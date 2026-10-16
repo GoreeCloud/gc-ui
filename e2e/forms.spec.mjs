@@ -195,3 +195,18 @@ test('extended native form specimens fit 320px and preserve native semantics',as
  expect(v.overflow).toBeLessThanOrEqual(1);
  expect(v.input).toBeGreaterThan(130);
 });
+
+test('unfocused skip link does not float over scrolled form content',async({page})=>{
+ await page.setViewportSize({width:375,height:812});
+ await page.goto('/lab/forms.html');
+ await page.locator('#simulate-failure').click();
+ const skip=page.getByRole('link',{name:'Skip to forms'});
+ const rect=await skip.boundingBox();
+ expect(rect.y+rect.height).toBeLessThan(0);
+ await page.keyboard.press('Tab');
+ // Focus moves naturally based on the browser; explicit focus demonstrates the affordance.
+ await skip.focus();
+ await expect(skip).toBeFocused();
+ const shown=await skip.boundingBox();
+ expect(shown.y).toBeGreaterThanOrEqual(0);
+});
