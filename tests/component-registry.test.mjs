@@ -37,3 +37,15 @@ test('implementation claims are specific, experimental, and traceable to source 
   }
  }
 });
+
+test('every experimental component points to a real lab page and implemented CSS class',()=>{
+ for(const component of registry.components.filter(c=>c.webStatus==='experimental')){
+  const page=component.web.example.split('#')[0];
+  assert.ok(existsSync(new URL('../'+page,import.meta.url)),component.id+' missing example '+page);
+  const css=component.web.sources.filter(path=>path.endsWith('.css')).map(path=>
+   readFileSync(new URL('../'+path,import.meta.url),'utf8')).join('\n');
+  for(const className of component.web.classNames){
+   assert.ok(css.includes('.'+className),component.id+' unimplemented class '+className);
+  }
+ }
+});
