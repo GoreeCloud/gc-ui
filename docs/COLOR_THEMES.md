@@ -94,3 +94,6 @@ Canonical shape: theme = {appearance: 'auto'|'light'|'dark', palette: 'iris'|'la
 
 ## 9. Validation matrix
 Every starter palette x light/dark x material solid/translucent x standard/high contrast. Verify primary and status on-pairs, text on every surface, outlines vs adjacent surfaces, focus ring, disabled vs enabled, and data-viz legends. Sample wallpaper extremes: black, white, high-frequency photograph, saturated red/blue, low-contrast beige. Record actual composite pixel colors rather than checking only source RGBA hex.
+
+## 10. Working seed generator (experimental)
+The repository includes [src/gc-color-engine.mjs](../src/gc-color-engine.mjs), an original pure JavaScript OKLCH conversion/gamut-mapping engine for explicit #RRGGBB color seeds. It generates five tonal families and assigns readable on-colors with a minimum 4.5:1 body-text check, with a safe black/white fallback. The [v1 reference lab](../lab/v1.html) can preview a custom user-supplied color locally. It is **not** Google's proprietary/HCT algorithm; it does not read wallpapers. Contrast is checked for a sampled seed set by unit tests, but non-text roles, color-deficiency experience, perceptual quality and real-image overlays need product review before production use.
