@@ -1,7 +1,7 @@
-# GC UI — Design Language Specification 1.0
+# GoreeCloud UI (GC UI) — Design Language Specification 1.0
 **Status:** normative design specification candidate; implementation maturity tracked separately.  
 **Scope:** mobile, tablet, foldable, desktop, ultrawide, television, wearable, and spatial experiences.  
-**Owner:** GoreeCloud. **Identity:** original; no dependency on Glaze UI.
+**Owner:** GoreeCloud. **Official name:** GoreeCloud UI. **Short form:** GC UI. **Identity:** original; no dependency on Glaze UI.
 
 ## 0. What this document is
 MUST means required to claim GC UI compliance; SHOULD means strongly preferred; MAY is an intentional extension. This is a design contract, not an assertion that every component or platform implementation already exists. Values are GC UI decisions unless explicitly marked as external guidance. Read this alongside COLOR_THEMES, COMPONENT_CATALOG, MOTION_INPUT, LAYOUT_PLATFORMS, ICONOGRAPHY, ACCESSIBILITY_RELEASE, and TOKENS_IMPLEMENTATION.
