@@ -16,7 +16,7 @@ npm install --no-save --no-package-lock @playwright/test@1.64.1
 npx playwright install chromium
 npm run test:e2e
 ```
-The Playwright config starts a local Python static server, so no production deployment is needed. Supported smoke scenarios: native checkboxes/radios, toggle button labeling, focus/keyboard tabs, menu keyboard behavior and Escape focus recovery, light/dark and forced-colors preference changes, high-contrast precedence over curated palettes, native progress and disclosure, catalog search/status filtering, custom seed generation, and compact 320px layouts.
+The Playwright config starts a local Python static server, so no production deployment is needed. Browser tests also assert cross-page theme preferences, high-contrast custom-seed suppression, natural forward/reverse menu Tab focus movement, and keyboard menu action results. Supported smoke scenarios: native checkboxes/radios, toggle button labeling, focus/keyboard tabs, menu keyboard behavior and Escape focus recovery, light/dark and forced-colors preference changes, high-contrast precedence over curated palettes, native progress and disclosure, catalog search/status filtering, custom seed generation, and compact 320px layouts.
 
 ## 3. Visual evidence
 `e2e/visual-capture.spec.mjs` captures **five screenshot fixtures** on Chromium:
