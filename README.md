@@ -147,3 +147,5 @@ The [Forms Lab](lab/forms.html) demonstrates eight experimental web treatments: 
 The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 153-test laptop run, successful three-job GitHub Actions check, and remaining manual screen-reader/device gates.
 
 The Forms Lab additionally covers IME-safe search and simulated error/retry behavior. The controller source is experimental demonstration code, not a stable public form API.
+
+The [native forms stabilization checkpoint](docs/QA_NATIVE_FORMS_2026-10-16.md) records 173 passing source/browser/axe/visual tests and verified [three-job CI success](https://github.com/GoreeCloud/gc-ui/actions/runs/38978706036). The module remains experimental, not stable or published.
