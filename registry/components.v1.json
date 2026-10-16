@@ -34,8 +34,17 @@
       "category": "Actions",
       "anatomy": "hit zone 44; icon 20/24; quiet, filled, tonal, danger",
       "behavior": "programmatic name mandatory; toggle variant exposes pressed state; tooltip not substitute for name",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-icon-button"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#native-controls"
+      }
     },
     {
       "id": "A03",
@@ -154,8 +163,17 @@
       "category": "Input",
       "anatomy": "box, label, description; unchecked/checked/mixed",
       "behavior": "Space toggles; grouped fieldset/legend; mixed is programmatic",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-checkbox"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#native-controls"
+      }
     },
     {
       "id": "F14",
@@ -163,8 +181,18 @@
       "category": "Input",
       "anatomy": "circle, label, helper; one checked per group",
       "behavior": "arrow keys navigate/select in standard grouped radio pattern",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-radio-group",
+          "gc-radio"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#native-controls"
+      }
     },
     {
       "id": "F15",
@@ -190,8 +218,18 @@
       "category": "Input",
       "anatomy": "track, thumb, ticks, value; single/range",
       "behavior": "arrow/Home/End/Page keys; numerical accessible min/max/now, discrete step announcement",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-range"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/primitives.mjs"
+        ],
+        "example": "lab/components.html#data-controls"
+      }
     },
     {
       "id": "F17",
@@ -253,8 +291,17 @@
       "category": "Containers and data",
       "anatomy": "header, body, action footer; flat, tonal, outlined, clickable",
       "behavior": "only whole-card click when truly one destination; no nested actionable elements in button",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-card"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#data-controls"
+      }
     },
     {
       "id": "C24",
@@ -325,8 +372,17 @@
       "category": "Containers and data",
       "anatomy": "heading button, region",
       "behavior": "Enter/Space toggles; aria-expanded; region labels; multiple/single policy stated",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-accordion"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#disclosures"
+      }
     },
     {
       "id": "C31",
@@ -354,8 +410,20 @@
       "category": "Containers and data",
       "anatomy": "short label, optional icon, dismiss",
       "behavior": "status is noninteractive badge; removable chip has independently named remove button",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-badge"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#data-controls",
+        "limits": [
+          "badge only; dismissible chip remains specified"
+        ]
+      }
     },
     {
       "id": "C33",
@@ -574,8 +642,21 @@
       "category": "Feedback and overlays",
       "anatomy": "determinate, indeterminate; bar/ring",
       "behavior": "role, label and numerical value when known; reduced motion fallback",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-progress"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/primitives.mjs"
+        ],
+        "example": "lab/components.html#data-controls",
+        "limits": [
+          "determinate native progress; indeterminate treatment remains specified"
+        ]
+      }
     },
     {
       "id": "O53",
