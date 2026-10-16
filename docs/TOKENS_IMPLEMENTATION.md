@@ -60,3 +60,10 @@ No runtime CDN font requirement. Avoid dynamic CSS from untrusted seed text; hex
 
 ## 9. Current state
 v1 token JSON, CSS generator, CSS artifact, catalog, and test contract are created. Framework packages, production validated tonal palette generation, native adapters, full icon vectors, visual snapshots, and manual assistive-technology audits are NOT completed. Production-ready release is gated by ACCESSIBILITY_RELEASE.md.
+
+## 10. Experimental theme runtime and component primitives (October 2026)
+`src/gc-theme-runtime.mjs` resolves mode auto/light/dark, curated or custom seed, and solid/translucent material while obeying high contrast, forced-colors and reduced transparency. `src/gc-color-engine.mjs` generates five independently developed OKLCH tonal families and opaque foregrounds. The v1 reference lab demonstrates custom seeds; the Components Lab demonstrates curated appearance, theme runtime, semantic CSS components and interactive behavior. The runtime has unit tests and a 361-seed/722-theme stress sample, but lacks wallpaper inputs, composited backdrop audits and real-device accessibility signoff.
+
+`styles/gc.v1.components.css` provides experimental CSS primitives for buttons, inputs, switches, tablists, dialogs, banners, toasts and Lens. `src/gc-interactions.mjs` provides tab arrow/Home/End navigation with RTL support, native dialog activation, live toast announcements, and async action protection. These are **web reference primitives, not a versioned/stable component package**. See [Components Lab](../lab/components.html) and [component catalog](COMPONENT_CATALOG_V1.md).
+
+Automated checks: `npm run check`, `node tests/check-lab-references.mjs`; CI runs both. Manual browser, keyboard and assistive technology audits are still required before beta/stable release.
