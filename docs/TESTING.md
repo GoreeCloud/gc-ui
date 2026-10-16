@@ -6,7 +6,7 @@ Run `npm run check` from the repository root. It runs:
 - `npm run tokens:check`: regenerates token CSS and compares byte-for-byte with `styles/gc.v1.generated.css`.
 - `npm test`: Node tests for color roles, high-contrast and forced-color mapping, theme runtime, menus, tabs, dialogs, native component semantics, icon sprite structure, type/package exports, and implementation-registry traceability.
 - `npm run audit:colors`: samples 361 hexadecimal seed colors in both appearances (722 generated schemes), checks foreground and background pairs, baseline accent pairings and high contrast.
-- `node tests/check-lab-references.mjs`: rejects broken local asset references in the three browser labs.
+- `node tests/check-lab-references.mjs`: rejects broken local asset references in the four browser labs.
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
@@ -19,12 +19,13 @@ npm run test:e2e
 The Playwright config starts a local Python static server, so no production deployment is needed. Browser tests also assert cross-page theme preferences, high-contrast custom-seed suppression, natural forward/reverse menu Tab focus movement, and keyboard menu action results. Supported smoke scenarios: native checkboxes/radios, toggle button labeling, focus/keyboard tabs, menu keyboard behavior and Escape focus recovery, light/dark and forced-colors preference changes, high-contrast precedence over curated palettes, native progress and disclosure, catalog search/status filtering, custom seed generation, and compact 320px layouts.
 
 ## 3. Visual evidence
-`e2e/visual-capture.spec.mjs` captures **five screenshot fixtures** on Chromium:
+`e2e/visual-capture.spec.mjs` captures **eight screenshot fixtures** on Chromium:
 - components lab, desktop light, 1440x900
 - components lab, desktop dark, 1440x900
 - components lab, high-contrast dark, 1440x900
 - components lab, compact light, 375x812
 - component registry, desktop, 1440x900
+- adaptive shell at 375x812, 840x900, and 1440x900
 
 GitHub Actions uploads these as browser QA evidence. The screenshot artifacts have **no approved visual baseline** and must be reviewed by a human before considering typography, spacing, optical geometry, or Lens effects stable.
 
