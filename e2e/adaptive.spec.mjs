@@ -45,7 +45,7 @@ test('modal side sheet uses native Escape dismissal and restores trigger focus',
 });
 test('adaptive shell retains theme accessibility preferences across labs',async({page})=>{
   await page.goto('/lab/components.html');
-  await page.locator('#contrast-switch').check();
+  await page.locator('label:has(#contrast-switch)').click();
   await page.goto('/lab/adaptive.html');
   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
   await expect(page.locator('html')).toHaveAttribute('data-gc-material','solid');
