@@ -5,7 +5,7 @@
 <meta name="description" content="Interactive GC UI semantic token and material reference lab">
 <link rel="stylesheet" href="../styles/gc.v1.generated.css">
 <link rel="stylesheet" href="./v1.css">
-<script defer src="./v1.js"></script></head>
+<script type="module" src="./v1.js"></script></head>
 <body>
 <a class="skip" href="#main">Skip to main content</a>
 <div class="scene">
@@ -26,7 +26,7 @@
         </div></fieldset>
         <fieldset><legend>Accent palette</legend><div class="swatches" role="group" aria-label="GC UI accent">
           <button class="swatch iris" data-accent="iris" aria-label="Iris accent" aria-pressed="true"></button><button class="swatch lagoon" data-accent="lagoon" aria-label="Lagoon accent" aria-pressed="false"></button><button class="swatch ember" data-accent="ember" aria-label="Ember accent" aria-pressed="false"></button><button class="swatch moss" data-accent="moss" aria-label="Moss accent" aria-pressed="false"></button>
-        </div></fieldset>
+        </div><div class="seed-picker"><label for="custom-seed">Custom color seed</label><input type="color" id="custom-seed" aria-label="Select a custom GC UI accent seed" value="#5145d9"><small>Generated locally with GC UI OKLCH tones</small></div></fieldset>
         <fieldset><legend>Lens material</legend><div class="segments" role="group" aria-label="Material selection">
           <button type="button" data-material="translucent" aria-pressed="true">Translucent</button><button type="button" data-material="solid" aria-pressed="false">Solid</button>
         </div></fieldset>
