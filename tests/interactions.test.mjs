@@ -98,3 +98,26 @@ test('vertical tablists use Up/Down arrows and ignore Left/Right',async()=>{
   assert.equal(panels[1].hidden,false);
   controller.destroy();
 });
+
+test('superseded toasts cannot reschedule dismissal of the current toast',async()=>{
+ const children=[];
+ const region={
+  setAttribute(){},
+  ownerDocument:{createElement:()=>({
+   listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
+   remove(){const at=children.indexOf(this);if(at!==-1)children.splice(at,1)}
+  })},
+  appendChild(node){children.push(node)}
+ };
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const toast=createToast(region);
+ toast.show('first',{duration:20});
+ const old=children[0];
+ toast.show('new',{duration:0});
+ old.listeners.pointerleave(); // detached DOM element still holds event callbacks
+ old.listeners.focusout();
+ await new Promise(resolve=>setTimeout(resolve,45));
+ assert.equal(children.length,1);
+ assert.equal(children[0].textContent,'new');
+ toast.destroy();
+});
