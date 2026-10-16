@@ -51,3 +51,6 @@ For adaptive navigation contract details, see [Adaptive shell architecture](ADAP
 
 ## Verified implementation checkpoint (2026-10-16)
 The complete Node source gate and Chromium Playwright suite passed on a connected Linux laptop, and limited Android Firefox touch/navigation tests were performed on a OnePlus N200. See the [dated device testing record](DEVICE_TESTING_2026_10_16.md) for exact counts, first-run failures and their corrections, transport setup, and open browser compatibility findings.
+
+## Browser execution order (hardware-tested)
+Run `npm run test:e2e` to execute the 17 interaction scenarios first, followed by eight independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
