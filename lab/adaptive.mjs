@@ -17,7 +17,7 @@ const themeToggle=document.getElementById('appearance-toggle');
 function routeFromHash(){const route=location.hash.slice(1);return Object.hasOwn(labels,route)?route:'overview'}
 function renderRoute(){
  const route=routeFromHash(),current=labels[route];
- document.title='GC UI · '+route[0].toUpperCase()+route.slice(1);
+ document.title='GoreeCloud UI · '+route[0].toUpperCase()+route.slice(1);
  title.textContent=current.title;
  subtitle.textContent=current.subtitle;
  contentTitle.textContent=current.heading;
