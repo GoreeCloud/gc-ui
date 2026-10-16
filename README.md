@@ -134,3 +134,6 @@ A connected Linux laptop completed **55/55 Node tests**, **7,988/7,988 opaque co
 
 ### Official GC UI branding
 GC UI's official v1 identity (app icon, transparent symbol and outlined light/dark wordmarks) is maintained in the separate authoritative [GoreeCloud branding-assets product namespace](https://github.com/GoreeCloud/branding-assets/tree/main/products/gc-ui). Its 23 PNG exports, favicon, SVG masters, manifest, and deterministic raster build remain there. This repo carries **exact synchronized vector derivatives** only for offline previews and package distribution; see [brand provenance and usage rules](docs/BRANDING.md). Package exports: `./brand/icon`, `./brand/symbol`, `./brand/logo`, and `./brand/logo-dark`. The interface theme can change, but the logo's official colors do not.
+
+### Accessibility smoke check
+The browser pipeline includes four pinned axe-core WCAG A/AA checks as well as interaction and visual capture tests. This does not constitute WCAG certification; inconclusive color contrast / ARIA checks are retained for manual review. See [testing guidance](docs/TESTING.md).
