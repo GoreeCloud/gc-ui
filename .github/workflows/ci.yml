@@ -24,6 +24,7 @@ jobs:
           node --check src/gc-color-engine.mjs
           node --check src/gc-theme-runtime.mjs
           node --check src/gc-interactions.mjs
+          node --check src/gc-menu.mjs
           node --check lab/v1.js
           node --check lab/primitives.mjs
           node --check scripts/build-v1-tokens.mjs
