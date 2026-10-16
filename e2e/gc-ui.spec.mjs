@@ -36,10 +36,10 @@ test('action menu skips disabled items, closes with Escape, restores trigger foc
 });
 test('high contrast and OS accessibility force solid material',async({page})=>{
   await page.goto('/lab/components.html');
-  await page.locator('#contrast-switch').check();
+  await page.locator('label:has(#contrast-switch)').click();
   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
   await expect(page.locator('html')).toHaveAttribute('data-gc-material','solid');
-  await page.locator('#contrast-switch').uncheck();
+  await page.locator('label:has(#contrast-switch)').click();
   await page.emulateMedia({reducedMotion:'reduce',colorScheme:'dark',forcedColors:'active'});
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
   await expect(page.locator('html')).toHaveAttribute('data-gc-material','solid');
@@ -76,7 +76,7 @@ test('custom palette seed is applied in the foundation lab',async({page})=>{
 
 test('high-contrast dark semantic color wins over curated accent',async({page})=>{
   await page.goto('/lab/components.html');
-  await page.locator('#contrast-switch').check();
+  await page.locator('label:has(#contrast-switch)').click();
   await page.locator('[data-theme-mode="dark"]').click();
   await page.locator('[data-theme-accent="lagoon"]').click();
   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
@@ -98,7 +98,7 @@ test('responsive labs retain accessible primary controls on narrow screens',asyn
 test('both labs share preference persistence and accessibility overrides',async({page})=>{
   await page.goto('/lab/components.html');
   await page.locator('[data-theme-mode="dark"]').click();
-  await page.locator('#contrast-switch').check();
+  await page.locator('label:has(#contrast-switch)').click();
   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
 
   await page.goto('/lab/v1.html');
@@ -116,7 +116,7 @@ test('both labs share preference persistence and accessibility overrides',async(
   expect(overriddenDuringHigh).toBe('');
 
   await page.goto('/lab/components.html');
-  await page.locator('#contrast-switch').uncheck();
+  await page.locator('label:has(#contrast-switch)').click();
   await page.goto('/lab/v1.html');
   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','standard');
   await expect(page.locator('html')).toHaveAttribute('data-gc-accent','custom');
