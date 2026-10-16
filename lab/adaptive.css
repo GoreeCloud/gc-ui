@@ -1,0 +1,38 @@
+/* GC UI adaptive reference shell — layouts derive from shared components CSS. */
+:root{color-scheme:light}:root[data-gc-mode=dark]{color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-canvas);font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+a{color:inherit}
+.gc-app-shell{min-height:100dvh}
+.gc-shell-brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-size:16px;white-space:nowrap}
+.gc-shell-mark{display:grid;place-items:center;inline-size:40px;block-size:40px;border-radius:13px;color:var(--gc-v1-color-on-primary);background:var(--gc-v1-color-primary);font-weight:750;font-size:21px}
+.gc-shell-caption{font-size:13px;color:var(--gc-v1-color-on-surface-muted)}
+.gc-app-bar-actions{display:flex;gap:10px}
+.gc-main-content{max-width:1370px;padding:42px clamp(22px,4vw,64px) 100px;margin-inline:auto}
+.gc-eyebrow{font-size:12px;letter-spacing:.12em;font-weight:730;color:var(--gc-v1-color-primary);margin:0 0 12px}
+.gc-page-header{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:55px}
+.gc-page-header h1{font-size:clamp(42px,5.8vw,76px);line-height:1.06;letter-spacing:-.055em;margin:0}
+.gc-page-lead{max-width:570px;color:var(--gc-v1-color-on-surface-muted);font-size:17px;margin:18px 0 0}
+.gc-shell-section{margin:0 0 56px}
+.gc-shell-section h2{font-size:22px;letter-spacing:-.035em;margin:0 0 20px}
+.gc-section-title{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.gc-metric-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.gc-metric-card{min-height:196px;display:flex;flex-direction:column}
+.gc-metric-icon{inline-size:38px;block-size:38px;border-radius:12px;background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container);display:grid;place-items:center;font-weight:750}
+.gc-metric-card p{margin:16px 0 4px;font-size:14px;color:var(--gc-v1-color-on-surface-muted)}
+.gc-metric-card strong{font-size:36px;letter-spacing:-.04em;line-height:1.1}
+.gc-metric-card>span:last-child{font-size:13px;color:var(--gc-v1-color-on-surface-muted);margin-top:6px}
+.gc-activity-list{list-style:none;padding:0;background:var(--gc-v1-color-surface);border:1px solid var(--gc-v1-color-divider);border-radius:24px;overflow:hidden;margin:0}
+.gc-activity-list li{padding:20px 22px;display:flex;align-items:center;gap:16px}
+.gc-activity-list li+li{border-top:1px solid var(--gc-v1-color-divider)}
+.gc-activity-symbol{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--gc-v1-color-secondary-container);color:var(--gc-v1-color-on-secondary-container);font-weight:700;flex:none}
+.gc-activity-list p{margin:2px 0 0;color:var(--gc-v1-color-on-surface-muted);font-size:13px}
+.gc-activity-list time{margin-inline-start:auto;font-size:12px;color:var(--gc-v1-color-on-surface-muted);white-space:nowrap}
+.gc-shell-note{font-size:13px;color:var(--gc-v1-color-on-surface-muted)}
+.gc-shell-footer{padding:28px;text-align:center;font-size:13px;color:var(--gc-v1-color-on-surface-muted)}
+.gc-shell-footer a{color:var(--gc-v1-color-link)}
+@media(min-width:1200px){.gc-main-content{margin-inline-start:var(--gc-v1-shell-sidebar-width,248px)}}
+@media(min-width:600px) and (max-width:1199px){.gc-main-content{margin-inline-start:var(--gc-v1-shell-rail-width,88px)}.gc-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:599px){.gc-main-content{padding:38px 20px calc(124px + env(safe-area-inset-bottom))}.gc-page-header{display:block;margin-bottom:40px}.gc-page-header h1{font-size:45px}.gc-page-header>.gc-button{margin-top:20px}.gc-metric-grid{grid-template-columns:1fr}.gc-metric-card{min-height:160px}.gc-activity-list li{align-items:flex-start;flex-wrap:wrap}.gc-activity-list time{margin-inline-start:58px}.gc-shell-caption{display:none}.gc-app-bar-actions .gc-button[data-variant=quiet]{display:none}.gc-shell-footer{padding-bottom:calc(112px + env(safe-area-inset-bottom))}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
