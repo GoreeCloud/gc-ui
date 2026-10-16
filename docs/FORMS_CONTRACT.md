@@ -61,3 +61,5 @@ The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the C
 - F21 allows manual numeric input as well as 48px minimum increment/decrement controls. The specimen normalizes out-of-bounds numbers on change, updates the label/status in a live region and disables buttons at the configured minimum/maximum.
 - O54 explicitly distinguishes a simulated connection failure from actual network traffic. The alert offers one effective retry action. Successful retry hides the error, exposes confirmation as a polite status and returns focus to the stable Simulate button. Existing form content remains untouched.
 - These four references are tracked as **experimental** in the catalog; `lab/forms.mjs` is a specimen controller, not a published JavaScript API.
+
+The shared `.gc-skip-link` stays at an absolute negative block position while idle and becomes a fixed positive-position link only on keyboard focus. This avoids misleading full-page screenshot artifacts after page scroll while retaining visible keyboard skip navigation.
