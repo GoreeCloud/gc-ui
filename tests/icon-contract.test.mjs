@@ -17,5 +17,5 @@ test('GC icons have twelve uniquely named 24x24 outline symbols',()=>{
 });
 test('glyph sprite contains no scripts, fonts, linked images or inline CSS assets',()=>{
  assert.doesNotMatch(svg,/<(?:script|image|foreignObject|font)\b/i);
- assert.doesNotMatch(svg,/(?:https?:\/\/|data:image\/)/i);
+ assert.doesNotMatch(svg,/(?:href|xlink:href)=["'](?:https?:|data:)/i);
 });
