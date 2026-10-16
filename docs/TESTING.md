@@ -10,23 +10,23 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
-The alpha suite currently defines 22 interaction scenarios across Components, Foundations, Registry and Adaptive labs, four axe-core accessibility smoke scenarios, and ten independent screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
+The alpha suite currently defines 22 interaction scenarios across Components, Foundations, Registry and Adaptive labs, ten axe-core accessibility smoke scenarios, and ten independent screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
 The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
 ```sh
-npm install --no-save --no-package-lock @playwright/test@1.64.1
+npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3
 npx playwright install chromium
 npm run test:e2e
 ```
 The Playwright config starts a local Python static server, so no production deployment is needed. Browser tests also assert cross-page theme preferences, high-contrast custom-seed suppression, natural forward/reverse menu Tab focus movement, and keyboard menu action results. Supported smoke scenarios: native checkboxes/radios, toggle button labeling, focus/keyboard tabs, menu keyboard behavior and Escape focus recovery, light/dark and forced-colors preference changes, high-contrast precedence over curated palettes, native progress and disclosure, catalog search/status filtering, custom seed generation, and compact 320px layouts.
 
 ## 3. Visual evidence
-`e2e/visual-capture.spec.mjs` captures **eight screenshot fixtures** on Chromium:
+`e2e/visual-capture.spec.mjs` and `e2e/adaptive-visual.spec.mjs` capture **ten screenshot fixtures** on Chromium:
 - components lab, desktop light, 1440x900
 - components lab, desktop dark, 1440x900
 - components lab, high-contrast dark, 1440x900
 - components lab, compact light, 375x812
 - component registry, desktop, 1440x900
-- adaptive shell at 375x812, 840x900, and 1440x900
+- adaptive shell at 320x740 and 375x812 (light/dark), 840x900, and 1440x900
 
 GitHub Actions uploads these as browser QA evidence. The screenshot artifacts have **no approved visual baseline** and must be reviewed by a human before considering typography, spacing, optical geometry, or Lens effects stable.
 
@@ -47,19 +47,19 @@ GitHub Actions uploads these as browser QA evidence. The screenshot artifacts ha
 
 Only `registry/components.v1.json` is authoritative for component maturity. Do not update the registry without a source implementation, a lab example and a test. CI success is a prerequisite for release, not sufficient proof of WCAG conformance.
 
-For adaptive navigation contract details, see [Adaptive shell architecture](ADAPTIVE_SHELL.md). Review all eight screenshots for overflow, hierarchy, focus boundaries and dark/high-contrast usability.
+For adaptive navigation contract details, see [Adaptive shell architecture](ADAPTIVE_SHELL.md). Review all ten screenshots for overflow, hierarchy, focus boundaries and dark/high-contrast usability.
 
 ## Verified implementation checkpoint (2026-10-16)
 The complete Node source gate and Chromium Playwright suite passed on a connected Linux laptop, and limited Android Firefox touch/navigation tests were performed on a OnePlus N200. See the [dated device testing record](DEVICE_TESTING_2026_10_16.md) for exact counts, first-run failures and their corrections, transport setup, and open browser compatibility findings.
 
 ## Browser execution order (hardware-tested)
-Run `npm run test:e2e` to execute 20 interaction scenarios first, ten axe accessibility screens second, followed by eight independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
+Run `npm run test:e2e` to execute 22 interaction scenarios first, ten axe accessibility screens second, followed by ten independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
 
 ## Firefox engine smoke testing
-Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 17 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
+Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 22 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
 
 ## Automated accessibility smoke gate
-`npm run test:e2e:accessibility` runs pinned axe-core 4.10.3 on the four GC UI labs using Chromium and the WCAG 2.0/2.1 A/AA rule tags. Run `npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3` first. Confirmed axe violations fail; inconclusive checks and details are attached to the Playwright report as JSON for manual review. This is not a conformance claim, and CSS gradients, translucent materials, actual assistive technology, and touch hardware require manual evaluation. Full `npm run test:e2e` now runs 22 interaction tests, 10 automated accessibility screens, and 10 visual capture tests in separate stages. Firefox runs the interaction subset.
+`npm run test:e2e:accessibility` runs pinned axe-core 4.10.3 on the four GC UI labs and six additional interactive states using Chromium and the WCAG 2.0/2.1 A/AA rule tags. Run `npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3` first. Confirmed axe violations fail; inconclusive checks and details are attached to the Playwright report as JSON for manual review. This is not a conformance claim, and CSS gradients, translucent materials, actual assistive technology, and touch hardware require manual evaluation. Full `npm run test:e2e` now runs 22 interaction tests, 10 automated accessibility screens, and 10 visual capture tests in separate stages. Firefox runs the interaction subset.
 
 ## Alpha package integrity
 `npm run pack:check` performs a local `npm pack --dry-run --ignore-scripts` and checks that every published API export is included, development labs/test output are excluded, and the alpha package remains private. The check does not create a release or publish to npm. It also runs in `npm run check` and the core CI job.
