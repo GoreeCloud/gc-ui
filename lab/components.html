@@ -39,9 +39,13 @@
     <button type="button" class="palette moss" data-theme-accent="moss" aria-label="Moss" aria-pressed="false"></button>
    </div></fieldset>
    <fieldset><legend>Material</legend><label class="gc-switch">
-      <input class="gc-switch-input" type="checkbox" id="lens-switch" checked>
+      <input class="gc-switch-input" type="checkbox" id="lens-switch" aria-describedby="material-state" checked>
       <span class="gc-switch-track" aria-hidden="true"></span><span class="gc-switch-label">Translucent Lens</span>
-   </label></fieldset>
+   </label><small class="setting-note" id="material-state">Material follows accessibility preferences.</small></fieldset>
+   <fieldset><legend>Accessibility</legend><label class="gc-switch">
+     <input class="gc-switch-input" type="checkbox" id="contrast-switch" aria-describedby="contrast-state">
+     <span class="gc-switch-track" aria-hidden="true"></span><span class="gc-switch-label">High contrast</span>
+   </label><small class="setting-note" id="contrast-state">Uses the system preference by default.</small></fieldset>
   </div>
  </section>
  <section class="lab-section" id="components" aria-labelledby="components-title">
