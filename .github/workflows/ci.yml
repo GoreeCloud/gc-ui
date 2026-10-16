@@ -65,3 +65,27 @@ jobs:
             playwright-report/
           retention-days: 7
           if-no-files-found: ignore
+
+  browser-firefox:
+    name: Firefox interaction smoke tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright runner
+        run: npm install --no-save --no-package-lock @playwright/test@1.64.1
+      - name: Install Firefox browser and dependencies
+        run: npx playwright install --with-deps firefox
+      - name: Verify keyboard, theme and adaptive navigation in Firefox
+        run: npm run test:e2e:firefox
+      - name: Upload Firefox failure traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-ui-firefox-failure-evidence
+          path: test-results/
+          retention-days: 7
+          if-no-files-found: ignore
