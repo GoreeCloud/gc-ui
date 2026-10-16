@@ -48,3 +48,6 @@ GitHub Actions uploads these as browser QA evidence. The screenshot artifacts ha
 Only `registry/components.v1.json` is authoritative for component maturity. Do not update the registry without a source implementation, a lab example and a test. CI success is a prerequisite for release, not sufficient proof of WCAG conformance.
 
 For adaptive navigation contract details, see [Adaptive shell architecture](ADAPTIVE_SHELL.md). Review all eight screenshots for overflow, hierarchy, focus boundaries and dark/high-contrast usability.
+
+## Verified implementation checkpoint (2026-10-16)
+The complete Node source gate and Chromium Playwright suite passed on a connected Linux laptop, and limited Android Firefox touch/navigation tests were performed on a OnePlus N200. See the [dated device testing record](DEVICE_TESTING_2026_10_16.md) for exact counts, first-run failures and their corrections, transport setup, and open browser compatibility findings.
