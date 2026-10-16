@@ -60,3 +60,6 @@ Both the audit and tests are **opaque role checks**, not visual screenshots, scr
 No bundled npm release, no complete 63-component implementation, no native SwiftUI/Compose/TV adapters, no full filled glyph set, no production wallpaper sampling, no comprehensive picture/video backdrop contrast testing, no full Playwright end-to-end matrix, no manual VoiceOver/NVDA/TalkBack audits. Production usage requires a dedicated accessibility and security review in the host application.
 
 **Versioning:** this is v0.2.0-alpha.1, so APIs and visuals may change without compatibility guarantees. See `docs/RELEASE_PLAN_V1.md`.
+
+## Machine-readable component registry
+`registry/components.v1.json` is a complete 63-entry reflection of `docs/COMPONENT_CATALOG_V1.md`. Each pattern declares its documented anatomy and behavior, category, experimental or specification-only web maturity, and any source/example pointers. The [Component Registry Explorer](../lab/catalog.html) supports search and filters. `tests/component-registry.test.mjs` prevents undocumented status inflation and mismatches between the manifest and written catalog.
