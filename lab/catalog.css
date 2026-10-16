@@ -13,3 +13,6 @@ main{width:min(1200px,calc(100% - 40px));margin:auto}.hero{padding:110px 0 90px;
 @media(max-width:760px){.masthead nav{display:none}.filters{grid-template-columns:1fr}.heading{display:block}}
 @media(max-width:520px){main{width:calc(100% - 28px)}.hero{padding:86px 0 60px}.hero h1{font-size:52px}.summary{gap:20px}.summary>div{min-width:90px}.component-grid{grid-template-columns:1fr}.masthead .repo{display:none}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+/* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
+.identity img.logo{display:block;object-fit:contain;flex:none;background:none;padding:0}
