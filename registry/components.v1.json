@@ -176,8 +176,19 @@
       "category": "Input",
       "anatomy": "field plus reveal button, strength guidance",
       "behavior": "reveal state named; caps lock notice optional; no forced clipboard prevention",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-passphrase-wrap",
+          "gc-passphrase-reveal"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "F13",
@@ -259,8 +270,18 @@
       "category": "Input",
       "anatomy": "native or accessible listbox",
       "behavior": "use native select preferentially on mobile; typeahead, Escape, restored focus",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-native-select"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "F18",
@@ -295,8 +316,19 @@
       "category": "Input",
       "anatomy": "numeric field and +/- buttons",
       "behavior": "bounds announced; manual entry supported; avoid repeated accidental increments",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-stepper",
+          "gc-stepper-button"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "F22",
@@ -773,8 +805,18 @@
       "category": "Feedback and overlays",
       "anatomy": "diagnostic summary, action, optional details",
       "behavior": "distinguish offline, permission, validation, server and destructive failure",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-recovery-error"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "M55",
