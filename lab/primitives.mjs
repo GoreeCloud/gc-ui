@@ -83,3 +83,20 @@ const actionsMenu=initMenu(
  document.getElementById('gc-file-actions'),
  {onSelect:item=>toast.show(item.textContent.trim()+' — demonstration only.')}
 );
+
+const favorite=document.getElementById('favorite-workspace');
+favorite.addEventListener('click',()=>{
+ const selected=favorite.getAttribute('aria-pressed')!=='true';
+ favorite.setAttribute('aria-pressed',String(selected));
+ favorite.setAttribute('aria-label',selected?'Remove workspace from favorites':'Favorite workspace');
+ favorite.title=selected?'Remove from favorites':'Favorite workspace';
+ toast.show(selected?'Added to favorites.':'Removed from favorites.');
+});
+const completion=document.getElementById('gc-completion');
+const completionValue=document.getElementById('gc-completion-value');
+const completionProgress=document.getElementById('gc-completion-progress');
+completion.addEventListener('input',()=>{
+ const value=Number(completion.value);
+ completionValue.textContent=value+'%';
+ completionProgress.value=value;
+});
