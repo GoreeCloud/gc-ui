@@ -47,6 +47,8 @@ test('search keyboard suggestions select with Enter, Escape closes first',async(
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
  await search.press('ArrowDown');
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-1');
+ await search.press('ArrowDown');
+ await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-2');
  await search.press('Enter');
  await expect(search).toHaveValue('Design tokens');
  await expect(search).toHaveAttribute('aria-expanded','false');
