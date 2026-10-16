@@ -92,6 +92,21 @@
     <div class="gc-banner" data-intent="warning" style="margin-block:12px"><strong>! Review required</strong><p>One setting needs your attention.</p></div>
     <button class="gc-button" type="button" data-variant="secondary" id="show-toast">Show notification</button>
    </article>
+   <article class="specimen" id="menus">
+    <div class="specimen-meta"><span>GC / ACTION MENUS</span><span class="sample-tag">A06</span></div>
+    <h3>Commands without confusion.</h3>
+    <p>Use Arrow keys, Home, End, Escape and Tab to explore. Disabled items are skipped.</p>
+    <div class="gc-menu-anchor">
+      <button id="gc-file-action-trigger" type="button" class="gc-button" data-variant="secondary">Workspace actions <span aria-hidden="true">⌄</span></button>
+      <div id="gc-file-actions" class="gc-menu gc-lens" role="menu" aria-labelledby="gc-file-action-trigger" hidden>
+        <button type="button" role="menuitem" data-command="duplicate">Duplicate workspace</button>
+        <button type="button" role="menuitem" data-command="share">Share a link</button>
+        <button type="button" role="menuitem" data-command="rename">Rename workspace</button>
+        <div class="gc-menu-divider" role="separator"></div>
+        <button type="button" role="menuitem" aria-disabled="true" data-command="archive">Archive (unavailable)</button>
+      </div>
+    </div>
+   </article>
   </div>
  </section>
  <section class="lab-section" id="materials" aria-labelledby="materials-title">
