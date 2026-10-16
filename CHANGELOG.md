@@ -8,8 +8,9 @@ GC UI is an original independent design system. This changelog tracks implementa
 - Machine-readable maturity registry updated to 24 experimental and 39 specification-only patterns.
 - Twelve Chromium smoke tests in `e2e/gc-ui.spec.mjs`, plus five visual QA screenshots covering desktop light/dark/high-contrast, mobile and the registry, with a pinned Playwright CI job and uploaded evidence.
 - Adaptive navigation and native modal side sheet: app bar, compact bottom nav, medium rail, expanded sidebar, breadcrumbs, and a side-sheet with native dialog semantics.
-- Five adaptive viewport/interaction browser checks and three responsive screenshot fixtures.
+- Five adaptive viewport/interaction browser checks and three responsive screenshot fixtures, extending the existing 12 smoke scenarios to 17 (plus visual capture tests).
 ### Fixed
+- Route-change announcement, document title update and focus transfer for hash navigation, without focus theft on initial render.
 - Public tab controller rejects selections outside the tablist, reacts to disabled-state changes, and supports vertical tab orientation.
 - Icon-button toggle retains a stable accessible name while `aria-pressed` expresses its state.
 - Shared theme runtime across both labs, including a visible effective-material status and cross-page persistence coverage.
