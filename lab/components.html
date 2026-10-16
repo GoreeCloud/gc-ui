@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GC UI v1 accessible component primitives and theming reference">
+<title>GC UI · Components Lab</title>
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.components.css">
+<link rel="stylesheet" href="./primitives.css">
+<script type="module" src="./primitives.mjs"></script>
+</head>
+<body>
+<a class="skip-link" href="#content">Skip to content</a>
+<div class="environment">
+<header class="gc-lens masthead">
+ <div class="identity"><span class="logo" aria-hidden="true">G</span><div><strong>GC UI</strong><small>Components laboratory · v1 candidate</small></div></div>
+ <nav aria-label="Laboratory navigation"><a href="./v1.html">Design lab</a><a href="#components">Components</a><a href="#materials">Materials</a></nav>
+ <a class="repo" href="https://github.com/GoreeCloud/gc-ui">GitHub ↗</a>
+</header>
+<main id="content">
+ <section class="intro">
+  <p class="eyebrow">THE GC UI DESIGN LANGUAGE / COMPONENTS</p>
+  <h1>Made to feel<br><em>effortless.</em></h1>
+  <p class="summary">Real interactive controls, semantic colors, thoughtful states, and expressive precision. Everything keeps working when the visual effects are removed.</p>
+  <a href="#components" class="gc-button" data-variant="primary">Explore components <span aria-hidden="true">↗</span></a>
+ </section>
+ <section class="lab-section" aria-labelledby="settings-title">
+  <header class="section-head"><div><p class="eyebrow">01 / PERSONALITY</p><h2 id="settings-title">One system, many moods.</h2></div><p>Modify the experience without changing the meaning.</p></header>
+  <div class="setting-surface">
+   <fieldset><legend>Appearance</legend><div class="button-row" role="group" aria-label="Choose appearance">
+      <button type="button" class="gc-button" data-theme-mode="auto" data-variant="quiet" aria-pressed="true">Auto</button>
+      <button type="button" class="gc-button" data-theme-mode="light" data-variant="quiet" aria-pressed="false">Light</button>
+      <button type="button" class="gc-button" data-theme-mode="dark" data-variant="quiet" aria-pressed="false">Dark</button>
+   </div></fieldset>
+   <fieldset><legend>Accent</legend><div class="palette-row" role="group" aria-label="Choose accent palette">
+    <button type="button" class="palette iris" data-theme-accent="iris" aria-label="Iris" aria-pressed="true"></button>
+    <button type="button" class="palette lagoon" data-theme-accent="lagoon" aria-label="Lagoon" aria-pressed="false"></button>
+    <button type="button" class="palette ember" data-theme-accent="ember" aria-label="Ember" aria-pressed="false"></button>
+    <button type="button" class="palette moss" data-theme-accent="moss" aria-label="Moss" aria-pressed="false"></button>
+   </div></fieldset>
+   <fieldset><legend>Material</legend><label class="gc-switch">
+      <input class="gc-switch-input" type="checkbox" id="lens-switch" checked>
+      <span class="gc-switch-track" aria-hidden="true"></span><span class="gc-switch-label">Translucent Lens</span>
+   </label></fieldset>
+  </div>
+ </section>
+ <section class="lab-section" id="components" aria-labelledby="components-title">
+  <header class="section-head"><div><p class="eyebrow">02 / PRIMITIVES</p><h2 id="components-title">The little things matter.</h2></div><p>Buttons, states, tabs, inputs, dialogs and feedback.</p></header>
+  <div class="component-grid">
+   <article class="specimen">
+    <div class="specimen-meta"><span>GC / ACTIONS</span><span class="sample-tag">A01</span></div>
+    <h3>Buttons, with intention.</h3><p>Hierarchy is clear even without shadow or motion.</p>
+    <div class="action-examples">
+     <button class="gc-button" data-variant="primary" id="action-primary" type="button"><span class="gc-button-spinner" aria-hidden="true"></span><span>Save changes</span></button>
+     <button class="gc-button" data-variant="secondary" id="action-secondary" type="button">Preview</button>
+     <button class="gc-button" data-variant="outline" type="button" disabled>Unavailable</button>
+     <button class="gc-button" data-variant="danger" data-gc-dialog-open="confirm-dialog" type="button">Delete</button>
+    </div>
+   </article>
+   <article class="specimen">
+    <div class="specimen-meta"><span>GC / INPUTS</span><span class="sample-tag">F09 · F15</span></div>
+    <h3>Quietly capable.</h3><p>Persistent labels, enough room to touch, and help when needed.</p>
+    <form id="project-form" novalidate>
+      <div class="gc-field"><label class="gc-field-label" for="gc-name">Workspace name</label>
+       <input id="gc-name" class="gc-input" name="workspace" required aria-describedby="gc-name-help" placeholder="Give your idea a name">
+       <span class="gc-field-description" id="gc-name-help">This appears in your workspace header.</span>
+       <span class="gc-field-error" id="gc-name-error" hidden>Please enter a workspace name.</span>
+      </div>
+      <label class="gc-switch" style="margin-block:20px">
+       <input class="gc-switch-input" type="checkbox" name="updates" checked>
+       <span class="gc-switch-track" aria-hidden="true"></span><span>Helpful notifications</span>
+      </label>
+      <button class="gc-button" data-variant="primary" type="submit">Create workspace</button>
+    </form>
+   </article>
+   <article class="specimen">
+    <div class="specimen-meta"><span>GC / NAVIGATION</span><span class="sample-tag">C31</span></div>
+    <h3>Content in context.</h3><p>Arrows, Home and End move through this accessible tab group.</p>
+    <div id="example-tablist" class="gc-tabs" role="tablist" aria-label="Workspace information">
+      <button id="tab-overview" class="gc-tab" role="tab" type="button" aria-selected="true" aria-controls="panel-overview">Overview</button>
+      <button id="tab-activity" class="gc-tab" role="tab" type="button" aria-selected="false" aria-controls="panel-activity" tabindex="-1">Activity</button>
+      <button id="tab-details" class="gc-tab" role="tab" type="button" aria-selected="false" aria-controls="panel-details" tabindex="-1">Details</button>
+    </div>
+    <section id="panel-overview" class="gc-tabpanel" role="tabpanel" aria-labelledby="tab-overview" tabindex="0"><strong>Overview</strong><p>At a glance. Your workspace stays focused on what matters.</p></section>
+    <section id="panel-activity" class="gc-tabpanel" role="tabpanel" aria-labelledby="tab-activity" tabindex="0" hidden><strong>Activity</strong><p>A place for recent changes and new conversations.</p></section>
+    <section id="panel-details" class="gc-tabpanel" role="tabpanel" aria-labelledby="tab-details" tabindex="0" hidden><strong>Details</strong><p>Precise information, without unnecessary chrome.</p></section>
+   </article>
+   <article class="specimen">
+    <div class="specimen-meta"><span>GC / FEEDBACK</span><span class="sample-tag">O46 · O47</span></div>
+    <h3>Say exactly what happened.</h3><p>Color is a supporting cue, not the only message.</p>
+    <div class="gc-banner" data-intent="success" role="status"><strong>✓ All changes saved</strong><p>Your workspace is up to date.</p></div>
+    <div class="gc-banner" data-intent="warning" style="margin-block:12px"><strong>! Review required</strong><p>One setting needs your attention.</p></div>
+    <button class="gc-button" type="button" data-variant="secondary" id="show-toast">Show notification</button>
+   </article>
+  </div>
+ </section>
+ <section class="lab-section" id="materials" aria-labelledby="materials-title">
+  <header class="section-head"><div><p class="eyebrow">03 / LAYERS</p><h2 id="materials-title">Depth has a reason.</h2></div><p>Canvas sets the scene. Surface carries information. Lens holds temporary interaction.</p></header>
+  <div class="material-scene">
+   <div class="material-card"><span class="eyebrow">SURFACE</span><h3>Clarity comes first.</h3><p>Content is solid and easy to read. Depth belongs to the tools that help you act.</p></div>
+   <div class="gc-lens floating-control"><span aria-hidden="true">✧</span><span>Lens controls</span><button class="gc-button" data-variant="primary" id="lens-apply">Apply</button></div>
+  </div>
+ </section>
+ <p class="candidate-note">Design specification candidate · Web component primitives are experimental · Not yet a production component library or accessibility certification.</p>
+</main>
+<footer><a href="../docs/GC_UI_1_0_SPECIFICATION.md">GC UI specification</a> · <a href="../docs/ACCESSIBILITY_RELEASE.md">Release criteria</a> · GoreeCloud © 2026</footer>
+</div>
+<dialog class="gc-dialog" id="confirm-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-description">
+ <div class="gc-dialog-header"><h2 id="dialog-title">Delete this example?</h2></div>
+ <div class="gc-dialog-content" id="dialog-description">This is a local demonstration. It does not delete any real data.</div>
+ <div class="gc-dialog-footer">
+  <button type="button" class="gc-button" data-variant="outline" data-gc-dialog-close>Cancel</button>
+  <button type="button" class="gc-button" data-variant="danger" id="confirm-delete">Delete example</button>
+ </div>
+</dialog>
+<div id="toast-region" class="gc-toast-region"></div>
+</body></html>
