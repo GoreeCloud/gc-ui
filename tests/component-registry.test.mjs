@@ -23,7 +23,7 @@ test('all catalog rows are uniquely mirrored in the machine-readable component r
 });
 test('implementation claims are specific, experimental, and traceable to source files',()=>{
  const implemented=registry.components.filter(c=>c.webStatus==='experimental');
- assert.equal(implemented.length,24);
+ assert.equal(implemented.length,28);
  assert.equal(registry.components.filter(c=>c.webStatus==='stable').length,0);
  for(const component of registry.components){
   assert.equal(component.nativeStatus,'specified');
