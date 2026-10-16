@@ -32,3 +32,14 @@ test('native controls remain keyboard visible and styled with semantic roles',()
   assert.match(style,/\.gc-range:focus-visible/);
   assert.match(style,/@media\(forced-colors:active\)/);
 });
+
+test('action menus ship fully styled in reusable component CSS',()=>{
+ for(const selector of ['.gc-menu-anchor','.gc-menu{','.gc-menu[hidden]', '[role=menuitemcheckbox]','[role=menuitemradio]','.gc-menu-divider']){
+  assert.ok(style.includes(selector),'missing reusable menu selector '+selector);
+ }
+ const lab=readFileSync(new URL('../lab/primitives.css',import.meta.url),'utf8');
+ assert.ok(!lab.includes('.gc-menu{'),'menu implementation may not live only in lab CSS');
+});
+test('compact buttons meet the system touch target baseline',()=>{
+ assert.match(style,/\.gc-button\[data-size=small\]\{min-block-size:44px/);
+});
