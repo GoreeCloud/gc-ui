@@ -137,3 +137,6 @@ GC UI's official v1 identity (app icon, transparent symbol and outlined light/da
 
 ### Accessibility smoke check
 The browser pipeline includes four pinned axe-core WCAG A/AA checks as well as interaction and visual capture tests. This does not constitute WCAG certification; inconclusive color contrast / ARIA checks are retained for manual review. See [testing guidance](docs/TESTING.md).
+
+### Latest stabilization checkpoint
+The [concurrent stabilization QA report](docs/QA_CONCURRENT_STABILIZATION_2026-10-16.md) documents laptop-verified 66 core tests, 22 Chromium and 22 Firefox interactions, 10 axe accessibility state screens, 10 screenshot captures, and a verified successful three-job GitHub Actions run. GoreeCloud UI remains an unpublished experimental alpha; screen-reader/device signoff is still outstanding.
