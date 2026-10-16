@@ -24,14 +24,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
 @media(max-width:850px){.glyph-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:470px){.glyph-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.glyph-card{min-height:92px}}
 
-.gc-menu-anchor{position:relative;display:inline-block;max-width:100%}
-.gc-menu{position:absolute;inset-inline-start:0;inset-block-start:calc(100% + 8px);z-index:15;min-width:min(270px,calc(100vw - 80px));max-width:320px;padding:6px;display:grid;gap:2px}
-.gc-menu[hidden]{display:none!important}
-.gc-menu [role=menuitem]{display:flex;align-items:center;min-block-size:44px;inline-size:100%;font:inherit;font-size:14px;font-weight:550;text-align:start;background:transparent;color:var(--gc-v1-color-on-surface);border:0;border-radius:12px;padding:9px 12px;cursor:pointer}
-.gc-menu [role=menuitem]:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:-3px;background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container)}
-.gc-menu [role=menuitem][aria-disabled=true]{opacity:.55;cursor:not-allowed}
-.gc-menu-divider{height:1px;background:var(--gc-v1-color-outline);margin:6px 8px}
-@media(forced-colors:active){.gc-menu [role=menuitem]:focus-visible{background:Highlight;color:HighlightText;outline-color:Highlight}}
+/* GC UI menu primitives are now shipped by styles/gc.v1.components.css. */
 
 .setting-note{display:block;margin-top:9px;font-size:12px;line-height:1.5;color:var(--gc-v1-color-on-surface-muted)}
 
