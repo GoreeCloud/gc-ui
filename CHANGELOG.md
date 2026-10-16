@@ -6,7 +6,8 @@ GC UI is an original independent design system. This changelog tracks implementa
 - Added the [Forms Lab](lab/forms.html) with four experimental patterns: F10 Text area, F11 Search field, F22 Form validation summary, and O53 Empty state.
 - Registry maturity now reads **28 experimental**, **35 specification-only**, **0 stable** (63 documented patterns).
 - Stabilized tab initialization with ARIA-disabled selected items and guarded toast timers against detached historical events.
-- Expanded Node and browser regression coverage, automated forms accessibility states, and screenshot fixtures. The [forms contract](docs/FORMS_CONTRACT.md) documents the interaction boundaries and open manual QA.
+- Expanded Node and browser regression coverage, automated forms accessibility states, and screenshot fixtures. **153 total test executions passed** locally (72 Node, 28 Chromium, 28 Firefox, 13 axe, 12 visual capture) with a [successful three-job GitHub Actions run](https://github.com/GoreeCloud/gc-ui/actions/runs/38976905865).
+- Fixed the previously visible unfocused forms skip link and doubled Chromium search clear icons after inspecting light/dark screenshots. See [QA checkpoint](docs/QA_FORMS_2026-10-16.md). The [forms contract](docs/FORMS_CONTRACT.md) documents the interaction boundaries and open manual QA.
 - No package release or native platform adapter was published.
 
 ## Concurrent stabilization checkpoint — 2026-10-16
