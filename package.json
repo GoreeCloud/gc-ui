@@ -25,7 +25,11 @@
     "./css/components": "./styles/gc.v1.components.css",
     "./icons": "./assets/gc-glyphs.svg",
     "./registry": "./registry/components.v1.json",
-    "./css/navigation": "./styles/gc.v1.navigation.css"
+    "./css/navigation": "./styles/gc.v1.navigation.css",
+    "./brand/icon": "./assets/gc-mark.svg",
+    "./brand/symbol": "./assets/gc-symbol.svg",
+    "./brand/logo": "./assets/gc-logo.svg",
+    "./brand/logo-dark": "./assets/gc-logo-dark.svg"
   },
   "files": [
     "src",
@@ -37,7 +41,11 @@
     "README.md",
     "docs",
     "registry/components.v1.json",
-    "styles/gc.v1.navigation.css"
+    "styles/gc.v1.navigation.css",
+    "assets/gc-mark.svg",
+    "assets/gc-symbol.svg",
+    "assets/gc-logo.svg",
+    "assets/gc-logo-dark.svg"
   ],
   "sideEffects": [
     "./styles/*.css"
