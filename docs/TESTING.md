@@ -1,0 +1,46 @@
+# GC UI — Verification and Quality Gates
+**Status:** 0.2.0-alpha.1 working agreement. This document distinguishes test execution from accessibility or visual signoff.
+
+## 1. Source-level checks (dependency-free)
+Run `npm run check` from the repository root. It runs:
+- `npm run tokens:check`: regenerates token CSS and compares byte-for-byte with `styles/gc.v1.generated.css`.
+- `npm test`: Node tests for color roles, high-contrast and forced-color mapping, theme runtime, menus, tabs, dialogs, native component semantics, icon sprite structure, type/package exports, and implementation-registry traceability.
+- `npm run audit:colors`: samples 361 hexadecimal seed colors in both appearances (722 generated schemes), checks foreground and background pairs, baseline accent pairings and high contrast.
+- `node tests/check-lab-references.mjs`: rejects broken local asset references in the three browser labs.
+The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
+
+## 2. Browser interaction checks (Playwright)
+The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
+```sh
+npm install --no-save --no-package-lock @playwright/test@1.64.1
+npx playwright install chromium
+npm run test:e2e
+```
+The Playwright config starts a local Python static server, so no production deployment is needed. Supported smoke scenarios: native checkboxes/radios, toggle button labeling, focus/keyboard tabs, menu keyboard behavior and Escape focus recovery, light/dark and forced-colors preference changes, high-contrast precedence over curated palettes, native progress and disclosure, catalog search/status filtering, custom seed generation, and compact 320px layouts.
+
+## 3. Visual evidence
+`e2e/visual-capture.spec.mjs` captures **five screenshot fixtures** on Chromium:
+- components lab, desktop light, 1440x900
+- components lab, desktop dark, 1440x900
+- components lab, high-contrast dark, 1440x900
+- components lab, compact light, 375x812
+- component registry, desktop, 1440x900
+
+GitHub Actions uploads these as browser QA evidence. The screenshot artifacts have **no approved visual baseline** and must be reviewed by a human before considering typography, spacing, optical geometry, or Lens effects stable.
+
+## 4. Manual accessibility and UX gates (not complete)
+- VoiceOver/Safari, NVDA/Chrome+Firefox, TalkBack/Chrome, keyboard-only.
+- Screen-reader verbosity and focus history when menus/dialogs open and close.
+- Test 200% and 400% zoom including keyboard occlusion and focus visibility.
+- Motion/transparency reduction, forced colors, high contrast and dark mode.
+- RTL layout and directional navigation, long translations, touch, stylus and remote.
+- Lens material over worst-case photographs/video, including moving saturation and specular highlights.
+- Native TV, spatial, wearable and foldable device testing after adapters exist.
+
+## 5. Release labels
+- **Specified:** design contract exists, implementation may not.
+- **Experimental:** functioning reference exists, not audited or stable.
+- **Beta:** framework packaging and broad browser/AT testing with known limitations documented.
+- **Stable:** supported API, audit evidence, visual approval, representative-platform tests and published migration/release notes.
+
+Only `registry/components.v1.json` is authoritative for component maturity. Do not update the registry without a source implementation, a lab example and a test. CI success is a prerequisite for release, not sufficient proof of WCAG conformance.
