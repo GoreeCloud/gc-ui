@@ -57,3 +57,6 @@ Run `npm run test:e2e` to execute the 17 interaction scenarios first, followed b
 
 ## Firefox engine smoke testing
 Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 17 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
+
+## Automated accessibility smoke gate
+`npm run test:e2e:accessibility` runs pinned axe-core 4.10.3 on the four GC UI labs using Chromium and the WCAG 2.0/2.1 A/AA rule tags. Run `npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3` first. Confirmed axe violations fail; inconclusive checks and details are attached to the Playwright report as JSON for manual review. This is not a conformance claim, and CSS gradients, translucent materials, actual assistive technology, and touch hardware require manual evaluation. Full `npm run test:e2e` now runs 20 interaction tests, 4 automated accessibility screens, and 8 visual capture tests in separate stages. Firefox runs the interaction subset.
