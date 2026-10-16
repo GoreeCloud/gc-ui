@@ -78,3 +78,23 @@ test('accessibility fallback and reference lab exist',()=>{
   assert.match(demo,/aria-live="polite"/);
   assert.match(demo,/data-gc-accent/);
 });
+
+test('high-contrast foreground roles meet >=4.5:1 and boundaries >=3:1',()=>{
+ for(const mode of ['light','dark']){
+  const scheme=registry.color.highContrast[mode];
+  for(const [bg,fg] of [...bodyPairs,['primary','onPrimary'],['primaryContainer','onPrimaryContainer']]){
+    const value=contrast(color(scheme[bg]),color(scheme[fg]));
+    assert.ok(value>=4.5,mode+' high contrast '+fg+' on '+bg+': '+value.toFixed(2));
+  }
+  for(const role of ['outline','outlineStrong','divider','focusRing']){
+    const ratio=contrast(color(scheme.surface),color(scheme[role]));
+    assert.ok(ratio>=3,mode+' high contrast '+role+': '+ratio.toFixed(2));
+  }
+ }
+});
+test('forced-colors overrides cover every public semantic role',()=>{
+ for(const role of Object.keys(registry.color.light)){
+  const cssName=role.replace(/([a-z0-9])([A-Z])/g,'$1-$2').toLowerCase();
+  assert.match(generated,new RegExp('--gc-v1-color-'+cssName+': (?:Canvas|CanvasText|ButtonText|Highlight|HighlightText|LinkText) !important;'));
+ }
+});
