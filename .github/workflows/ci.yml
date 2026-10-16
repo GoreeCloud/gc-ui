@@ -29,6 +29,11 @@ jobs:
           node --check lab/primitives.mjs
           node --check lab/catalog.mjs
           node --check lab/adaptive.mjs
+          node --check playwright.config.mjs
+          node --check e2e/gc-ui.spec.mjs
+          node --check e2e/visual-capture.spec.mjs
+          node --check e2e/adaptive.spec.mjs
+          node --check e2e/adaptive-visual.spec.mjs
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs
           node --check src/index.mjs
