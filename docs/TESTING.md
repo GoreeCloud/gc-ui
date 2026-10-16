@@ -10,6 +10,7 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
+The alpha suite currently defines 17 interaction smoke scenarios across Components, Foundations, Registry and Adaptive labs, plus two screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
 The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
 ```sh
 npm install --no-save --no-package-lock @playwright/test@1.64.1
@@ -45,3 +46,5 @@ GitHub Actions uploads these as browser QA evidence. The screenshot artifacts ha
 - **Stable:** supported API, audit evidence, visual approval, representative-platform tests and published migration/release notes.
 
 Only `registry/components.v1.json` is authoritative for component maturity. Do not update the registry without a source implementation, a lab example and a test. CI success is a prerequisite for release, not sufficient proof of WCAG conformance.
+
+For adaptive navigation contract details, see [Adaptive shell architecture](ADAPTIVE_SHELL.md). Review all eight screenshots for overflow, hierarchy, focus boundaries and dark/high-contrast usability.
