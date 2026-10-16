@@ -35,7 +35,7 @@ test('empty state contains an explanation and reset action',()=>{
 });
 
 test('shared form styles hide skip links until keyboard focus and avoid duplicate search clear glyphs',()=>{
- assert.match(css,/\.gc-skip-link\{position:fixed/);
+ assert.match(css,/\.gc-skip-link\{position:absolute/);
  assert.match(css,/\.gc-skip-link:focus\{inset-block-start:12px/);
  assert.match(css,/\.gc-search-input::-webkit-search-cancel-button/);
 });
