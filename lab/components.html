@@ -111,6 +111,43 @@
       </div>
     </div>
    </article>
+
+   <article class="specimen" id="native-controls">
+    <div class="specimen-meta"><span>GC / NATIVE CONTROLS</span><span class="sample-tag">A02 · F13 · F14</span></div>
+    <h3>Precise, naturally.</h3><p>Native input semantics preserve keyboard and assistive technology behaviors.</p>
+    <div class="gc-native-controls">
+      <button id="favorite-workspace" class="gc-icon-button" type="button" aria-label="Favorite workspace" aria-pressed="false" title="Favorite workspace">
+        <svg width="24" height="24" aria-hidden="true"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg>
+      </button>
+      <span class="gc-field-description">Toggle the favorite action</span>
+    </div>
+    <label class="gc-checkbox"><input type="checkbox" id="gc-show-tips" checked> Show helpful tips</label>
+    <fieldset class="gc-radio-group">
+      <legend>Workspace visibility</legend>
+      <label class="gc-radio"><input type="radio" name="gc-visibility" value="private" checked> Private</label>
+      <label class="gc-radio"><input type="radio" name="gc-visibility" value="team"> Team</label>
+    </fieldset>
+   </article>
+   <article class="specimen" id="data-controls">
+    <div class="specimen-meta"><span>GC / DATA &amp; FEEDBACK</span><span class="sample-tag">F16 · C23 · C32 · O52</span></div>
+    <h3>Progress you can read.</h3><p>Numbers and text give meaning to states without relying on color.</p>
+    <div class="gc-card">
+      <div class="gc-card-head"><strong>Workspace setup</strong><span class="gc-badge" data-intent="info">In progress</span></div>
+      <label for="gc-completion" class="gc-field-label">Completion <output id="gc-completion-value" for="gc-completion">64%</output></label>
+      <input class="gc-range" id="gc-completion" type="range" min="0" max="100" step="1" value="64">
+      <progress class="gc-progress" id="gc-completion-progress" max="100" value="64" aria-label="Workspace setup progress"></progress>
+    </div>
+   </article>
+   <article class="specimen" id="disclosures">
+    <div class="specimen-meta"><span>GC / DISCLOSURE</span><span class="sample-tag">C30</span></div>
+    <h3>Details when needed.</h3><p>Native disclosure works with pointer, Enter, Space, and assistive navigation.</p>
+    <details class="gc-accordion"><summary>Why choose solid Lens?</summary>
+      <div class="gc-accordion-content">Solid material maintains stable readability over unpredictable images and respects reduced-transparency preferences.</div>
+    </details>
+    <details class="gc-accordion"><summary>How are accent colors applied?</summary>
+      <div class="gc-accordion-content">Semantic color roles pair backgrounds with readable foregrounds. Accessibility overrides always take precedence.</div>
+    </details>
+   </article>
   </div>
  </section>
  <section class="lab-section" id="materials" aria-labelledby="materials-title">
