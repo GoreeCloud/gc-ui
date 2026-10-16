@@ -27,13 +27,21 @@ async function audit(page,testInfo,label){
   result.id+': '+result.nodes.map(node=>node.target.join(' ')).join(', ')
  ),'Confirmed accessibility violations for '+label).toEqual([]);
 }
-for(const name of ['v1','components','catalog','adaptive']){
+for(const name of ['v1','components','catalog','adaptive','forms']){
  test('axe WCAG A/AA baseline — '+name,async({page},testInfo)=>{
   await page.goto('/lab/'+name+'.html');
   await audit(page,testInfo,name);
  });
 }
 const states=[
+ {name:'forms-invalid-summary',page:'forms',width:375,setup:async page=>{
+  await page.getByRole('button',{name:'Create brief'}).click();
+  await expect(page.locator('#brief-errors')).toBeVisible();
+ }},
+ {name:'forms-search-suggestions',page:'forms',width:375,setup:async page=>{
+  await page.locator('#project-search').fill('d');
+  await expect(page.locator('#project-suggestions')).toBeVisible();
+ }},
  {name:'adaptive-sheet-open',page:'adaptive',width:375,setup:async page=>{
   await page.locator('#open-details').click();
   await expect(page.locator('#details-sheet')).toBeVisible();
