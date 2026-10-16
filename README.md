@@ -124,3 +124,5 @@ Both reference laboratories now use `createThemeController()`. Custom seed color
 
 ### Adaptive navigation and overlays
 The adaptive reference shell lives at `/lab/adaptive.html`, demonstrating a semantic app bar, compact bottom navigation, medium-width navigation rail, expanded sidebar, breadcrumbs and a modal side sheet backed by native `<dialog>`. The reusable styles are exported at `@goreecloud/gc-ui/css/navigation`; theme and focus behavior reuse `src/gc-theme-runtime.mjs` and `src/gc-interactions.mjs`. The machine-readable catalog records 24 experimental web patterns and 39 specification-only patterns (0 stable). This is a demonstration, not an app router or supported production shell.
+
+See [Adaptive shell architecture](docs/ADAPTIVE_SHELL.md) for breakpoint, route/focus and modal-sheet contracts. Automated browser checks cover the three navigation modes and accessibility behavior; they are not a substitute for device testing.
