@@ -6,7 +6,7 @@ GC UI is a separate design system, built independently and without Glaze UI depe
 
 ## Version
 
-**0.1.0 — Foundation Alpha**. This is an exploratory component playground and initial token contract, **not** a stable or published production library.
+**0.2.0-alpha.1 — Design-System Implementation Alpha**. This experimental source package extends the original 0.1 playground with typed modules, high-contrast themes, working components, and a machine-readable 63-component registry. It is **not published or stable**.
 
 ## Run locally
 
@@ -77,14 +77,17 @@ The existing v0.1 playground remains an **alpha reference**; the new v1 document
 8. [Developer implementation and token governance](docs/TOKENS_IMPLEMENTATION.md).
 9. [Original GC icon set and usage](docs/ICONS_LIBRARY.md).
 10. [Release plan and production-quality gates](docs/RELEASE_PLAN_V1.md).
+11. [Experimental web API and quick start](docs/WEB_API_ALPHA.md).
+12. [Machine-readable component registry](registry/components.v1.json).
 
 ### Live reference labs
-Open [GC UI v1 Design Lab](lab/v1.html) and [GC UI Components Lab](lab/components.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
+Open [GC UI v1 Design Lab](lab/v1.html), [GC UI Components Lab](lab/components.html), and [Searchable Component Registry](lab/catalog.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
 
 ~~~bash
 npm run dev
 # Open http://localhost:4173/lab/v1.html
 # Or http://localhost:4173/lab/components.html
+# Or http://localhost:4173/lab/catalog.html
 npm test
 npm run tokens:check
 ~~~
@@ -102,3 +105,6 @@ npm run tokens:check
 - [Token/contrast tests](tests/v1-contract.test.mjs); GitHub Actions checks the generated output.
 
 **Implementation boundaries:** CSS variables, reference lab and automated checks exist. Production React/Vue/SwiftUI/Compose component libraries, a fully audited wallpaper color system (experimental validated custom-seed theming is implemented), all 63 components, original complete SVG icon set, native platform adapters, screenshot baselines and manual assistive-technology audits remain to be built and verified. See [accessibility and release requirements](docs/ACCESSIBILITY_RELEASE.md). Do not market candidate documentation as application-level WCAG conformance.
+
+### Component delivery status
+The v1 component catalog contains **63 specified patterns**, represented in `registry/components.v1.json`. At the current alpha milestone, **10** have experimental web references, **53** remain specification-only, and **0** are stable components. Browse them at `/lab/catalog.html`; the `tests/component-registry.test.mjs` check prevents docs/registry drift. The original v0.1 alpha playground remains available at the site root. Package publishing remains disabled.
