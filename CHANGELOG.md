@@ -2,6 +2,12 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Native-first settings and recovery wave — 2026-10-16
+- Extended the [Forms Lab](lab/forms.html) with F12 Password reveal, F17 native Select, F21 bounded Stepper/number and O54 Error/retry state.
+- Hardened search against IME composition events; added associated source/browser tests, stateful axe screens, and a compact error/retry visual capture.
+- Current catalog maturity: **32 experimental**, **31 specified**, **0 stable** (63 total). All examples remain local-only; none are stable component exports.
+- See [forms reference contract](docs/FORMS_CONTRACT.md) for accessible labels, bounds, recovery behavior, and pending manual validation.
+
 ## Native-first forms and component lifecycle wave — 2026-10-16
 - Added the [Forms Lab](lab/forms.html) with four experimental patterns: F10 Text area, F11 Search field, F22 Form validation summary, and O53 Empty state.
 - Registry maturity now reads **28 experimental**, **35 specification-only**, **0 stable** (63 documented patterns).
