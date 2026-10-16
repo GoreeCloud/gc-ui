@@ -50,6 +50,9 @@ try{
  const data=await response.json();
  if(!Array.isArray(data.components)||data.components.length!==63)throw new Error('Registry is missing entries.');
  components=data.components;
+ document.getElementById('catalog-total').textContent=String(components.length);
+ document.getElementById('catalog-experimental').textContent=String(components.filter(c=>c.webStatus==='experimental').length);
+ document.getElementById('catalog-stable').textContent=String(components.filter(c=>c.webStatus==='stable').length);
  render();
 }catch(error){
  results.textContent='Unable to load the component registry: '+error.message;
