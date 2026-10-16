@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" style="position:absolute;width:0;height:0">
+  <title>GC UI original outline glyphs — 24-unit grid</title>
+  <defs>
+    <symbol id="gc-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m5.2 12.3 4.35 4.3L18.9 7.4"/></symbol>
+    <symbol id="gc-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M6.2 6.2 17.8 17.8M17.8 6.2 6.2 17.8"/></symbol>
+    <symbol id="gc-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="10.8" cy="10.8" r="6.5"/><path d="m16.1 16.1 4.1 4.1"/></symbol>
+    <symbol id="gc-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h15M13.5 6l6 6-6 6"/></symbol>
+    <symbol id="gc-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M19.5 12h-15M10.5 6l-6 6 6 6"/></symbol>
+    <symbol id="gc-layers" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="m12 3.6 8.4 4.5L12 12.6 3.6 8.1 12 3.6Z"/><path d="m4 12.2 8 4.4 8-4.4M4 16.5l8 4.2 8-4.2"/></symbol>
+    <symbol id="gc-spark" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.7c.8 5.9 3.3 8.5 9.3 9.3-6 .8-8.5 3.4-9.3 9.3-.8-5.9-3.3-8.5-9.3-9.3 6-.8 8.5-3.4 9.3-9.3Z"/></symbol>
+    <symbol id="gc-sliders" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3.8 6h16.4M3.8 12h16.4M3.8 18h16.4"/><circle cx="9" cy="6" r="2" fill="var(--gc-icon-surface, white)"/><circle cx="15.2" cy="12" r="2" fill="var(--gc-icon-surface, white)"/><circle cx="10.4" cy="18" r="2" fill="var(--gc-icon-surface, white)"/></symbol>
+    <symbol id="gc-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4.5v15M4.5 12h15"/></symbol>
+    <symbol id="gc-minus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 12h15"/></symbol>
+    <symbol id="gc-warning" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M10.2 4.3a2.1 2.1 0 0 1 3.6 0l7.4 13a2.05 2.05 0 0 1-1.8 3.1H4.6a2.05 2.05 0 0 1-1.8-3.1l7.4-13Z"/><path d="M12 9v5.2M12 17.2v.1"/></symbol>
+    <symbol id="gc-info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11.1v5.6M12 7.5v.1"/></symbol>
+  </defs>
+</svg>
