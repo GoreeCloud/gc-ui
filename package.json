@@ -22,7 +22,8 @@
     "./tokens": "./tokens/gc.v1.tokens.json",
     "./css/tokens": "./styles/gc.v1.generated.css",
     "./css/components": "./styles/gc.v1.components.css",
-    "./icons": "./assets/gc-glyphs.svg"
+    "./icons": "./assets/gc-glyphs.svg",
+    "./registry": "./registry/components.v1.json"
   },
   "files": [
     "src",
@@ -32,7 +33,8 @@
     "tokens/gc.v1.tokens.json",
     "assets/gc-glyphs.svg",
     "README.md",
-    "docs"
+    "docs",
+    "registry/components.v1.json"
   ],
   "sideEffects": [
     "./styles/*.css"
