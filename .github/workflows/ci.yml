@@ -49,11 +49,11 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test responsive browser behaviors
         run: npm run test:e2e
-      - name: Upload failure traces
-        if: failure()
+      - name: Upload visual captures and failure traces
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gc-ui-playwright-failures
+          name: gc-ui-browser-qa-evidence
           path: |
             test-results/
             playwright-report/
