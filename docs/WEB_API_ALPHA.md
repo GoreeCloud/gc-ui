@@ -63,3 +63,6 @@ No bundled npm release, no complete 63-component implementation, no native Swift
 
 ## Machine-readable component registry
 `registry/components.v1.json` is a complete 63-entry reflection of `docs/COMPONENT_CATALOG_V1.md`. Each pattern declares its documented anatomy and behavior, category, experimental or specification-only web maturity, and any source/example pointers. The [Component Registry Explorer](../lab/catalog.html) supports search and filters. `tests/component-registry.test.mjs` prevents undocumented status inflation and mismatches between the manifest and written catalog.
+
+## Web component stylesheet completeness
+Menu positioning and all three ARIA menu item variants (`menuitem`, `menuitemcheckbox`, `menuitemradio`) are styled by the exported `./css/components` entry, not only the laboratory stylesheet. Wrap a menu in `.gc-menu-anchor` for absolute positioning relative to its trigger; pair `.gc-menu` with `.gc-lens` only when material treatment is appropriate. Small buttons retain a minimum 44px block target height.
