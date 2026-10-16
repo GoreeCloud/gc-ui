@@ -59,7 +59,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   };
   const menuKeys=event=>{
     if(event.key==='Escape'){event.preventDefault();hide();return}
-    if(event.key==='Tab'){hide({returnFocus:false});return}
+    if(event.key==='Tab')return; // Let native Tab focus navigation complete; focusout dismisses the menu.
     const candidates=enabled(),current=candidates.indexOf(document.activeElement);
     if(!candidates.length)return;
     const next=nextMenuIndex(event.key,current===-1?0:current,candidates.length);
@@ -81,10 +81,14 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   const outside=event=>{
     if(open&&!menu.contains(event.target)&&!trigger.contains(event.target))hide({returnFocus:false});
   };
+  const focusout=event=>{
+    if(open&&!menu.contains(event.relatedTarget))hide({returnFocus:false});
+  };
   trigger.addEventListener('click',triggerClick);
   trigger.addEventListener('keydown',triggerKeys);
   menu.addEventListener('keydown',menuKeys);
   menu.addEventListener('click',menuClick);
+  menu.addEventListener('focusout',focusout);
   document.addEventListener('pointerdown',outside);
   return {
     open:show,close:hide,isOpen:()=>open,
@@ -95,6 +99,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       trigger.removeEventListener('keydown',triggerKeys);
       menu.removeEventListener('keydown',menuKeys);
       menu.removeEventListener('click',menuClick);
+      menu.removeEventListener('focusout',focusout);
       document.removeEventListener('pointerdown',outside);
       destroyed=true;
     }
