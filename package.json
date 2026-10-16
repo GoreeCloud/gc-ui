@@ -24,7 +24,8 @@
     "./css/tokens": "./styles/gc.v1.generated.css",
     "./css/components": "./styles/gc.v1.components.css",
     "./icons": "./assets/gc-glyphs.svg",
-    "./registry": "./registry/components.v1.json"
+    "./registry": "./registry/components.v1.json",
+    "./css/navigation": "./styles/gc.v1.navigation.css"
   },
   "files": [
     "src",
@@ -35,7 +36,8 @@
     "assets/gc-glyphs.svg",
     "README.md",
     "docs",
-    "registry/components.v1.json"
+    "registry/components.v1.json",
+    "styles/gc.v1.navigation.css"
   ],
   "sideEffects": [
     "./styles/*.css"
