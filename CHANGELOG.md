@@ -2,6 +2,14 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Concurrent stabilization checkpoint — 2026-10-16
+- Restored the 44px mobile appearance toggle, fixed logical RTL side-sheet anchoring, and improved compact badge wrapping.
+- Expanded the browser quality gate to **22 Chromium interactions, 22 Firefox interactions, 10 axe-core state audits, and 10 screenshot captures**.
+- Added a nonpublishing npm archive contract check: 42 files, all 14 required export/metadata paths included and tests/labs excluded.
+- **66 Node tests** and all browser tests passed locally (130 automated executions total); **7,988** opaque role-contrast comparisons passed.
+- Independently verified [GitHub Actions success for source commit d2d1e55](https://github.com/GoreeCloud/gc-ui/actions/runs/38973136941): all three jobs passed.
+- See [concurrent stabilization report](docs/QA_CONCURRENT_STABILIZATION_2026-10-16.md). These checks do not establish visual or WCAG certification.
+
 ## Unreleased alpha development — 2026-10-16
 ### Verified on a connected laptop and phone
 - **55/55 Node tests** and **19/19 Playwright Chromium tests** passed locally, alongside an opaque-color audit with **7,988 checks and no failures**.
