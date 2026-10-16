@@ -39,3 +39,26 @@ test('shared form styles hide skip links until keyboard focus and avoid duplicat
  assert.match(css,/\.gc-skip-link:focus\{inset-block-start:12px/);
  assert.match(css,/\.gc-search-input::-webkit-search-cancel-button/);
 });
+
+test('native passphrase, select and bounded number field carry explicit semantics',()=>{
+ assert.match(html,/id="demo-passphrase"[^>]+type="password"[^>]+autocomplete="new-password"/);
+ assert.match(html,/id="passphrase-reveal"[^>]+aria-label="Reveal sample passphrase" aria-pressed="false"/);
+ assert.match(html,/<select id="demo-density"/);
+ assert.match(html,/id="demo-collaborators"[^>]+type="number" min="1" max="12" step="1"/);
+ assert.match(script,/reveal\.setAttribute\('aria-pressed'/);
+ assert.match(script,/quantity\.focus\(\)/);
+ assert.match(css,/\.gc-passphrase-wrap/);
+ assert.match(css,/\.gc-stepper-button:focus-visible/);
+});
+test('retry has an alert and focus recovery, and simulated failure does not send data',()=>{
+ assert.match(html,/id="recovery-error"[^>]+role="alert"/);
+ assert.match(html,/id="recovery-retry"/);
+ assert.match(html,/id="recovery-success"[^>]+role="status"/);
+ assert.match(script,/simulate\.focus\(\)/);
+ assert.doesNotMatch(script,/\bfetch\s*\(|XMLHttpRequest|sendBeacon/);
+});
+test('composition input does not trigger keyboard suggestion selection prematurely',()=>{
+ assert.match(script,/compositionstart/);
+ assert.match(script,/compositionend/);
+ assert.match(script,/if\(composing\|\|event\.isComposing\|\|event\.keyCode===229\)return/);
+});
