@@ -25,6 +25,6 @@ test('all advertised exports resolve to committed files',()=>{
 test('type declarations document every public function',()=>{
  const types=readFileSync(new URL('../types/index.d.ts',import.meta.url),'utf8');
  for(const [name,value] of Object.entries(gc)){
-  if(typeof value==='function')assert.match(types,new RegExp('function '+name+'\\('),'missing type for '+name);
+  if(typeof value==='function')assert.match(types,new RegExp('function '+name+'(?:<[^>]*>)?\\('),'missing type for '+name);
  }
 });
