@@ -2,7 +2,7 @@
   "name": "@goreecloud/gc-ui",
   "version": "0.2.0-alpha.1",
   "private": true,
-  "description": "GC UI — GoreeCloud's original adaptive interface design language",
+  "description": "GoreeCloud UI (GC UI) — GoreeCloud's original adaptive interface design language",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
