@@ -1,5 +1,6 @@
 import {createThemeController} from '../src/gc-theme-runtime.mjs';
 import {initTabs,initDialog,createToast,runAsyncAction} from '../src/gc-interactions.mjs';
+import {initMenu} from '../src/gc-menu.mjs';
 
 const theme=createThemeController();
 const toast=createToast(document.getElementById('toast-region'));
@@ -70,3 +71,9 @@ document.getElementById('confirm-delete').addEventListener('click',()=>{
  dialog.close();
  toast.show('Example cleared. No data was deleted.');
 });
+
+const actionsMenu=initMenu(
+ document.getElementById('gc-file-action-trigger'),
+ document.getElementById('gc-file-actions'),
+ {onSelect:item=>toast.show(item.textContent.trim()+' — demonstration only.')}
+);
