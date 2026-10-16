@@ -28,5 +28,7 @@ jobs:
           node --check lab/v1.js
           node --check lab/primitives.mjs
           node --check scripts/build-v1-tokens.mjs
+          node --check scripts/audit-colors.mjs
+          node --check src/index.mjs
       - name: Resolve reference lab local assets
         run: node tests/check-lab-references.mjs
