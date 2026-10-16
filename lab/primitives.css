@@ -32,3 +32,6 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
 .gc-native-controls .gc-field-description{max-width:210px}
 .gc-card .gc-field-label{display:flex;justify-content:space-between;gap:12px}
 .gc-card output{font-weight:750;color:var(--gc-v1-color-primary)}
+
+/* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
+.identity img.logo{display:block;object-fit:contain;flex:none;background:none;padding:0}
