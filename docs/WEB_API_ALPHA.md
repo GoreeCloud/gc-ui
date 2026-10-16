@@ -66,3 +66,8 @@ No bundled npm release, no complete 63-component implementation, no native Swift
 
 ## Web component stylesheet completeness
 Menu positioning and all three ARIA menu item variants (`menuitem`, `menuitemcheckbox`, `menuitemradio`) are styled by the exported `./css/components` entry, not only the laboratory stylesheet. Wrap a menu in `.gc-menu-anchor` for absolute positioning relative to its trigger; pair `.gc-menu` with `.gc-lens` only when material treatment is appropriate. Small buttons retain a minimum 44px block target height.
+
+## Adaptive navigation and native side sheet (experimental)
+The exported `./css/navigation` sheet styles `.gc-app-bar`, `.gc-nav-bottom` (compact viewports below 600 CSS px), `.gc-nav-rail` (600–1199), `.gc-nav-sidebar` (1200+), `.gc-breadcrumbs`, and `.gc-side-sheet`. The reference at `lab/adaptive.html` uses real links with `aria-current=page`, labeled navigation landmarks, and a native modal `<dialog>` controlled through `initDialog`. Route changes in this lab only update demonstration content and are not a general-purpose router.
+
+The app bar and navigation CSS intentionally stay in a separate stylesheet so simple components don't require shell layout primitives. Screen reader, focus, contrast and viewport verification remains part of pre-stable release gating.
