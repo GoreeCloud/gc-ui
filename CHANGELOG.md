@@ -6,7 +6,9 @@ GC UI is an original independent design system. This changelog tracks implementa
 - Extended the [Forms Lab](lab/forms.html) with F12 Password reveal, F17 native Select, F21 bounded Stepper/number and O54 Error/retry state.
 - Hardened search against IME composition events; added associated source/browser tests, stateful axe screens, and a compact error/retry visual capture. The Forms Lab's offscreen skip link also stays outside scrolled full-page screenshots while remaining visible on focus.
 - Current catalog maturity: **32 experimental**, **31 specified**, **0 stable** (63 total). All examples remain local-only; none are stable component exports.
-- See [forms reference contract](docs/FORMS_CONTRACT.md) for accessible labels, bounds, recovery behavior, and pending manual validation.
+- Verified **173 total automated executions** (75 Node, 35 Chromium, 35 serial Firefox, 15 axe, 13 screenshots) and [all three GitHub Actions jobs](https://github.com/GoreeCloud/gc-ui/actions/runs/38978706036).
+- Firefox smoke runs use one worker by default on laptops to avoid concurrent browser resource contention.
+- See [forms reference contract](docs/FORMS_CONTRACT.md) and [native forms QA checkpoint](docs/QA_NATIVE_FORMS_2026-10-16.md) for accessible labels, bounds, recovery and remaining manual validation.
 
 ## Native-first forms and component lifecycle wave — 2026-10-16
 - Added the [Forms Lab](lab/forms.html) with four experimental patterns: F10 Text area, F11 Search field, F22 Form validation summary, and O53 Empty state.
