@@ -27,3 +27,9 @@ test('labs retain compact GC UI branding while using the full name in document t
   assert.match(markup,/<strong>GC UI<\/strong>/,path);
  }
 });
+
+test('adaptive client-side route titles preserve the full product name',()=>{
+ const script=read('lab/adaptive.mjs');
+ assert.match(script,/document\.title='GoreeCloud UI · '/);
+ assert.doesNotMatch(script,/document\.title='GC UI · '/);
+});
