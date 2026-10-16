@@ -81,3 +81,6 @@ Native dialog controllers close any modal that is still open when destroyed, unr
 The `./css/components` stylesheet includes `.gc-textarea`, `.gc-field-foot`, `.gc-search-input`, `.gc-search-suggestions`, `.gc-validation-summary`, and `.gc-empty-state`. Native controls handle editing and basic focus semantics; the keyboard suggestion controller and linked error summary live in `lab/forms.mjs` as demo code, **not** as an exported reusable JavaScript form controller. Applications must adapt the demo without claiming a framework-integrated component.
 
 See [Forms and search interaction contract](FORMS_CONTRACT.md) for keyboard, failure, accessibility and privacy notes.
+
+## Experimental native-first settings and recovery
+The exported `./css/components` file now styles `.gc-passphrase-wrap`, `.gc-passphrase-reveal`, `.gc-native-select`, `.gc-stepper`, `.gc-stepper-button` and `.gc-recovery-error`. These complement the Forms Lab. Password reveal, select updates, stepper bounds, and retry-state logic live in `lab/forms.mjs` **only** and are not API exports. The reference includes IME-aware search composition guards but still requires manual AT and multilingual keyboard testing. See [Forms contract](FORMS_CONTRACT.md).
