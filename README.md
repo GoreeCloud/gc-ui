@@ -149,3 +149,6 @@ The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 
 The Forms Lab additionally covers IME-safe search and simulated error/retry behavior. The controller source is experimental demonstration code, not a stable public form API.
 
 The [native forms stabilization checkpoint](docs/QA_NATIVE_FORMS_2026-10-16.md) records 173 passing source/browser/axe/visual tests and verified [three-job CI success](https://github.com/GoreeCloud/gc-ui/actions/runs/38978706036). The module remains experimental, not stable or published.
+
+### Physical Android Firefox QA
+The [real-device Android Firefox checkpoint](docs/QA_ANDROID_FIREFOX_REAL_DEVICE_2026-10-16.md) verifies touch navigation, theme, native Details/Back, on-screen keyboard, local form validation, and landscape adaptation on an authorized USB phone. It also documents a **physically discovered and fixed footer touch-clearance issue**. The implementation passed **175 automated test executions** and a [successful three-job CI run](https://github.com/GoreeCloud/gc-ui/actions/runs/38979945053). Real TalkBack and cross-device signoff are still open.
