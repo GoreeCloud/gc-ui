@@ -2,6 +2,17 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Unreleased alpha development — 2026-10-16
+### Added
+- Eight native-first reference component treatments: icon buttons, checkboxes, radio groups, sliders, cards, accordions, badges and determinate progress.
+- Machine-readable maturity registry updated to 18 experimental and 45 specification-only patterns.
+- Seven Chromium smoke tests in `e2e/gc-ui.spec.mjs`, with a pinned Playwright CI job and failure traces.
+### Fixed
+- Public tab controller rejects selections outside the tablist, reacts to disabled-state changes, and supports vertical tab orientation.
+- Icon-button toggle retains a stable accessible name while `aria-pressed` expresses its state.
+### Not verified yet
+- Full Chromium CI success, cross-browser manual behavior, and real assistive-technology use are release gates, not completed claims.
+
 ## 0.2.0-alpha.1 — 2026-10-16
 ### Added
 - Independent versioned design specification and 63-pattern component catalog with platform, interaction and accessibility guidance.
