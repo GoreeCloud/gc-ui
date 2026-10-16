@@ -3,26 +3,29 @@ on:
   push:
     branches: [main]
   pull_request:
+    branches: [main]
 permissions:
   contents: read
 jobs:
-  tokens-and-contracts:
+  core:
+    name: Tokens, color, interactions, and reference integrity
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Set up Node
-        uses: actions/setup-node@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Verify generated tokens
-        run: npm run tokens:check
-      - name: Execute foundation and theme tests
-        run: npm test
-      - name: Check module syntax
+      - name: Validate generated tokens and run tests
+        run: npm run check
+      - name: Check source module syntax
         run: |
           node --check src/main.js
           node --check src/gc-color-engine.mjs
+          node --check src/gc-theme-runtime.mjs
+          node --check src/gc-interactions.mjs
           node --check lab/v1.js
+          node --check lab/primitives.mjs
           node --check scripts/build-v1-tokens.mjs
+      - name: Resolve reference lab local assets
+        run: node tests/check-lab-references.mjs
