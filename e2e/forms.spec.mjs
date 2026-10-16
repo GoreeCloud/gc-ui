@@ -40,9 +40,9 @@ test('search keyboard suggestions select with Enter, Escape closes first',async(
  await page.goto('/lab/forms.html');
  const search=page.getByRole('combobox',{name:'Search projects'});
  await expect(page.locator('#project-result-count')).toHaveText('6 projects found');
- await search.fill('de');
+ await search.fill('d');
  await expect(search).toHaveAttribute('aria-expanded','true');
- await expect(page.getByRole('option')).toHaveCount(2);
+ await expect(page.getByRole('option')).toHaveCount(3);
  await search.press('ArrowDown');
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
  await search.press('ArrowDown');
