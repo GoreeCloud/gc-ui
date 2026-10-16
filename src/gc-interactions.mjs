@@ -30,7 +30,7 @@ export function initTabs(tablist,{rtl=false}={}){
   });
   if(focus)tab.focus();
  }
- activate(tabs.find(tab=>tab.getAttribute('aria-selected')==='true'&&!tab.disabled)||enabled()[0]);
+ activate(tabs.find(tab=>tab.getAttribute('aria-selected')==='true'&&enabled().includes(tab))||enabled()[0]);
  const click=e=>{const tab=e.target.closest?.('[role=tab]');if(tabs.includes(tab))activate(tab)};
  const keydown=e=>{
   const tab=e.target.closest?.('[role=tab]'),candidates=enabled(),current=candidates.indexOf(tab);
@@ -90,8 +90,8 @@ export function createToast(region){
   const el=region.ownerDocument.createElement('div');
   el.className='gc-toast';el.textContent=String(message);region.appendChild(el);active=el;
   if(duration>0)timer=setTimeout(dismiss,duration);
-  const pause=()=>{if(timer!==null){clearTimeout(timer);timer=null}};
-  const resume=()=>{if(timer===null&&duration>0)timer=setTimeout(dismiss,duration)};
+  const pause=()=>{if(active===el&&timer!==null){clearTimeout(timer);timer=null}};
+  const resume=()=>{if(active===el&&timer===null&&duration>0)timer=setTimeout(dismiss,duration)};
   el.addEventListener('pointerenter',pause);el.addEventListener('pointerleave',resume);
   el.addEventListener('focusin',pause);el.addEventListener('focusout',resume);
   return ()=>{if(active===el)dismiss()};
