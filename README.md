@@ -82,13 +82,14 @@ The existing v0.1 playground remains an **alpha reference**; the new v1 document
 13. [Verification and quality gates](docs/TESTING.md).
 
 ### Live reference labs
-Open [GC UI v1 Design Lab](lab/v1.html), [GC UI Components Lab](lab/components.html), and [Searchable Component Registry](lab/catalog.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
+Open [GC UI v1 Design Lab](lab/v1.html), [GC UI Components Lab](lab/components.html), [Adaptive Shell Lab](lab/adaptive.html), and [Searchable Component Registry](lab/catalog.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
 
 ~~~bash
 npm run dev
 # Open http://localhost:4173/lab/v1.html
 # Or http://localhost:4173/lab/components.html
 # Or http://localhost:4173/lab/catalog.html
+# Or http://localhost:4173/lab/adaptive.html
 npm test
 npm run tokens:check
 ~~~
@@ -108,7 +109,7 @@ npm run tokens:check
 **Implementation boundaries:** CSS variables, reference lab and automated checks exist. Production React/Vue/SwiftUI/Compose component libraries, a fully audited wallpaper color system (experimental validated custom-seed theming is implemented), all 63 components, original complete SVG icon set, native platform adapters, screenshot baselines and manual assistive-technology audits remain to be built and verified. See [accessibility and release requirements](docs/ACCESSIBILITY_RELEASE.md). Do not market candidate documentation as application-level WCAG conformance.
 
 ### Component delivery status
-The v1 component catalog contains **63 specified patterns**, represented in `registry/components.v1.json`. At the current alpha milestone, **18** have experimental web references, **45** remain specification-only, and **0** are stable components. Browse them at `/lab/catalog.html`; the `tests/component-registry.test.mjs` check prevents docs/registry drift. The original v0.1 alpha playground remains available at the site root. Package publishing remains disabled.
+The v1 component catalog contains **63 specified patterns**, represented in `registry/components.v1.json`. At the current alpha milestone, **24** have experimental web references, **39** remain specification-only, and **0** are stable components. Browse them at `/lab/catalog.html`; the `tests/component-registry.test.mjs` check prevents docs/registry drift. The original v0.1 alpha playground remains available at the site root. Package publishing remains disabled.
 
 ### Current engineering wave — verified source milestone
 GC UI now includes native-first experimental styles and Components Lab examples for icon buttons, checkboxes, radio groups, sliders, cards, accordions, badges and determinate progress, alongside the original ten web references. The component registry is the authoritative maturity inventory. Keyboard controller updates reject foreign tab selection, skip newly disabled tabs, and handle vertical tab orientation. A separate Chromium Playwright smoke suite covers interactive workflows; its GitHub Actions job is configured but remote execution and manual AT audits must be verified before claiming browser conformance.
@@ -120,3 +121,6 @@ GitHub Actions now includes an independent Chromium Playwright job. The suite co
 
 ### Shared theme and keyboard interaction hardening
 Both reference laboratories now use `createThemeController()`. Custom seed colors are not applied as inline overrides while system or user high contrast is active; the effective material is visibly announced in the Foundations Lab. Command menus are distributed in the component CSS, suppress duplicate native button activation, and permit ordinary Tab / Shift+Tab focus movement before focus-exit dismissal. Browser regression scenarios and unit/source contracts protect these behaviors.
+
+### Adaptive navigation and overlays
+The adaptive reference shell lives at `/lab/adaptive.html`, demonstrating a semantic app bar, compact bottom navigation, medium-width navigation rail, expanded sidebar, breadcrumbs and a modal side sheet backed by native `<dialog>`. The reusable styles are exported at `@goreecloud/gc-ui/css/navigation`; theme and focus behavior reuse `src/gc-theme-runtime.mjs` and `src/gc-interactions.mjs`. The machine-readable catalog records 24 experimental web patterns and 39 specification-only patterns (0 stable). This is a demonstration, not an app router or supported production shell.
