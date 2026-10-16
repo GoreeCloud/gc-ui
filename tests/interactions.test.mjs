@@ -28,3 +28,21 @@ test('async actions block duplicate activation and restore state on failure',asy
  await assert.rejects(runAsyncAction(button,async()=>{throw Error('failed')}),/failed/);
  assert.equal(button.disabled,false);
 });
+
+test('stale toast dismiss handles do not remove a newer message',async()=>{
+ const elements=[];
+ const region={
+  ownerDocument:{createElement:()=>({listeners:{},addEventListener(key,fn){this.listeners[key]=fn},remove(){const index=elements.indexOf(this);if(index!==-1)elements.splice(index,1)}})},
+  setAttribute(){},
+  appendChild(item){elements.push(item)}
+ };
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const toast=createToast(region);
+ const dismissOld=toast.show('first',{duration:0});
+ toast.show('second',{duration:0});
+ dismissOld();
+ assert.equal(elements.length,1);
+ assert.equal(elements[0].textContent,'second');
+ toast.dismiss();
+ assert.equal(elements.length,0);
+});
