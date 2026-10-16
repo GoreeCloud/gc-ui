@@ -20,6 +20,8 @@ test('navigation preserves route and its active destination when resizing',async
   await page.locator('.gc-nav-bottom [data-gc-route="activity"]').click();
   await expect(page).toHaveURL(/#activity$/);
   await expect(page.getByRole('heading',{name:'Your activity.'})).toBeVisible();
+  await expect(page.getByRole('heading',{name:'Your activity.'})).toBeFocused();
+  await expect(page.locator('#route-announcement')).toHaveText('Now viewing Your activity.');
   await page.setViewportSize({width:1440,height:900});
   await expect(page.locator('.gc-nav-sidebar [data-gc-route="activity"]')).toHaveAttribute('aria-current','page');
   await expect(page.locator('.gc-nav-bottom')).toBeHidden();
