@@ -19,6 +19,9 @@ function syncControls(){
   button.setAttribute('aria-pressed',String(button.dataset.themeAccent===preference.accent));
  });
  document.getElementById('lens-switch').checked=preference.material==='translucent';
+ document.getElementById('contrast-switch').checked=preference.contrast==='high';
+ document.getElementById('contrast-state').textContent=resolved.contrast==='high'?'High-contrast colors are active.':'Standard contrast; follows system settings.';
+ document.getElementById('material-state').textContent=resolved.material==='solid'?'Effective material: Solid.':'Effective material: Translucent Lens.';
  const label=document.getElementById('lens-switch').closest('label');
  label.title=resolved.material==='solid'&&preference.material==='translucent'
   ?'Solid Lens is active because of system accessibility settings':'';
@@ -32,6 +35,9 @@ document.querySelectorAll('[data-theme-accent]').forEach(button=>{
 });
 document.getElementById('lens-switch').addEventListener('change',event=>{
  theme.set({material:event.target.checked?'translucent':'solid'});
+});
+document.getElementById('contrast-switch').addEventListener('change',event=>{
+ theme.set({contrast:event.target.checked?'high':'system'});
 });
 syncControls();
 
