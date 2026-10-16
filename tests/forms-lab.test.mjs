@@ -33,3 +33,9 @@ test('empty state contains an explanation and reset action',()=>{
  assert.match(css,/\.gc-empty-state\[hidden\]/);
  assert.match(css,/\.gc-validation-summary\[hidden\]/);
 });
+
+test('shared form styles hide skip links until keyboard focus and avoid duplicate search clear glyphs',()=>{
+ assert.match(css,/\.gc-skip-link\{position:fixed/);
+ assert.match(css,/\.gc-skip-link:focus\{inset-block-start:12px/);
+ assert.match(css,/\.gc-search-input::-webkit-search-cancel-button/);
+});
