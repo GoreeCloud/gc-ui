@@ -45,3 +45,6 @@ All examples run entirely in the browser. They do not fetch or store workspace c
 Manual VoiceOver, TalkBack and NVDA testing; mobile virtual keyboard behavior; IME composition; large translated strings and RTL typing; error-summary verbosity; slow-network/async search for a real data-backed consumer; and visual approval remain incomplete.
 
 This work does **not** convert F10, F11, F22 or O53 to stable. The catalog can declare them experimental once coded behavior, accessible example, and automated tests are present.
+
+## Review-driven usability corrections
+The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the Chromium/WebKit built-in search cancel glyph is hidden in the experiment so there is exactly one intentionally labeled clear control. These are supported by source and browser regressions; the broader app-specific search accessibility contract still requires live screen-reader review.
