@@ -96,3 +96,14 @@ test('native dialog ignores a second opener when already open and lets close res
  assert.equal(other.focused,0);
  controller.destroy();
 });
+
+test('initially ARIA-disabled selected tabs fall back to a valid enabled tab',()=>{
+ const {tabs,panels,group}=tabsFixture();
+ tabs[0].ariaDisabled=true;
+ const controller=initTabs(group);
+ assert.equal(tabs[1].selected,'true');
+ assert.equal(tabs[0].selected,'false');
+ assert.equal(panels[0].hidden,true);
+ assert.equal(panels[1].hidden,false);
+ controller.destroy();
+});
