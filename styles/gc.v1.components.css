@@ -85,3 +85,32 @@
 .gc-menu-divider{height:1px;background:var(--gc-v1-color-outline);margin:6px 8px}
 @media(forced-colors:active){.gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio]):focus-visible{background:Highlight;color:HighlightText;outline-color:Highlight}}
 @media(forced-colors:active){.gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio])[aria-disabled=true]{color:GrayText;opacity:1}.gc-menu-divider{background:CanvasText}}
+
+
+/* Native-first forms and searchable content patterns (experimental). */
+.gc-textarea{box-sizing:border-box;display:block;inline-size:100%;min-block-size:130px;resize:vertical;font:inherit;font-size:14px;line-height:1.6;color:var(--gc-v1-color-on-surface);background:var(--gc-v1-color-surface);border:1px solid var(--gc-v1-color-outline);border-radius:15px;padding:12px 14px;max-inline-size:100%}
+.gc-textarea:focus-visible,.gc-search-input:focus-visible,.gc-search-clear:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px}
+.gc-textarea[aria-invalid=true],.gc-search-input[aria-invalid=true]{border:2px solid var(--gc-v1-color-danger)}
+.gc-field-foot{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;margin-top:8px}
+.gc-field-count{font-size:12px;flex:none;font-variant-numeric:tabular-nums;color:var(--gc-v1-color-on-surface-muted)}
+.gc-validation-summary{border:2px solid var(--gc-v1-color-danger);border-radius:18px;background:var(--gc-v1-color-danger-container);color:var(--gc-v1-color-on-danger-container);padding:18px 20px;margin-bottom:24px}
+.gc-validation-summary h3{font-size:17px;margin:0 0 10px}
+.gc-validation-summary ul{margin:0;padding-inline-start:22px}
+.gc-validation-summary li+li{margin-top:5px}
+.gc-validation-summary a{color:inherit;text-underline-offset:3px;font-weight:650}
+.gc-validation-summary:focus{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:3px}
+.gc-search-anchor{position:relative;inline-size:100%}
+.gc-search-wrap{display:flex;align-items:center;inline-size:100%;position:relative}
+.gc-search-input{font:inherit;font-size:14px;inline-size:100%;min-inline-size:0;min-block-size:48px;box-sizing:border-box;color:var(--gc-v1-color-on-surface);background:var(--gc-v1-color-surface);border:1px solid var(--gc-v1-color-outline);border-radius:15px;padding:10px 50px 10px 14px}
+.gc-search-clear{position:absolute;inset-inline-end:3px;display:grid;place-items:center;inline-size:42px;block-size:42px;border:0;border-radius:12px;background:transparent;color:var(--gc-v1-color-on-surface);cursor:pointer;font-size:24px}
+.gc-search-clear:hover{background:var(--gc-v1-color-surface-tonal)}
+.gc-search-suggestions{position:absolute;z-index:25;inset-inline:0;inset-block-start:calc(100% + 5px);list-style:none;padding:6px;margin:0;max-block-size:260px;overflow:auto;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);border:1px solid var(--gc-v1-color-outline);border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.12)}
+.gc-search-suggestions [role=option]{padding:11px 13px;border-radius:10px;min-block-size:44px;display:flex;align-items:center;cursor:pointer}
+.gc-search-suggestions [role=option]:hover,.gc-search-suggestions [aria-selected=true]{background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container)}
+.gc-search-count{color:var(--gc-v1-color-on-surface-muted);font-size:13px}
+.gc-empty-state{padding:35px 22px;border:1px dashed var(--gc-v1-color-outline);background:var(--gc-v1-color-surface);border-radius:22px;text-align:center;color:var(--gc-v1-color-on-surface)}
+.gc-empty-symbol{inline-size:52px;block-size:52px;display:grid;place-items:center;margin:auto;border-radius:18px;background:var(--gc-v1-color-secondary-container);color:var(--gc-v1-color-on-secondary-container);font-size:28px}
+.gc-empty-state h3{font-size:20px;margin:18px 0 8px}
+.gc-empty-state p{color:var(--gc-v1-color-on-surface-muted);font-size:14px;margin:0 0 20px}
+.gc-validation-summary[hidden],.gc-search-suggestions[hidden],.gc-search-clear[hidden],.gc-empty-state[hidden],.gc-banner[hidden]{display:none!important}
+@media(forced-colors:active){.gc-textarea,.gc-search-input,.gc-search-suggestions,.gc-empty-state,.gc-validation-summary{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important}.gc-search-suggestions [aria-selected=true]{background:Highlight;color:HighlightText}.gc-search-clear{color:ButtonText}.gc-validation-summary a{color:LinkText}}
