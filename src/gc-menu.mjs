@@ -70,7 +70,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     }
   };
   function select(item,event){
-    if(!enabled().includes(item))return;
+    if(!open||!enabled().includes(item))return;
     hide();
     onSelect(item,event);
   }
