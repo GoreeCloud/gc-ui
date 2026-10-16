@@ -1,50 +1,51 @@
-import {generateTheme} from '../src/gc-color-engine.mjs';
-(() => {
-  const root=document.documentElement;
-  const allowed={mode:['auto','light','dark'],accent:['iris','lagoon','ember','moss','custom'],material:['translucent','solid']};
-  const key='gc-ui-v1:';
-  const seedInput=document.getElementById('custom-seed');
-  const seedPattern=/^#[0-9a-fA-F]{6}$/;
-  let seed='#5145D9';
-  const applied=new Set();
-  const toKebab=s=>s.replace(/([a-z0-9])([A-Z])/g,'$1-$2').toLowerCase();
-  const get=(k)=>{try{return localStorage.getItem(key+k)}catch{return null}};
-  const set=(k,v)=>{try{localStorage.setItem(key+k,v)}catch{}};
-  const media=window.matchMedia('(prefers-color-scheme: dark)');
-  let choice={mode:get('mode')||'auto',accent:get('accent')||'iris',material:get('material')||'translucent'};
-  seed=seedPattern.test(get('seed')||'')?get('seed'):'#5145D9';
-  seedInput.value=seed;
-  for(const k of Object.keys(choice))if(!allowed[k].includes(choice[k]))choice[k]=allowed[k][0];
-  const effective=()=>choice.mode==='auto'?(media.matches?'dark':'light'):choice.mode;
-  function render(){
-    root.dataset.gcMode=effective();root.dataset.gcAccent=choice.accent;root.dataset.gcMaterial=choice.material;
-    for(const name of applied)root.style.removeProperty('--gc-v1-color-'+toKebab(name));
-    applied.clear();
-    if(choice.accent==='custom'){
-      const scheme=generateTheme(seed,effective());
-      for(const [name,value] of Object.entries(scheme.roles)){
-        root.style.setProperty('--gc-v1-color-'+toKebab(name),value);
-        applied.add(name);
-      }
-    }
-    seedInput.dataset.selected=String(choice.accent==='custom');
-    for(const k of Object.keys(choice))document.querySelectorAll('[data-'+k+']').forEach(btn=>btn.setAttribute('aria-pressed',String(btn.getAttribute('data-'+k)===choice[k])));
-  }
-  for(const kind of Object.keys(choice))document.querySelectorAll('[data-'+kind+']').forEach(btn=>{
-    btn.addEventListener('click',()=>{choice[kind]=btn.getAttribute('data-'+kind);set(kind,choice[kind]);render()});
+import {createThemeController} from '../src/gc-theme-runtime.mjs';
+
+/** The foundation and component laboratories share a single accessibility-aware theme contract. */
+const theme=createThemeController();
+const root=document.documentElement;
+const seedInput=document.getElementById('custom-seed');
+const materialState=document.getElementById('material-effective');
+
+function syncControls(){
+ const preference=theme.get(),resolved=theme.resolved();
+ seedInput.value=preference.seed;
+ seedInput.dataset.selected=String(preference.accent==='custom');
+ for(const key of ['mode','accent','material']){
+  document.querySelectorAll('[data-'+key+']').forEach(button=>{
+   button.setAttribute('aria-pressed',String(button.getAttribute('data-'+key)===preference[key]));
   });
-  seedInput.addEventListener('input',()=>{
-    if(!seedPattern.test(seedInput.value))return;
-    seed=seedInput.value;choice.accent='custom';set('seed',seed);set('accent','custom');render();
-  });
-  media.addEventListener?.('change',()=>{if(choice.mode==='auto')render()});
-  render();
-  const feedback=document.getElementById('feedback');
-  document.getElementById('create').addEventListener('click',()=>{
-    const name=document.getElementById('project-name').value.trim();
-    if(!name){feedback.textContent='Enter a project name first.';document.getElementById('project-name').focus();return;}
-    feedback.textContent='“'+name+'” created in this local-only reference demo.';
-  });
-  document.getElementById('reset').addEventListener('click',()=>{document.getElementById('project-name').value='';document.getElementById('updates').checked=false;feedback.textContent='Fields cleared.';});
-  document.getElementById('lens-action').addEventListener('click',()=>{feedback.textContent='Lens action activated.';document.getElementById('controls').scrollIntoView({behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});});
-})();
+ }
+ materialState.textContent=resolved.material==='solid'
+  ?'Effective material: Solid'+(preference.material==='translucent'?' (accessibility preference overrides translucency).':'.')
+  :'Effective material: Translucent Lens.';
+}
+root.addEventListener('gc-theme-change',syncControls);
+for(const kind of ['mode','accent','material']){
+ document.querySelectorAll('[data-'+kind+']').forEach(button=>{
+  button.addEventListener('click',()=>theme.set({[kind]:button.getAttribute('data-'+kind)}));
+ });
+}
+seedInput.addEventListener('input',()=>{
+ if(/^#[0-9a-fA-F]{6}$/.test(seedInput.value)){
+  theme.set({accent:'custom',seed:seedInput.value});
+ }
+});
+syncControls();
+
+const feedback=document.getElementById('feedback');
+document.getElementById('create').addEventListener('click',()=>{
+ const field=document.getElementById('project-name');
+ const name=field.value.trim();
+ if(!name){feedback.textContent='Enter a project name first.';field.focus();return}
+ feedback.textContent='“'+name+'” created in this local-only reference demo.';
+});
+document.getElementById('reset').addEventListener('click',()=>{
+ document.getElementById('project-name').value='';
+ document.getElementById('updates').checked=false;
+ feedback.textContent='Fields cleared.';
+});
+document.getElementById('lens-action').addEventListener('click',()=>{
+ feedback.textContent='Lens action activated.';
+ const reduced=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+ document.getElementById('controls').scrollIntoView({behavior:reduced?'instant':'smooth'});
+});
