@@ -136,8 +136,19 @@
       "category": "Input",
       "anatomy": "label, expanding editor, count and help",
       "behavior": "resizable unless product-specific editor; no unexpected autocorrect of data",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-textarea",
+          "gc-field-foot"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "F11",
@@ -145,8 +156,19 @@
       "category": "Input",
       "anatomy": "label, suggestions, clear, scope, submit",
       "behavior": "keyboard suggestion list pattern; Escape clears popup first; announce results count",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-search-input",
+          "gc-search-suggestions"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "F12",
@@ -282,8 +304,18 @@
       "category": "Input",
       "anatomy": "heading, linked errors, corrective help",
       "behavior": "submit focuses summary when blocking, field IDs linked; preserve entered data",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-validation-summary"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "C23",
@@ -722,8 +754,18 @@
       "category": "Feedback and overlays",
       "anatomy": "illustration, title, explanation, next step",
       "behavior": "informative, not celebratory when blocked; one relevant action",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-empty-state"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/forms.mjs"
+        ],
+        "example": "lab/forms.html"
+      }
     },
     {
       "id": "O54",
