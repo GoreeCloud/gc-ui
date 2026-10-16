@@ -10,24 +10,24 @@ const pinned={
  'assets/gc-logo-dark.svg':'9c36aec87107552fa703798a2b09adb610175572'
 };
 function blobId(data){
- return createHash('sha1').update('blob '+data.length+'\\0').update(data).digest('hex');
+ return createHash('sha1').update('blob '+data.length+'\0').update(data).digest('hex');
 }
-test('GC UI consumer branding vectors match their immutable canonical Git blob IDs',()=>{
+test('GC UI consumer vectors exactly match canonical branding Git blob IDs',()=>{
  for(const [path,expected] of Object.entries(pinned)){
   const source=readFileSync(new URL('../'+path,import.meta.url));
-  assert.equal(blobId(source),expected,path+' drifted from official branding source');
+  assert.equal(blobId(source),expected,path+' drifted from branding source');
   const svg=source.toString('utf8');
-  assert.match(svg,/<svg\\s[^>]*viewBox=/);
-  assert.doesNotMatch(svg,/<script\\b|<foreignObject\\b|<text\\b|<image\\b/i);
+  assert.match(svg,/<svg\s[^>]*viewBox=/);
+  assert.doesNotMatch(svg,/<script\b|<foreignObject\b|<text\b|<image\b/i);
  }
 });
-test('the official icon is used as favicon and visible identity on all GC UI labs',()=>{
+test('official icon is used in all GC UI laboratory headers and favicons',()=>{
  const index=readFileSync(new URL('../index.html',import.meta.url),'utf8');
- assert.match(index,/assets\\/gc-mark\\.svg/);
+ assert.match(index,/assets\/gc-mark\.svg/);
  for(const page of ['lab/v1.html','lab/components.html','lab/catalog.html','lab/adaptive.html']){
   const html=readFileSync(new URL('../'+page,import.meta.url),'utf8');
-  assert.match(html,/href="\\.\\.\\/assets\\/gc-mark\\.svg"/);
-  assert.match(html,/src="\\.\\.\\/assets\\/gc-mark\\.svg"/);
-  assert.doesNotMatch(html,/<span class="(?:logo|brandmark|gc-shell-mark)" aria-hidden="true">G<\\/span>/);
+  assert.match(html,/href="\.\.\/assets\/gc-mark\.svg"/);
+  assert.match(html,/src="\.\.\/assets\/gc-mark\.svg"/);
+  assert.doesNotMatch(html,/<span class="(?:logo|brandmark|gc-shell-mark)" aria-hidden="true">G<\/span>/);
  }
 });
