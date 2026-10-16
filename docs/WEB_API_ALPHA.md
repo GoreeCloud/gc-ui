@@ -76,3 +76,8 @@ Full responsive shell, navigation accessibility, native modal and test requireme
 
 ## Component lifecycle stabilization
 Native dialog controllers close any modal that is still open when destroyed, unregister listeners, and return focus to the original trigger where possible; calls to `open()` or `close()` after destruction throw. Tab groups reject duplicate tabpanel references and respect both native `disabled` and `aria-disabled="true"`, including changes made after initialization. The browser and Node suites cover these contracts.
+
+## Experimental forms reference
+The `./css/components` stylesheet includes `.gc-textarea`, `.gc-field-foot`, `.gc-search-input`, `.gc-search-suggestions`, `.gc-validation-summary`, and `.gc-empty-state`. Native controls handle editing and basic focus semantics; the keyboard suggestion controller and linked error summary live in `lab/forms.mjs` as demo code, **not** as an exported reusable JavaScript form controller. Applications must adapt the demo without claiming a framework-integrated component.
+
+See [Forms and search interaction contract](FORMS_CONTRACT.md) for keyboard, failure, accessibility and privacy notes.
