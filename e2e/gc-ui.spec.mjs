@@ -73,3 +73,24 @@ test('custom palette seed is applied in the foundation lab',async({page})=>{
   await expect(page.locator('html')).toHaveAttribute('data-gc-accent','custom');
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode',/light|dark/);
 });
+
+test('high-contrast dark semantic color wins over curated accent',async({page})=>{
+  await page.goto('/lab/components.html');
+  await page.locator('#contrast-switch').check();
+  await page.locator('[data-theme-mode="dark"]').click();
+  await page.locator('[data-theme-accent="lagoon"]').click();
+  await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+  const primary=await page.locator('html').evaluate(node=>
+    getComputedStyle(node).getPropertyValue('--gc-v1-color-primary').trim().toUpperCase()
+  );
+  expect(primary).toBe('#E1DAFF');
+});
+test('responsive labs retain accessible primary controls on narrow screens',async({page})=>{
+  await page.setViewportSize({width:320,height:740});
+  await page.goto('/lab/components.html');
+  await expect(page.getByRole('heading',{name:/Made to feel/i})).toBeVisible();
+  await expect(page.getByRole('button',{name:/Save changes/i})).toBeVisible();
+  await page.goto('/lab/catalog.html');
+  await expect(page.getByRole('heading',{name:/Every detail/i})).toBeVisible();
+  await expect(page.getByRole('searchbox',{name:'Search components'})).toBeVisible();
+});
