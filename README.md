@@ -81,7 +81,8 @@ Open [GC UI v1 Design Lab](lab/v1.html) and [GC UI Components Lab](lab/component
 
 ~~~bash
 npm run dev
-# Open http://localhost:4173/lab/v1.html\n# Or http://localhost:4173/lab/components.html
+# Open http://localhost:4173/lab/v1.html
+# Or http://localhost:4173/lab/components.html
 npm test
 npm run tokens:check
 ~~~
