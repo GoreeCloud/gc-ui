@@ -1,6 +1,8 @@
-# GC UI
+# GoreeCloud UI (GC UI)
 
-**GoreeCloud's original adaptive interface design language.**
+**The original adaptive interface design language for GoreeCloud.**
+
+**GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
 
 GC UI is a separate design system, built independently and without Glaze UI dependencies. Its foundation combines expressive personal color, focused depth, and consistent cross-device interaction. Apple Liquid Glass and Google Material You provide *reference principles*, not source code, branding, or component implementations.
 
