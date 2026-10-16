@@ -145,10 +145,11 @@ test('native Tab and Shift+Tab leave the action menu without trapping focus',asy
   await expect(menu).toBeVisible();
   await page.keyboard.press('Tab');
   await expect(menu).toBeHidden();
-  await expect(page.locator('body')).not.toHaveAttribute('data-gc-menu-trap','true');
+  await expect(page.locator('#favorite-workspace')).toBeFocused();
   await trigger.focus();
   await trigger.press('ArrowUp');
   await expect(menu).toBeVisible();
   await page.keyboard.press('Shift+Tab');
   await expect(menu).toBeHidden();
+  await expect(trigger).toBeFocused();
 });
