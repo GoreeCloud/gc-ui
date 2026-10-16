@@ -56,13 +56,13 @@ test('slider drives native progress and disclosure works with keyboard',async({p
   await summary.press('Enter');
   await expect(page.locator('.gc-accordion').first()).toHaveAttribute('open','');
 });
-test('catalog separates 18 experimental components from 45 specified patterns',async({page})=>{
+test('catalog separates 24 experimental components from 39 specified patterns',async({page})=>{
   await page.goto('/lab/catalog.html');
   await expect(page.locator('#result-message')).toHaveText('63 of 63 patterns shown');
   await page.getByRole('button',{name:'Experimental',exact:true}).click();
-  await expect(page.locator('#result-message')).toHaveText('18 of 63 patterns shown');
+  await expect(page.locator('#result-message')).toHaveText('24 of 63 patterns shown');
   await page.getByRole('button',{name:'Specification only'}).click();
-  await expect(page.locator('#result-message')).toHaveText('45 of 63 patterns shown');
+  await expect(page.locator('#result-message')).toHaveText('39 of 63 patterns shown');
 });
 test('custom palette seed is applied in the foundation lab',async({page})=>{
   await page.goto('/lab/v1.html');
