@@ -76,19 +76,26 @@ The existing v0.1 playground remains an **alpha reference**; the new v1 document
 7. [Accessibility criteria and release gates](docs/ACCESSIBILITY_RELEASE.md).
 8. [Developer implementation and token governance](docs/TOKENS_IMPLEMENTATION.md).
 
-### Live reference lab
-Open [GC UI v1 Lab](lab/v1.html) through a local server. This stand-alone demo consumes the v1 generated token CSS without replacing the original 0.1 playground.
+### Live reference labs
+Open [GC UI v1 Design Lab](lab/v1.html) and [GC UI Components Lab](lab/components.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
 
 ~~~bash
 npm run dev
-# Open http://localhost:4173/lab/v1.html
+# Open http://localhost:4173/lab/v1.html\n# Or http://localhost:4173/lab/components.html
 npm test
 npm run tokens:check
 ~~~
+
+### Concurrent implementation milestone (October 16, 2026)
+- Corrected the custom color engine to reference only generated tonal stops; expanded tests reject undefined semantic role colors.
+- Implemented a dependency-free theme controller for curated/custom accents, auto appearance, solid/translucent selection, and system accessibility overrides.
+- Implemented web interaction bindings for tabs (including RTL keyboard navigation), native dialogs, toasts, and async actions.
+- Added accessible component CSS, interactive Components Lab, and CI checks for all new modules and local assets.
+- Stress-tested 361 seed colors across both appearances: 722 themes and 7,220 foreground pairs met the 4.5:1 contrast threshold. This is not a comprehensive visual or accessibility audit.
 
 ### Machine-readable source
 - [v1 DTCG-style tokens](tokens/gc.v1.tokens.json): semantic light/dark schemes, four accent palettes, typography, space, radius, motion, focus, control geometry.
 - [CSS token compiler](scripts/build-v1-tokens.mjs) and [generated CSS](styles/gc.v1.generated.css).
 - [Token/contrast tests](tests/v1-contract.test.mjs); GitHub Actions checks the generated output.
 
-**Implementation boundaries:** CSS variables, reference lab and automated checks exist. Production React/Vue/SwiftUI/Compose component libraries, a fully audited arbitrary-seed or wallpaper system (the experimental OKLCH seed engine is present), all 63 components, original complete SVG icon set, native platform adapters, screenshot baselines and manual assistive-technology audits remain to be built and verified. See [accessibility and release requirements](docs/ACCESSIBILITY_RELEASE.md). Do not market candidate documentation as application-level WCAG conformance.
+**Implementation boundaries:** CSS variables, reference lab and automated checks exist. Production React/Vue/SwiftUI/Compose component libraries, a fully audited wallpaper color system (experimental validated custom-seed theming is implemented), all 63 components, original complete SVG icon set, native platform adapters, screenshot baselines and manual assistive-technology audits remain to be built and verified. See [accessibility and release requirements](docs/ACCESSIBILITY_RELEASE.md). Do not market candidate documentation as application-level WCAG conformance.
