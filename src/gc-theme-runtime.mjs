@@ -58,7 +58,7 @@ export function createThemeController({
     root.dataset.gcContrast=next.contrast;
     for(const name of overridden)root.style.removeProperty('--gc-v1-color-'+kebab(name));
     overridden.clear();
-    if(next.accent==='custom'){
+    if(next.accent==='custom'&&next.contrast!=='high'&&!system().forcedColors){
       for(const [name,value] of Object.entries(generateTheme(next.seed,next.mode).roles)){
         root.style.setProperty('--gc-v1-color-'+kebab(name),value);
         overridden.add(name);
