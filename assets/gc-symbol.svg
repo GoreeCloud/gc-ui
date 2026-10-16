@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+<title id="title">GC UI official symbol</title>
+<desc id="desc">Two adjoining open letterforms define the GC monogram in iris-blue and clear cyan.</desc>
+<defs><linearGradient id="iris" x1="93" y1="169" x2="255" y2="341" gradientUnits="userSpaceOnUse"><stop stop-color="#5C8BFF"/><stop offset=".52" stop-color="#6564FF"/><stop offset="1" stop-color="#8369F5"/></linearGradient><linearGradient id="aqua" x1="258" y1="326" x2="404" y2="164" gradientUnits="userSpaceOnUse"><stop stop-color="#42E0D1"/><stop offset=".49" stop-color="#44C9F5"/><stop offset="1" stop-color="#8F85FF"/></linearGradient></defs><path d="M222 184c-19-18-37-25-60-24-44 2-74 37-74 87 0 50 32 86 77 86 27 0 51-11 64-30v-42h-49" fill="none" stroke="url(#iris)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M404 187c-19-18-39-27-67-27-46 0-81 38-81 87 0 49 34 86 81 86 28 0 50-10 68-29" fill="none" stroke="url(#aqua)" stroke-width="46" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
