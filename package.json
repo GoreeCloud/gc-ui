@@ -1,15 +1,39 @@
 {
   "name": "@goreecloud/gc-ui",
-  "version": "0.1.0",
+  "version": "0.2.0-alpha.1",
   "private": true,
   "description": "GC UI — GoreeCloud's original adaptive interface design language",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm run tokens:check && npm test",
+    "check": "npm run tokens:check && npm test && node tests/check-lab-references.mjs",
     "tokens:build": "node scripts/build-v1-tokens.mjs",
     "tokens:check": "node scripts/build-v1-tokens.mjs --check"
   },
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./types/index.d.ts",
+      "import": "./src/index.mjs"
+    },
+    "./tokens": "./tokens/gc.v1.tokens.json",
+    "./css/tokens": "./styles/gc.v1.generated.css",
+    "./css/components": "./styles/gc.v1.components.css",
+    "./icons": "./assets/gc-glyphs.svg"
+  },
+  "files": [
+    "src",
+    "types",
+    "styles/gc.v1.generated.css",
+    "styles/gc.v1.components.css",
+    "tokens/gc.v1.tokens.json",
+    "assets/gc-glyphs.svg",
+    "README.md",
+    "docs"
+  ],
+  "sideEffects": [
+    "./styles/*.css"
+  ]
 }
