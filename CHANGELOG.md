@@ -5,8 +5,10 @@ GC UI is an original independent design system. This changelog tracks implementa
 ## Unreleased alpha development — 2026-10-16
 ### Added
 - Eight native-first reference component treatments: icon buttons, checkboxes, radio groups, sliders, cards, accordions, badges and determinate progress.
-- Machine-readable maturity registry updated to 18 experimental and 45 specification-only patterns.
+- Machine-readable maturity registry updated to 24 experimental and 39 specification-only patterns.
 - Twelve Chromium smoke tests in `e2e/gc-ui.spec.mjs`, plus five visual QA screenshots covering desktop light/dark/high-contrast, mobile and the registry, with a pinned Playwright CI job and uploaded evidence.
+- Adaptive navigation and native modal side sheet: app bar, compact bottom nav, medium rail, expanded sidebar, breadcrumbs, and a side-sheet with native dialog semantics.
+- Five adaptive viewport/interaction browser checks and three responsive screenshot fixtures.
 ### Fixed
 - Public tab controller rejects selections outside the tablist, reacts to disabled-state changes, and supports vertical tab orientation.
 - Icon-button toggle retains a stable accessible name while `aria-pressed` expresses its state.
