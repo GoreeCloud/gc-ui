@@ -10,6 +10,10 @@
 |---|---|---|
 | F10 | Text area | Native `<textarea>` with persistent label, 10–280 character example constraint, independent counter, vertical resizing and error description |
 | F11 | Search field | Native search input enhanced as a named ARIA combobox with listbox suggestions, tracked active option, clear action and polite results count |
+| F12 | Password | Native password input, intentional Show/Hide toggle with stable accessible name and `aria-pressed`, no persistence |
+| F17 | Select | Native labeled `<select>`, keyboard/touch semantics preserved and a local-only result status |
+| F21 | Stepper/number | Native bounded `type="number"` (1–12), manual edits and +/- buttons, disabled controls at bounds |
+| O54 | Error/retry state | Informative `role="alert"` for simulated failure, explicit retry and polite recovery confirmation |
 | F22 | Form validation summary | Named focusable group with links to all blocking errors, per-field `aria-invalid`, error/help relationships and preserved entries |
 | O53 | Empty state | Explanatory heading, status context and one clear-filter action when search yields no matching sample results |
 
@@ -31,6 +35,7 @@ All examples run entirely in the browser. They do not fetch or store workspace c
 - `Escape` closes the suggestion list first. When no suggestion list is open, another Escape clears the query.
 - The clear button and empty-state reset both restore the complete result list and focus the search input.
 - No user-authored search data is inserted through HTML parsing: example result and suggestion nodes use `textContent` and DOM creation.
+- IME composition defers filtering and prevents Enter/Escape navigation while the browser is composing characters. `compositionend` re-renders results and suggestions without selecting anything on behalf of the user.
 
 ## Visual and platform behavior
 
@@ -44,7 +49,15 @@ All examples run entirely in the browser. They do not fetch or store workspace c
 
 Manual VoiceOver, TalkBack and NVDA testing; mobile virtual keyboard behavior; IME composition; large translated strings and RTL typing; error-summary verbosity; slow-network/async search for a real data-backed consumer; and visual approval remain incomplete.
 
-This work does **not** convert F10, F11, F22 or O53 to stable. The catalog can declare them experimental once coded behavior, accessible example, and automated tests are present.
+This work does **not** convert F10, F11, F12, F17, F21, F22, O53 or O54 to stable. The catalog can declare them experimental once coded behavior, accessible example, and automated tests are present.
 
 ## Review-driven usability corrections
 The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the Chromium/WebKit built-in search cancel glyph is hidden in the experiment so there is exactly one intentionally labeled clear control. These are supported by source and browser regressions; the broader app-specific search accessibility contract still requires live screen-reader review.
+
+## Password, native select, numeric and recovery contracts
+
+- F12 is explicitly an invented sample passphrase field. The Show/Hide button has a stable accessibility name (`Reveal sample passphrase`) and uses `aria-pressed` to report the reveal state; changing the type preserves the field value. No actual credential should be entered. Never store or transmit the value.
+- F17 prefers the platform-native select for mobile typeahead and accessible option behavior; selection changes only the local demonstration status.
+- F21 allows manual numeric input as well as 48px minimum increment/decrement controls. The specimen normalizes out-of-bounds numbers on change, updates the label/status in a live region and disables buttons at the configured minimum/maximum.
+- O54 explicitly distinguishes a simulated connection failure from actual network traffic. The alert offers one effective retry action. Successful retry hides the error, exposes confirmation as a polite status and returns focus to the stable Simulate button. Existing form content remains untouched.
+- These four references are tracked as **experimental** in the catalog; `lab/forms.mjs` is a specimen controller, not a published JavaScript API.
