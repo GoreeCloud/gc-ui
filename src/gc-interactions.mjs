@@ -18,9 +18,10 @@ export function initTabs(tablist,{rtl=false}={}){
   if(!id||!p||p.getAttribute('role')!=='tabpanel')throw new Error('Each tab needs a matching tabpanel');
   return p;
  });
- const enabled=tabs.filter(tab=>!tab.disabled);
- if(!enabled.length)throw new Error('No enabled tab');
+ const enabled=()=>tabs.filter(tab=>!tab.disabled);
+ if(!enabled().length)throw new Error('No enabled tab');
  function activate(tab,{focus=false}={}){
+  if(!tabs.includes(tab))throw new RangeError('Tab does not belong to the tablist');
   if(tab.disabled)return;
   tabs.forEach((item,index)=>{
    const selected=item===tab;
@@ -28,14 +29,21 @@ export function initTabs(tablist,{rtl=false}={}){
   });
   if(focus)tab.focus();
  }
- activate(tabs.find(tab=>tab.getAttribute('aria-selected')==='true'&&!tab.disabled)||enabled[0]);
- const click=e=>{const tab=e.target.closest('[role=tab]');if(tabs.includes(tab))activate(tab)};
+ activate(tabs.find(tab=>tab.getAttribute('aria-selected')==='true'&&!tab.disabled)||enabled()[0]);
+ const click=e=>{const tab=e.target.closest?.('[role=tab]');if(tabs.includes(tab))activate(tab)};
  const keydown=e=>{
-  const tab=e.target.closest('[role=tab]'),current=enabled.indexOf(tab);
+  const tab=e.target.closest?.('[role=tab]'),candidates=enabled(),current=candidates.indexOf(tab);
   if(current===-1)return;
-  const next=nextTabIndex(e.key,current,enabled.length,{rtl});
+  const vertical=tablist.getAttribute('aria-orientation')==='vertical';
+  let direction=e.key;
+  if(vertical){
+    if(e.key==='ArrowDown')direction='ArrowRight';
+    else if(e.key==='ArrowUp')direction='ArrowLeft';
+    else if(e.key==='ArrowRight'||e.key==='ArrowLeft')return;
+  }else if(e.key==='ArrowUp'||e.key==='ArrowDown')return;
+  const next=nextTabIndex(direction,current,candidates.length,{rtl:vertical?false:rtl});
   if(next===null)return;
-  e.preventDefault();activate(enabled[next],{focus:true});
+  e.preventDefault();activate(candidates[next],{focus:true});
  };
  tablist.addEventListener('click',click);tablist.addEventListener('keydown',keydown);
  return {select:activate,destroy(){tablist.removeEventListener('click',click);tablist.removeEventListener('keydown',keydown)}};
