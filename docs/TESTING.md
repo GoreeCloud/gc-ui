@@ -73,3 +73,6 @@ The [Forms Lab QA checkpoint](QA_FORMS_2026-10-16.md) records the later 72-test 
 Native form extensions add password reveal/visibility checks, select behavior, number bounds and focus recovery, simulated error/retry, and a synthetic IME composition contract. Accessibility screens include revealed sample passphrase and an open retry alert. Real IME keyboard and screen-reader testing is still required.
 
 The focus-only Forms Lab skip link is positioned outside the document when idle and becomes fixed in the viewport when focused. A dedicated browser test ensures it does not contaminate scrolled full-page screenshots.
+
+### Firefox local concurrency safety
+The Firefox interaction smoke command uses **one browser worker**. On a laptop with an interactive Firefox session, two parallel test workers triggered sporadic navigation/timeouts despite successful GitHub Actions results. The three affected cases all passed when isolated with one worker. A final complete one-worker run is required before claiming local Firefox verification; CI remains a separate gate.
