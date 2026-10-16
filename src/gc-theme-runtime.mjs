@@ -32,9 +32,11 @@ export function resolveTheme(config={},system={}){
 export function createThemeController({
   root=globalThis.document?.documentElement,
   media=globalThis.matchMedia?.bind(globalThis),
-  storage=globalThis.localStorage,key='gc-ui-v1:'
+  storage,key='gc-ui-v1:'
 }={}){
   if(!root?.style||!root?.dataset)throw new TypeError('A document root with style and dataset is required');
+  let persistence=storage;
+  if(persistence===undefined){try{persistence=globalThis.localStorage}catch{persistence=null}}
   const requests={dark:'(prefers-color-scheme: dark)',highContrast:'(prefers-contrast: more)',
     reducedTransparency:'(prefers-reduced-transparency: reduce)',forcedColors:'(forced-colors: active)'};
   const mql=Object.fromEntries(Object.entries(requests).map(([name,query])=>{
@@ -42,7 +44,7 @@ export function createThemeController({
   }));
   const previous={};
   for(const name of Object.keys(GC_THEME_DEFAULTS)){
-    try{previous[name]=storage?.getItem(key+name)}catch{}
+    try{previous[name]=persistence?.getItem(key+name)}catch{}
   }
   let state=normalizeTheme(previous),destroyed=false;
   const overridden=new Set(),listeners=[];
@@ -78,7 +80,7 @@ export function createThemeController({
       if(destroyed)throw new Error('Theme controller was destroyed');
       state=normalizeTheme({...state,...patch});
       for(const [name,value] of Object.entries(state)){
-        try{storage?.setItem(key+name,value)}catch{}
+        try{persistence?.setItem(key+name,value)}catch{}
       }
       render();
       return {...state};
@@ -87,7 +89,7 @@ export function createThemeController({
       if(destroyed)throw new Error('Theme controller was destroyed');
       state=normalizeTheme();
       for(const name of Object.keys(state)){
-        try{storage?.removeItem(key+name)}catch{}
+        try{persistence?.removeItem(key+name)}catch{}
       }
       render();
       return {...state};
