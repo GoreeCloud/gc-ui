@@ -45,13 +45,13 @@ export function initDialog(dialog,{document=dialog.ownerDocument}={}){
  let trigger=null;
  const click=e=>{
   const opener=e.target.closest('[data-gc-dialog-open]');
-  if(opener?.dataset.gcDialogOpen===dialog.id){trigger=opener;dialog.showModal();return}
+  if(opener?.dataset.gcDialogOpen===dialog.id){trigger=opener;if(!dialog.open)dialog.showModal();return}
   const close=e.target.closest('[data-gc-dialog-close]');
-  if(close&&dialog.contains(close))dialog.close();
+  if(close&&dialog.contains(close)&&dialog.open)dialog.close();
  };
  const closed=()=>{if(trigger?.isConnected)trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
- return {open(){dialog.showModal()},close(){dialog.close()},destroy(){document.removeEventListener('click',click);dialog.removeEventListener('close',closed)}};
+ return {open(){if(!dialog.open)dialog.showModal()},close(){if(dialog.open)dialog.close()},destroy(){document.removeEventListener('click',click);dialog.removeEventListener('close',closed)}};
 }
 export function createToast(region){
  if(!region)throw new TypeError('Toast region required');
@@ -67,7 +67,7 @@ export function createToast(region){
   const resume=()=>{if(timer===null&&duration>0)timer=setTimeout(dismiss,duration)};
   el.addEventListener('pointerenter',pause);el.addEventListener('pointerleave',resume);
   el.addEventListener('focusin',pause);el.addEventListener('focusout',resume);
-  return dismiss;
+  return ()=>{if(active===el)dismiss()};
  }
  return {show,dismiss,destroy:dismiss};
 }
