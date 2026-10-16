@@ -25,7 +25,7 @@ export function normalizeTheme(input={}){
 export function resolveTheme(config={},system={}){
   const s=normalizeTheme(config);
   const mode=s.mode==='auto'?(system.dark?'dark':'light'):s.mode;
-  const high=Boolean(system.forcedColors||s.contrast==='high'||(s.contrast==='system'&&system.highContrast));
+  const high=Boolean(system.forcedColors||system.highContrast||s.contrast==='high');
   const material=system.reducedTransparency||high?'solid':s.material;
   return {mode,accent:s.accent,material,contrast:high?'high':'standard',seed:s.seed};
 }
