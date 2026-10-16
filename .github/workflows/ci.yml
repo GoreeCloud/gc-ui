@@ -1,0 +1,28 @@
+name: GC UI quality gates
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  tokens-and-contracts:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify generated tokens
+        run: npm run tokens:check
+      - name: Execute foundation and theme tests
+        run: npm test
+      - name: Check module syntax
+        run: |
+          node --check src/main.js
+          node --check src/gc-color-engine.mjs
+          node --check lab/v1.js
+          node --check scripts/build-v1-tokens.mjs
