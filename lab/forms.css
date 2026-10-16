@@ -1,0 +1,31 @@
+/* GC UI Forms Lab: experiment layout only. Shared component semantics live in the exported CSS. */
+*{box-sizing:border-box}
+body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-canvas);font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.gc-form-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px max(20px,4vw);background:var(--gc-v1-color-surface);border-block-end:1px solid var(--gc-v1-color-divider)}
+.gc-form-brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--gc-v1-color-on-surface);font-weight:750}
+.gc-form-brand span{color:var(--gc-v1-color-on-surface-muted);font-size:13px;font-weight:500}
+.gc-form-header nav{display:flex;flex-wrap:wrap;gap:12px 20px}
+.gc-form-header nav a,.gc-form-footer a{color:var(--gc-v1-color-link);text-underline-offset:4px;font-size:13px}
+.gc-form-layout{max-width:1260px;margin:auto;padding:clamp(26px,5vw,68px) clamp(18px,4vw,54px) 80px}
+.gc-form-intro{margin-bottom:42px;max-width:800px}
+.gc-form-eyebrow{color:var(--gc-v1-color-primary);letter-spacing:.11em;font-weight:750;font-size:12px}
+.gc-form-intro h1{font-size:clamp(40px,5vw,64px);line-height:1.08;letter-spacing:-.045em;margin:12px 0 18px}
+.gc-form-intro>p:last-child,.gc-form-panel-heading>p,.gc-form-disclaimer{color:var(--gc-v1-color-on-surface-muted)}
+.gc-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start}
+.gc-form-panel{padding:clamp(20px,3vw,34px)}
+.gc-form-panel-heading{margin-bottom:32px}
+.gc-form-panel-heading h2{font-size:25px;letter-spacing:-.03em;line-height:1.15;margin:16px 0 12px}
+.gc-form-panel-heading p{font-size:14px;margin:0}
+.gc-form-panel .gc-field{margin-bottom:23px}
+.gc-form-panel .gc-button[type=submit]{margin-top:12px}
+.gc-form-panel .gc-banner{margin-top:20px}
+.gc-search-results{padding:0;margin:15px 0 0;list-style:none;border:1px solid var(--gc-v1-color-divider);border-radius:18px;overflow:hidden}
+.gc-search-results:empty{display:none}
+.gc-search-results li{padding:16px 18px;background:var(--gc-v1-color-surface)}
+.gc-search-results li+li{border-top:1px solid var(--gc-v1-color-divider)}
+.gc-search-results li strong{display:block;font-size:14px;color:var(--gc-v1-color-on-surface)}
+.gc-search-results li span{font-size:12px;color:var(--gc-v1-color-on-surface-muted)}
+.gc-form-disclaimer{font-size:13px;margin-top:36px}
+.gc-form-footer{text-align:center;padding:20px 20px 40px;font-size:13px}
+@media(max-width:760px){.gc-form-grid{grid-template-columns:1fr}.gc-form-layout{padding-inline:18px}.gc-form-header{padding-inline:18px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
