@@ -38,7 +38,7 @@ npm test
 
 ```text
 index.html                 Interactive reference site
-assets/gc-mark.svg         Original alpha mark
+assets/gc-mark.svg         Official product icon (brand-repository derivative)
 styles/tokens.css          Semantic and foundation CSS variables
 styles/components.css      Component patterns and layouts
 src/main.js                Accessible interactions and theme controls
@@ -129,3 +129,6 @@ See [Adaptive shell architecture](docs/ADAPTIVE_SHELL.md) for breakpoint, route/
 
 ### Verified laptop and Android Firefox QA (2026-10-16)
 A connected Linux laptop completed **55/55 Node tests**, **7,988/7,988 opaque color-role checks**, and **19/19 Chromium browser tests**. A OnePlus N200 running Android Firefox loaded the adaptive shell over USB and passed manual touch tests for the mobile navigation and side-sheet dismissal. Hardware Android Back behavior with the modal remains under investigation. See [physical-device test evidence](docs/DEVICE_TESTING_2026_10_16.md); these results do not establish production accessibility certification.
+
+### Official GC UI branding
+GC UI's official v1 identity (app icon, transparent symbol and outlined light/dark wordmarks) is maintained in the separate authoritative [GoreeCloud branding-assets product namespace](https://github.com/GoreeCloud/branding-assets/tree/main/products/gc-ui). Its 23 PNG exports, favicon, SVG masters, manifest, and deterministic raster build remain there. This repo carries **exact synchronized vector derivatives** only for offline previews and package distribution; see [brand provenance and usage rules](docs/BRANDING.md). Package exports: `./brand/icon`, `./brand/symbol`, `./brand/logo`, and `./brand/logo-dark`. The interface theme can change, but the logo's official colors do not.
