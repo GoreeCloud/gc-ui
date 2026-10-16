@@ -26,6 +26,7 @@ test('action menu skips disabled items, closes with Escape, restores trigger foc
   const trigger=page.getByRole('button',{name:/Workspace actions/});
   await trigger.click();
   const menu=page.getByRole('menu',{name:/Workspace actions/});
+  await expect(menu).toHaveAttribute('id',await trigger.getAttribute('aria-controls'));
   await expect(menu).toBeVisible();
   await expect(menu.getByRole('menuitem',{name:/Duplicate/})).toBeFocused();
   await menu.getByRole('menuitem',{name:/Duplicate/}).press('ArrowDown');
