@@ -1,0 +1,62 @@
+# GC UI Web API — 0.2.0-alpha.1
+
+**Experimental; not published to npm; not a production-ready or WCAG-certified component library.** The GC UI design specification is broader than the coded component subset. This document defines the actual currently shipped source interfaces.
+
+## Getting started from this repository
+1. Clone `GoreeCloud/gc-ui` or download its source. No runtime dependencies or build tooling are required to view the labs.
+2. Run `npm run dev`. Visit `http://localhost:4173/lab/components.html` to inspect live component behavior and `/lab/v1.html` for the foundation and custom seed demo.
+3. Use the token sheet and component sheet together:
+```html
+<link rel="stylesheet" href="/styles/gc.v1.generated.css">
+<link rel="stylesheet" href="/styles/gc.v1.components.css">
+```
+4. When serving from the cloned repository, import ES modules by relative path (bare package imports require a bundler or a locally installed package):
+```js
+import {createThemeController,initTabs,initMenu,createToast} from '/src/index.mjs';
+const theme=createThemeController();
+const cleanupTabs=initTabs(document.querySelector('[role="tablist"]'));
+```
+The package.json export map is **provisional** for local development and future distribution. The repository keeps `private:true` until release gates pass.
+
+## Theme controller
+```js
+import {createThemeController} from '/src/index.mjs';
+const theme=createThemeController();
+theme.set({mode:'auto',accent:'lagoon',material:'translucent',contrast:'system'});
+theme.set({accent:'custom',seed:'#3978D3'});
+const current=theme.resolved();
+console.log(current.mode,current.material,current.contrast);
+theme.reset();
+theme.destroy(); // when tearing down a host application
+```
+The runtime accepts `mode: auto|light|dark`, `accent: iris|lagoon|ember|moss|custom`, `material: solid|translucent`, `contrast: system|standard|high`, and opaque six-digit hex `seed`. Invalid values fall back to known defaults. The operating system's increased contrast, forced-colors or reduced-transparency settings override Lens effects, even with a conflicting persisted preference. **When high contrast is active, custom inline role overrides are suspended** so the dedicated verified high-contrast palette can take precedence; chosen seed and accent preference are retained for when standard contrast returns. Private-mode storage denial is handled as an in-memory session.
+
+Custom seed generation uses an original OKLCH tonal mapping, not Google's HCT algorithm and not native wallpaper sampling. Only sampled opaque semantic foreground/background pairs are audited; dynamic backgrounds still require runtime contrast verification and solid Lens fallback.
+
+## Reusable component behavior
+**Tabs:** `initTabs(tablist,{rtl:false})` requires `role=tablist`, `role=tab` children with `aria-controls`, and matching `role=tabpanel` IDs. Arrow Left/Right cycle among enabled tabs, Home/End jump, focus and selected state remain synchronized. Panels use `hidden`. Dispose via `destroy()`.
+
+**Action menu:** `initMenu(button,menu,{onSelect})` requires a button, an ID'd element with `role=menu`, and children with `role=menuitem`, `menuitemcheckbox` or `menuitemradio`. Arrow Down/Up, Home/End, Enter/Space, Escape, and Tab are handled; disabled items are skipped and outside pointer clicks dismiss. The callback receives the selected element/event. Menus execute commands; don't repurpose as a select or site navigation. See `#menus` in Components Lab.
+
+**Dialogs:** `initDialog(nativeDialog)` binds buttons with `data-gc-dialog-open=dialog-id` and `data-gc-dialog-close`, using native `showModal()`, Escape and focus management. Buttons that open dialogs still need informative labels. Opening/closing is idempotent; dynamic onSelect behavior remains the app's responsibility.
+
+**Toasts:** `createToast(region)` sets polite live-region semantics and creates plain-text messages. The `show()` return value dismisses only its own toast; stale callbacks cannot dismiss newer notifications. `duration:0` disables automatic timeout. The user must still be able to obtain essential information after a toast disappears.
+
+**Async actions:** `runAsyncAction(button,()=>promise)` rejects duplicate activations, sets aria-busy, disables the button while pending, and restores it on success or failure. It does not invent success messages; the caller must handle errors and status announcements.
+
+## Styling contracts
+All color uses `--gc-v1-color-<semantic-role>` variables, never a component-specific hardcoded RGB value. Space, typography, shape, motion, target size, and component geometry derive from `tokens/gc.v1.tokens.json`. Run `npm run tokens:build` after changing token source; `npm run tokens:check` catches CSS drift. Import the component sheet only where its classes are used, and prefer native HTML controls.
+
+GC UI uses three planes: Canvas for the environment, opaque Surface for information, and bounded Lens for floating controls. `data-gc-material=solid`, `data-gc-contrast=high`, and forced-colors modes disable Lens transparency. Avoid nesting Lens over Lens or using it as the background for lengthy text.
+
+## Reproducible verification
+```sh
+npm run check          # checks generated CSS, unit tests, color audit, local assets
+npm run audit:colors   # 361 seeds in light+dark, plus high-contrast and curated schemes
+```
+Both the audit and tests are **opaque role checks**, not visual screenshots, screen-reader certification or a device lab. GitHub Actions runs the checks on pushes to main and pull requests; a local check or workflow definition does not prove a particular remote run passed.
+
+## Known gaps
+No bundled npm release, no complete 63-component implementation, no native SwiftUI/Compose/TV adapters, no full filled glyph set, no production wallpaper sampling, no comprehensive picture/video backdrop contrast testing, no full Playwright end-to-end matrix, no manual VoiceOver/NVDA/TalkBack audits. Production usage requires a dedicated accessibility and security review in the host application.
+
+**Versioning:** this is v0.2.0-alpha.1, so APIs and visuals may change without compatibility guarantees. See `docs/RELEASE_PLAN_V1.md`.
