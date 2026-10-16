@@ -88,3 +88,16 @@ test('forms lab remains in bounds at 320px and under dark theme',async({page})=>
  expect(size.overflow).toBeLessThanOrEqual(1);
  expect(size.textarea).toBeGreaterThan(200);
 });
+
+test('skip navigation is keyboard-discoverable but visually hidden at rest',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const skip=page.getByRole('link',{name:'Skip to forms'});
+ const initial=await skip.boundingBox();
+ expect(initial.y).toBeLessThan(0);
+ await page.keyboard.press('Tab');
+ await expect(skip).toBeFocused();
+ const visible=await skip.boundingBox();
+ expect(visible.y).toBeGreaterThanOrEqual(0);
+ await skip.press('Enter');
+ await expect(page).toHaveURL(/#content$/);
+});
