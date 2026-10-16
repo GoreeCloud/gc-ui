@@ -476,8 +476,17 @@
       "category": "Navigation",
       "anatomy": "title, back affordance, actions",
       "behavior": "at most two high-priority actions exposed on compact widths",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-app-bar"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "N39",
@@ -485,8 +494,18 @@
       "category": "Navigation",
       "anatomy": "3–5 labeled destinations; active marker",
       "behavior": "never scrollable by default; safe-area inset; selection visible without color",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-nav-bottom",
+          "gc-bottom-link"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "N40",
@@ -494,8 +513,18 @@
       "category": "Navigation",
       "anatomy": "compact destinations and overflow",
       "behavior": "for medium widths; labels available on focus/selection or always when space allows",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-nav-rail",
+          "gc-rail-link"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "N41",
@@ -503,8 +532,18 @@
       "category": "Navigation",
       "anatomy": "grouped destinations, resizable option",
       "behavior": "desktop persistent when room; collapse preserves context and scroll position",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-nav-sidebar",
+          "gc-nav-link"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "N42",
@@ -512,8 +551,17 @@
       "category": "Navigation",
       "anatomy": "path links with current item",
       "behavior": "only for hierarchical spaces; use nav landmark; don't duplicate a back control needlessly",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-breadcrumbs"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "N43",
@@ -633,8 +681,18 @@
       "category": "Feedback and overlays",
       "anatomy": "resizable inspector, close, actions",
       "behavior": "preferred for tablet/desktop detail; focus order preserves app context",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-side-sheet"
+        ],
+        "sources": [
+          "styles/gc.v1.navigation.css",
+          "src/gc-interactions.mjs"
+        ],
+        "example": "lab/adaptive.html"
+      }
     },
     {
       "id": "O52",
