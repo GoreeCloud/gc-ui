@@ -58,8 +58,10 @@ test('Tab dismissal does not pull focus back to menu trigger',()=>{
  const api=initMenu(trigger,menu,{document:doc});
  api.open();
  menu.fire('keydown',{key:'Tab',target:item,preventDefault(){throw Error('Tab should remain default')}});
+ assert.equal(api.isOpen(),true,'menu stays visible while browser processes native Tab');
+ menu.fire('focusout',{relatedTarget:trigger});
  assert.equal(api.isOpen(),false);
- assert.equal(doc.activeElement,item);
+ assert.equal(doc.activeElement,item,'dismissal must not steal keyboard focus');
  api.destroy();
 });
 
@@ -78,5 +80,22 @@ test('keyboard Enter and a following native click select an action exactly once'
  assert.equal(api.isOpen(),false);
  menu.fire('click',{target:item}); // stale clicks while closed are no-ops
  assert.equal(selected,1);
+ api.destroy();
+});
+
+test('focus movement between menu items does not dismiss menu; reverse Tab does',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'focus-actions',role:'menu'});
+ const items=[elem('button',{role:'menuitem'}),elem('button',{role:'menuitem'})];
+ for(const el of [trigger,menu,...items])el.ownerDocument=doc;
+ menu.querySelectorAll=()=>items;
+ menu.contains=el=>el===menu||items.includes(el);
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ menu.fire('focusout',{relatedTarget:items[1]});
+ assert.equal(api.isOpen(),true);
+ menu.fire('keydown',{key:'Tab',shiftKey:true,target:items[1],preventDefault(){throw Error('Shift+Tab is native')}});
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),false);
  api.destroy();
 });
