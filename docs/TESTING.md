@@ -10,7 +10,7 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
-The alpha suite currently defines 17 interaction smoke scenarios across Components, Foundations, Registry and Adaptive labs, plus two screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
+The alpha suite currently defines 20 interaction scenarios across Components, Foundations, Registry and Adaptive labs, four axe-core accessibility smoke scenarios, and eight independent screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
 The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
 ```sh
 npm install --no-save --no-package-lock @playwright/test@1.64.1
@@ -53,7 +53,7 @@ For adaptive navigation contract details, see [Adaptive shell architecture](ADAP
 The complete Node source gate and Chromium Playwright suite passed on a connected Linux laptop, and limited Android Firefox touch/navigation tests were performed on a OnePlus N200. See the [dated device testing record](DEVICE_TESTING_2026_10_16.md) for exact counts, first-run failures and their corrections, transport setup, and open browser compatibility findings.
 
 ## Browser execution order (hardware-tested)
-Run `npm run test:e2e` to execute the 17 interaction scenarios first, followed by eight independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
+Run `npm run test:e2e` to execute 20 interaction scenarios first, four axe accessibility screens second, followed by eight independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
 
 ## Firefox engine smoke testing
 Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 17 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
