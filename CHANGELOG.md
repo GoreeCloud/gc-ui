@@ -6,10 +6,13 @@ GC UI is an original independent design system. This changelog tracks implementa
 ### Added
 - Eight native-first reference component treatments: icon buttons, checkboxes, radio groups, sliders, cards, accordions, badges and determinate progress.
 - Machine-readable maturity registry updated to 18 experimental and 45 specification-only patterns.
-- Nine Chromium smoke tests in `e2e/gc-ui.spec.mjs`, plus five visual QA screenshots covering desktop light/dark/high-contrast, mobile and the registry, with a pinned Playwright CI job and uploaded evidence.
+- Twelve Chromium smoke tests in `e2e/gc-ui.spec.mjs`, plus five visual QA screenshots covering desktop light/dark/high-contrast, mobile and the registry, with a pinned Playwright CI job and uploaded evidence.
 ### Fixed
 - Public tab controller rejects selections outside the tablist, reacts to disabled-state changes, and supports vertical tab orientation.
 - Icon-button toggle retains a stable accessible name while `aria-pressed` expresses its state.
+- Shared theme runtime across both labs, including a visible effective-material status and cross-page persistence coverage.
+- Reusable action-menu stylesheet, native keyboard Tab and Shift+Tab focus-exit handling, and duplicate-activation guard.
+- SVG glyph fragment integrity checking in local asset verification.
 ### Not verified yet
 - Full Chromium CI success, cross-browser manual behavior, and real assistive-technology use are release gates, not completed claims.
 
