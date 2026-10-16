@@ -44,7 +44,10 @@ img.gc-shell-mark{display:block;object-fit:contain;flex:none;background:none;pad
 @media(max-width:599px){
  .gc-app-bar{padding-inline:12px;gap:8px}
  .gc-app-bar-actions{gap:8px}
- #appearance-toggle{display:grid;place-items:center;flex:none;inline-size:44px;min-inline-size:44px;min-block-size:44px;padding:0;font-size:0}
+ #appearance-toggle{display:grid;place-items:center;flex:none;inline-size:44px;min-inline-size:44px;min-block-size:44px;padding:0;font-size:0;border-radius:14px;background:var(--gc-v1-color-surface-tonal)}
  #appearance-toggle::before{content:'☾';font-size:22px;line-height:1}
  #appearance-toggle[data-next-mode=light]::before{content:'☀';font-size:22px}
 }
+
+/* Keep badge legible as one unit at high zoom; the heading may wrap. */
+.gc-section-title .gc-badge{white-space:nowrap;flex:none}
