@@ -27,6 +27,7 @@ jobs:
           node --check src/gc-menu.mjs
           node --check lab/v1.js
           node --check lab/primitives.mjs
+          node --check lab/catalog.mjs
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs
           node --check src/index.mjs
