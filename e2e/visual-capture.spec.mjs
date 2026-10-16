@@ -12,7 +12,7 @@ test('capture GC UI light, dark, high contrast and compact specimens',async({pag
     await page.setViewportSize({width:scenario.width,height:scenario.height});
     await page.goto('/lab/components.html');
     await page.locator('[data-theme-mode="'+scenario.appearance+'"]').click();
-    if(scenario.high)await page.locator('#contrast-switch').check();
+    if(scenario.high)await page.locator('label:has(#contrast-switch)').click();
     await page.evaluate(()=>document.fonts?.ready);
     await expect(page.getByRole('heading',{name:/Made to feel/i})).toBeVisible();
     const png=await page.screenshot({fullPage:true,animations:'disabled'});
