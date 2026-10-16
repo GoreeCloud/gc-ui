@@ -1,25 +1,28 @@
 import {readFileSync,existsSync} from 'node:fs';
-import {resolve,dirname} from 'node:path';
+import {resolve,dirname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
+const insideRoot=path=>path.startsWith(root+sep);
 for(const page of ['lab/v1.html','lab/components.html','lab/catalog.html']){
- const html=readFileSync(resolve(root,page),'utf8');
+ const documentPath=resolve(root,page);
+ const html=readFileSync(documentPath,'utf8');
  const refs=[...html.matchAll(/(?:href|src)="([^"]+)"/g)].map(match=>match[1]);
  for(const ref of refs){
   if(ref.startsWith('#')||/^(?:https?:|data:|mailto:)/.test(ref))continue;
-  const path=resolve(dirname(resolve(root,page)),ref.split(/[?#]/)[0]);
-  if(!path.startsWith(root+'/')||!existsSync(path))throw new Error(page+': unresolved or unsafe '+ref);
+  const target=resolve(dirname(documentPath),ref.split(/[?#]/)[0]);
+  if(!insideRoot(target)||!existsSync(target))throw new Error(page+': unresolved or unsafe '+ref);
  }
- for(const match of html.matchAll(/<use\\b[^>]*\\bhref="([^"]+)"/g)){
+ for(const match of html.matchAll(/<use\b[^>]*\bhref="([^"]+)"/g)){
   const reference=match[1];
   const index=reference.indexOf('#');
-  if(index<0)throw new Error(page+': SVG use has no symbol '+reference);
+  if(index<0)throw new Error(page+': SVG use is missing a symbol fragment '+reference);
   const target=reference.slice(0,index),symbol=reference.slice(index+1);
-  const svg=target?resolve(dirname(resolve(root,page)),target):resolve(root,page);
-  if(!existsSync(svg))throw new Error(page+': missing SVG sprite '+target);
-  if(!new RegExp('\\\\bid="'+symbol.replace(/[.*+?^$()|[\\]{}]/g,'\\\\ console.log(page+': local assets resolved');')+'"').test(readFileSync(svg,'utf8')))
+  if(!/^[A-Za-z_][\w.-]*$/.test(symbol))throw new Error(page+': unsafe SVG symbol identifier '+symbol);
+  const svg=target?resolve(dirname(documentPath),target):documentPath;
+  if(!insideRoot(svg)||!existsSync(svg))throw new Error(page+': missing SVG sprite '+target);
+  if(!readFileSync(svg,'utf8').includes('id="'+symbol+'"'))
    throw new Error(page+': missing SVG symbol #'+symbol);
  }
- console.log(page+': local assets resolved');
+ console.log(page+': local assets and SVG symbols resolved');
 }
