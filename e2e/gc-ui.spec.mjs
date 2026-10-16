@@ -136,3 +136,19 @@ test('keyboard menu activation performs the action and returns focus',async({pag
   await expect(trigger).toBeFocused();
   await expect(page.locator('#toast-region')).toContainText('Duplicate workspace');
 });
+
+test('native Tab and Shift+Tab leave the action menu without trapping focus',async({page})=>{
+  await page.goto('/lab/components.html');
+  const trigger=page.getByRole('button',{name:/Workspace actions/});
+  await trigger.click();
+  const menu=page.getByRole('menu',{name:/Workspace actions/});
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Tab');
+  await expect(menu).toBeHidden();
+  await expect(page.locator('body')).not.toHaveAttribute('data-gc-menu-trap','true');
+  await trigger.focus();
+  await trigger.press('ArrowUp');
+  await expect(menu).toBeVisible();
+  await page.keyboard.press('Shift+Tab');
+  await expect(menu).toBeHidden();
+});
