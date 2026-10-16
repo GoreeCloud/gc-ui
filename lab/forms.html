@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="GoreeCloud UI accessible forms, autocomplete search, validation and empty-state reference">
+<title>GoreeCloud UI · Forms Lab</title>
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.components.css">
+<link rel="stylesheet" href="./forms.css">
+<script type="module" src="./forms.mjs"></script>
+</head>
+<body>
+<a class="gc-skip-link" href="#content">Skip to forms</a>
+<header class="gc-form-header">
+ <a href="./adaptive.html" class="gc-form-brand"><img src="../assets/gc-mark.svg" width="40" height="40" alt=""><strong>GC UI</strong><span>Forms Lab</span></a>
+ <nav aria-label="Lab navigation"><a href="./components.html">Components</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
+</header>
+<main id="content" class="gc-form-layout">
+ <div class="gc-form-intro"><p class="gc-form-eyebrow">FORM INTELLIGENCE / NATIVE FIRST</p><h1>Every detail matters.</h1><p>Forms that make recovery simple and search that respects keyboard intent. This is a local-only experimental reference.</p></div>
+ <div class="gc-form-grid">
+  <section class="gc-card gc-form-panel" aria-labelledby="draft-title">
+   <div class="gc-form-panel-heading"><span class="gc-badge" data-intent="info">F10 · F22</span><h2 id="draft-title">Create a project brief</h2><p>Try submitting the form empty. The error summary links directly to fields and preserves anything you entered.</p></div>
+   <form id="brief-form" novalidate>
+    <section id="brief-errors" class="gc-validation-summary" role="group" aria-labelledby="errors-title" tabindex="-1" hidden>
+     <h3 id="errors-title">Check these fields</h3>
+     <ul id="brief-errors-list"></ul>
+    </section>
+    <div class="gc-field">
+     <label for="brief-name" class="gc-field-label">Project name <span aria-hidden="true">*</span></label>
+     <input class="gc-input" id="brief-name" name="name" required maxlength="64" autocomplete="off" aria-describedby="brief-name-help" placeholder="Example: Studio refresh">
+     <span class="gc-field-description" id="brief-name-help">Give this project a distinct, descriptive name.</span>
+     <span class="gc-field-error" id="brief-name-error" hidden>Enter a project name.</span>
+    </div>
+    <div class="gc-field">
+     <label for="brief-email" class="gc-field-label">Contact email <span aria-hidden="true">*</span></label>
+     <input class="gc-input" id="brief-email" name="email" type="email" required autocomplete="email" aria-describedby="brief-email-help" placeholder="contact@example.com">
+     <span class="gc-field-description" id="brief-email-help">Use an email address in a valid format.</span>
+     <span class="gc-field-error" id="brief-email-error" hidden>Enter a valid email address.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="brief-notes">Project notes <span aria-hidden="true">*</span></label>
+     <textarea class="gc-textarea" id="brief-notes" name="notes" required minlength="10" maxlength="280" rows="5" aria-describedby="brief-notes-help brief-notes-count" placeholder="Describe what you want to create"></textarea>
+     <div class="gc-field-foot"><span id="brief-notes-help" class="gc-field-description">At least 10 characters. Your notes remain in this browser only.</span><output id="brief-notes-count" for="brief-notes" class="gc-field-count">0 / 280</output></div>
+     <span class="gc-field-error" id="brief-notes-error" hidden>Write at least 10 characters of notes.</span>
+    </div>
+    <button class="gc-button" data-variant="primary" type="submit">Create brief</button>
+    <div id="brief-success" class="gc-banner" data-intent="success" role="status" hidden><strong>Brief ready</strong><p>Validated locally. No data has been submitted or saved.</p></div>
+   </form>
+  </section>
+  <section class="gc-card gc-form-panel" aria-labelledby="search-title">
+   <div class="gc-form-panel-heading"><span class="gc-badge" data-intent="info">F11 · O53</span><h2 id="search-title">Find the right work</h2><p>Use Arrow Down to explore suggestions, Enter to select, and Escape to dismiss suggestions before clearing the query.</p></div>
+   <div class="gc-field">
+    <label class="gc-field-label" for="project-search">Search projects</label>
+    <div class="gc-search-anchor">
+     <div class="gc-search-wrap">
+      <input id="project-search" class="gc-search-input" type="search" role="combobox" autocomplete="off" aria-expanded="false" aria-autocomplete="list" aria-controls="project-suggestions" aria-describedby="search-instructions" placeholder="Search by project name">
+      <button id="search-clear" class="gc-search-clear" type="button" aria-label="Clear search" hidden>×</button>
+     </div>
+     <ul id="project-suggestions" class="gc-search-suggestions" role="listbox" aria-label="Project suggestions" hidden></ul>
+    </div>
+    <span id="search-instructions" class="gc-field-description">Type to filter the example projects. Use arrow keys for suggestions.</span>
+   </div>
+   <p id="project-result-count" class="gc-search-count" role="status" aria-live="polite" aria-atomic="true">6 projects found</p>
+   <ul id="project-results" class="gc-search-results" aria-label="Matching example projects"></ul>
+   <section class="gc-empty-state" id="project-empty" aria-labelledby="empty-title" hidden>
+    <span class="gc-empty-symbol" aria-hidden="true">◇</span>
+    <h3 id="empty-title">No matching projects</h3>
+    <p>Try a shorter search or clear the filter to show all examples.</p>
+    <button id="empty-reset" type="button" class="gc-button" data-variant="secondary">Clear search</button>
+   </section>
+  </section>
+ </div>
+ <p class="gc-form-disclaimer">Experimental GoreeCloud UI references. Demonstration values only, no network calls and no account data.</p>
+</main>
+<footer class="gc-form-footer"><a href="./components.html">Components Lab</a> · <a href="./catalog.html">Component Registry</a> · <a href="../docs/WEB_API_ALPHA.md">Web API</a></footer>
+</body></html>
