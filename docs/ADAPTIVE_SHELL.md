@@ -42,3 +42,5 @@ Automated source contracts are in `tests/adaptive-shell.test.mjs`; browser check
 
 ## Compact appearance and bidirectional sheet refinement (2026-10-16)
 The appearance switch remains operable at widths below 600px as a 44px icon-only visual control with a full accessible name (`Switch to dark appearance` or `Switch to light appearance`). It must not disappear when the compact header is constrained. The native side sheet anchors to **inline end** and uses logical border radii, including on RTL layouts. Chromium tests now cover 320px preference persistence, eight RTL breakpoint widths, and RTL sheet positioning. The accessibility gate also scans representative mobile, high-contrast, open-menu, open-sheet and RTL states.
+
+Related work: [Forms and Search Lab](FORMS_CONTRACT.md) develops distinct input and recovery patterns without introducing an application-level router or persistence layer.
