@@ -13,7 +13,8 @@
     "audit:colors": "node scripts/audit-colors.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:visual",
     "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs",
-    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs --workers=1 --timeout=90000"
+    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs --workers=1 --timeout=90000",
+    "test:e2e:firefox": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs --browser firefox"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",
