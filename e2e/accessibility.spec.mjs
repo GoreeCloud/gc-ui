@@ -34,6 +34,16 @@ for(const name of ['v1','components','catalog','adaptive','forms']){
  });
 }
 const states=[
+
+ {name:'forms-retry-alert',page:'forms',width:375,setup:async page=>{
+  await page.locator('#simulate-failure').click();
+  await expect(page.locator('#recovery-error')).toBeVisible();
+ }},
+ {name:'forms-revealed-passphrase',page:'forms',width:375,setup:async page=>{
+  await page.locator('#demo-passphrase').fill('invented-example');
+  await page.locator('#passphrase-reveal').click();
+  await expect(page.locator('#demo-passphrase')).toHaveAttribute('type','text');
+ }},
  {name:'forms-invalid-summary',page:'forms',width:375,setup:async page=>{
   await page.getByRole('button',{name:'Create brief'}).click();
   await expect(page.locator('#brief-errors')).toBeVisible();
