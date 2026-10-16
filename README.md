@@ -143,3 +143,5 @@ The [concurrent stabilization QA report](docs/QA_CONCURRENT_STABILIZATION_2026-1
 
 ### Forms and search reference
 The [Forms Lab](lab/forms.html) demonstrates four new experimental web treatments: F10 textarea, F11 combobox search, F22 focusable linked validation summary, and O53 empty state. See the [forms interaction contract](docs/FORMS_CONTRACT.md). The registry now counts **28 experimental**, **35 specified**, and **0 stable** patterns out of 63; no web components are production-certified.
+
+The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 153-test laptop run, successful three-job GitHub Actions check, and remaining manual screen-reader/device gates.
