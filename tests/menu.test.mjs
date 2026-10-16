@@ -62,3 +62,21 @@ test('Tab dismissal does not pull focus back to menu trigger',()=>{
  assert.equal(doc.activeElement,item);
  api.destroy();
 });
+
+test('keyboard Enter and a following native click select an action exactly once',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'unique-actions',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const element of [trigger,menu,item])element.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];
+ menu.contains=element=>element===menu||element===item;
+ let selected=0;
+ const api=initMenu(trigger,menu,{document:doc,onSelect:()=>selected++});
+ api.open();
+ menu.fire('keydown',{key:'Enter',target:item,preventDefault(){}});
+ menu.fire('click',{target:item}); // native button can also synthesize click
+ assert.equal(selected,1);
+ assert.equal(api.isOpen(),false);
+ menu.fire('click',{target:item}); // stale clicks while closed are no-ops
+ assert.equal(selected,1);
+ api.destroy();
+});
