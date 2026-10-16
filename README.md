@@ -75,6 +75,8 @@ The existing v0.1 playground remains an **alpha reference**; the new v1 document
 6. [Adaptive layouts, TV, foldables, wearables and spatial](docs/LAYOUT_PLATFORMS.md).
 7. [Accessibility criteria and release gates](docs/ACCESSIBILITY_RELEASE.md).
 8. [Developer implementation and token governance](docs/TOKENS_IMPLEMENTATION.md).
+9. [Original GC icon set and usage](docs/ICONS_LIBRARY.md).
+10. [Release plan and production-quality gates](docs/RELEASE_PLAN_V1.md).
 
 ### Live reference labs
 Open [GC UI v1 Design Lab](lab/v1.html) and [GC UI Components Lab](lab/components.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
@@ -91,7 +93,7 @@ npm run tokens:check
 - Corrected the custom color engine to reference only generated tonal stops; expanded tests reject undefined semantic role colors.
 - Implemented a dependency-free theme controller for curated/custom accents, auto appearance, solid/translucent selection, and system accessibility overrides.
 - Implemented web interaction bindings for tabs (including RTL keyboard navigation), native dialogs, toasts, and async actions.
-- Added accessible component CSS, interactive Components Lab, and CI checks for all new modules and local assets.
+- Added accessible component CSS, interactive Components Lab, and CI checks for all new modules and local assets; added 12 original outline glyphs with structural tests.
 - Stress-tested 361 seed colors across both appearances: 722 themes and 7,220 foreground pairs met the 4.5:1 contrast threshold. This is not a comprehensive visual or accessibility audit.
 
 ### Machine-readable source
