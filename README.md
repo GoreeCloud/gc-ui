@@ -136,12 +136,14 @@ A connected Linux laptop completed **55/55 Node tests**, **7,988/7,988 opaque co
 GC UI's official v1 identity (app icon, transparent symbol and outlined light/dark wordmarks) is maintained in the separate authoritative [GoreeCloud branding-assets product namespace](https://github.com/GoreeCloud/branding-assets/tree/main/products/gc-ui). Its 23 PNG exports, favicon, SVG masters, manifest, and deterministic raster build remain there. This repo carries **exact synchronized vector derivatives** only for offline previews and package distribution; see [brand provenance and usage rules](docs/BRANDING.md). Package exports: `./brand/icon`, `./brand/symbol`, `./brand/logo`, and `./brand/logo-dark`. The interface theme can change, but the logo's official colors do not.
 
 ### Accessibility smoke check
-The browser pipeline includes four pinned axe-core WCAG A/AA checks as well as interaction and visual capture tests. This does not constitute WCAG certification; inconclusive color contrast / ARIA checks are retained for manual review. See [testing guidance](docs/TESTING.md).
+The browser pipeline includes pinned axe-core WCAG A/AA smoke checks as well as interaction and visual capture tests. This does not constitute WCAG certification; inconclusive color contrast / ARIA checks are retained for manual review. See [testing guidance](docs/TESTING.md).
 
 ### Latest stabilization checkpoint
 The [concurrent stabilization QA report](docs/QA_CONCURRENT_STABILIZATION_2026-10-16.md) documents laptop-verified 66 core tests, 22 Chromium and 22 Firefox interactions, 10 axe accessibility state screens, 10 screenshot captures, and a verified successful three-job GitHub Actions run. GoreeCloud UI remains an unpublished experimental alpha; screen-reader/device signoff is still outstanding.
 
 ### Forms and search reference
-The [Forms Lab](lab/forms.html) demonstrates four new experimental web treatments: F10 textarea, F11 combobox search, F22 focusable linked validation summary, and O53 empty state. See the [forms interaction contract](docs/FORMS_CONTRACT.md). The registry now counts **28 experimental**, **35 specified**, and **0 stable** patterns out of 63; no web components are production-certified.
+The [Forms Lab](lab/forms.html) demonstrates eight experimental web treatments: F10 textarea, F11 combobox search, F12 revealable passphrase, F17 native select, F21 bounded number stepper, F22 linked validation summary, O53 empty state and O54 error/retry. See the [forms interaction contract](docs/FORMS_CONTRACT.md). The registry now counts **32 experimental**, **31 specified**, and **0 stable** patterns out of 63; no web components are production-certified.
 
 The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 153-test laptop run, successful three-job GitHub Actions check, and remaining manual screen-reader/device gates.
+
+The Forms Lab additionally covers IME-safe search and simulated error/retry behavior. The controller source is experimental demonstration code, not a stable public form API.
