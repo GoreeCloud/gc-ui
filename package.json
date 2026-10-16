@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "python3 -m http.server 4173",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm test"
+    "check": "npm run tokens:check && npm test",
+    "tokens:build": "node scripts/build-v1-tokens.mjs",
+    "tokens:check": "node scripts/build-v1-tokens.mjs --check"
   },
   "license": "UNLICENSED"
 }
