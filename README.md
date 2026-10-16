@@ -62,3 +62,33 @@ Token naming, iconographic geometry, full dynamic color generation, bidirectiona
 - [Google — Customizing Material color](https://codelabs.developers.google.com/customizing-material-color)
 
 GC UI and its assets are original GoreeCloud work. Apple, Liquid Glass, Google, Material You and Material Design are the property of their respective owners.
+
+## GC UI v1 design-language candidate (October 2026)
+The existing v0.1 playground remains an **alpha reference**; the new v1 documents are a **normative specification candidate** and are not a claim of an audited, production-ready library.
+
+### Start here
+1. [Complete design language specification](docs/GC_UI_1_0_SPECIFICATION.md) — identity, materials, color, typography, geometry, governance.
+2. [Color, dynamic theme policy and premium modes](docs/COLOR_THEMES.md).
+3. [Typography, original icons and glyph geometry](docs/TYPOGRAPHY_ICONS.md).
+4. [63-component canonical catalog](docs/COMPONENT_CATALOG_V1.md).
+5. [Motion and multimodal input](docs/MOTION_INPUT.md).
+6. [Adaptive layouts, TV, foldables, wearables and spatial](docs/LAYOUT_PLATFORMS.md).
+7. [Accessibility criteria and release gates](docs/ACCESSIBILITY_RELEASE.md).
+8. [Developer implementation and token governance](docs/TOKENS_IMPLEMENTATION.md).
+
+### Live reference lab
+Open [GC UI v1 Lab](lab/v1.html) through a local server. This stand-alone demo consumes the v1 generated token CSS without replacing the original 0.1 playground.
+
+~~~bash
+npm run dev
+# Open http://localhost:4173/lab/v1.html
+npm test
+npm run tokens:check
+~~~
+
+### Machine-readable source
+- [v1 DTCG-style tokens](tokens/gc.v1.tokens.json): semantic light/dark schemes, four accent palettes, typography, space, radius, motion, focus, control geometry.
+- [CSS token compiler](scripts/build-v1-tokens.mjs) and [generated CSS](styles/gc.v1.generated.css).
+- [Token/contrast tests](tests/v1-contract.test.mjs); GitHub Actions checks the generated output.
+
+**Implementation boundaries:** CSS variables, reference lab and automated checks exist. Production React/Vue/SwiftUI/Compose component libraries, a calibrated arbitrary-seed or wallpaper color generator, all 63 components, original complete SVG icon set, native platform adapters, screenshot baselines and manual assistive-technology audits remain to be built and verified. See [accessibility and release requirements](docs/ACCESSIBILITY_RELEASE.md). Do not market candidate documentation as application-level WCAG conformance.
