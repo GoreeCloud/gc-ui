@@ -79,6 +79,7 @@ The existing v0.1 playground remains an **alpha reference**; the new v1 document
 10. [Release plan and production-quality gates](docs/RELEASE_PLAN_V1.md).
 11. [Experimental web API and quick start](docs/WEB_API_ALPHA.md).
 12. [Machine-readable component registry](registry/components.v1.json).
+13. [Verification and quality gates](docs/TESTING.md).
 
 ### Live reference labs
 Open [GC UI v1 Design Lab](lab/v1.html), [GC UI Components Lab](lab/components.html), and [Searchable Component Registry](lab/catalog.html) through a local server. Both consume the v1 semantic tokens; the Components Lab additionally uses [reusable CSS primitives](styles/gc.v1.components.css), [theme runtime](src/gc-theme-runtime.mjs), and [interaction bindings](src/gc-interactions.mjs). Neither replaces the original 0.1 playground.
