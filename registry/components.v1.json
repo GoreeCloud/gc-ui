@@ -1,0 +1,680 @@
+{
+  "schemaVersion": 1,
+  "libraryVersion": "0.2.0-alpha.1",
+  "identity": "GC UI",
+  "description": "Canonical candidate catalog, sourced from docs/COMPONENT_CATALOG_V1.md. Implementation status is explicit and is not an accessibility certification.",
+  "statuses": {
+    "specified": "Behavior and anatomy defined in the written specification, but no reviewed v1 implementation.",
+    "experimental": "At least one reference web implementation or treatment exists; APIs and accessibility are not stable.",
+    "stable": "Audited, versioned and supported implementation; none have reached this stage."
+  },
+  "components": [
+    {
+      "id": "A01",
+      "name": "Button",
+      "category": "Actions",
+      "anatomy": "label, optional leading/trailing glyph, spinner; primary, secondary, outline, quiet, danger; S/M/L",
+      "behavior": "Enter/Space; submit/reset types explicit; busy state does not change width; icon never sole confirmation",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-button"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "src/gc-interactions.mjs"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "A02",
+      "name": "Icon button",
+      "category": "Actions",
+      "anatomy": "hit zone 44; icon 20/24; quiet, filled, tonal, danger",
+      "behavior": "programmatic name mandatory; toggle variant exposes pressed state; tooltip not substitute for name",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "A03",
+      "name": "Split button",
+      "category": "Actions",
+      "anatomy": "main action + distinct menu trigger",
+      "behavior": "separate focus stops; ArrowDown opens menu; default action predictable",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "A04",
+      "name": "Floating action",
+      "category": "Actions",
+      "anatomy": "single elevated short action, optional label",
+      "behavior": "one dominant FAB per task context; never obscure content or mobile nav",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "A05",
+      "name": "Segmented control",
+      "category": "Actions",
+      "anatomy": "2–5 choices; single value",
+      "behavior": "one persistent selected item; use radio group when genuinely exclusive and form-like; arrow key behavior per chosen widget pattern",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "A06",
+      "name": "Action menu",
+      "category": "Actions",
+      "anatomy": "trigger + list of commands + separators",
+      "behavior": "opens on Enter/Space; Up/Down/Home/End, Escape closes, focus returns; destructive actions separated",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-menu"
+        ],
+        "sources": [
+          "src/gc-menu.mjs",
+          "styles/gc.v1.components.css",
+          "lab/primitives.css"
+        ],
+        "example": "lab/components.html#menus"
+      }
+    },
+    {
+      "id": "A07",
+      "name": "Overflow menu",
+      "category": "Actions",
+      "anatomy": "menu version of low-frequency actions",
+      "behavior": "never hide the only way to accomplish primary task in overflow",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "A08",
+      "name": "Toolbar",
+      "category": "Actions",
+      "anatomy": "grouped commands, optional search and title",
+      "behavior": "roving focus only where ARIA pattern applies; adaptive overflow must preserve command names",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F09",
+      "name": "Text field",
+      "category": "Input",
+      "anatomy": "persistent label, input, helper/error, optional prefix/suffix, clear",
+      "behavior": "label never replaced by placeholder; text selection works; error ID via aria-describedby",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-field",
+          "gc-input"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "F10",
+      "name": "Text area",
+      "category": "Input",
+      "anatomy": "label, expanding editor, count and help",
+      "behavior": "resizable unless product-specific editor; no unexpected autocorrect of data",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F11",
+      "name": "Search field",
+      "category": "Input",
+      "anatomy": "label, suggestions, clear, scope, submit",
+      "behavior": "keyboard suggestion list pattern; Escape clears popup first; announce results count",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F12",
+      "name": "Password",
+      "category": "Input",
+      "anatomy": "field plus reveal button, strength guidance",
+      "behavior": "reveal state named; caps lock notice optional; no forced clipboard prevention",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F13",
+      "name": "Checkbox",
+      "category": "Input",
+      "anatomy": "box, label, description; unchecked/checked/mixed",
+      "behavior": "Space toggles; grouped fieldset/legend; mixed is programmatic",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F14",
+      "name": "Radio group",
+      "category": "Input",
+      "anatomy": "circle, label, helper; one checked per group",
+      "behavior": "arrow keys navigate/select in standard grouped radio pattern",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F15",
+      "name": "Switch",
+      "category": "Input",
+      "anatomy": "track/thumb + immediate-action label",
+      "behavior": "on/off programmatic state; Space toggles; never for deferred submit form choice",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-switch"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "F16",
+      "name": "Slider",
+      "category": "Input",
+      "anatomy": "track, thumb, ticks, value; single/range",
+      "behavior": "arrow/Home/End/Page keys; numerical accessible min/max/now, discrete step announcement",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F17",
+      "name": "Select",
+      "category": "Input",
+      "anatomy": "native or accessible listbox",
+      "behavior": "use native select preferentially on mobile; typeahead, Escape, restored focus",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F18",
+      "name": "Combobox",
+      "category": "Input",
+      "anatomy": "editable or readonly; list popup",
+      "behavior": "implement recognized ARIA combobox keyboard model; async results cancel stale requests",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F19",
+      "name": "Date/time picker",
+      "category": "Input",
+      "anatomy": "editable display and calendar/grid or native system picker",
+      "behavior": "locale format, timezone and DST explicit; no color-only date availability",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F20",
+      "name": "File picker",
+      "category": "Input",
+      "anatomy": "drop zone, input, preview, validation",
+      "behavior": "keyboard activation plus browse alternative to drag/drop; show max size/type",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F21",
+      "name": "Stepper/number",
+      "category": "Input",
+      "anatomy": "numeric field and +/- buttons",
+      "behavior": "bounds announced; manual entry supported; avoid repeated accidental increments",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "F22",
+      "name": "Form validation summary",
+      "category": "Input",
+      "anatomy": "heading, linked errors, corrective help",
+      "behavior": "submit focuses summary when blocking, field IDs linked; preserve entered data",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C23",
+      "name": "Surface / Card",
+      "category": "Containers and data",
+      "anatomy": "header, body, action footer; flat, tonal, outlined, clickable",
+      "behavior": "only whole-card click when truly one destination; no nested actionable elements in button",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C24",
+      "name": "Lens panel",
+      "category": "Containers and data",
+      "anatomy": "backdrop, fill, edge, optional toolbar",
+      "behavior": "floating navigation/temporary control only; solid fallback; no Lens-in-Lens",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-lens"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#materials"
+      }
+    },
+    {
+      "id": "C25",
+      "name": "List",
+      "category": "Containers and data",
+      "anatomy": "optional grouped headings, row, metadata, actions",
+      "behavior": "row content supports 2 lines normally; actionable rows have clear destination",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C26",
+      "name": "List row",
+      "category": "Containers and data",
+      "anatomy": "leading glyph/media, title, subtitle, trailing affordance",
+      "behavior": "touch zone 44–48; selection indicator independent of hover",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C27",
+      "name": "Data table",
+      "category": "Containers and data",
+      "anatomy": "column headers, sorting, selection, bulk actions",
+      "behavior": "native table semantics; headers mapped to cells; sort state announced",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C28",
+      "name": "Grid",
+      "category": "Containers and data",
+      "anatomy": "responsive cards, track behavior, gap",
+      "behavior": "DOM reading order must match visual order; avoid masonry trapping keyboard",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C29",
+      "name": "Tree view",
+      "category": "Containers and data",
+      "anatomy": "expandable hierarchical items",
+      "behavior": "Left/Right expand/collapse in LTR; home/end; typeahead; selected vs focused distinct",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C30",
+      "name": "Accordion",
+      "category": "Containers and data",
+      "anatomy": "heading button, region",
+      "behavior": "Enter/Space toggles; aria-expanded; region labels; multiple/single policy stated",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C31",
+      "name": "Tabs",
+      "category": "Containers and data",
+      "anatomy": "tablist, tabs, tabpanels",
+      "behavior": "keyboard Arrow/Home/End, tab to active panel; automatic activation only when latency negligible",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-tabs",
+          "gc-tabpanel"
+        ],
+        "sources": [
+          "src/gc-interactions.mjs",
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "C32",
+      "name": "Badge/Chip",
+      "category": "Containers and data",
+      "anatomy": "short label, optional icon, dismiss",
+      "behavior": "status is noninteractive badge; removable chip has independently named remove button",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C33",
+      "name": "Avatar",
+      "category": "Containers and data",
+      "anatomy": "image or initials, availability marker",
+      "behavior": "image has useful alt if identifying; status never solely colored dot",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C34",
+      "name": "Tooltip",
+      "category": "Containers and data",
+      "anatomy": "concise supplementary text",
+      "behavior": "appears on hover and keyboard focus, Escape dismisses; not essential instructions",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C35",
+      "name": "Popover",
+      "category": "Containers and data",
+      "anatomy": "nonmodal interactive overlay anchored to trigger",
+      "behavior": "focus stays sensible; Escape and outside click policy; scroll boundary tracking",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C36",
+      "name": "Skeleton",
+      "category": "Containers and data",
+      "anatomy": "placeholders that mirror final geometry",
+      "behavior": "hide decorative skeletons from screen reader; loading status announced once",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "C37",
+      "name": "Charts",
+      "category": "Containers and data",
+      "anatomy": "visual encoding + legends, source, alt-data",
+      "behavior": "series distinguished by shape/labels, tabular equivalent, keyboard data exploration",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N38",
+      "name": "App bar",
+      "category": "Navigation",
+      "anatomy": "title, back affordance, actions",
+      "behavior": "at most two high-priority actions exposed on compact widths",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N39",
+      "name": "Bottom navigation",
+      "category": "Navigation",
+      "anatomy": "3–5 labeled destinations; active marker",
+      "behavior": "never scrollable by default; safe-area inset; selection visible without color",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N40",
+      "name": "Navigation rail",
+      "category": "Navigation",
+      "anatomy": "compact destinations and overflow",
+      "behavior": "for medium widths; labels available on focus/selection or always when space allows",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N41",
+      "name": "Navigation sidebar",
+      "category": "Navigation",
+      "anatomy": "grouped destinations, resizable option",
+      "behavior": "desktop persistent when room; collapse preserves context and scroll position",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N42",
+      "name": "Breadcrumbs",
+      "category": "Navigation",
+      "anatomy": "path links with current item",
+      "behavior": "only for hierarchical spaces; use nav landmark; don't duplicate a back control needlessly",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N43",
+      "name": "Pagination",
+      "category": "Navigation",
+      "anatomy": "current, previous/next, page size",
+      "behavior": "reachable keyboard buttons, current page announced; don't trap focus on page rerender",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N44",
+      "name": "Command palette",
+      "category": "Navigation",
+      "anatomy": "search, grouped suggestions and shortcuts",
+      "behavior": "invoked by discoverable command; Escape returns focus; no hidden essential functionality",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "N45",
+      "name": "Stepper/wizard",
+      "category": "Navigation",
+      "anatomy": "step labels, current, completed, blocked",
+      "behavior": "current step announced; users can review; do not lose entered data",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "O46",
+      "name": "Toast/snackbar",
+      "category": "Feedback and overlays",
+      "anatomy": "brief message, optional one action",
+      "behavior": "polite announcement, does not steal focus; time limit extends/pauses where necessary",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-toast-region",
+          "gc-toast"
+        ],
+        "sources": [
+          "src/gc-interactions.mjs",
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "O47",
+      "name": "Inline banner",
+      "category": "Feedback and overlays",
+      "anatomy": "icon, severity, title, description, optional action",
+      "behavior": "semantic intent with text; do not overuse warning color",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-banner"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "O48",
+      "name": "Alert dialog",
+      "category": "Feedback and overlays",
+      "anatomy": "heading, summary, primary/cancel",
+      "behavior": "modal focus containment; Escape handling; safe focus initial for irreversible action",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-dialog"
+        ],
+        "sources": [
+          "src/gc-interactions.mjs",
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "O49",
+      "name": "Dialog",
+      "category": "Feedback and overlays",
+      "anatomy": "heading, content, footer actions",
+      "behavior": "max width 560, scroll content not whole viewport; close restores invoking focus",
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-dialog"
+        ],
+        "sources": [
+          "src/gc-interactions.mjs",
+          "styles/gc.v1.components.css"
+        ],
+        "example": "lab/components.html#components"
+      }
+    },
+    {
+      "id": "O50",
+      "name": "Bottom sheet",
+      "category": "Feedback and overlays",
+      "anatomy": "drag handle, heading, content/actions",
+      "behavior": "gesture and keyboard equivalent; safe-area inset; predictable dismissal",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "O51",
+      "name": "Side sheet",
+      "category": "Feedback and overlays",
+      "anatomy": "resizable inspector, close, actions",
+      "behavior": "preferred for tablet/desktop detail; focus order preserves app context",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "O52",
+      "name": "Progress",
+      "category": "Feedback and overlays",
+      "anatomy": "determinate, indeterminate; bar/ring",
+      "behavior": "role, label and numerical value when known; reduced motion fallback",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "O53",
+      "name": "Empty state",
+      "category": "Feedback and overlays",
+      "anatomy": "illustration, title, explanation, next step",
+      "behavior": "informative, not celebratory when blocked; one relevant action",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "O54",
+      "name": "Error/retry state",
+      "category": "Feedback and overlays",
+      "anatomy": "diagnostic summary, action, optional details",
+      "behavior": "distinguish offline, permission, validation, server and destructive failure",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M55",
+      "name": "Media player chrome",
+      "category": "Specialized",
+      "anatomy": "play, seek, captions, audio, fullscreen",
+      "behavior": "labeled controls; keyboard/media-key support; Lens over imagery with robust scrim",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M56",
+      "name": "Image viewer",
+      "category": "Specialized",
+      "anatomy": "zoom, pan, caption, close",
+      "behavior": "pointer/touch and keyboard equivalents; alt text; avoid scroll-jank",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M57",
+      "name": "Drag-and-drop item",
+      "category": "Specialized",
+      "anatomy": "handle, source, target",
+      "behavior": "reorder actions and keyboard alternative, announcement on relocation",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M58",
+      "name": "Calendar",
+      "category": "Specialized",
+      "anatomy": "month/week/day schedule views",
+      "behavior": "accessible events list alternative; timezone and first weekday localized",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M59",
+      "name": "Timeline",
+      "category": "Specialized",
+      "anatomy": "ordered events and timestamps",
+      "behavior": "list semantics; color+shape status; time format locale aware",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M60",
+      "name": "Notification center",
+      "category": "Specialized",
+      "anatomy": "grouped cards, unread state, actions",
+      "behavior": "clear affordance for read/unread; no focus theft on arrival",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M61",
+      "name": "Context menu",
+      "category": "Specialized",
+      "anatomy": "location-specific commands",
+      "behavior": "keyboard Shift+F10/context-menu key; touch long-press is optional shortcut",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M62",
+      "name": "Split view",
+      "category": "Specialized",
+      "anatomy": "primary and detail panes, resize handle",
+      "behavior": "draggable and keyboard resize, minimum widths and collapse",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    },
+    {
+      "id": "M63",
+      "name": "Onboarding tour",
+      "category": "Specialized",
+      "anatomy": "steps, optional spotlight, skip",
+      "behavior": "never block core tasks after first use; no forced motion; progress and dismiss",
+      "webStatus": "specified",
+      "nativeStatus": "specified"
+    }
+  ]
+}
