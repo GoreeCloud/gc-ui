@@ -71,3 +71,5 @@ Menu positioning and all three ARIA menu item variants (`menuitem`, `menuitemche
 The exported `./css/navigation` sheet styles `.gc-app-bar`, `.gc-nav-bottom` (compact viewports below 600 CSS px), `.gc-nav-rail` (600–1199), `.gc-nav-sidebar` (1200+), `.gc-breadcrumbs`, and `.gc-side-sheet`. The reference at `lab/adaptive.html` uses real links with `aria-current=page`, labeled navigation landmarks, and a native modal `<dialog>` controlled through `initDialog`. Route changes in this lab only update demonstration content and are not a general-purpose router.
 
 The app bar and navigation CSS intentionally stay in a separate stylesheet so simple components don't require shell layout primitives. Screen reader, focus, contrast and viewport verification remains part of pre-stable release gating.
+
+Full responsive shell, navigation accessibility, native modal and test requirements are in [Adaptive shell architecture](ADAPTIVE_SHELL.md).
