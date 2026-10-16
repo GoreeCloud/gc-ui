@@ -66,7 +66,10 @@ test('catalog separates 18 experimental components from 45 specified patterns',a
 });
 test('custom palette seed is applied in the foundation lab',async({page})=>{
   await page.goto('/lab/v1.html');
-  await page.locator('#custom-seed').fill('#2079a9');
+  await page.locator('#custom-seed').evaluate(input=>{
+    input.value='#2079a9';
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+  });
   await expect(page.locator('html')).toHaveAttribute('data-gc-accent','custom');
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode',/light|dark/);
 });
