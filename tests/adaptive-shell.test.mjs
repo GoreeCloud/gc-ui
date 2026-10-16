@@ -42,3 +42,12 @@ test('native modal sheet has label, description and close control',()=>{
  assert.match(script,/initDialog\(document.getElementById\('details-sheet'\)\)/);
  assert.match(css,/\.gc-side-sheet::backdrop/);
 });
+
+test('route changes announce content and focus the heading, but first paint remains inert',()=>{
+ assert.match(markup,/id="route-announcement"[^>]+role="status" aria-live="polite"/);
+ assert.match(markup,/id="page-title" tabindex="-1"/);
+ assert.match(script,/window\.addEventListener\('hashchange',/);
+ assert.match(script,/title\.focus\(\)/);
+ assert.match(script,/Now viewing /);
+ assert.match(css,/\.gc-visually-hidden\{/);
+});
