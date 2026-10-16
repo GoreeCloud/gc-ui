@@ -10,7 +10,8 @@
     "check": "npm run tokens:check && npm test && npm run audit:colors && node tests/check-lab-references.mjs",
     "tokens:build": "node scripts/build-v1-tokens.mjs",
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
-    "audit:colors": "node scripts/audit-colors.mjs"
+    "audit:colors": "node scripts/audit-colors.mjs",
+    "test:e2e": "playwright test"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",
