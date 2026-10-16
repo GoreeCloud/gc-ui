@@ -33,7 +33,7 @@ These are initial default values used for reference and documentation; implement
 | surfaceTonal | #F4F5FA | #292F40 |
 | onSurface | #20243A | #F2F2FA |
 | onSurfaceMuted | #5F657B | #B3B9CF |
-| outline | #CDD1E0 | #747C99 |
+| outline | #8990A7 | #747C99 |
 | outlineStrong | #777E99 | #AEB6D0 |
 | divider | #E5E7F0 | #373C50 |
 | focusRing | #4132B3 | #D8D2FF |
