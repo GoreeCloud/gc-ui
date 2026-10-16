@@ -70,3 +70,9 @@ test('high contrast and forced colors suppress custom theme inline overrides',()
  assert.equal(root.dataset.gcMaterial,'solid');
  controller.destroy();
 });
+
+test('OS high-contrast remains authoritative even with saved standard preference',()=>{
+ const resolved=resolveTheme({contrast:'standard',material:'translucent'},{highContrast:true});
+ assert.equal(resolved.contrast,'high');
+ assert.equal(resolved.material,'solid');
+});
