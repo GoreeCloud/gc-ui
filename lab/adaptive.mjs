@@ -32,6 +32,7 @@ function renderAppearance(){
  const next=mode==='dark'?'light':'dark';
  themeToggle.textContent=next==='dark'?'Dark mode':'Light mode';
  themeToggle.setAttribute('aria-label','Switch to '+next+' appearance');
+ themeToggle.dataset.nextMode=next;
 }
 window.addEventListener('hashchange',()=>{
  renderRoute();
