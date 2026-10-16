@@ -42,7 +42,7 @@ test('search keyboard suggestions select with Enter, Escape closes first',async(
  await expect(page.locator('#project-result-count')).toHaveText('6 projects found');
  await search.fill('d');
  await expect(search).toHaveAttribute('aria-expanded','true');
- await expect(page.getByRole('option')).toHaveCount(3);
+ await expect(page.locator('#project-suggestions [role=option]')).toHaveCount(3);
  await search.press('ArrowDown');
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
  await search.press('ArrowDown');
