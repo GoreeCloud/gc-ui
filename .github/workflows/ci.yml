@@ -33,3 +33,29 @@ jobs:
           node --check src/index.mjs
       - name: Resolve reference lab local assets
         run: node tests/check-lab-references.mjs
+
+  browser-smoke:
+    name: Browser interaction smoke tests (Chromium)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned Playwright test runner
+        run: npm install --no-save --no-package-lock @playwright/test@1.64.1
+      - name: Install Chromium and system dependencies
+        run: npx playwright install --with-deps chromium
+      - name: Test responsive browser behaviors
+        run: npm run test:e2e
+      - name: Upload failure traces
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-ui-playwright-failures
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 7
+          if-no-files-found: ignore
