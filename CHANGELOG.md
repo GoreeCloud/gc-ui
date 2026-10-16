@@ -3,6 +3,11 @@
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
 ## Unreleased alpha development — 2026-10-16
+### Verified on a connected laptop and phone
+- **55/55 Node tests** and **19/19 Playwright Chromium tests** passed locally, alongside an opaque-color audit with **7,988 checks and no failures**.
+- Fixed the test-only TypeScript generic function matcher and browser automation of visually hidden switch controls (via clickable labels).
+- Validated the adaptive mobile layout and side-sheet touch dismissal on OnePlus N200 Android Firefox over USB. The first Android system Back attempt did not dismiss the modal; tracked as an open compatibility observation. Detailed evidence is in `docs/DEVICE_TESTING_2026_10_16.md`.
+
 ### Added
 - Eight native-first reference component treatments: icon buttons, checkboxes, radio groups, sliders, cards, accordions, badges and determinate progress.
 - Machine-readable maturity registry updated to 24 experimental and 39 specification-only patterns.
