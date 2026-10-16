@@ -49,3 +49,5 @@
  .gc-side-sheet::backdrop{background:Canvas;opacity:.8}
  .gc-breadcrumbs a{color:LinkText}
 }
+
+.gc-visually-hidden{position:absolute!important;inline-size:1px!important;block-size:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;clip-path:inset(50%)!important}
