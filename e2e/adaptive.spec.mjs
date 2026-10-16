@@ -62,3 +62,30 @@ test('compact layout avoids horizontal document overflow',async({page})=>{
   }));
   expect(dims.content).toBeLessThanOrEqual(dims.viewport+1);
 });
+
+test('adaptive browser title uses the full GoreeCloud UI product name on route changes',async({page})=>{
+ await page.goto('/lab/adaptive.html');
+ await expect(page).toHaveTitle('GoreeCloud UI · Overview');
+ await page.locator('.gc-nav-sidebar [data-gc-route="activity"]').click();
+ await expect(page).toHaveTitle('GoreeCloud UI · Activity');
+ await page.goBack();
+ await expect(page).toHaveTitle('GoreeCloud UI · Overview');
+});
+test('destroying an open native dialog clears the modal state',async({page})=>{
+ await page.goto('/lab/adaptive.html');
+ const result=await page.evaluate(async()=>{
+  const {initDialog}=await import('../src/gc-interactions.mjs');
+  const temp=document.createElement('dialog');
+  temp.id='temporary-lifecycle-test';
+  temp.innerHTML='<button data-gc-dialog-close>Close</button>';
+  document.body.append(temp);
+  const controller=initDialog(temp);
+  controller.open();
+  const wasOpen=temp.open;
+  controller.destroy();
+  const nowClosed=!temp.open;
+  temp.remove();
+  return {wasOpen,nowClosed};
+ });
+ expect(result).toEqual({wasOpen:true,nowClosed:true});
+});
