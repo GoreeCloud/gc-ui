@@ -89,3 +89,42 @@ test('destroying an open native dialog clears the modal state',async({page})=>{
  });
  expect(result).toEqual({wasOpen:true,nowClosed:true});
 });
+
+test('mobile appearance switch remains accessible at 320px and preserves preferences',async({page})=>{
+ await page.setViewportSize({width:320,height:740});
+ await page.goto('/lab/adaptive.html');
+ const toggle=page.getByRole('button',{name:'Switch to dark appearance'});
+ await expect(toggle).toBeVisible();
+ const dims=await toggle.boundingBox();
+ expect(dims.width).toBeGreaterThanOrEqual(44);
+ expect(dims.height).toBeGreaterThanOrEqual(44);
+ await toggle.click();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+ await expect(page.getByRole('button',{name:'Switch to light appearance'})).toBeVisible();
+ await page.locator('.gc-nav-bottom [data-gc-route="library"]').click();
+ await expect(page).toHaveTitle('GoreeCloud UI · Library');
+ await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+ await page.reload();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(1);
+});
+test('responsive chrome stays in bounds and sheet anchors to inline end in RTL',async({page})=>{
+ for(const width of [320,375,599,600,840,1199,1200,1440]){
+  await page.setViewportSize({width,height:740});
+  await page.goto('/lab/adaptive.html');
+  await page.evaluate(()=>document.documentElement.dir='rtl');
+  const values=await page.evaluate(()=>({
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+    visible:['bottom','rail','sidebar'].filter(s=>getComputedStyle(document.querySelector('.gc-nav-'+s)).display!=='none')
+  }));
+  expect(values.overflow,'Overflow at '+width+' RTL').toBeLessThanOrEqual(1);
+  expect(values.visible).toHaveLength(1);
+ }
+ await page.setViewportSize({width:1024,height:740});
+ await page.goto('/lab/adaptive.html');
+ await page.evaluate(()=>document.documentElement.dir='rtl');
+ await page.locator('#open-details').click();
+ const left=await page.locator('#details-sheet').evaluate(el=>el.getBoundingClientRect().left);
+ expect(left).toBeLessThanOrEqual(1);
+});
