@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Search the 63 GC UI design system component contracts and distinguish experimental implementations from specifications">
+<title>GC UI · Component Registry</title>
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.components.css">
+<link rel="stylesheet" href="./catalog.css">
+<script type="module" src="./catalog.mjs"></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to component catalog</a>
+<div class="environment">
+<header class="gc-lens masthead">
+ <div class="identity"><span class="logo" aria-hidden="true">G</span><div><strong>GC UI</strong><small>Component Registry · v1 candidate</small></div></div>
+ <nav aria-label="GC UI labs"><a href="./v1.html">Foundations</a><a href="./components.html">Components Lab</a><a aria-current="page" href="./catalog.html">Registry</a></nav>
+ <a href="https://github.com/GoreeCloud/gc-ui" class="repo">GitHub ↗</a>
+</header>
+<main id="main">
+ <section class="hero">
+  <p class="eyebrow">THE SYSTEM / COMPONENT LIBRARY</p>
+  <h1>Every detail,<br><em>accounted for.</em></h1>
+  <p>The full GC UI component architecture—clearly separating documented patterns from experimental reference implementations.</p>
+  <div class="summary">
+   <div><strong>63</strong><span>Documented patterns</span></div>
+   <div><strong>10</strong><span>Experimental web references</span></div>
+   <div><strong>0</strong><span>Stable releases</span></div>
+  </div>
+ </section>
+ <section class="registry-section" aria-labelledby="browse-title">
+  <div class="heading"><div><p class="eyebrow">EXPLORE / 01</p><h2 id="browse-title">Browse the system.</h2></div><p>Find components by category, name, code or behavior.</p></div>
+  <div class="filters">
+   <div class="gc-field"><label class="gc-field-label" for="component-query">Search components</label><input class="gc-input" id="component-query" type="search" autocomplete="off" placeholder="Search components, patterns or behaviors"></div>
+   <div class="gc-field"><label class="gc-field-label" for="component-category">Category</label>
+   <select class="gc-input" id="component-category">
+     <option value="all">All categories</option>
+     <option value="Actions">Actions</option>
+     <option value="Input">Input</option>
+     <option value="Containers and data">Containers &amp; data</option>
+     <option value="Navigation">Navigation</option>
+     <option value="Feedback and overlays">Feedback &amp; overlays</option>
+     <option value="Specialized">Specialized</option>
+   </select></div>
+  </div>
+  <div class="status-filter" role="group" aria-label="Implementation status">
+   <button class="filter-chip" type="button" data-filter-status="all" aria-pressed="true">All patterns</button>
+   <button class="filter-chip" type="button" data-filter-status="experimental" aria-pressed="false">Experimental</button>
+   <button class="filter-chip" type="button" data-filter-status="specified" aria-pressed="false">Specification only</button>
+  </div>
+  <p class="result-message" id="result-message" role="status" aria-live="polite">Loading component registry…</p>
+  <div id="component-grid" class="component-grid" role="list" aria-label="GC UI component specifications"></div>
+  <div class="empty-state" id="empty-state" hidden><h3>No matching patterns</h3><p>Try a different category or a broader search.</p><button class="gc-button" data-variant="secondary" id="reset-filters" type="button">Clear filters</button></div>
+ </section>
+ <section class="about"><span class="eyebrow">DESIGN STANDARD</span><h2>Documented is not the same as delivered.</h2><p>Every component has a purpose, anatomy, variant contract and interaction requirements. Production status also requires coded implementations, keyboard and accessibility audits, visual testing, platform validation, and maintained APIs.</p><a class="gc-button" data-variant="primary" href="../docs/RELEASE_PLAN_V1.md">View release requirements ↗</a></section>
+</main>
+<footer>GC UI — Original design language · <a href="../docs/COMPONENT_CATALOG_V1.md">Full component contracts</a> · GoreeCloud © 2026</footer>
+</div>
+</body></html>
