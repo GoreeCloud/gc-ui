@@ -73,3 +73,6 @@ The exported `./css/navigation` sheet styles `.gc-app-bar`, `.gc-nav-bottom` (co
 The app bar and navigation CSS intentionally stay in a separate stylesheet so simple components don't require shell layout primitives. Screen reader, focus, contrast and viewport verification remains part of pre-stable release gating.
 
 Full responsive shell, navigation accessibility, native modal and test requirements are in [Adaptive shell architecture](ADAPTIVE_SHELL.md).
+
+## Component lifecycle stabilization
+Native dialog controllers close any modal that is still open when destroyed, unregister listeners, and return focus to the original trigger where possible; calls to `open()` or `close()` after destruction throw. Tab groups reject duplicate tabpanel references and respect both native `disabled` and `aria-disabled="true"`, including changes made after initialization. The browser and Node suites cover these contracts.
