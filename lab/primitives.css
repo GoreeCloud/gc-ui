@@ -34,3 +34,8 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
 @media(forced-colors:active){.gc-menu [role=menuitem]:focus-visible{background:Highlight;color:HighlightText;outline-color:Highlight}}
 
 .setting-note{display:block;margin-top:9px;font-size:12px;line-height:1.5;color:var(--gc-v1-color-on-surface-muted)}
+
+.gc-native-controls{display:flex;align-items:center;gap:12px;margin-block:16px}
+.gc-native-controls .gc-field-description{max-width:210px}
+.gc-card .gc-field-label{display:flex;justify-content:space-between;gap:12px}
+.gc-card output{font-weight:750;color:var(--gc-v1-color-primary)}
