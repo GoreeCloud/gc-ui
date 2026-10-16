@@ -26,3 +26,14 @@ test('generated semantic foregrounds pass WCAG normal-text contrast for diverse 
     }
   }
 });
+
+test('every generated semantic role is an opaque sRGB color',()=>{
+  for(const seed of ['#000000','#FFFFFF','#5145D9','#087C8D','#AE4D3F','#3F744B','#FF0000','#00FF00','#0000FF','#DEBFAA','#FFFF00']){
+    for(const mode of ['light','dark']){
+      const scheme=generateTheme(seed,mode);
+      for(const [role,value] of Object.entries(scheme.roles)){
+        assert.match(value,/^#[0-9A-F]{6}$/,seed+' '+mode+' '+role);
+      }
+    }
+  }
+});
