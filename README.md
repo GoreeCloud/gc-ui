@@ -117,3 +117,6 @@ Run `npm run check` for dependency-free source verification. To run browser test
 
 ### Browser and visual verification
 GitHub Actions now includes an independent Chromium Playwright job. The suite covers keyboard tabs and menus, native controls, accessibility material overrides, responsive navigation, and searchable catalog behavior. A dedicated `e2e/visual-capture.spec.mjs` creates five reviewable screenshot attachments (light, dark, high-contrast, compact and registry). These are **evidence captures, not approved pixel regression baselines**. Manual design and assistive-technology signoff remains required.
+
+### Shared theme and keyboard interaction hardening
+Both reference laboratories now use `createThemeController()`. Custom seed colors are not applied as inline overrides while system or user high contrast is active; the effective material is visibly announced in the Foundations Lab. Command menus are distributed in the component CSS, suppress duplicate native button activation, and permit ordinary Tab / Shift+Tab focus movement before focus-exit dismissal. Browser regression scenarios and unit/source contracts protect these behaviors.
