@@ -54,3 +54,6 @@ The complete Node source gate and Chromium Playwright suite passed on a connecte
 
 ## Browser execution order (hardware-tested)
 Run `npm run test:e2e` to execute the 17 interaction scenarios first, followed by eight independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
+
+## Firefox engine smoke testing
+Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 17 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
