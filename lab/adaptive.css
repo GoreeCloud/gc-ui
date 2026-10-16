@@ -34,8 +34,17 @@ a{color:inherit}
 .gc-shell-footer a{color:var(--gc-v1-color-link)}
 @media(min-width:1200px){.gc-main-content{margin-inline-start:var(--gc-v1-shell-sidebar-width,248px)}}
 @media(min-width:600px) and (max-width:1199px){.gc-main-content{margin-inline-start:var(--gc-v1-shell-rail-width,88px)}.gc-metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:599px){.gc-main-content{padding:38px 20px calc(124px + env(safe-area-inset-bottom))}.gc-page-header{display:block;margin-bottom:40px}.gc-page-header h1{font-size:45px}.gc-page-header>.gc-button{margin-top:20px}.gc-metric-grid{grid-template-columns:1fr}.gc-metric-card{min-height:160px}.gc-activity-list li{align-items:flex-start;flex-wrap:wrap}.gc-activity-list time{margin-inline-start:58px}.gc-shell-caption{display:none}.gc-app-bar-actions .gc-button[data-variant=quiet]{display:none}.gc-shell-footer{padding-bottom:calc(112px + env(safe-area-inset-bottom))}}
+@media(max-width:599px){.gc-main-content{padding:38px 20px calc(124px + env(safe-area-inset-bottom))}.gc-page-header{display:block;margin-bottom:40px}.gc-page-header h1{font-size:45px}.gc-page-header>.gc-button{margin-top:20px}.gc-metric-grid{grid-template-columns:1fr}.gc-metric-card{min-height:160px}.gc-activity-list li{align-items:flex-start;flex-wrap:wrap}.gc-activity-list time{margin-inline-start:58px}.gc-shell-caption{display:none}.gc-shell-footer{padding-bottom:calc(112px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 /* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
 img.gc-shell-mark{display:block;object-fit:contain;flex:none;background:none;padding:0}
+
+/* Compact header keeps appearance preferences discoverable without crowding the brand. */
+@media(max-width:599px){
+ .gc-app-bar{padding-inline:12px;gap:8px}
+ .gc-app-bar-actions{gap:8px}
+ #appearance-toggle{display:grid;place-items:center;flex:none;inline-size:44px;min-inline-size:44px;min-block-size:44px;padding:0;font-size:0}
+ #appearance-toggle::before{content:'☾';font-size:22px;line-height:1}
+ #appearance-toggle[data-next-mode=light]::before{content:'☀';font-size:22px}
+}
