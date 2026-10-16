@@ -120,3 +120,25 @@
 .gc-skip-link:focus{inset-block-start:12px;outline:3px solid var(--gc-v1-color-focus-ring)}
 /* Suppress Chromium/WebKit's native clear glyph when a named clear button is provided. */
 .gc-search-input::-webkit-search-cancel-button,.gc-search-input::-webkit-search-decoration{display:none}
+
+
+/* Native-first passphrase, select, bounded number and error/retry patterns (experimental). */
+.gc-passphrase-wrap{position:relative;display:flex;align-items:center;inline-size:100%}
+.gc-passphrase-input{min-inline-size:0;inline-size:100%;padding-inline-end:82px}
+.gc-passphrase-reveal{position:absolute;inset-inline-end:3px;inline-size:74px;min-block-size:42px;border:0;border-radius:12px;background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.gc-passphrase-reveal:focus-visible,.gc-native-select:focus-visible,.gc-stepper-button:focus-visible,.gc-stepper-input:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px}
+.gc-native-select{display:block;inline-size:100%;min-block-size:48px;color:var(--gc-v1-color-on-surface);background:var(--gc-v1-color-surface);cursor:pointer}
+.gc-stepper{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:stretch;gap:10px;inline-size:100%}
+.gc-stepper-button{min-block-size:48px;min-inline-size:48px;border:1px solid var(--gc-v1-color-outline);border-radius:13px;background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface);font:inherit;font-size:24px;cursor:pointer}
+.gc-stepper-button:disabled{opacity:.55;cursor:not-allowed}
+.gc-stepper-input{inline-size:100%;min-inline-size:0;text-align:center;font-variant-numeric:tabular-nums}
+.gc-form-result{font-size:14px;color:var(--gc-v1-color-on-surface);font-weight:650}
+.gc-recovery-error{padding:20px;border:2px solid var(--gc-v1-color-danger);border-radius:18px;background:var(--gc-v1-color-danger-container);color:var(--gc-v1-color-on-danger-container);margin-top:20px}
+.gc-recovery-error h3{font-size:17px;margin:0 0 8px}
+.gc-recovery-error p{font-size:14px;margin:0 0 16px;line-height:1.55}
+.gc-recovery-error[hidden]{display:none!important}
+@media(forced-colors:active){
+ .gc-passphrase-reveal,.gc-native-select,.gc-stepper-button,.gc-stepper-input,.gc-recovery-error{border:1px solid CanvasText!important;background:Canvas!important;color:CanvasText!important}
+ .gc-passphrase-reveal:focus-visible,.gc-stepper-button:focus-visible{outline-color:Highlight}
+ .gc-stepper-button:disabled{color:GrayText!important;opacity:1}
+}
