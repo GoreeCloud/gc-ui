@@ -47,3 +47,26 @@ test('runtime reacts to system changes, supports custom themes, restores curated
   assert.equal(queryMap.get('(prefers-color-scheme: dark)').handlers.size,0);
   assert.throws(()=>controller.set({mode:'light'}));
 });
+
+test('high contrast and forced colors suppress custom theme inline overrides',()=>{
+ const vars=new Map();
+ const root={dataset:{},style:{setProperty:(key,val)=>vars.set(key,val),removeProperty:key=>vars.delete(key)},dispatchEvent(){}};
+ const mql=new Map();
+ const media=pattern=>{
+   const handlers=new Set();
+   const query={matches:false,addEventListener:(_,fn)=>handlers.add(fn),removeEventListener:(_,fn)=>handlers.delete(fn),emit(value){this.matches=value;for(const fn of handlers)fn();}};
+   mql.set(pattern,query);return query;
+ };
+ const controller=createThemeController({root,media,storage:null});
+ controller.set({accent:'custom',seed:'#CC3265'});
+ assert.ok(vars.size>0);
+ controller.set({contrast:'high'});
+ assert.equal(vars.size,0);
+ assert.equal(root.dataset.gcContrast,'high');
+ controller.set({contrast:'standard'});
+ assert.ok(vars.size>0);
+ mql.get('(forced-colors: active)').emit(true);
+ assert.equal(vars.size,0);
+ assert.equal(root.dataset.gcMaterial,'solid');
+ controller.destroy();
+});
