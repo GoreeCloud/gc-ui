@@ -2,6 +2,13 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Native-first forms and component lifecycle wave — 2026-10-16
+- Added the [Forms Lab](lab/forms.html) with four experimental patterns: F10 Text area, F11 Search field, F22 Form validation summary, and O53 Empty state.
+- Registry maturity now reads **28 experimental**, **35 specification-only**, **0 stable** (63 documented patterns).
+- Stabilized tab initialization with ARIA-disabled selected items and guarded toast timers against detached historical events.
+- Expanded Node and browser regression coverage, automated forms accessibility states, and screenshot fixtures. The [forms contract](docs/FORMS_CONTRACT.md) documents the interaction boundaries and open manual QA.
+- No package release or native platform adapter was published.
+
 ## Concurrent stabilization checkpoint — 2026-10-16
 - Restored the 44px mobile appearance toggle, fixed logical RTL side-sheet anchoring, and improved compact badge wrapping.
 - Expanded the browser quality gate to **22 Chromium interactions, 22 Firefox interactions, 10 axe-core state audits, and 10 screenshot captures**.
