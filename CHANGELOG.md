@@ -2,6 +2,12 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Physical Android Firefox validation and mobile footer fix — 2026-10-16
+- Exercised the actual USB Android Firefox UI: touch bottom navigation, light/dark mode, Details sheet, Android Back, virtual keyboard, linked validation errors, local success, and landscape two-column content.
+- Found cramped footer links against the fixed bottom bar; expanded compact footer end padding from 112px to 168px plus safe-area inset, added 320/360/375px hit-target clearance regression, and **visually verified the fix on a freshly loaded physical phone page**.
+- Latest implementation checkpoint: **175 passing scripted tests** (75 Node, 36 Chromium interactions, 36 Firefox interactions, 15 axe screens, 13 screenshot captures) and [all three successful GitHub Actions jobs](https://github.com/GoreeCloud/gc-ui/actions/runs/38979945053).
+- Device accessibility settings were left untouched. TalkBack, screen-reader quality, and additional physical form controls remain pending. See [real-device QA report](docs/QA_ANDROID_FIREFOX_REAL_DEVICE_2026-10-16.md).
+
 ## Native-first settings and recovery wave — 2026-10-16
 - Extended the [Forms Lab](lab/forms.html) with F12 Password reveal, F17 native Select, F21 bounded Stepper/number and O54 Error/retry state.
 - Hardened search against IME composition events; added associated source/browser tests, stateful axe screens, and a compact error/retry visual capture. The Forms Lab's offscreen skip link also stays outside scrolled full-page screenshots while remaining visible on focus.
