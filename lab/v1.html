@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GC UI v1 — Reference Lab</title>
+<meta name="description" content="Interactive GC UI semantic token and material reference lab">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="./v1.css">
+<script defer src="./v1.js"></script></head>
+<body>
+<a class="skip" href="#main">Skip to main content</a>
+<div class="scene">
+  <header class="lens topbar">
+    <div class="brand"><span class="brandmark" aria-hidden="true">G</span><span><strong>GC UI</strong><small>Design Language · v1 candidate</small></span></div>
+    <nav aria-label="Reference navigation"><a href="#tokens">Tokens</a><a href="#controls">Components</a><a href="#materials">Materials</a></nav>
+    <a class="repository" href="https://github.com/GoreeCloud/gc-ui">Repository ↗</a>
+  </header>
+  <main id="main">
+    <section class="hero"><p class="eyebrow">ONE LANGUAGE. EVERY EXPERIENCE.</p><h1>Clarity has<br><em>dimension.</em></h1><p>Expressive personality, quiet information, and purposeful depth. A living demonstration of GC UI’s independent visual foundations.</p>
+      <div class="heroactions"><a class="button primary" href="#controls">Explore components <span aria-hidden="true">↗</span></a><a class="button secondary" href="#tokens">Explore tokens</a></div>
+    </section>
+    <section id="tokens" class="section" aria-labelledby="tokens-title">
+      <div class="section-heading"><div><p class="eyebrow">FOUNDATIONS / 01</p><h2 id="tokens-title">Make it yours.</h2></div><p>The meaning stays stable while the color changes.</p></div>
+      <div class="panel settings">
+        <fieldset><legend>Appearance</legend><div class="segments" role="group" aria-label="Appearance selection">
+          <button type="button" data-mode="auto" aria-pressed="false">Auto</button><button type="button" data-mode="light" aria-pressed="true">Light</button><button type="button" data-mode="dark" aria-pressed="false">Dark</button>
+        </div></fieldset>
+        <fieldset><legend>Accent palette</legend><div class="swatches" role="group" aria-label="GC UI accent">
+          <button class="swatch iris" data-accent="iris" aria-label="Iris accent" aria-pressed="true"></button><button class="swatch lagoon" data-accent="lagoon" aria-label="Lagoon accent" aria-pressed="false"></button><button class="swatch ember" data-accent="ember" aria-label="Ember accent" aria-pressed="false"></button><button class="swatch moss" data-accent="moss" aria-label="Moss accent" aria-pressed="false"></button>
+        </div></fieldset>
+        <fieldset><legend>Lens material</legend><div class="segments" role="group" aria-label="Material selection">
+          <button type="button" data-material="translucent" aria-pressed="true">Translucent</button><button type="button" data-material="solid" aria-pressed="false">Solid</button>
+        </div></fieldset>
+      </div>
+      <div class="role-grid" aria-label="Color role samples">
+        <div class="role primary-role"><strong>Primary</strong><span>High-emphasis action</span></div>
+        <div class="role secondary-role"><strong>Secondary</strong><span>Supporting character</span></div>
+        <div class="role tertiary-role"><strong>Tertiary</strong><span>Expressive contrast</span></div>
+        <div class="role success-role"><strong>Success</strong><span>Positive feedback</span></div>
+        <div class="role warning-role"><strong>Warning</strong><span>Needs attention</span></div>
+        <div class="role danger-role"><strong>Danger</strong><span>Destructive intent</span></div>
+      </div>
+    </section>
+    <section id="controls" class="section" aria-labelledby="controls-title">
+      <div class="section-heading"><div><p class="eyebrow">COMPONENTS / 02</p><h2 id="controls-title">Care in every state.</h2></div><p>Semantic, accessible, restrained.</p></div>
+      <div class="panel demo"><div class="demo-left"><h3>Start something brilliant.</h3><p>Native semantics and tokenized treatment, shown with actual interactive HTML controls.</p><label for="project-name">Project name</label><input id="project-name" type="text" placeholder="Your next idea" autocomplete="off" aria-describedby="name-help"><small id="name-help">Give your workspace a meaningful name.</small>
+      <label class="check"><input type="checkbox" id="updates"> Send me product updates</label>
+      <div class="actions"><button class="button primary" id="create" type="button">Create project</button><button class="button secondary" id="reset" type="button">Clear</button></div><p class="feedback" id="feedback" role="status" aria-live="polite"></p></div>
+      <aside class="demo-side"><div class="status-pill"><span aria-hidden="true">✓</span> Foundation ready</div><div class="metric">63<span>specified component patterns</span></div><div class="smallstat">4 curated palettes · 2 appearances · 3 material planes</div><p>Alpha code and v1 specification have distinct release statuses.</p></aside></div>
+    </section>
+    <section id="materials" class="section" aria-labelledby="materials-title">
+      <div class="section-heading"><div><p class="eyebrow">MATERIALS / 03</p><h2 id="materials-title">Depth with a purpose.</h2></div><p>Canvas holds the scene. Surface holds the content. Lens holds the controls.</p></div>
+      <div class="material-scene">
+        <div class="material-surface"><small>SURFACE</small><h3>Information deserves clarity.</h3><p>Reading areas stay stable while functional controls may float above them.</p></div>
+        <div class="lens material-lens"><span>◈</span> LENS <button type="button" id="lens-action" class="button primary">Apply</button></div>
+      </div>
+    </section>
+  </main>
+  <footer>GC UI © 2026 GoreeCloud · Independent design language · <a href="../docs/GC_UI_1_0_SPECIFICATION.md">Full specification</a></footer>
+</div>
+</body></html>
