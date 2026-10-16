@@ -88,8 +88,7 @@ const favorite=document.getElementById('favorite-workspace');
 favorite.addEventListener('click',()=>{
  const selected=favorite.getAttribute('aria-pressed')!=='true';
  favorite.setAttribute('aria-pressed',String(selected));
- favorite.setAttribute('aria-label',selected?'Remove workspace from favorites':'Favorite workspace');
- favorite.title=selected?'Remove from favorites':'Favorite workspace';
+ // A toggle button keeps the same accessible name; aria-pressed communicates the state.
  toast.show(selected?'Added to favorites.':'Removed from favorites.');
 });
 const completion=document.getElementById('gc-completion');
