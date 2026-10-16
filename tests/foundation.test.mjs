@@ -37,3 +37,8 @@ test('interaction feedback and accessible fallbacks exist', () => {
   assert.ok(css.includes('prefers-reduced-transparency'));
   assert.ok(css.includes(':focus-visible'));
 });
+
+test('color role swatch group has a valid accessible landmark role',()=>{
+ const html=readFileSync(new URL('../lab/v1.html',import.meta.url),'utf8');
+ assert.match(html,/<div class="role-grid" role="group" aria-label="Color role samples">/);
+});
