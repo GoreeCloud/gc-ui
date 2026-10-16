@@ -29,3 +29,6 @@ footer{padding:36px 20px 54px;text-align:center;color:var(--gc-v1-color-on-surfa
 
 :root[data-gc-contrast="high"] .lens{background:var(--gc-v1-color-surface);-webkit-backdrop-filter:none;backdrop-filter:none}
 .effective-material{display:block;margin-top:12px;font-size:12px;color:var(--gc-v1-color-on-surface-muted);line-height:1.5}
+
+/* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
+img.brandmark{display:block;object-fit:contain;flex:none;background:none;padding:0}
