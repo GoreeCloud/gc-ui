@@ -128,3 +128,20 @@ test('responsive chrome stays in bounds and sheet anchors to inline end in RTL',
  const left=await page.locator('#details-sheet').evaluate(el=>el.getBoundingClientRect().left);
  expect(left).toBeLessThanOrEqual(1);
 });
+
+test('footer links retain a touch-safe gap above fixed mobile navigation at maximum scroll',async({page})=>{
+ for(const width of [320,360,375]){
+  await page.setViewportSize({width,height:675});
+  await page.goto('/lab/adaptive.html');
+  await page.evaluate(()=>window.scrollTo({top:document.documentElement.scrollHeight,behavior:'instant'}));
+  const clearance=await page.evaluate(()=>{
+   const link=document.querySelector('.gc-shell-footer a[href="./forms.html"]');
+   const nav=document.querySelector('.gc-nav-bottom');
+   const rect=link.getBoundingClientRect(),navRect=nav.getBoundingClientRect();
+   return {gap:navRect.top-rect.bottom,
+    hit:document.elementFromPoint(rect.left+rect.width/2,rect.top+rect.height/2)===link};
+  });
+  expect(clearance.hit,'Footer link hit target at '+width+'px').toBe(true);
+  expect(clearance.gap,'Touch clearance above bottom nav at '+width+'px').toBeGreaterThanOrEqual(80);
+ }
+});
