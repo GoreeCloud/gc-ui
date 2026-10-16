@@ -1,8 +1,10 @@
-# GC UI — Design Language v0.1
+# GoreeCloud UI (GC UI) — Design Language v0.1
 
 **Status:** Working alpha foundation (16 October 2026)
 
 ## 1. Identity
+
+**Name:** GoreeCloud UI (short form: GC UI). This is the canonical public full name; "GoreeCloud User Interface" may explain the acronym but is not the preferred full product name.
 
 GC UI exists as a distinct GoreeCloud design language. It is **not Glaze UI**, does not incorporate Glaze UI as a base, and will not rename Glaze UI assets as GC UI. A separate migration plan may eventually replace Glaze UI, but GC UI development must remain self-contained.
 
