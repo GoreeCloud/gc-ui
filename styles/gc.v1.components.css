@@ -116,8 +116,8 @@
 @media(forced-colors:active){.gc-textarea,.gc-search-input,.gc-search-suggestions,.gc-empty-state,.gc-validation-summary{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important}.gc-search-suggestions [aria-selected=true]{background:Highlight;color:HighlightText}.gc-search-clear{color:ButtonText}.gc-validation-summary a{color:LinkText}}
 
 /* Skip navigation is a common component utility, not exclusive to application shells. */
-.gc-skip-link{position:fixed;z-index:100;inset-inline-start:12px;inset-block-start:-100px;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);padding:10px 14px;border-radius:12px;text-decoration:underline}
-.gc-skip-link:focus{inset-block-start:12px;outline:3px solid var(--gc-v1-color-focus-ring)}
+.gc-skip-link{position:absolute;z-index:100;inset-inline-start:12px;inset-block-start:-100px;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);padding:10px 14px;border-radius:12px;text-decoration:underline}
+.gc-skip-link:focus{position:fixed;inset-block-start:12px;outline:3px solid var(--gc-v1-color-focus-ring)}
 /* Suppress Chromium/WebKit's native clear glyph when a named clear button is provided. */
 .gc-search-input::-webkit-search-cancel-button,.gc-search-input::-webkit-search-decoration{display:none}
 
