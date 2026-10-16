@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GC UI · Adaptive Shell</title>
+<meta name="description" content="Responsive GC UI navigation and accessible side-sheet reference">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.components.css">
+<link rel="stylesheet" href="./adaptive.css">
+<script type="module" src="./adaptive.mjs"></script>
+</head>
+<body>
+<a href="#main-content" class="gc-skip-link">Skip to main content</a>
+<div class="gc-app-shell" id="adaptive-demo">
+ <header class="gc-app-bar" aria-label="Workspace toolbar">
+  <a class="gc-shell-brand" href="./adaptive.html" aria-label="GC UI workspace home"><span class="gc-shell-mark" aria-hidden="true">G</span><strong>GC UI</strong><span class="gc-shell-caption">Workspace</span></a>
+  <div class="gc-app-bar-actions">
+   <button id="appearance-toggle" type="button" class="gc-button" data-variant="quiet" aria-label="Switch to dark appearance">Dark mode</button>
+   <button id="open-details" type="button" class="gc-button" data-variant="primary" data-gc-dialog-open="details-sheet">Details</button>
+  </div>
+ </header>
+ <nav class="gc-navigation gc-nav-sidebar" aria-label="Primary navigation, desktop">
+  <p class="gc-nav-heading">YOUR SPACE</p>
+  <a class="gc-nav-link" href="#overview" data-gc-route="overview" aria-current="page"><span class="gc-nav-glyph" aria-hidden="true">◈</span>Overview</a>
+  <a class="gc-nav-link" href="#activity" data-gc-route="activity"><span class="gc-nav-glyph" aria-hidden="true">◷</span>Activity</a>
+  <a class="gc-nav-link" href="#library" data-gc-route="library"><span class="gc-nav-glyph" aria-hidden="true">▦</span>Library</a>
+  <div class="gc-nav-spacer"></div>
+  <p class="gc-nav-aside">GC UI adapts the chrome, not the information architecture.</p>
+ </nav>
+ <nav class="gc-navigation gc-nav-rail" aria-label="Primary navigation, tablet">
+  <a class="gc-rail-link" href="#overview" data-gc-route="overview" aria-current="page"><span aria-hidden="true">◈</span><span>Overview</span></a>
+  <a class="gc-rail-link" href="#activity" data-gc-route="activity"><span aria-hidden="true">◷</span><span>Activity</span></a>
+  <a class="gc-rail-link" href="#library" data-gc-route="library"><span aria-hidden="true">▦</span><span>Library</span></a>
+ </nav>
+ <main id="main-content" tabindex="-1" class="gc-main-content">
+  <nav class="gc-breadcrumbs" aria-label="Breadcrumb">
+   <ol><li><a href="./adaptive.html">Workspace</a></li><li aria-current="page" id="crumb-current">Overview</li></ol>
+  </nav>
+  <div class="gc-page-header">
+   <div><p class="gc-eyebrow">ONE DESIGN LANGUAGE · ANY VIEWPORT</p><h1 id="page-title" tabindex="-1">Your overview.</h1><p id="page-subtitle" class="gc-page-lead">A connected workspace that feels right at every screen size.</p></div>
+   <button type="button" class="gc-button" data-variant="outline" data-gc-dialog-open="details-sheet">View details</button>
+  </div>
+  <section aria-labelledby="content-title" class="gc-shell-section">
+   <div class="gc-section-title"><h2 id="content-title">Today at a glance</h2><span class="gc-badge" data-intent="info">Reference demo</span></div>
+   <div class="gc-metric-grid">
+    <article class="gc-card gc-metric-card"><span class="gc-metric-icon" aria-hidden="true">◈</span><p>Active projects</p><strong>12</strong><span>Across your workspace</span></article>
+    <article class="gc-card gc-metric-card"><span class="gc-metric-icon" aria-hidden="true">↗</span><p>Shared updates</p><strong>28</strong><span>In the last seven days</span></article>
+    <article class="gc-card gc-metric-card"><span class="gc-metric-icon" aria-hidden="true">✓</span><p>Completed</p><strong>86%</strong><span>Example progress metric</span></article>
+   </div>
+  </section>
+  <section class="gc-shell-section" aria-labelledby="feed-title">
+   <h2 id="feed-title">Recent activity</h2>
+   <ol class="gc-activity-list">
+    <li><span class="gc-activity-symbol" aria-hidden="true">✓</span><div><strong>Design tokens reviewed</strong><p>Semantic colors and material hierarchy</p></div><time datetime="2026-10-16">Oct 16</time></li>
+    <li><span class="gc-activity-symbol" aria-hidden="true">◈</span><div><strong>New component patterns drafted</strong><p>Navigation, surfaces, and overlays</p></div><time datetime="2026-10-15">Oct 15</time></li>
+    <li><span class="gc-activity-symbol" aria-hidden="true">↗</span><div><strong>Adaptive layout explored</strong><p>Compact, medium, and expanded views</p></div><time datetime="2026-10-14">Oct 14</time></li>
+   </ol>
+  </section>
+  <p class="gc-shell-note">All data shown here is illustrative. Navigation changes the demo state locally and does not access accounts.</p>
+ </main>
+ <nav class="gc-navigation gc-nav-bottom" aria-label="Primary navigation, mobile">
+  <a class="gc-bottom-link" href="#overview" data-gc-route="overview" aria-current="page"><span aria-hidden="true">◈</span><span>Overview</span></a>
+  <a class="gc-bottom-link" href="#activity" data-gc-route="activity"><span aria-hidden="true">◷</span><span>Activity</span></a>
+  <a class="gc-bottom-link" href="#library" data-gc-route="library"><span aria-hidden="true">▦</span><span>Library</span></a>
+ </nav>
+</div>
+<dialog id="details-sheet" class="gc-side-sheet" aria-labelledby="sheet-title" aria-describedby="sheet-description">
+ <div class="gc-side-sheet-header">
+  <p class="gc-eyebrow">WORKSPACE / DETAILS</p>
+  <button class="gc-icon-button" type="button" data-gc-dialog-close aria-label="Close details">×</button>
+ </div>
+ <div class="gc-side-sheet-body">
+  <h2 id="sheet-title">Designed to adapt.</h2>
+  <p id="sheet-description">This sheet uses a native modal dialog for Escape behavior, focus isolation and return focus.</p>
+  <div class="gc-card"><strong>Three navigation modes</strong><p>Bottom navigation on compact viewports, a navigation rail for medium widths, and a persistent sidebar when expanded.</p></div>
+  <div class="gc-card"><strong>Accessible structure</strong><p>Active locations use <code>aria-current="page"</code>. The visible landmark changes by viewport. Focus stays in the sheet until dismissed.</p></div>
+ </div>
+ <div class="gc-side-sheet-footer"><button class="gc-button" type="button" data-variant="primary" data-gc-dialog-close>Done</button></div>
+</dialog>
+<footer class="gc-shell-footer"><a href="./components.html">Components Lab</a> · <a href="./catalog.html">Component Registry</a> · <a href="../docs/GC_UI_1_0_SPECIFICATION.md">Design language specification</a></footer>
+</body>
+</html>
