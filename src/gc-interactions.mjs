@@ -18,11 +18,12 @@ export function initTabs(tablist,{rtl=false}={}){
   if(!id||!p||p.getAttribute('role')!=='tabpanel')throw new Error('Each tab needs a matching tabpanel');
   return p;
  });
- const enabled=()=>tabs.filter(tab=>!tab.disabled);
+ if(new Set(panels).size!==panels.length)throw new Error('Each tab requires a unique tabpanel');
+ const enabled=()=>tabs.filter(tab=>!tab.disabled&&tab.getAttribute('aria-disabled')!=='true');
  if(!enabled().length)throw new Error('No enabled tab');
  function activate(tab,{focus=false}={}){
   if(!tabs.includes(tab))throw new RangeError('Tab does not belong to the tablist');
-  if(tab.disabled)return;
+  if(!enabled().includes(tab))return;
   tabs.forEach((item,index)=>{
    const selected=item===tab;
    item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1;panels[index].hidden=!selected;
@@ -48,18 +49,36 @@ export function initTabs(tablist,{rtl=false}={}){
  tablist.addEventListener('click',click);tablist.addEventListener('keydown',keydown);
  return {select:activate,destroy(){tablist.removeEventListener('click',click);tablist.removeEventListener('keydown',keydown)}};
 }
-export function initDialog(dialog,{document=dialog.ownerDocument}={}){
- if(dialog.localName!=='dialog')throw new TypeError('Expected native dialog');
- let trigger=null;
+export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
+ if(dialog?.localName!=='dialog')throw new TypeError('Expected native dialog');
+ if(!document?.addEventListener)throw new TypeError('A document is required');
+ let trigger=null,destroyed=false;
+ const ensureActive=()=>{if(destroyed)throw new Error('Dialog controller was destroyed')};
  const click=e=>{
-  const opener=e.target.closest('[data-gc-dialog-open]');
-  if(opener?.dataset.gcDialogOpen===dialog.id){trigger=opener;if(!dialog.open)dialog.showModal();return}
-  const close=e.target.closest('[data-gc-dialog-close]');
+  if(destroyed)return;
+  const opener=e.target.closest?.('[data-gc-dialog-open]');
+  if(opener?.dataset.gcDialogOpen===dialog.id){
+   if(!dialog.open){trigger=opener;dialog.showModal()}
+   return;
+  }
+  const close=e.target.closest?.('[data-gc-dialog-close]');
   if(close&&dialog.contains(close)&&dialog.open)dialog.close();
  };
  const closed=()=>{if(trigger?.isConnected)trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
- return {open(){if(!dialog.open)dialog.showModal()},close(){if(dialog.open)dialog.close()},destroy(){document.removeEventListener('click',click);dialog.removeEventListener('close',closed)}};
+ return {
+  open(){ensureActive();if(!dialog.open)dialog.showModal()},
+  close(){ensureActive();if(dialog.open)dialog.close()},
+  destroy(){
+   if(destroyed)return;
+   destroyed=true;
+   document.removeEventListener('click',click);
+   dialog.removeEventListener('close',closed);
+   if(dialog.open)dialog.close();
+   if(trigger?.isConnected)trigger.focus();
+   trigger=null;
+  }
+ };
 }
 export function createToast(region){
  if(!region)throw new TypeError('Toast region required');
