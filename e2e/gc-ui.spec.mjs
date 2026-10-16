@@ -94,3 +94,45 @@ test('responsive labs retain accessible primary controls on narrow screens',asyn
   await expect(page.getByRole('heading',{name:/Every detail/i})).toBeVisible();
   await expect(page.getByRole('searchbox',{name:'Search components'})).toBeVisible();
 });
+
+test('both labs share preference persistence and accessibility overrides',async({page})=>{
+  await page.goto('/lab/components.html');
+  await page.locator('[data-theme-mode="dark"]').click();
+  await page.locator('#contrast-switch').check();
+  await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+
+  await page.goto('/lab/v1.html');
+  await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+  await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+  await expect(page.locator('#material-effective')).toContainText('Solid');
+  await page.locator('#custom-seed').evaluate(input=>{
+    input.value='#14a37c';
+    input.dispatchEvent(new Event('input',{bubbles:true}));
+  });
+  await expect(page.locator('html')).toHaveAttribute('data-gc-accent','custom');
+  const overriddenDuringHigh=await page.locator('html').evaluate(root=>
+    root.style.getPropertyValue('--gc-v1-color-primary')
+  );
+  expect(overriddenDuringHigh).toBe('');
+
+  await page.goto('/lab/components.html');
+  await page.locator('#contrast-switch').uncheck();
+  await page.goto('/lab/v1.html');
+  await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','standard');
+  await expect(page.locator('html')).toHaveAttribute('data-gc-accent','custom');
+  const generated=await page.locator('html').evaluate(root=>
+    root.style.getPropertyValue('--gc-v1-color-primary')
+  );
+  expect(generated).toMatch(/^#[0-9a-fA-F]{6}$/);
+});
+test('keyboard menu activation performs the action and returns focus',async({page})=>{
+  await page.goto('/lab/components.html');
+  const trigger=page.getByRole('button',{name:/Workspace actions/});
+  await trigger.focus();
+  await trigger.press('ArrowDown');
+  await expect(page.getByRole('menuitem',{name:/Duplicate workspace/})).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(page.getByRole('menu',{name:/Workspace actions/})).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await expect(page.locator('#toast-region')).toContainText('Duplicate workspace');
+});
