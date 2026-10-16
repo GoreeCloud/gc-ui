@@ -3,7 +3,7 @@ import {resolve,dirname} from 'node:path';
 import {fileURLToPath} from 'node:url';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
-for(const page of ['lab/v1.html','lab/components.html']){
+for(const page of ['lab/v1.html','lab/components.html','lab/catalog.html']){
  const html=readFileSync(resolve(root,page),'utf8');
  const refs=[...html.matchAll(/(?:href|src)="([^"#]+)"/g)].map(match=>match[1]);
  for(const ref of refs){
