@@ -75,12 +75,12 @@ export function generateTheme(seed,mode='light'){
     roles[id]=bg;roles['on'+id[0].toUpperCase()+id.slice(1)]=on;
   }
   const n=families.neutral,v=families.neutralVariant;
-  roles.canvas=n[dark?10:98];roles.surface=n[dark?15:100];roles.surfaceRaised=n[dark?20:100];
-  roles.surfaceTonal=v[dark?20:95];roles.surfaceInset=n[dark?8:95];
+  roles.canvas=n[dark?10:98];roles.surface=n[dark?20:100];roles.surfaceRaised=n[dark?30:100];
+  roles.surfaceTonal=v[dark?20:95];roles.surfaceInset=n[dark?5:95];
   roles.onCanvas=readable(roles.canvas,n[dark?95:10]);
   roles.onSurface=readable(roles.surface,n[dark?95:10]);
-  roles.onSurfaceMuted=readable(roles.surface,n[dark?80:35]);
-  roles.outline=v[dark?70:45];roles.outlineStrong=v[dark?85:35];
+  roles.onSurfaceMuted=readable(roles.surface,n[dark?80:30]);
+  roles.outline=v[dark?70:50];roles.outlineStrong=v[dark?80:40];
   roles.divider=v[dark?30:90];roles.focusRing=roles.primary;
   roles.selection=roles.primaryContainer;roles.onSelection=roles.onPrimaryContainer;
   roles.inverseSurface=n[dark?95:20];roles.inverseOnSurface=readable(roles.inverseSurface,n[dark?10:98]);
