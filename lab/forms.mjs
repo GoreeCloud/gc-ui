@@ -82,7 +82,7 @@ const countStatus=document.getElementById('project-result-count');
 const empty=document.getElementById('project-empty');
 const clear=document.getElementById('search-clear');
 const anchor=document.querySelector('.gc-search-anchor');
-let choices=[],active=-1;
+let choices=[],active=-1,composing=false;
 const matching=()=>examples.filter(p=>p.name.toLocaleLowerCase().includes(search.value.trim().toLocaleLowerCase()));
 function closeSuggestions(){
  suggestionList.hidden=true;
@@ -139,14 +139,25 @@ function renderResults(){
  countStatus.textContent=matches.length+' '+(matches.length===1?'project':'projects')+' found';
  empty.hidden=matches.length!==0;
 }
+search.addEventListener('compositionstart',()=>{
+ composing=true;
+ closeSuggestions();
+});
+search.addEventListener('compositionend',()=>{
+ composing=false;
+ renderResults();
+ openSuggestions();
+});
 search.addEventListener('input',()=>{
+ if(composing)return;
  renderResults();
  openSuggestions();
 });
 search.addEventListener('focus',()=>{
- if(search.value.trim())openSuggestions();
+ if(!composing&&search.value.trim())openSuggestions();
 });
 search.addEventListener('keydown',event=>{
+ if(composing||event.isComposing||event.keyCode===229)return;
  if(event.key==='Escape'){
   if(!suggestionList.hidden){event.preventDefault();closeSuggestions()}
   else if(search.value){event.preventDefault();search.value='';renderResults()}
@@ -178,3 +189,55 @@ function resetSearch(){
 clear.addEventListener('click',resetSearch);
 document.getElementById('empty-reset').addEventListener('click',resetSearch);
 renderResults();
+
+/* Native-first experimental field and recovery controls (local-only specimens). */
+const passphrase=document.getElementById('demo-passphrase');
+const reveal=document.getElementById('passphrase-reveal');
+reveal.addEventListener('click',()=>{
+ const visible=passphrase.type==='password';
+ passphrase.type=visible?'text':'password';
+ reveal.setAttribute('aria-pressed',String(visible));
+ reveal.textContent=visible?'Hide':'Show';
+});
+const density=document.getElementById('demo-density');
+const quantity=document.getElementById('demo-collaborators');
+const decrease=document.getElementById('demo-decrease');
+const increase=document.getElementById('demo-increase');
+const preferenceState=document.getElementById('preference-state');
+const minimum=Number(quantity.min),maximum=Number(quantity.max);
+function normalizeQuantity(){
+ const value=Number(quantity.value);
+ const normalized=quantity.value.trim()===''||!Number.isFinite(value)
+  ?minimum:Math.max(minimum,Math.min(maximum,Math.round(value)));
+ quantity.value=String(normalized);
+ return normalized;
+}
+function updatePreferences(){
+ const n=normalizeQuantity();
+ decrease.disabled=n<=minimum;
+ increase.disabled=n>=maximum;
+ preferenceState.textContent=density.selectedOptions[0].text+' density · '+n+' '+(n===1?'collaborator':'collaborators');
+}
+function changeQuantity(delta){
+ quantity.value=String(normalizeQuantity()+delta);
+ updatePreferences();
+ quantity.focus();
+}
+decrease.addEventListener('click',()=>changeQuantity(-1));
+increase.addEventListener('click',()=>changeQuantity(1));
+quantity.addEventListener('change',updatePreferences);
+density.addEventListener('change',updatePreferences);
+updatePreferences();
+
+const failure=document.getElementById('recovery-error');
+const recovered=document.getElementById('recovery-success');
+const simulate=document.getElementById('simulate-failure');
+simulate.addEventListener('click',()=>{
+ recovered.hidden=true;
+ failure.hidden=false;
+});
+document.getElementById('recovery-retry').addEventListener('click',()=>{
+ failure.hidden=true;
+ recovered.hidden=false;
+ simulate.focus();
+});
