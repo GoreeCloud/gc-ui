@@ -17,6 +17,7 @@ const themeToggle=document.getElementById('appearance-toggle');
 function routeFromHash(){const route=location.hash.slice(1);return Object.hasOwn(labels,route)?route:'overview'}
 function renderRoute(){
  const route=routeFromHash(),current=labels[route];
+ document.title='GC UI · '+route[0].toUpperCase()+route.slice(1);
  title.textContent=current.title;
  subtitle.textContent=current.subtitle;
  contentTitle.textContent=current.heading;
@@ -32,7 +33,11 @@ function renderAppearance(){
  themeToggle.textContent=next==='dark'?'Dark mode':'Light mode';
  themeToggle.setAttribute('aria-label','Switch to '+next+' appearance');
 }
-window.addEventListener('hashchange',renderRoute);
+window.addEventListener('hashchange',()=>{
+ renderRoute();
+ document.getElementById('route-announcement').textContent='Now viewing '+labels[routeFromHash()].title;
+ title.focus();
+});
 document.documentElement.addEventListener('gc-theme-change',renderAppearance);
 themeToggle.addEventListener('click',()=>theme.set({mode:theme.resolved().mode==='dark'?'light':'dark'}));
 renderRoute();
