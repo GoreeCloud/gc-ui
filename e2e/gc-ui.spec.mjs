@@ -153,3 +153,23 @@ test('native Tab and Shift+Tab leave the action menu without trapping focus',asy
   await expect(menu).toBeHidden();
   await expect(trigger).toBeFocused();
 });
+
+test('disabled tab states cannot become the active panel',async({page})=>{
+  await page.goto('/lab/components.html');
+  const overview=page.getByRole('tab',{name:'Overview'});
+  const activity=page.getByRole('tab',{name:'Activity'});
+  const details=page.getByRole('tab',{name:'Details'});
+  await activity.evaluate(tab=>tab.setAttribute('aria-disabled','true'));
+  await overview.focus();
+  await overview.press('ArrowRight');
+  await expect(details).toHaveAttribute('aria-selected','true');
+  await expect(page.getByRole('tabpanel',{name:'Details'})).toBeVisible();
+  await activity.click();
+  await expect(details).toHaveAttribute('aria-selected','true');
+  await activity.evaluate(tab=>tab.removeAttribute('aria-disabled'));
+  await details.focus();
+  await details.press('Home');
+  await expect(overview).toHaveAttribute('aria-selected','true');
+  await overview.press('ArrowRight');
+  await expect(activity).toHaveAttribute('aria-selected','true');
+});
