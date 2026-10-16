@@ -44,3 +44,6 @@
 @media(prefers-reduced-transparency:reduce){.gc-lens{background:var(--gc-v1-color-surface);-webkit-backdrop-filter:none;backdrop-filter:none}}
 @media(prefers-reduced-motion:reduce){.gc-button,.gc-switch-track,.gc-switch-track::before{transition:none}.gc-button-spinner{animation:none;border-right-color:currentColor}}
 @media(forced-colors:active){.gc-button,.gc-icon-button,.gc-input,.gc-tab,.gc-switch-track,.gc-banner,.gc-dialog,.gc-toast,.gc-lens{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}.gc-button:focus-visible,.gc-tab:focus-visible{outline-color:Highlight}.gc-switch-input:checked+.gc-switch-track{border:3px solid Highlight}.gc-switch-input:checked+.gc-switch-track::before{background:Highlight}}
+
+/* Busy buttons keep full readable contrast; disabled opacity is reserved for unavailable actions. */
+.gc-button[aria-busy=true]:disabled{opacity:1;cursor:progress}
