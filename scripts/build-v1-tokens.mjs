@@ -27,6 +27,8 @@ export function buildStyles(registry){
     lines.push(':root[data-gc-accent="'+name+'"] {',...walk(entry.light,"-color"),"}");
     lines.push(':root[data-gc-mode="dark"][data-gc-accent="'+name+'"] {',...walk(entry.dark,"-color"),"}");
   }
+  lines.push(':root[data-gc-contrast="high"] {',...walk(registry.color.highContrast.light,"-color"),"}");
+  lines.push(':root[data-gc-mode="dark"][data-gc-contrast="high"] {',...walk(registry.color.highContrast.dark,"-color"),"}");
   lines.push("@media (forced-colors: active) { :root { --gc-v1-color-focus-ring: Highlight; --gc-v1-color-on-surface: CanvasText; --gc-v1-color-surface: Canvas; --gc-v1-color-canvas: Canvas; } }");
   lines.push("@media (prefers-reduced-motion: reduce) { :root { --gc-v1-foundation-motion-duration-immediate: 0ms; --gc-v1-foundation-motion-duration-fast: 0ms; --gc-v1-foundation-motion-duration-standard: 0ms; --gc-v1-foundation-motion-duration-entrance: 0ms; --gc-v1-foundation-motion-duration-expansive: 0ms; --gc-v1-foundation-motion-duration-exit: 0ms; } }");
   return lines.join("\n")+"\n";
