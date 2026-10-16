@@ -164,7 +164,9 @@ test('disabled tab states cannot become the active panel',async({page})=>{
   await overview.press('ArrowRight');
   await expect(details).toHaveAttribute('aria-selected','true');
   await expect(page.getByRole('tabpanel',{name:'Details'})).toBeVisible();
-  await activity.click();
+  // aria-disabled is also recognized by Playwright, so dispatch the hostile
+  // programmatic click that the controller must ignore.
+  await activity.evaluate(tab=>tab.click());
   await expect(details).toHaveAttribute('aria-selected','true');
   await activity.evaluate(tab=>tab.removeAttribute('aria-disabled'));
   await details.focus();
