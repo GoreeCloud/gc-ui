@@ -22,7 +22,7 @@ Avoid: --blue-500 inside a feature component, hardcoded #..., --card-purple, --p
 <html data-gc-mode="light" data-gc-accent="iris">
 <link rel="stylesheet" href="/styles/gc.v1.generated.css">
 ~~~
-data-gc-mode accepts light/dark; auto mode belongs to host runtime, which must reflect OS settings while no explicit override exists. data-gc-accent accepts iris/lagoon/ember/moss in v1 reference CSS. Unknown values fall back to Iris; arbitrary hex seeds require a future versioned tonal generator, which must validate contrast before emission. Version 1 does not claim wallpaper extraction is shipped.
+data-gc-mode accepts light/dark; auto mode belongs to host runtime, which must reflect OS settings while no explicit override exists. data-gc-accent accepts iris/lagoon/ember/moss in v1 reference CSS. Unknown values fall back to Iris; arbitrary hex seeds can be previewed using the experimental, independent OKLCH color engine in src/gc-color-engine.mjs. It enforces foreground/body contrast for generated roles, but is not yet validated for every background/non-text pairing or approved for production. Version 1 does not claim wallpaper extraction is shipped.
 
 ## 4. Component example
 ~~~css
