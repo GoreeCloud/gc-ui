@@ -25,7 +25,10 @@
     "test:native:contracts": "node --test tests/native-host.test.mjs native/desktop/test/host-contract.test.mjs native/desktop/test/local-resource-policy.test.mjs tests/native-adapters.test.mjs",
     "qa:native:desktop": "xvfb-run -a node native/desktop/electron-smoke.mjs",
     "test:android:performance:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_performance.py",
-    "test:android:compositor:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_compositor.py"
+    "test:android:compositor:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_compositor.py",
+    "test:android:gpu:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_gpu.py",
+    "test:desktop:atspi:parsers": "python3 -m unittest discover -s scripts -p test_qa_electron_atspi.py",
+    "qa:desktop:atspi": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-electron-atspi.py"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

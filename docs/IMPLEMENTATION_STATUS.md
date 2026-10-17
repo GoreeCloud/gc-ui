@@ -1,6 +1,11 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Activity HWUI GPU and Linux AT-SPI checkpoint
+- The [GPU and AT-SPI QA report](QA_NATIVE_GPU_ATSPI_2026_10_17.md) adds real Android Activity HWUI GPU histogram profiling (8 runs, debug mode verified), a reproducible parser/CI test, and real Linux Electron AT-SPI exposure with 10/10 required names/roles among 156 visited nodes.
+- HWUI p90/p95 timing buckets were lower for Conservation in this short workload, but **WebView renderer/compositor GPU timing, battery energy and statistical significance remain unverified**.
+- The existing tablet emulator provides another form factor/WebView version, but **not** another physical device or API. Human Orca/VoiceOver/NVDA speech review remains open; Android TalkBack user-reported 12/12 PASS stays accepted.
+
 ## 2026-10-17 Compositor timing and tablet verification
 - [Native compositor/tablet QA](QA_NATIVE_COMPOSITOR_TABLET_2026_10_17.md) records GC UI SurfaceFlinger presentation intervals, a separate Android 36 tablet emulator with verified Tablet host profile, and Linux Electron accessible name/role and keyboard smoke checks.
 - The physical phone shows nearly identical Normal and Conservation presentation pacing during a four-run exploratory workload; **not** a GPU-time or battery-energy measurement. Tablet boot showed initial WebView rendering delay before successfully displaying the Studio.

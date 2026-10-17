@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## GPU instrumentation and Linux AT-SPI verification
+
+The [GPU/AT-SPI QA checkpoint](docs/QA_NATIVE_GPU_ATSPI_2026_10_17.md) records eight Android Activity HWUI graphics runs and real Electron AT-SPI role/name verification. Native CI includes the new GPU parser and live Linux AT-SPI smoke. Battery-energy and human desktop speech testing remain open; Android TalkBack 12/12 user-confirmed PASS remains complete.
+
 ## Extended native compositor and tablet QA
 
 The [SurfaceFlinger presentation probe](scripts/qa-android-compositor.py) now measures aggregate GC UI layer-presentation timing without claiming GPU energy savings. The [tablet and compositor QA report](docs/QA_NATIVE_COMPOSITOR_TABLET_2026_10_17.md) covers real Android and a separately created GC UI-only tablet emulator, alongside automated Electron keyboard/semantics checks. The user-completed Android TalkBack 12/12 manual acceptance remains recorded separately.

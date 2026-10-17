@@ -1,0 +1,224 @@
+{
+  "schema": "gc-ui-hwui-gpu-qa.v1",
+  "device_context": {
+    "model": "DE2117",
+    "api": "36",
+    "resolution": "1080x2400",
+    "battery_context": {
+      "level_pct": 83,
+      "temperature_c": 33.3,
+      "usb_powered": true
+    },
+    "device_settings_changed": false,
+    "coverage": "Activity HWUI GPU histogram, not Chrome/WebView renderer GPU or system-wide utilization, not energy."
+  },
+  "parameters": {
+    "order": [
+      "normal",
+      "conserve",
+      "conserve",
+      "normal",
+      "conserve",
+      "normal",
+      "normal",
+      "conserve"
+    ],
+    "swipes_per_run": 6
+  },
+  "runs": [
+    {
+      "mode": "normal",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 317,
+        "p50_gpu_bucket_ms": 4,
+        "p90_gpu_bucket_ms": 7,
+        "p95_gpu_bucket_ms": 7,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 317,
+        "janky": 2,
+        "p50_ms": 8,
+        "p90_ms": 10,
+        "p95_ms": 12,
+        "p99_ms": 15,
+        "jank_pct": 0.63
+      }
+    },
+    {
+      "mode": "conserve",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 319,
+        "p50_gpu_bucket_ms": 3,
+        "p90_gpu_bucket_ms": 4,
+        "p95_gpu_bucket_ms": 4,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 319,
+        "janky": 0,
+        "p50_ms": 7,
+        "p90_ms": 9,
+        "p95_ms": 9,
+        "p99_ms": 10,
+        "jank_pct": 0.0
+      }
+    },
+    {
+      "mode": "conserve",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 314,
+        "p50_gpu_bucket_ms": 3,
+        "p90_gpu_bucket_ms": 4,
+        "p95_gpu_bucket_ms": 4,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 314,
+        "janky": 0,
+        "p50_ms": 7,
+        "p90_ms": 8,
+        "p95_ms": 9,
+        "p99_ms": 10,
+        "jank_pct": 0.0
+      }
+    },
+    {
+      "mode": "normal",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 317,
+        "p50_gpu_bucket_ms": 4,
+        "p90_gpu_bucket_ms": 7,
+        "p95_gpu_bucket_ms": 8,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 317,
+        "janky": 2,
+        "p50_ms": 8,
+        "p90_ms": 11,
+        "p95_ms": 12,
+        "p99_ms": 19,
+        "jank_pct": 0.63
+      }
+    },
+    {
+      "mode": "conserve",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 318,
+        "p50_gpu_bucket_ms": 4,
+        "p90_gpu_bucket_ms": 6,
+        "p95_gpu_bucket_ms": 6,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 318,
+        "janky": 1,
+        "p50_ms": 7,
+        "p90_ms": 10,
+        "p95_ms": 11,
+        "p99_ms": 12,
+        "jank_pct": 0.31
+      }
+    },
+    {
+      "mode": "normal",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 316,
+        "p50_gpu_bucket_ms": 3,
+        "p90_gpu_bucket_ms": 4,
+        "p95_gpu_bucket_ms": 4,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 316,
+        "janky": 1,
+        "p50_ms": 7,
+        "p90_ms": 8,
+        "p95_ms": 9,
+        "p99_ms": 10,
+        "jank_pct": 0.32
+      }
+    },
+    {
+      "mode": "normal",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 317,
+        "p50_gpu_bucket_ms": 4,
+        "p90_gpu_bucket_ms": 7,
+        "p95_gpu_bucket_ms": 8,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 317,
+        "janky": 3,
+        "p50_ms": 8,
+        "p90_ms": 10,
+        "p95_ms": 11,
+        "p99_ms": 15,
+        "jank_pct": 0.95
+      }
+    },
+    {
+      "mode": "conserve",
+      "verified": true,
+      "hwui_gpu_histogram": {
+        "samples": 318,
+        "p50_gpu_bucket_ms": 4,
+        "p90_gpu_bucket_ms": 4,
+        "p95_gpu_bucket_ms": 6,
+        "buckets_over_16ms_pct": 0.0,
+        "extreme_4950ms_bucket_count": 0,
+        "pipeline": "Skia (OpenGL)"
+      },
+      "activity_ui_frames": {
+        "rendered": 318,
+        "janky": 1,
+        "p50_ms": 7,
+        "p90_ms": 9,
+        "p95_ms": 10,
+        "p99_ms": 11,
+        "jank_pct": 0.31
+      }
+    }
+  ],
+  "summary": {
+    "normal": {
+      "runs": 4,
+      "samples_median": 317.0,
+      "p50_gpu_bucket_ms_median": 4.0,
+      "p90_gpu_bucket_ms_median": 7.0,
+      "p95_gpu_bucket_ms_median": 7.5,
+      "buckets_over_16ms_pct_median": 0.0
+    },
+    "conserve": {
+      "runs": 4,
+      "samples_median": 318.0,
+      "p50_gpu_bucket_ms_median": 3.5,
+      "p90_gpu_bucket_ms_median": 4.0,
+      "p95_gpu_bucket_ms_median": 5.0,
+      "buckets_over_16ms_pct_median": 0.0
+    }
+  }
+}

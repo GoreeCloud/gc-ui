@@ -94,3 +94,6 @@ The Experience Studio now has a **Preview resource conservation** checkbox. It m
 
 ## Window presentation and tablet follow-up
 A GC UI drawable-layer-only [SurfaceFlinger presentation probe](../scripts/qa-android-compositor.py) augments Activity UI-thread profiling. [Native compositor/tablet QA](QA_NATIVE_COMPOSITOR_TABLET_2026_10_17.md) documents phone aggregate pacing and a GC UI-only Android 36 tablet emulator visual/host check. This is **not** GPU render-time, energy, TalkBack tablet or cross-API certification. The desktop Electron smoke also verifies accessible control names/roles and keyboard activation without claiming spoken Orca/VoiceOver acceptance.
+
+## Android GPU and Linux native accessibility diagnostics
+Use the [HWUI GPU probe](../scripts/qa-android-gpu.py) for sampled Activity graphics histogram buckets and the [Electron AT-SPI probe](../scripts/qa-electron-atspi.py) for real Linux exposed names/roles. Both are limited diagnostics, not energy or human screen-reader speech testing. See [GPU and AT-SPI QA](QA_NATIVE_GPU_ATSPI_2026_10_17.md). Android TalkBack 12/12 user-confirmed acceptance is complete.

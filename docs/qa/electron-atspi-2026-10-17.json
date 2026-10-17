@@ -1,0 +1,13 @@
+{
+  "schema": "gc-ui-electron-atspi-qa.v1",
+  "host": "Linux X11 virtual display in isolated D-Bus session",
+  "method": "AT-SPI document role/name inspection with Electron force-renderer-accessibility flag",
+  "result": {
+    "required_role_name_pairs": 10,
+    "all_required_present": true,
+    "document_found": true,
+    "appearance_accessible_name_found": true
+  },
+  "visited_accessible_nodes": 156,
+  "limitations": "No human speech check, no Orca audio confirmation, no keyboard-gesture or NVDA/VoiceOver certification."
+}

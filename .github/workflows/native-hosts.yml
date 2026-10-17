@@ -7,6 +7,14 @@ on:
       - 'native/**'
       - 'scripts/qa-android-performance.py'
       - 'scripts/qa-android-compositor.py'
+      - 'scripts/qa-android-gpu.py'
+      - 'scripts/test_qa_android_gpu.py'
+      - 'scripts/qa-electron-atspi.py'
+      - 'scripts/test_qa_electron_atspi.py'
+      - 'scripts/test_qa_electron_atspi.py'
+      - 'scripts/qa-electron-atspi.py'
+      - 'scripts/test_qa_android_gpu.py'
+      - 'scripts/qa-android-gpu.py'
       - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
@@ -26,6 +34,14 @@ on:
       - 'native/**'
       - 'scripts/qa-android-performance.py'
       - 'scripts/qa-android-compositor.py'
+      - 'scripts/qa-android-gpu.py'
+      - 'scripts/test_qa_android_gpu.py'
+      - 'scripts/qa-electron-atspi.py'
+      - 'scripts/test_qa_electron_atspi.py'
+      - 'scripts/test_qa_electron_atspi.py'
+      - 'scripts/qa-electron-atspi.py'
+      - 'scripts/test_qa_android_gpu.py'
+      - 'scripts/qa-android-gpu.py'
       - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
@@ -59,6 +75,14 @@ jobs:
         run: npm run test:android:performance:parsers
       - name: Verify SurfaceFlinger presentation timestamp parser
         run: npm run test:android:compositor:parsers
+      - name: Verify HWUI GPU histogram parsing
+        run: npm run test:android:gpu:parsers
+      - name: Verify desktop AT-SPI role/name policy parsing
+        run: npm run test:desktop:atspi:parsers
+      - name: Verify bounded Activity HWUI GPU histogram parser
+        run: npm run test:android:gpu:parsers
+      - name: Verify Linux AT-SPI accessibility acceptance contracts
+        run: npm run test:desktop:atspi:parsers
 
   android-debug:
     name: Compile isolated GC UI Android preview
@@ -98,7 +122,13 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Install Linux AT-SPI accessibility infrastructure
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends python3-pyatspi python3-gi at-spi2-core dbus-x11 xvfb
       - name: Install locked optional Electron desktop runtime
         run: npm ci --prefix native/desktop --no-audit --no-fund
       - name: Verify actual native desktop launch, profile and appearance
         run: npm run qa:native:desktop
+      - name: Verify actual sandboxed Electron AT-SPI accessible roles and names
+        run: npm run qa:desktop:atspi
