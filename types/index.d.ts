@@ -64,6 +64,7 @@ export declare function initDialog(dialog:HTMLDialogElement,options?:{document?:
 export interface GCToastController {
   show(message:string,options?:{duration?:number}):()=>void;
   dismiss():void;
+  /** Cancel the toast and retire this instance. Later show() calls throw. */
   destroy():void;
 }
 export declare function createToast(region:HTMLElement):GCToastController;

@@ -83,9 +83,10 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
 export function createToast(region){
  if(!region)throw new TypeError('Toast region required');
  region.setAttribute('role','status');region.setAttribute('aria-live','polite');region.setAttribute('aria-atomic','true');
- let timer=null,active=null;
+ let timer=null,active=null,destroyed=false;
  const dismiss=()=>{if(timer!==null)clearTimeout(timer);timer=null;active?.remove();active=null};
  function show(message,{duration=6000}={}){
+  if(destroyed)throw new Error('Toast controller was destroyed');
   dismiss();
   const el=region.ownerDocument.createElement('div');
   el.className='gc-toast';el.textContent=String(message);region.appendChild(el);active=el;
@@ -107,7 +108,11 @@ export function createToast(region){
   });
   return ()=>{if(active===el)dismiss()};
  }
- return {show,dismiss,destroy:dismiss};
+ return {show,dismiss,destroy(){
+  if(destroyed)return;
+  destroyed=true;
+  dismiss();
+ }};
 }
 export async function runAsyncAction(button,operation){
  if(button.getAttribute('aria-busy')==='true'||button.disabled)return null;

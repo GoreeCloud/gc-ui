@@ -151,3 +151,34 @@ test('toast remains until neither pointer nor focus is inside it',async()=>{
  assert.equal(children.length,0,'toast can expire after both pointer and focus have left');
  toast.destroy();
 });
+
+
+test('toast destroy permanently retires its controller without affecting another instance',async()=>{
+ const children=[];
+ const region={
+  setAttribute(){},
+  ownerDocument:{createElement:()=>({
+   listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
+   remove(){const index=children.indexOf(this);if(index!==-1)children.splice(index,1)}
+  })},
+  appendChild(node){children.push(node)}
+ };
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const retired=createToast(region);
+ const oldDismiss=retired.show('Original',{duration:20});
+ assert.equal(children.length,1);
+ retired.destroy();
+ assert.equal(children.length,0,'destroy removes any active notification');
+ assert.throws(()=>retired.show('Unexpected',{duration:0}),/destroyed/);
+ assert.equal(children.length,0,'retired controller never appends new notifications');
+ const live=createToast(region);
+ live.show('New controller',{duration:0});
+ retired.dismiss();
+ retired.destroy();
+ oldDismiss();
+ await new Promise(resolve=>setTimeout(resolve,40));
+ assert.equal(children.length,1,'retired timers/handles cannot affect replacement controller');
+ assert.equal(children[0].textContent,'New controller');
+ live.destroy();
+ assert.equal(children.length,0);
+});

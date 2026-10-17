@@ -168,3 +168,7 @@ The [toast hover/focus QA checkpoint](docs/QA_TOAST_FOCUS_2026-10-16.md) records
 
 ### Effective viewport reflow verification
 The experimental browser suite now includes `npm run test:e2e:effective-zoom`: at 1280×800 as a reference physical window, it verifies **200%-equivalent (640×400 CSS px)** and **400%-equivalent (320×200 CSS px)** viewport layouts in LTR and RTL across all five labs. It also exercises native forms, menus, compact navigation, modal focus and footer links at the smallest size. This uses viewport equivalence, **not** browser-toolbar zoom; true 200%/400% browser zoom and hardware assistive technology still require manual verification. See [effective-viewport QA](docs/QA_EFFECTIVE_ZOOM_2026-10-16.md).
+
+
+### Toast lifecycle verification
+The [toast controller teardown QA record](docs/QA_TOAST_TEARDOWN_2026-10-16.md) documents another experimental lifecycle safeguard: `destroy()` cancels the active notification and permanently retires that instance; old dismissal handles cannot disrupt a replacement controller on the same region. The API remains experimental.
