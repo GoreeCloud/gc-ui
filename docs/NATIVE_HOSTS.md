@@ -79,3 +79,10 @@ The Android request interceptor now restricts both navigation and subresource re
 
 ## Electron runtime maintenance
 The optional desktop preview is pinned to stable Electron 44.9.0 (October 17, 2026), with the runtime version asserted by its real-launch smoke test. A dedicated GitHub Actions desktop-native job runs the pinned Electron build under Xvfb. See [Electron runtime QA](QA_DESKTOP_ELECTRON_2026_10_17.md) for evidence and remaining cross-platform gates.
+
+## Native accessibility and lifecycle adaptation (2026-10-17)
+The Experience Studio merges browser accessibility media queries and **validated** host capability hints conservatively: if either requests high contrast, reduced motion, reduced transparency or low-power treatment, the restrictive behavior wins. A native power-saver hint reduces semantic elevation to E0, disables ornamental environment washes/shadows and opts out of choreography without changing text, focus order, controls or semantic colors. Native high contrast and transparency restrictions likewise suppress decorative effects; browser forced-colors remains authoritative.
+
+The Studio refreshes its host capabilities on a visible window focus or visibility restoration, coalescing concurrent refreshes and cancelling motion when required. A malformed or unavailable host refresh disables native feedback and leaves the browser preview usable. Manual platform-profile previews are preserved while real device restrictions remain effective.
+
+Android forwards activity pause/resume to its WebView, restoring its saved system-bar treatment when resumed. The source includes an optional Playwright server port override, GC_PLAYWRIGHT_PORT, so isolated worktrees do not silently test an older server running on the default 4173 port. For device and test evidence see [Native Lifecycle QA](QA_NATIVE_LIFECYCLE_2026_10_17.md). This is not certification of power savings or screen-reader usability.

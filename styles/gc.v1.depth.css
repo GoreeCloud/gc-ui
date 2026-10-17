@@ -54,3 +54,9 @@
  }
  .gc-scene{color:CanvasText!important}
 }
+
+:root[data-gc-resource-mode=conserve] .gc-depth-surface,
+:root[data-gc-host-contrast=high] .gc-depth-surface {
+ --gc-depth-shadow:none;
+ border-color:var(--gc-v1-color-outline-strong);
+}

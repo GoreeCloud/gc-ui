@@ -88,3 +88,15 @@
  .gc-environment{background-image:none!important}
  .gc-material-surface[data-gc-treatment=lens]{background:var(--gc-v1-color-surface-raised);-webkit-backdrop-filter:none;backdrop-filter:none}
 }
+
+/* Trusted native-host hints supplement, never replace, browser preference media queries. */
+:root[data-gc-resource-mode=conserve] .gc-environment,
+:root[data-gc-host-contrast=high] .gc-environment {background-image:none!important}
+:root[data-gc-resource-mode=conserve] .gc-material-surface,
+:root[data-gc-host-contrast=high] .gc-material-surface {box-shadow:none!important}
+:root[data-gc-resource-mode=conserve] .gc-material-surface[data-gc-treatment=lens],
+:root[data-gc-host-contrast=high] .gc-material-surface[data-gc-treatment=lens],
+:root[data-gc-host-transparency=reduce] .gc-material-surface[data-gc-treatment=lens] {
+ background:var(--gc-v1-color-surface-raised);
+ backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+}

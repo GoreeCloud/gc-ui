@@ -267,3 +267,9 @@ export declare function createNativeTransport(scope?:object):GCNativeTransport|n
 export declare function createNativeHostClient(options?:{transport?:GCNativeTransport|null;timeoutMs?:number}):GCNativeHostClient;
 export declare function applyVerifiedHostCapabilities(root:HTMLElement,capabilities:GCNativeCapabilities,options?:GCPlatformSystem):
  Readonly<GCPlatformProfile&{nativeAdapterInstalled:true;selectionFeedback:boolean;appearanceControl:boolean}>;
+
+/** Native accessibility/energy hints only increase browser safety restrictions. */
+export declare function resolveEffectiveNativePreferences(
+ browser?:GCPlatformSystem&{forcedColors?:boolean},
+ native?:GCNativeCapabilities|null
+):Readonly<Required<GCPlatformSystem>&{forcedColors:boolean}>;

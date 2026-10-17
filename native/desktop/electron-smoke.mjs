@@ -13,7 +13,17 @@ try{
  });
  const win=await app.firstWindow({timeout:30000});
  await win.waitForSelector('#host-status',{timeout:20000});
- await win.getByText('Native electron host connected',{exact:false}).waitFor({timeout:15000});
+ try{
+  await win.getByText('Native electron host connected',{exact:false}).waitFor({timeout:20000});
+ }catch(error){
+  const diagnostic=await win.evaluate(()=>({
+   hostStatus:document.getElementById('host-status')?.textContent,
+   nativeTransport:typeof window.GCNativeHost,
+   scripts:[...document.scripts].map(element=>element.src)
+  })).catch(()=>null);
+  console.error('ELECTRON NATIVE CONNECTION DIAGNOSTIC',JSON.stringify(diagnostic));
+  throw error;
+ }
  const platform=await win.locator('#platform').inputValue();
  if(platform!=='desktop')throw new Error('Host did not select desktop profile: '+platform);
  const before=await win.locator('html').getAttribute('data-gc-native-host');

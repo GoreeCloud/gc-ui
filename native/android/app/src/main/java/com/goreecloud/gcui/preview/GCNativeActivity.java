@@ -185,6 +185,15 @@ public final class GCNativeActivity extends Activity {
   if(browser!=null&&browser.canGoBack())browser.goBack();
   else super.onBackPressed();
  }
+ @Override protected void onPause(){
+  if(browser!=null)browser.onPause();
+  super.onPause();
+ }
+ @Override protected void onResume(){
+  super.onResume();
+  if(browser!=null)browser.onResume();
+  setSystemBarAppearance(preferredLightAppearance());
+ }
  @Override public void onDestroy(){
   if(browser!=null){browser.stopLoading();browser.destroy();browser=null;}
   super.onDestroy();

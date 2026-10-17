@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {createNativeHostClient,createNativeTransport,validateNativeHostRequest,applyVerifiedHostCapabilities} from '../src/gc-native-host.mjs';
+import {createNativeHostClient,createNativeTransport,validateNativeHostRequest,applyVerifiedHostCapabilities,resolveEffectiveNativePreferences} from '../src/gc-native-host.mjs';
 const req=(id,action,payload={})=>JSON.stringify({v:1,type:'gc-host/request',id,action,payload});
 function fixture(){
  const subscribers=new Set(),messages=[];
@@ -80,4 +80,18 @@ test('malformed native host capability types and inconsistent platform identitie
  ])assert.throws(()=>applyVerifiedHostCapabilities(root,bad),/Invalid/);
  assert.equal(root.dataset.gcNativeHost,undefined);
  assert.throws(()=>validateNativeHostRequest(req('x','setAppearance',{mode:'light',extra:'unexpected'})),/Invalid appearance/);
+});
+
+test('host hints never disable browser safety preferences and low power is preserved',()=>{
+ const browser={highContrast:false,reducedMotion:true,reducedTransparency:false,lowPower:false,forcedColors:true};
+ const native={highContrast:true,reducedMotion:false,reducedTransparency:true,lowPower:true};
+ const result=resolveEffectiveNativePreferences(browser,native);
+ assert.deepEqual(result,{highContrast:true,reducedMotion:true,reducedTransparency:true,lowPower:true,forcedColors:true});
+ assert.equal(Object.isFrozen(result),true);
+ assert.deepEqual(resolveEffectiveNativePreferences({reducedMotion:true}),{
+  highContrast:false,reducedMotion:true,reducedTransparency:false,lowPower:false,forcedColors:false
+ });
+ assert.deepEqual(resolveEffectiveNativePreferences(),{
+  highContrast:false,reducedMotion:false,reducedTransparency:false,lowPower:false,forcedColors:false
+ });
 });

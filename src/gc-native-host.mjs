@@ -79,6 +79,17 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
    pending.clear();
   }});
 }
+/** Strictly monotone preference merge: a native host can only strengthen system safety. */
+export function resolveEffectiveNativePreferences(browser={},native=null){
+ const supported=['highContrast','reducedMotion','reducedTransparency','lowPower'];
+ return Object.freeze({
+  highContrast:Boolean(browser.highContrast||native?.highContrast),
+  reducedMotion:Boolean(browser.reducedMotion||native?.reducedMotion),
+  reducedTransparency:Boolean(browser.reducedTransparency||native?.reducedTransparency),
+  lowPower:Boolean(browser.lowPower||native?.lowPower),
+  forcedColors:Boolean(browser.forcedColors)
+ });
+}
 export function applyVerifiedHostCapabilities(root,capabilities,options={}){
  if(!capabilities||capabilities.protocol!==1||!['phone','tablet','desktop'].includes(capabilities.platform)||
  !['android','electron'].includes(capabilities.host)||capabilities.nativeAdapterInstalled!==true||
