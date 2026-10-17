@@ -32,7 +32,7 @@ test('async actions block duplicate activation and restore state on failure',asy
 test('stale toast dismiss handles do not remove a newer message',async()=>{
  const elements=[];
  const region={
-  ownerDocument:{createElement:()=>({listeners:{},addEventListener(key,fn){this.listeners[key]=fn},remove(){const index=elements.indexOf(this);if(index!==-1)elements.splice(index,1)}})},
+  ownerDocument:{createElement:()=>({setAttribute(){},parts:[],append(...nodes){this.parts.push(...nodes)},listeners:{},addEventListener(key,fn){this.listeners[key]=fn},remove(){const index=elements.indexOf(this);if(index!==-1)elements.splice(index,1)}})},
   setAttribute(){},
   appendChild(item){elements.push(item)}
  };
@@ -103,7 +103,7 @@ test('superseded toasts cannot reschedule dismissal of the current toast',async(
  const children=[];
  const region={
   setAttribute(){},
-  ownerDocument:{createElement:()=>({
+  ownerDocument:{createElement:()=>({setAttribute(){},parts:[],append(...nodes){this.parts.push(...nodes)},
    listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
    remove(){const at=children.indexOf(this);if(at!==-1)children.splice(at,1)}
   })},
@@ -118,7 +118,7 @@ test('superseded toasts cannot reschedule dismissal of the current toast',async(
  old.listeners.focusout();
  await new Promise(resolve=>setTimeout(resolve,45));
  assert.equal(children.length,1);
- assert.equal(children[0].textContent,'new');
+ assert.equal(children[0].parts[0].textContent,'new');
  toast.destroy();
 });
 
@@ -127,7 +127,7 @@ test('toast remains until neither pointer nor focus is inside it',async()=>{
  const children=[];
  const region={
   setAttribute(){},
-  ownerDocument:{createElement:()=>({
+  ownerDocument:{createElement:()=>({setAttribute(){},parts:[],append(...nodes){this.parts.push(...nodes)},
    listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
    contains(target){return target===this.child},
    remove(){const at=children.indexOf(this);if(at!==-1)children.splice(at,1)}
@@ -157,7 +157,7 @@ test('toast destroy permanently retires its controller without affecting another
  const children=[];
  const region={
   setAttribute(){},
-  ownerDocument:{createElement:()=>({
+  ownerDocument:{createElement:()=>({setAttribute(){},parts:[],append(...nodes){this.parts.push(...nodes)},
    listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
    remove(){const index=children.indexOf(this);if(index!==-1)children.splice(index,1)}
   })},
@@ -178,7 +178,36 @@ test('toast destroy permanently retires its controller without affecting another
  oldDismiss();
  await new Promise(resolve=>setTimeout(resolve,40));
  assert.equal(children.length,1,'retired timers/handles cannot affect replacement controller');
- assert.equal(children[0].textContent,'New controller');
+ assert.equal(children[0].parts[0].textContent,'New controller');
  live.destroy();
  assert.equal(children.length,0);
+});
+
+test('toast renders a keyboard-accessible dismiss button and returns focus',async()=>{
+ const children=[];
+ const trigger={isConnected:true,focused:false,focus(){this.focused=true}};
+ const doc={activeElement:trigger,createElement:tag=>({
+  tag,listeners:{},attrs:{},parts:[],
+  addEventListener(type,fn){this.listeners[type]=fn},
+  setAttribute(name,value){this.attrs[name]=value},
+  append(...nodes){this.parts.push(...nodes)},
+  contains(node){return this.parts.includes(node)},
+  remove(){const index=children.indexOf(this);if(index!==-1)children.splice(index,1)}
+ })};
+ const region={ownerDocument:doc,setAttribute(){},appendChild(node){children.push(node)}};
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const toast=createToast(region);
+ toast.show('Saved locally',{duration:0});
+ assert.equal(children.length,1);
+ const [message,close]=children[0].parts;
+ assert.equal(message.textContent,'Saved locally');
+ assert.equal(close.tag,'button');
+ assert.equal(close.type,'button');
+ assert.equal(close.attrs['aria-label'],'Dismiss notification');
+ assert.equal(close.textContent,'Dismiss');
+ doc.activeElement=close;
+ close.listeners.click();
+ assert.equal(children.length,0);
+ assert.equal(trigger.focused,true,'dismiss action must restore keyboard focus to previous control');
+ toast.destroy();
 });
