@@ -67,3 +67,17 @@ test('desktop and android transports expose only postMessage and subscription',(
  assert.equal(calls,1);
  unsubscribe();assert.equal(android.onmessage,null);
 });
+
+test('malformed native host capability types and inconsistent platform identities fail closed',()=>{
+ const root={dataset:{}};
+ const valid={protocol:1,platform:'phone',host:'android',nativeAdapterInstalled:true};
+ for(const bad of [
+  {...valid,highContrast:'true'},
+  {...valid,reducedMotion:1},
+  {...valid,platform:'desktop'},
+  {...valid,host:'electron'},
+  {...valid,appearanceControl:'yes'}
+ ])assert.throws(()=>applyVerifiedHostCapabilities(root,bad),/Invalid/);
+ assert.equal(root.dataset.gcNativeHost,undefined);
+ assert.throws(()=>validateNativeHostRequest(req('x','setAppearance',{mode:'light',extra:'unexpected'})),/Invalid appearance/);
+});

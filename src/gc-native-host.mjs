@@ -7,7 +7,8 @@ const IDs=/^[A-Za-z0-9_-]{1,64}$/;
 function normalizeAction(action,payload){
  if(!GC_NATIVE_ACTIONS.includes(action))throw new RangeError('Unsupported native action');
  if(action==='setAppearance'){
-  if(!payload||!['system','light','dark'].includes(payload.mode))throw new TypeError('Invalid appearance mode');
+  if(!payload||typeof payload!=='object'||Array.isArray(payload)||Object.keys(payload).length!==1||
+   !['system','light','dark'].includes(payload.mode))throw new TypeError('Invalid appearance mode');
   return {mode:payload.mode};
  }
  if(payload!=null && (typeof payload!=='object'||Array.isArray(payload)||Object.keys(payload).length))throw new TypeError('Unexpected native action payload');
@@ -80,7 +81,11 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
 }
 export function applyVerifiedHostCapabilities(root,capabilities,options={}){
  if(!capabilities||capabilities.protocol!==1||!['phone','tablet','desktop'].includes(capabilities.platform)||
- !['android','electron'].includes(capabilities.host)||capabilities.nativeAdapterInstalled!==true)
+ !['android','electron'].includes(capabilities.host)||capabilities.nativeAdapterInstalled!==true||
+ (capabilities.host==='electron'&&capabilities.platform!=='desktop')||
+ (capabilities.host==='android'&&capabilities.platform==='desktop')||
+ ['highContrast','reducedMotion','reducedTransparency','lowPower','selectionFeedback','appearanceControl']
+  .some(key=>Object.hasOwn(capabilities,key)&&typeof capabilities[key]!=='boolean'))
   throw new TypeError('Invalid native host capabilities');
  const profile=applyPlatformProfile(root,capabilities.platform,{
   highContrast:Boolean(capabilities.highContrast||options.highContrast),

@@ -1,0 +1,63 @@
+name: GC UI native host quality gates
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'native/**'
+      - 'src/gc-native-host.mjs'
+      - 'src/gc-platform-profile.mjs'
+      - 'lab/experience-studio.*'
+      - 'tests/native-*.test.mjs'
+      - '.github/workflows/native-hosts.yml'
+      - 'package.json'
+      - 'types/index.d.ts'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'native/**'
+      - 'src/gc-native-host.mjs'
+      - 'src/gc-platform-profile.mjs'
+      - 'lab/experience-studio.*'
+      - 'tests/native-*.test.mjs'
+      - '.github/workflows/native-hosts.yml'
+      - 'package.json'
+      - 'types/index.d.ts'
+
+permissions:
+  contents: read
+
+jobs:
+  native-contracts:
+    name: Versioned host protocol and local resource safety
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify native bridge and deny-by-default policies
+        run: npm run test:native:contracts
+
+  android-debug:
+    name: Compile isolated GC UI Android preview
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Install matching Android platform and build tools
+        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Build debug APK from tracked sources and checked-in Gradle wrapper
+        working-directory: native/android
+        run: ./gradlew :app:assembleDebug --no-daemon
+      - name: Inspect the compiled APK exists
+        run: test -s native/android/app/build/outputs/apk/debug/app-debug.apk

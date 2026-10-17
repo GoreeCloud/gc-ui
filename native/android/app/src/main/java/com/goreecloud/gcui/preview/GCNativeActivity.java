@@ -28,6 +28,7 @@ import androidx.webkit.WebViewCompat;
 import androidx.webkit.WebViewFeature;
 import org.json.JSONObject;
 import org.json.JSONException;
+import java.io.ByteArrayInputStream;
 import java.util.Collections;
 import java.util.regex.Pattern;
 
@@ -71,11 +72,12 @@ public final class GCNativeActivity extends Activity {
    .addPathHandler("/assets/",new WebViewAssetLoader.AssetsPathHandler(this)).build();
   browser.setWebViewClient(new WebViewClient(){
    @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){
-    return loader.shouldInterceptRequest(request.getUrl());
+    if(!isTrustedLocalUrl(request.getUrl()))return blockedResource();
+    WebResourceResponse local=loader.shouldInterceptRequest(request.getUrl());
+    return local!=null?local:blockedResource();
    }
    @Override public boolean shouldOverrideUrlLoading(WebView view,WebResourceRequest request){
-    Uri uri=request.getUrl();
-    return !"https".equals(uri.getScheme())||!"appassets.androidplatform.net".equals(uri.getHost());
+    return !isTrustedLocalUrl(request.getUrl());
    }
   });
   if(!WebViewFeature.isFeatureSupported(WebViewFeature.WEB_MESSAGE_LISTENER)){
@@ -90,6 +92,18 @@ public final class GCNativeActivity extends Activity {
     runOnUiThread(()->respond(text,replyProxy));
    });
   browser.loadUrl(ENTRY);
+ }
+
+ private static boolean isTrustedLocalUrl(Uri uri){
+  return uri!=null&&"https".equals(uri.getScheme())&&
+   "appassets.androidplatform.net".equals(uri.getHost())&&uri.getPort()==-1&&
+   uri.getUserInfo()==null&&uri.getPath()!=null&&uri.getPath().startsWith("/assets/");
+ }
+ private static WebResourceResponse blockedResource(){
+  WebResourceResponse response=new WebResourceResponse("text/plain","UTF-8",
+   new ByteArrayInputStream(new byte[0]));
+  response.setStatusCodeAndReasonPhrase(403,"Forbidden");
+  return response;
  }
 
  private void respond(String text,JavaScriptReplyProxy reply){

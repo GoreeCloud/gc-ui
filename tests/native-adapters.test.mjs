@@ -9,6 +9,9 @@ test('Android app has locked-down local-only WebView message transport',()=>{
  assert.match(java,/WebViewAssetLoader/);
  assert.match(java,/WebViewCompat\.addWebMessageListener/);
  assert.match(java,/Collections\.singleton\(ORIGIN\)/);
+ assert.match(java,/isTrustedLocalUrl\(request\.getUrl\(\)\)/);
+ assert.match(java,/return local!=null\?local:blockedResource\(\)/);
+ assert.match(java,/setStatusCodeAndReasonPhrase\(403,"Forbidden"\)/);
  assert.match(java,/!isMainFrame/);
  assert.match(java,/isFeatureSupported\(WebViewFeature\.WEB_MESSAGE_LISTENER\)/);
  assert.match(java,/setAllowFileAccess\(false\)/);

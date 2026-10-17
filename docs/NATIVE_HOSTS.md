@@ -73,3 +73,6 @@ Separate Android compile, APK installation and real-device launch from source-le
 ## Remaining release gates
 
 Manual TalkBack/VoiceOver and keyboard testing, navigation/back gestures, Android WebView behavior across API levels, screen cutouts/safe areas, native haptic preferences, system appearance and contrast, power/GPU profiling, and native installers/signed release builds require review. Desktop app packaging, CSP-hardening, native menus, macOS/Windows and notarization are not claimed complete.
+
+## Hardening verification (follow-up)
+The Android request interceptor now restricts both navigation and subresource requests to the synthetic HTTPS app-assets origin and its assets path; missing and nonlocal requests produce a 403 empty response, even without relying on the absent INTERNET permission. The Electron host uses a canonicalized allowlist of public asset directories and file extensions, rejects symlink escapes and repository metadata, and adds a restrictive Content Security Policy on local resources. Host capability claims are checked against the expected Android-phone/tablet versus Electron-desktop combinations and strictly boolean preference flags. See [the native security QA report](QA_NATIVE_SECURITY_2026_10_17.md).
