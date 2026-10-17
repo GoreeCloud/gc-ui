@@ -3,6 +3,7 @@ plugins {
 }
 android {
  namespace = "com.goreecloud.gcui.preview"
+ buildFeatures { buildConfig = true }
  compileSdk = 36
  defaultConfig {
   applicationId = "com.goreecloud.gcui.preview"

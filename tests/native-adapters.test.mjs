@@ -20,6 +20,10 @@ test('Android app has locked-down local-only WebView message transport',()=>{
  assert.match(java,/protected void onResume\(\)/);
  assert.match(java,/browser\.onPause\(\)/);
  assert.match(java,/browser\.onResume\(\)/);
+ assert.match(java,/BuildConfig\.DEBUG\?getIntent\(\)\.getStringExtra\("gcui_preview_mode"\):null/);
+ assert.match(java,/BuildConfig\.DEBUG&&isTrustedLocalUrl/);
+ assert.match(java,/GCUI\.Perf/);
+ assert.match(java,/ENTRY\+"\?gcPreview=conserve"/);
  assert.match(java,/getPreferences\(MODE_PRIVATE\)\.edit\(\)\.putString\("appearance",mode\)/);
  assert.match(java,/setMixedContentMode\(WebSettings\.MIXED_CONTENT_NEVER_ALLOW\)/);
  assert.doesNotMatch(java,/\.addJavascriptInterface\s*\(|loadUrl\("http:|loadUrl\("https:\/\/[^"]*\.com/);

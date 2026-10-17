@@ -1,6 +1,12 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Performance/accessibility instrumentation addendum
+- A reversible Studio conservation preview and debug-only Android launch fixture support repeatable app presentation comparisons without changing global device settings.
+- The [Android QA benchmark](QA_ANDROID_PERFORMANCE_2026_10_17.md) includes an anonymized eight-run data record on Android API 36, with 4 runs/mode and honest Activity UI-frame versus GPU/power limitations. Automated browser and native protocol checks passed locally.
+- [TalkBack manual acceptance](ANDROID_TALKBACK_ACCEPTANCE.md) is still required: the device accessibility service was disabled during testing, and no spoken output or user gestures were validated. Neither beta release nor WCAG certification is inferred.
+- Next decision gates: human TalkBack pass on Android WebView, disconnected-power instrumentation, additional lower-capability devices, and actual WebView compositor/GPU profiling.
+
 ## 2026-10-17 Native host milestone addendum
 - Experimental Android WebView host and sandboxed Electron desktop host are implemented and retained as isolated, optional preview projects. Android was built, installed and launched on a connected API 36 phone, including native capability/profile reporting, system-bar safe areas, dark appearance and selection feedback.
 - Native host messaging is versioned, bounded, allowlisted and origin-restricted. Android denies nonlocal subresources and Electron denies non-public repo files, remote resources and arbitrary OS permissions.

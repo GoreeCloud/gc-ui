@@ -5,6 +5,8 @@ on:
     branches: [main]
     paths:
       - 'native/**'
+      - 'scripts/qa-android-performance.py'
+      - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
       - 'src/gc-platform-profile.mjs'
       - 'lab/experience-studio.*'
@@ -20,6 +22,8 @@ on:
     branches: [main]
     paths:
       - 'native/**'
+      - 'scripts/qa-android-performance.py'
+      - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
       - 'src/gc-platform-profile.mjs'
       - 'lab/experience-studio.*'
@@ -47,6 +51,8 @@ jobs:
           node-version: '22'
       - name: Verify native bridge and deny-by-default policies
         run: npm run test:native:contracts
+      - name: Verify device performance report parser without an Android device
+        run: npm run test:android:performance:parsers
 
   android-debug:
     name: Compile isolated GC UI Android preview

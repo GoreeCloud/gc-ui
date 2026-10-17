@@ -139,3 +139,32 @@ test('invalid refresh drops privileged native feedback but leaves the web previe
  await page.locator('#scene').selectOption('reading');
  await expect(page.locator('#scene-title')).toContainText('Make clarity');
 });
+
+test('resource-conservation preview is reversible and never claims device power control',async({page})=>{
+ await page.goto('/lab/experience-studio.html');
+ const root=page.locator('html'),feature=page.locator('#feature');
+ await expect(feature).toHaveAttribute('data-gc-depth','e2');
+ await expect(root).toHaveAttribute('data-gc-resource-mode','normal');
+ await expect(page.getByText('not a control for your device battery saver')).toBeVisible();
+ await page.locator('#conserve').check();
+ await expect(root).toHaveAttribute('data-gc-resource-mode','conserve');
+ await expect(feature).toHaveAttribute('data-gc-depth','e0');
+ await expect(page.locator('.gc-environment')).toHaveCSS('background-image','none');
+ await page.locator('#animate').click();
+ await expect(page.locator('#profile-status')).toContainText('Motion skipped');
+ await page.locator('#conserve').uncheck();
+ await expect(root).toHaveAttribute('data-gc-resource-mode','normal');
+ await expect(feature).toHaveAttribute('data-gc-depth','e2');
+ await expect(page.locator('#scene-title')).toBeVisible();
+ await page.locator('#conserve').focus();
+ await page.keyboard.press('Tab');
+ await expect(page.locator('#animate')).toBeFocused();
+});
+
+test('debug preview URL starts in conservation mode with semantic content unchanged',async({page})=>{
+ await page.goto('/lab/experience-studio.html?gcPreview=conserve');
+ await expect(page.locator('#conserve')).toBeChecked();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-resource-mode','conserve');
+ await expect(page.locator('#feature')).toHaveAttribute('data-gc-depth','e0');
+ await expect(page.getByRole('heading',{name:'A clearer place to make.'})).toBeVisible();
+});

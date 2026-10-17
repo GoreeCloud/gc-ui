@@ -35,6 +35,10 @@ for(const name of ['v1','components','catalog','adaptive','forms','environment',
 }
 const states=[
 
+ {name:'experience-studio-conserve',page:'experience-studio',width:375,setup:async page=>{
+  await page.locator('#conserve').check();
+  await expect(page.locator('html')).toHaveAttribute('data-gc-resource-mode','conserve');
+ }},
  {name:'environment-reading-dark',page:'environment',width:320,setup:async page=>{
   await page.locator('#context').selectOption('reading');
   await page.getByRole('button',{name:'Switch to dark appearance'}).click();

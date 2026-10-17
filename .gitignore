@@ -5,3 +5,7 @@ coverage/
 playwright-report/
 test-results/
 *.log
+
+# Native QA Python bytecode caches
+__pycache__/
+*.pyc

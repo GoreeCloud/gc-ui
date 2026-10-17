@@ -19,6 +19,10 @@ const scenes={
  analysis:{eyebrow:'ANALYSIS / STRUCTURE',title:'See the signal, not the shine.',description:'Crisp boundaries and restrained depth help comparisons remain readable.'}
 };
 const $=id=>document.getElementById(id);
+// A presentation-only test fixture: no device settings are modified.
+if(new URLSearchParams(location.search).get('gcPreview')==='conserve')
+ $('conserve').checked=true;
+
 function browserSystemOptions(){
  return {
   highContrast:root.dataset.gcContrast==='high'||matchMedia('(prefers-contrast: more)').matches,
@@ -28,7 +32,9 @@ function browserSystemOptions(){
  };
 }
 function systemOptions(){
- return resolveEffectiveNativePreferences(browserSystemOptions(),hostCapabilities);
+ const effective=resolveEffectiveNativePreferences(browserSystemOptions(),hostCapabilities);
+ // User-directed Studio preview may only strengthen native/browser restrictions.
+ return {...effective,lowPower:effective.lowPower||$('conserve').checked};
 }
 function render(){
  const scene=$('scene').value,platform=$('platform').value,purpose=$('detail').value;
@@ -112,6 +118,7 @@ $('animate').addEventListener('click',()=>{
 });
 $('cancel').addEventListener('click',()=>{motion.cancel();$('profile-status').textContent='Transition stopped. Content remains visible.'});
 $('reduced').addEventListener('change',()=>{if($('reduced').checked)motion.cancel()});
+$('conserve').addEventListener('change',()=>{motion.cancel();render()});
 root.addEventListener('gc-theme-change',render);
 for(const q of ['(prefers-reduced-motion: reduce)','(forced-colors: active)','(prefers-contrast: more)','(prefers-reduced-transparency: reduce)']){
  matchMedia(q).addEventListener?.('change',render);

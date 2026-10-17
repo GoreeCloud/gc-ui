@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Insets;
 import android.net.Uri;
+import android.util.Log;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -71,6 +72,15 @@ public final class GCNativeActivity extends Activity {
   final WebViewAssetLoader loader=new WebViewAssetLoader.Builder()
    .addPathHandler("/assets/",new WebViewAssetLoader.AssetsPathHandler(this)).build();
   browser.setWebViewClient(new WebViewClient(){
+   @Override public void onPageFinished(WebView view,String url){
+    super.onPageFinished(view,url);
+    // Development-only observability, not a JavaScript bridge or system-setting toggle.
+    if(BuildConfig.DEBUG&&isTrustedLocalUrl(Uri.parse(url))){
+     view.postDelayed(()->view.evaluateJavascript(
+      "document.documentElement.dataset.gcResourceMode||'unavailable'",
+      value->Log.i("GCUI.Perf","resourceMode="+value)),700);
+    }
+   }
    @Override public WebResourceResponse shouldInterceptRequest(WebView view,WebResourceRequest request){
     if(!isTrustedLocalUrl(request.getUrl()))return blockedResource();
     WebResourceResponse local=loader.shouldInterceptRequest(request.getUrl());
@@ -91,7 +101,8 @@ public final class GCNativeActivity extends Activity {
     if(text==null||text.length()>2048)return;
     runOnUiThread(()->respond(text,replyProxy));
    });
-  browser.loadUrl(ENTRY);
+  String preview=BuildConfig.DEBUG?getIntent().getStringExtra("gcui_preview_mode"):null;
+  browser.loadUrl("conserve".equals(preview)?ENTRY+"?gcPreview=conserve":ENTRY);
  }
 
  private static boolean isTrustedLocalUrl(Uri uri){
