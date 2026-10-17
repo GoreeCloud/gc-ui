@@ -7,6 +7,7 @@ GC UI is an original independent design system. This changelog tracks implementa
 - Added direct controller lifecycle/privacy/bounds tests; password controllers now reject buttons without a stable accessible name and re-mask exposed values on teardown.
 - Added an automated RTL and doubled-text reflow stage across five labs at 320, 375, 600 and 768 CSS px, executed in the Chromium CI pipeline.
 - Aligned README current catalog figures to **32 experimental**, **31 specification-only**, and **0 stable**; older dated test checkpoints remain historical, not current QA claims.
+- Verified **186 passing automated executions** (81 Node, 36 Chromium interactions, 5 reflow, 15 axe, 13 screenshot captures, 36 Firefox interactions) and [all three GitHub Actions jobs](https://github.com/GoreeCloud/gc-ui/actions/runs/38985325187). See [QA checkpoint](docs/QA_FORM_API_REFLOW_2026-10-16.md).
 
 ## Physical Android Firefox validation and mobile footer fix — 2026-10-16
 - Exercised the actual USB Android Firefox UI: touch bottom navigation, light/dark mode, Details sheet, Android Back, virtual keyboard, linked validation errors, local success, and landscape two-column content.
