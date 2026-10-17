@@ -1,0 +1,83 @@
+{
+  "schema": "gc-ui-android-surface-presentation.v1",
+  "context": {
+    "model": "DE2117",
+    "android_api": "36",
+    "physical_resolution": "1080x2400",
+    "device_settings_changed": false,
+    "limits": "Only per-layer SurfaceFlinger presentation intervals; not GPU time, energy, end-to-end responsiveness or statistically established savings."
+  },
+  "order": [
+    "normal",
+    "conserve",
+    "conserve",
+    "normal"
+  ],
+  "swipes": 6,
+  "runs": [
+    {
+      "mode": "normal",
+      "mode_verified": true,
+      "surface_presentation": {
+        "display_vsync_ms": 11.111,
+        "presented_frames": 63,
+        "presentation_interval_median_ms": 11.1,
+        "presentation_interval_p90_ms": 11.35,
+        "presentation_interval_p95_ms": 11.56,
+        "intervals_over_1_5_vsync_pct": 1.61
+      }
+    },
+    {
+      "mode": "conserve",
+      "mode_verified": true,
+      "surface_presentation": {
+        "display_vsync_ms": 11.111,
+        "presented_frames": 63,
+        "presentation_interval_median_ms": 11.1,
+        "presentation_interval_p90_ms": 11.46,
+        "presentation_interval_p95_ms": 11.49,
+        "intervals_over_1_5_vsync_pct": 1.61
+      }
+    },
+    {
+      "mode": "conserve",
+      "mode_verified": true,
+      "surface_presentation": {
+        "display_vsync_ms": 11.111,
+        "presented_frames": 63,
+        "presentation_interval_median_ms": 11.11,
+        "presentation_interval_p90_ms": 11.37,
+        "presentation_interval_p95_ms": 11.47,
+        "intervals_over_1_5_vsync_pct": 1.61
+      }
+    },
+    {
+      "mode": "normal",
+      "mode_verified": true,
+      "surface_presentation": {
+        "display_vsync_ms": 11.111,
+        "presented_frames": 63,
+        "presentation_interval_median_ms": 11.11,
+        "presentation_interval_p90_ms": 11.44,
+        "presentation_interval_p95_ms": 11.47,
+        "intervals_over_1_5_vsync_pct": 1.61
+      }
+    }
+  ],
+  "summary": {
+    "normal": {
+      "runs": 2,
+      "presented_frames_median": 63.0,
+      "presentation_interval_median_ms_median": 11.11,
+      "presentation_interval_p90_ms_median": 11.39,
+      "intervals_over_1_5_vsync_pct_median": 1.61
+    },
+    "conserve": {
+      "runs": 2,
+      "presented_frames_median": 63.0,
+      "presentation_interval_median_ms_median": 11.11,
+      "presentation_interval_p90_ms_median": 11.41,
+      "intervals_over_1_5_vsync_pct_median": 1.61
+    }
+  }
+}

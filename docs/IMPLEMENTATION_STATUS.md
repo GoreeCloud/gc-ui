@@ -1,6 +1,11 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Compositor timing and tablet verification
+- [Native compositor/tablet QA](QA_NATIVE_COMPOSITOR_TABLET_2026_10_17.md) records GC UI SurfaceFlinger presentation intervals, a separate Android 36 tablet emulator with verified Tablet host profile, and Linux Electron accessible name/role and keyboard smoke checks.
+- The physical phone shows nearly identical Normal and Conservation presentation pacing during a four-run exploratory workload; **not** a GPU-time or battery-energy measurement. Tablet boot showed initial WebView rendering delay before successfully displaying the Studio.
+- Android TalkBack 12/12 user-reported acceptance remains completed. Separate physical-device, OS-version, actual Orca/VoiceOver/NVDA and energy/GPU release gates remain.
+
 ## 2026-10-17 Android TalkBack completion update
 
 - **12/12 Android TalkBack cases TB-01 through TB-12 PASS — user-reported.** The test operator confirmed completing every case; see [TalkBack manual acceptance](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md).

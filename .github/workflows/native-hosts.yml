@@ -6,6 +6,8 @@ on:
     paths:
       - 'native/**'
       - 'scripts/qa-android-performance.py'
+      - 'scripts/qa-android-compositor.py'
+      - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
       - 'src/gc-platform-profile.mjs'
@@ -23,6 +25,8 @@ on:
     paths:
       - 'native/**'
       - 'scripts/qa-android-performance.py'
+      - 'scripts/qa-android-compositor.py'
+      - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
       - 'src/gc-platform-profile.mjs'
@@ -53,6 +57,8 @@ jobs:
         run: npm run test:native:contracts
       - name: Verify device performance report parser without an Android device
         run: npm run test:android:performance:parsers
+      - name: Verify SurfaceFlinger presentation timestamp parser
+        run: npm run test:android:compositor:parsers
 
   android-debug:
     name: Compile isolated GC UI Android preview

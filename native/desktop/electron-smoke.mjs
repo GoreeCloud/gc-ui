@@ -28,14 +28,26 @@ try{
  if(platform!=='desktop')throw new Error('Host did not select desktop profile: '+platform);
  const before=await win.locator('html').getAttribute('data-gc-native-host');
  if(before!=='electron')throw new Error('No verified Electron connection');
+ // Browser's accessible-role exposure and keyboard activation on the actual Electron host.
+ // This is an automated semantic smoke check, not spoken Orca/VoiceOver acceptance.
+ const combobox=win.getByRole('combobox',{name:'Platform profile'});
+ if(await combobox.count()!==1)throw new Error('Native desktop platform selector lacks its accessible label');
+ if(await win.getByRole('checkbox',{name:'Preview resource conservation'}).count()!==1)
+  throw new Error('Conservation preview checkbox lacks its accessible name');
+ if(await win.getByRole('heading',{name:'Tune the experience.'}).count()!==1)
+  throw new Error('Native desktop experience heading is missing');
  const current=await win.locator('html').getAttribute('data-gc-mode');
  const next=current==='dark'?'light':'dark';
- await win.getByRole('button',{name:'Switch to '+next+' appearance'}).click();
+ const appearance=win.getByRole('button',{name:'Switch to '+next+' appearance'});
+ await appearance.focus();
+ if(!(await appearance.evaluate(element=>element===document.activeElement)))
+  throw new Error('Native desktop appearance control did not receive keyboard focus');
+ await win.keyboard.press('Enter');
  await win.waitForFunction(mode=>document.documentElement.dataset.gcMode===mode,next);
  const title=await win.title();
  const version=await app.evaluate(()=>process.versions.electron);
  const expected=require('./package.json').devDependencies.electron;
  if(version!==expected)throw new Error('Electron runtime is not pinned version: '+version+' instead of '+expected);
  await win.screenshot({path:'/tmp/gc-electron-native-preview.png',fullPage:true});
- console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,version,platform,verifiedHost:before,appearance:next}));
+ console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,version,platform,verifiedHost:before,appearance:next,accessibleLabels:true,keyboardActivation:true}));
 }finally{if(app)await app.close()}

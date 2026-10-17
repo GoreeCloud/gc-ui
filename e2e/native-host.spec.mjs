@@ -189,3 +189,34 @@ test('throwing native subscription leaves the Studio interactive in browser mode
  await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
  expect(errors).toEqual([]);
 });
+
+test('verified Android tablet host chooses the tablet profile and retains semantic controls',async({page})=>{
+ await page.setViewportSize({width:1280,height:800});
+ await page.addInitScript(()=>{
+  const listeners=[];
+  window.GCNativeHost={
+   subscribe:fn=>{listeners.push(fn);return()=>{const i=listeners.indexOf(fn);if(i>=0)listeners.splice(i,1)}},
+   postMessage:json=>{
+    const request=JSON.parse(json);
+    const result=request.action==='getCapabilities'?{
+     protocol:1,host:'android',platform:'tablet',nativeAdapterInstalled:true,
+     highContrast:false,reducedMotion:false,reducedTransparency:false,
+     lowPower:false,appearanceControl:true,selectionFeedback:true
+    }:request.action==='selectionFeedback'?{performed:true}:{mode:request.payload.mode};
+    queueMicrotask(()=>listeners.forEach(fn=>fn({
+     data:JSON.stringify({v:1,type:'gc-host/response',id:request.id,ok:true,result})
+    })));
+   }
+  };
+ });
+ await page.goto('/lab/experience-studio.html');
+ await expect(page.locator('#host-status')).toContainText('Native android host connected · tablet profile.');
+ await expect(page.locator('#platform')).toHaveValue('tablet');
+ await expect(page.locator('html')).toHaveAttribute('data-gc-platform','tablet');
+ await expect(page.locator('#profile-status')).toContainText('navigation: rail');
+ await expect(page.locator('#host-feedback')).toBeEnabled();
+ await expect(page.getByRole('heading',{name:'Tune the experience.'})).toBeVisible();
+ await expect(page.locator('#scene')).toBeVisible();
+ await page.locator('#host-feedback').click();
+ await expect(page.locator('#host-status')).toContainText('feedback performed');
+});
