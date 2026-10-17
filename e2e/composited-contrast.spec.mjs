@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 // Canvas composes the browser's resolved color-mix() just as a uniformly
 // colored underlay would. Black and white bound any opaque sRGB backdrop;
 // this does not sample real photographs, text antialiasing or OS compositors.
-test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seeds',async({page})=>{
+test('translucent Lens text and border retain 4.5:1 and 3:1 over extreme backdrops',async({page})=>{
  await page.goto('/lab/environment.html');
  const samples=await page.evaluate(async()=>{
   const {generateTheme}=await import('/src/gc-color-engine.mjs');
@@ -49,6 +49,14 @@ test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seed
      const bg=getComputedStyle(lens).backgroundColor;
      const backFilter=getComputedStyle(lens).backdropFilter;
      if(bg==='transparent'||backFilter==='none')throw new Error('Translucent Lens was not rendered');
+     const boundary=sampledColor(getComputedStyle(lens).borderTopColor);
+     for(const underlay of ['#000000','#ffffff']){
+      const rendered=compositedColor(underlay,bg);
+      const ratio=contrast(boundary,rendered);
+      const result={seed,mode,name:'boundary',underlay,ratio};
+      results.push(result);
+      if(ratio<3)failures.push(result);
+     }
      for(const [name,element] of [['primary',primary],['secondary',secondary]]){
       const fg=sampledColor(getComputedStyle(element).color);
       for(const underlay of ['#000000','#ffffff']){
@@ -67,7 +75,7 @@ test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seed
   }
   return {results,failures};
  });
- expect(samples.results).toHaveLength(40);
+ expect(samples.results).toHaveLength(60);
  expect(samples.failures).toEqual([]);
 });
 
@@ -85,4 +93,43 @@ test('Lens resolves to an opaque blur-free plane when solid surface is requested
   return context.getImageData(0,0,1,1).data[3];
  },bg);
  expect(alpha).toBe(255);
+});
+
+test('real keyboard focus outline remains visible on the environmental skip link in both themes',async({page})=>{
+ await page.goto('/lab/environment.html');
+ for(const mode of ['light','dark']){
+  if(mode==='dark'){
+   await page.getByRole('button',{name:'Switch to dark appearance'}).click();
+   await page.reload();
+  }
+  await expect(page.locator('html')).toHaveAttribute('data-gc-mode',mode);
+  await page.keyboard.press('Tab');
+  const skip=page.getByRole('link',{name:'Skip to content'});
+  await expect(skip).toBeFocused();
+  const appearance=await skip.evaluate(el=>{
+   const style=getComputedStyle(el),root=getComputedStyle(document.documentElement);
+   return {width:parseFloat(style.outlineWidth),kind:style.outlineStyle,
+    foreground:style.outlineColor,
+    surface:style.backgroundColor,
+    token:root.getPropertyValue('--gc-v1-color-focus-ring').trim()};
+  });
+  expect(appearance.kind).toBe('solid');
+  expect(appearance.width).toBeGreaterThanOrEqual(3);
+  const contrast=await page.evaluate(({foreground,surface})=>{
+   const ctx=document.createElement('canvas').getContext('2d');
+   const channels=color=>{
+    ctx.fillStyle=color;
+    ctx.fillRect(0,0,1,1);
+    return Array.from(ctx.getImageData(0,0,1,1).data).slice(0,3);
+   };
+   const lum=color=>channels(color).reduce((sum,value,i)=>{
+    const srgb=value/255;
+    const linear=srgb<=.04045?srgb/12.92:((srgb+.055)/1.055)**2.4;
+    return sum+linear*[.2126,.7152,.0722][i];
+   },0);
+   const a=lum(foreground),b=lum(surface);
+   return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  },appearance);
+  expect(contrast).toBeGreaterThanOrEqual(3);
+ }
 });
