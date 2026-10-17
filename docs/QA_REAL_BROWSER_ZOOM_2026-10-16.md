@@ -25,7 +25,7 @@ At **200%** the CSS viewport width is 640 px with DPR 2; at **400%** it is 320 p
 
 ## CI and release gates
 
-The complete 208-case pre-existing automated inventory remains intact. Two additional native zoom suites (one Chromium and one Firefox) have been wired into their respective GitHub Actions jobs. **A completed green remote CI run is required before calling these new gates verified in CI.**
+**Remote CI verified:** [GC UI quality gates run 38992357848](https://github.com/GoreeCloud/gc-ui/actions/runs/38992357848) completed successfully for reviewed PR head `8f611643cff8e1c1d3ecdc1834172c0ad576cb13`. All three jobs passed. The pre-existing **208 automated test executions** remain green, plus **two native browser zoom suites**: Chromium and Firefox each passed 20 real-zoom layout/direction cases (40 total), their 400% interaction journeys, native zoom reset, and all ten requested screenshot captures (**20/20 CI images, 0 screenshot failures**). [PR #4](https://github.com/GoreeCloud/gc-ui/pull/4) was squash-merged into `main` as `4a05854c3fbcea9a0740701e4a16ee78b8b7b0ad`. The initial CI attempt had a transient Chromium screenshot API failure; the final successful run recorded none. Screenshot generation is evidence capture, not a human visual approval.
 
 ### Human assistive-technology checklist — not yet signed off
 
