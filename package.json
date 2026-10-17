@@ -31,7 +31,11 @@
     "qa:desktop:atspi": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-electron-atspi.py",
     "test:android:perfetto:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_perfetto.py",
     "test:desktop:orca:parsers": "python3 -m unittest discover -s scripts -p test_qa_orca_speech.py",
-    "qa:desktop:orca:generated-speech": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-orca-speech.py"
+    "qa:desktop:orca:generated-speech": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-orca-speech.py",
+    "test:android:power-readiness:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_power_readiness.py",
+    "qa:android:power-readiness": "python3 scripts/qa-android-power-readiness.py",
+    "qa:desktop:portability": "node scripts/check-desktop-portability.mjs",
+    "qa:native:desktop:direct": "node native/desktop/electron-smoke.mjs"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

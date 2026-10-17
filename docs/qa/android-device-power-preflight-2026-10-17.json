@@ -1,0 +1,37 @@
+{
+  "schema": "gc-ui-power-and-device-preflight.v1",
+  "devices": [
+    {
+      "id": "target-1",
+      "kind": "physical",
+      "model": "DE2117",
+      "android_api": "36",
+      "battery": {
+        "external_power": {
+          "USB powered": true,
+          "AC powered": false,
+          "Wireless powered": false,
+          "Dock powered": false
+        },
+        "status_code": 2,
+        "level_pct": 91,
+        "temperature_c": 31.6
+      },
+      "battery_preflight": {
+        "ready_for_disconnected_workload": false,
+        "blocking_reasons": [
+          "external-power-connected",
+          "not-discharging",
+          "discharging-not-confirmed",
+          "battery-level-outside-controlled-window"
+        ]
+      }
+    }
+  ],
+  "physical_device_count": 1,
+  "second_physical_device_verified": false,
+  "disconnected_power_ready": false,
+  "energy_consumption_measured": false,
+  "device_settings_changed": false,
+  "limitations": "ADB source alone does not measure mWh/J, unplugged battery consumption, or external power meter data."
+}

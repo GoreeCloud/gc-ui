@@ -1,6 +1,7 @@
 import { _electron as electron } from 'playwright';
 import {createRequire} from 'node:module';
-import {resolve} from 'node:path';
+import {join,resolve} from 'node:path';
+import {tmpdir} from 'node:os';
 const require=createRequire(import.meta.url);
 const electronBinary=require('electron');
 let app;
@@ -48,6 +49,6 @@ try{
  const version=await app.evaluate(()=>process.versions.electron);
  const expected=require('./package.json').devDependencies.electron;
  if(version!==expected)throw new Error('Electron runtime is not pinned version: '+version+' instead of '+expected);
- await win.screenshot({path:'/tmp/gc-electron-native-preview.png',fullPage:true});
- console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,version,platform,verifiedHost:before,appearance:next,accessibleLabels:true,keyboardActivation:true}));
+ await win.screenshot({path:join(tmpdir(),'gc-electron-native-preview.png'),fullPage:true});
+ console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,version,hostOS:process.platform,platform,verifiedHost:before,appearance:next,accessibleLabels:true,keyboardActivation:true}));
 }finally{if(app)await app.close()}

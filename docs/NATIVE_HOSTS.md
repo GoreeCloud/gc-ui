@@ -100,3 +100,6 @@ Use the [HWUI GPU probe](../scripts/qa-android-gpu.py) for sampled Activity grap
 
 ## Android 35, WebView Perfetto and Orca speech events
 The [deep native QA report](QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md) provides Android 35 emulator compatibility, the bounded [Perfetto app/WebView/SurfaceFlinger probe](../scripts/qa-android-perfetto.py), and the [Orca generated-speech probe](../scripts/qa-orca-speech.py). Both scripts use narrow, privacy-preserving outputs and parser regressions; native hosted CI tests only the parsers. Neither is a disconnected battery-power assessment or a human desktop screen-reader signoff.
+
+## Physical power readiness and cross-OS Electron previews
+[Remaining native-gates QA](QA_REMAINING_NATIVE_GATES_2026_10_17.md) covers read-only [Android device/power preflight](../scripts/qa-android-power-readiness.py) and independent macOS/Windows pinned Electron smoke workflows. Power and second-physical-device acceptance require actual hardware; Windows/macOS GUI automation is not human VoiceOver/NVDA acceptance.

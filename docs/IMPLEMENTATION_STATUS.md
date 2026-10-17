@@ -1,6 +1,11 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Remaining native-gate checkpoint
+- [Remaining native-gates QA](QA_REMAINING_NATIVE_GATES_2026_10_17.md) adds read-only fail-closed power/device preflight, plus macOS and Windows locked Electron preview security/semantic/keyboard CI jobs.
+- Only one USB-charging physical phone is connected; unplugged-power consumption and a second physical device are **not verified**.
+- Desktop native launch automation does not prove human NVDA/VoiceOver speech or signed distribution; Android TalkBack user-confirmed 12/12 PASS remains accepted.
+
 ## 2026-10-17 Deep Native Verification — Android 35, WebView Perfetto and Orca
 - [Deep native QA](QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md) records Android 35 emulator rendering and navigation on older WebView 124, alongside the API 36 physical-device WebView 152 baseline. The API coverage gate is broader, but a second physical phone is still unavailable.
 - Restricted Perfetto app/WebView/SurfaceFlinger traces include actual GC UI draw, Skia-related CPU slices and sandbox renderer CPU scheduling; they do not prove Conservation savings or hardware GPU energy.

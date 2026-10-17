@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/qa-android-power-readiness.py'
+      - 'scripts/test_qa_android_power_readiness.py'
+      - 'scripts/check-desktop-portability.mjs'
       - 'scripts/qa-android-perfetto.py'
       - 'scripts/test_qa_android_perfetto.py'
       - 'scripts/qa-orca-speech.py'
@@ -31,6 +34,9 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'scripts/qa-android-power-readiness.py'
+      - 'scripts/test_qa_android_power_readiness.py'
+      - 'scripts/check-desktop-portability.mjs'
       - 'scripts/qa-android-perfetto.py'
       - 'scripts/test_qa_android_perfetto.py'
       - 'scripts/qa-orca-speech.py'
@@ -83,6 +89,8 @@ jobs:
         run: npm run test:android:perfetto:parsers
       - name: Verify Orca generated-speech event parser
         run: npm run test:desktop:orca:parsers
+      - name: Verify Android physical-device and disconnected-power fail-closed preflight
+        run: npm run test:android:power-readiness:parsers
 
   android-debug:
     name: Compile isolated GC UI Android preview
@@ -126,3 +134,25 @@ jobs:
         run: npm ci --prefix native/desktop --no-audit --no-fund
       - name: Verify actual native desktop launch, profile and appearance
         run: npm run qa:native:desktop
+
+  desktop-portability:
+    name: "Pinned Electron and keyboard/semantics — ${{ matrix.os }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest]
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned optional Electron runtime
+        run: npm ci --prefix native/desktop --no-audit --no-fund
+      - name: Validate localized desktop resources and locked versions
+        run: npm run qa:desktop:portability
+      - name: Enforce host protocols and deny-by-default local resource checks
+        run: npm run test:native:contracts
+      - name: Launch Electron desktop preview and verify keyboard and accessible roles
+        run: npm run qa:native:desktop:direct
