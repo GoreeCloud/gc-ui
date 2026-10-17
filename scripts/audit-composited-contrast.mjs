@@ -20,6 +20,8 @@ const alpha=Number(alphaMatch[1])/100;
 if(!(alpha>0&&alpha<1))throw new Error('Expected a partially transparent Lens background');
 if(!/--gc-v1-color-on-surface-muted:\s*var\(--gc-v1-color-on-surface\)/.test(lensRule))
  throw new Error('Lens secondary text must use the audited strong on-surface foreground role');
+if(!/border-color:\s*var\(--gc-v1-color-outline-strong\)/.test(lensRule))
+ throw new Error('Lens boundary must use the audited outlineStrong role');
 
 const rgb=hex=>{
  if(!/^#[\da-f]{6}$/i.test(hex))throw new TypeError('Non-opaque role: '+hex);
