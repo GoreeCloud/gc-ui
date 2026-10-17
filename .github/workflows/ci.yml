@@ -25,6 +25,7 @@ jobs:
           node --check src/gc-theme-runtime.mjs
           node --check src/gc-interactions.mjs
           node --check src/gc-menu.mjs
+          node --check src/gc-form-controls.mjs
           node --check lab/v1.js
           node --check lab/primitives.mjs
           node --check lab/catalog.mjs
@@ -37,6 +38,7 @@ jobs:
           node --check e2e/adaptive-visual.spec.mjs
           node --check e2e/accessibility.spec.mjs
           node --check e2e/forms.spec.mjs
+          node --check e2e/reflow.spec.mjs
           node --check e2e/forms-visual.spec.mjs
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs
