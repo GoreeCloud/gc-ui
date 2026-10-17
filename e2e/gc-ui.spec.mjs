@@ -218,11 +218,37 @@ test('destroyed toast controller cannot announce after teardown or erase a repla
   dismissOld();
   old.dismiss();
   old.destroy();
-  const content=region.textContent;
+  const content=region.querySelector('.gc-toast-message')?.textContent;
   fresh.destroy();
   const cleared=region.childElementCount===0;
   region.remove();
   return {rejected,content,cleared};
  });
  expect(state).toEqual({rejected:true,content:'Replacement',cleared:true});
+});
+
+
+test('toast has a keyboard dismiss control and pauses its timeout during focus',async({page})=>{
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:'Show notification'});
+ await trigger.focus();
+ await page.evaluate(async()=>{
+  const {createToast}=await import('/src/gc-interactions.mjs');
+  const region=document.createElement('div');
+  region.id='gc-toast-keyboard-test';
+  document.body.append(region);
+  window.__gcToastKeyboardTest=createToast(region);
+  window.__gcToastKeyboardTest.show('Keyboard dismissal check',{duration:150});
+  // Focus in the same event-loop turn, before the short timer can expire.
+  region.querySelector('.gc-toast-dismiss').focus();
+ });
+ const toast=page.locator('#gc-toast-keyboard-test .gc-toast');
+ const close=toast.getByRole('button',{name:'Dismiss notification'});
+ await expect(close).toBeFocused();
+ await expect(toast).toContainText('Keyboard dismissal check');
+ await page.waitForTimeout(325);
+ await expect(toast).toBeVisible();
+ await close.press('Enter');
+ await expect(toast).toHaveCount(0);
+ await expect(trigger).toBeFocused();
 });
