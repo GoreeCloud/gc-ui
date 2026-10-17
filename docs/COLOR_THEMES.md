@@ -56,6 +56,18 @@ For final production ship, audit all pairs and run the theme verifier for each c
 | Moss | #3F744B | natural, reassuring green | planning / environment |
 Primary is not the only expressive color. Secondary is contextual; tertiary introduces contrast in controlled doses. Accent coverage guidance: <=15% of an informational view, and no competing multicolor CTA clusters.
 
+## 4a. Balanced Surface Color — anti-whiteout rule
+**Design intent:** GC UI light themes SHOULD feel bright without becoming an almost entirely white, visually flat canvas. The goal is differentiated tonal space, not greater saturation or mandatory decoration. This rule applies to websites, applications, and adaptive shells.
+
+- **Canvas is atmospheric, not blank:** Prefer a subtly tinted neutral/neutralVariant Canvas instead of assigning `#FFFFFF` to the entire viewport.
+- **Surface roles express hierarchy:** Use `surfaceTonal` and `surfaceInset` for section groups, navigation bodies and secondary regions. Reserve the brightest `surface` or `surfaceRaised` for reading panes, active work areas and overlays where additional clarity is useful.
+- **Color comes from roles:** Introduce secondary/tertiary containers for selective contextual sections and meaningful highlights, while keeping the existing <=15% informational-view accent guidance. Do not scatter unrelated bright colors or use a different hue for every card.
+- **Glass is selective:** Lens adds focus to transient controls; it is not a solution for a visually monotonous, white-on-white layout.
+- **Composition matters:** Adjacent planes SHOULD be distinguishable through tone, boundary, geometry or elevation. If a reference screenshot looks like one uninterrupted near-white sheet, review its hierarchy before shipping. Do not impose a rigid percentage cap on white pixels; dense documents, accessibility modes and content-specific layouts are valid exceptions.
+- **Theme parity:** Apply the equivalent tonal-hierarchy principle to dark schemes without turning every plane pure black. Never sacrifice readable contrast, reduced-transparency behavior, or forced-colors semantics to meet a visual-style target.
+
+**Review prompt:** Does this screen still communicate Canvas / Surface / Lens hierarchy, grouping and actionable emphasis with its accent temporarily hidden? Is each white area intentional rather than simply an unstyled default?
+
 ## 5. Appearance and precedence
 User overrides > accessibility system preference > explicit product configuration > OS appearance > GC UI default. Accessibility overrides are *orthogonal*: increased contrast, reduced transparency, reduced motion, larger type, color-filter support, forced colors. Never infer accessibility needs based on appearance alone.
 - **Light:** bright Canvas, opaque information Surfaces, restrained shadow; darker primary actions.
