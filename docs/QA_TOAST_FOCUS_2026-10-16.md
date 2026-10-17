@@ -25,6 +25,6 @@ The corrected controller tracks hover and focus independently. A timed toast pau
 
 ## Follow-up gates
 
-- GitHub Actions core/Chromium/Firefox jobs still require completed remote confirmation on the reviewed source commit; local success alone does not verify CI.
+- **Remote CI verified:** [GitHub Actions GC UI quality gates run 38986522164](https://github.com/GoreeCloud/gc-ui/actions/runs/38986522164) completed successfully for reviewed PR head `22a0fa1a4e58524f25e01aadc66e6fa707a0b00d`; all three jobs (core tokens/color/source integrity, Chromium interaction/reflow/axe/visual capture, and Firefox interaction) passed. [PR #1](https://github.com/GoreeCloud/gc-ui/pull/1) was squash-merged into `main` as `a8e25e06667b98ad32da982dcb57012121ec31e2`. This CI success is necessary, not sufficient, for release approval.
 - Verify real screen-reader verbosity, announcement persistence, user-controlled dismissal and genuine hardware focus behavior; scripted hover/focus and axe do not constitute WCAG certification.
 - Do not promote any of the **32 experimental, 31 specified, 0 stable** catalog entries solely from these tests.
