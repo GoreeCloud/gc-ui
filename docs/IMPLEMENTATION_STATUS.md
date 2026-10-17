@@ -1,6 +1,11 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Native verification checkpoint
+- Independently retested the published e77d207 source with 122 core tests, 18 native contracts, 31 Chromium and 10 Firefox targeted browser checks. See [Native Verifications](QA_NATIVE_VERIFICATIONS_2026_10_17.md) and the two successful hosted CI runs.
+- The rebuilt Android debug APK launched on the API 36 OnePlus device; local navigation and Back returned correctly. A fresh four-run comparison did not demonstrate consistent performance or energy improvements.
+- TalkBack remained disabled; spoken/gesture acceptance, disconnected power and WebView compositor profiling remain open. Production certification is not claimed.
+
 ## 2026-10-17 Performance/accessibility instrumentation addendum
 - A reversible Studio conservation preview and debug-only Android launch fixture support repeatable app presentation comparisons without changing global device settings.
 - The [Android QA benchmark](QA_ANDROID_PERFORMANCE_2026_10_17.md) includes an anonymized eight-run data record on Android API 36, with 4 runs/mode and honest Activity UI-frame versus GPU/power limitations. Automated browser and native protocol checks passed locally.

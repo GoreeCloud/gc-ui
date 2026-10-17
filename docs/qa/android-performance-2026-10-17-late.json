@@ -1,0 +1,149 @@
+{
+  "schema": "gc-ui-android-performance-qa.v1",
+  "context": {
+    "device_model": "DE2117",
+    "android_sdk": "36",
+    "resolution": "1080x2400",
+    "battery_before": {
+      "level_pct": 76,
+      "temperature_c": 30.1,
+      "usb_powered": true
+    },
+    "usb_powered_during_test": true,
+    "note": "Single Android device, debug APK, USB-powered; gfxinfo counts Activity UI frames only. No direct WebView compositor GPU, battery energy, or rendering quality measurements.",
+    "device_settings_changed": false
+  },
+  "parameters": {
+    "paired_blocks": 1,
+    "swipes_per_run": 6,
+    "warmup_s": 2.0,
+    "order": [
+      "normal",
+      "conserve",
+      "conserve",
+      "normal"
+    ]
+  },
+  "runs": [
+    {
+      "mode": "normal",
+      "mode_verified": true,
+      "swipes": 6,
+      "duration_s": 3.8,
+      "frame_ui_thread": {
+        "rendered": 324,
+        "janky": 1,
+        "p50_ms": 7,
+        "p90_ms": 8,
+        "p95_ms": 9,
+        "p99_ms": 10,
+        "jank_pct": 0.31
+      },
+      "memory": {
+        "pss_kib": 164887,
+        "rss_kib": 269280,
+        "swap_pss_kib": 717
+      },
+      "battery_after": {
+        "level_pct": 76,
+        "temperature_c": 30.1,
+        "usb_powered": true
+      }
+    },
+    {
+      "mode": "conserve",
+      "mode_verified": true,
+      "swipes": 6,
+      "duration_s": 3.77,
+      "frame_ui_thread": {
+        "rendered": 329,
+        "janky": 1,
+        "p50_ms": 7,
+        "p90_ms": 10,
+        "p95_ms": 10,
+        "p99_ms": 11,
+        "jank_pct": 0.3
+      },
+      "memory": {
+        "pss_kib": 170962,
+        "rss_kib": 276956,
+        "swap_pss_kib": 685
+      },
+      "battery_after": {
+        "level_pct": 76,
+        "temperature_c": 30.3,
+        "usb_powered": true
+      }
+    },
+    {
+      "mode": "conserve",
+      "mode_verified": true,
+      "swipes": 6,
+      "duration_s": 3.75,
+      "frame_ui_thread": {
+        "rendered": 327,
+        "janky": 1,
+        "p50_ms": 8,
+        "p90_ms": 10,
+        "p95_ms": 11,
+        "p99_ms": 12,
+        "jank_pct": 0.31
+      },
+      "memory": {
+        "pss_kib": 163376,
+        "rss_kib": 268480,
+        "swap_pss_kib": 685
+      },
+      "battery_after": {
+        "level_pct": 76,
+        "temperature_c": 30.3,
+        "usb_powered": true
+      }
+    },
+    {
+      "mode": "normal",
+      "mode_verified": true,
+      "swipes": 6,
+      "duration_s": 3.77,
+      "frame_ui_thread": {
+        "rendered": 326,
+        "janky": 2,
+        "p50_ms": 8,
+        "p90_ms": 10,
+        "p95_ms": 12,
+        "p99_ms": 12,
+        "jank_pct": 0.61
+      },
+      "memory": {
+        "pss_kib": 168098,
+        "rss_kib": 273072,
+        "swap_pss_kib": 702
+      },
+      "battery_after": {
+        "level_pct": 76,
+        "temperature_c": 30.3,
+        "usb_powered": true
+      }
+    }
+  ],
+  "summary": {
+    "normal": {
+      "runs": 2,
+      "ui_frames_median": 325.0,
+      "ui_janky_frames_median": 1.5,
+      "ui_jank_pct_median": 0.46,
+      "ui_p90_ms_median": 9.0,
+      "app_pss_kib_median": 166492.5,
+      "app_rss_kib_median": 271176.0
+    },
+    "conserve": {
+      "runs": 2,
+      "ui_frames_median": 328.0,
+      "ui_janky_frames_median": 1.0,
+      "ui_jank_pct_median": 0.3,
+      "ui_p90_ms_median": 10.0,
+      "app_pss_kib_median": 167169.0,
+      "app_rss_kib_median": 272718.0
+    }
+  }
+}
