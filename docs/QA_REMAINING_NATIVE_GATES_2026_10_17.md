@@ -24,7 +24,11 @@ The strict preflight intentionally exits 2 unless it observes both an authorized
 
 Added dedicated Windows/macOS hosted jobs for the optional pinned Electron 44.9.0 GC UI Studio. Each independently installs locked optional desktop dependencies, validates local lab resources and private-package/lockfile status, enforces native IPC and file-deny-list contracts, and attempts the same real Electron semantic/keyboard appearance-launch smoke as Linux. Screenshot output uses the OS-native temporary directory. The web security, preload isolation, sandbox and local-resource allowlist remain unchanged.
 
-**Hosted CI jobs must report success individually before this is called a passing cross-OS GUI smoke.** A macOS/Windows CI app launch is not a signed installer or human VoiceOver/NVDA test, and there is no evidence that either platform's screen-reader speech was heard.
+**Hosted result: PASS for both macOS and Windows** on source commit ebaa5363c9c79ad6e943ad46e6eaf06f244f3be0. [Native CI run 39079696322](https://github.com/GoreeCloud/gc-ui/actions/runs/39079696322) completed **5/5**: Android debug build, native contracts/power parser, Linux Electron preview, macOS pinned Electron preview, and Windows pinned Electron preview. Both new desktop jobs passed actual application launch, native-host profile, accessible control roles, keyboard appearance switching, lockfile/resource integrity and deny-by-default host protocol checks.
+
+[Core CI run 39079696359](https://github.com/GoreeCloud/gc-ui/actions/runs/39079696359) completed **3/3**: token/source integrity, Chromium, Firefox.
+
+These are **real hosted GUI smoke passes**, but not signed Windows/macOS installers or human VoiceOver/NVDA listening tests. No speech output on those operating systems was claimed.
 
 ## Distinct manual and physical release acceptance
 

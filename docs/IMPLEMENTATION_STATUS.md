@@ -2,7 +2,7 @@
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
 ## 2026-10-17 Remaining native-gate checkpoint
-- [Remaining native-gates QA](QA_REMAINING_NATIVE_GATES_2026_10_17.md) adds read-only fail-closed power/device preflight, plus macOS and Windows locked Electron preview security/semantic/keyboard CI jobs.
+- [Remaining native-gates QA](QA_REMAINING_NATIVE_GATES_2026_10_17.md) adds read-only fail-closed power/device preflight. **Hosted macOS and Windows Electron preview security/semantic/keyboard jobs both PASSED**, as did Linux native Android build/host and Chromium/Firefox (5/5 native, 3/3 core jobs on source commit ebaa536).
 - Only one USB-charging physical phone is connected; unplugged-power consumption and a second physical device are **not verified**.
 - Desktop native launch automation does not prove human NVDA/VoiceOver speech or signed distribution; Android TalkBack user-confirmed 12/12 PASS remains accepted.
 
