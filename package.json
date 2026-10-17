@@ -12,7 +12,7 @@
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:reflow && npm run test:e2e:effective-zoom && npm run test:e2e:accessibility && npm run test:e2e:visual",
-    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/icon-atlas.spec.mjs e2e/motion-gallery.spec.mjs e2e/experience-studio.spec.mjs",
+    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/icon-atlas.spec.mjs e2e/motion-gallery.spec.mjs e2e/experience-studio.spec.mjs e2e/native-host.spec.mjs",
     "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs e2e/environment-visual.spec.mjs e2e/experience-studio-visual.spec.mjs --workers=1 --timeout=90000",
     "test:e2e:firefox": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/effective-zoom.spec.mjs --browser firefox --workers=1",
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",
@@ -20,7 +20,9 @@
     "test:e2e:reflow": "playwright test e2e/reflow.spec.mjs --workers=1",
     "test:e2e:effective-zoom": "playwright test e2e/effective-zoom.spec.mjs --workers=1",
     "qa:native-zoom:chromium": "GC_ZOOM_ISOLATED_DISPLAY=1 XDG_SESSION_TYPE=x11 GDK_BACKEND=x11 MOZ_ENABLE_WAYLAND=0 xvfb-run -a -s '-screen 0 1440x900x24' node scripts/qa-real-browser-zoom.mjs chromium",
-    "qa:native-zoom:firefox": "GC_ZOOM_ISOLATED_DISPLAY=1 XDG_SESSION_TYPE=x11 GDK_BACKEND=x11 MOZ_ENABLE_WAYLAND=0 xvfb-run -a -s '-screen 0 1440x900x24' node scripts/qa-real-browser-zoom.mjs firefox"
+    "qa:native-zoom:firefox": "GC_ZOOM_ISOLATED_DISPLAY=1 XDG_SESSION_TYPE=x11 GDK_BACKEND=x11 MOZ_ENABLE_WAYLAND=0 xvfb-run -a -s '-screen 0 1440x900x24' node scripts/qa-real-browser-zoom.mjs firefox",
+    "test:native:contracts": "node --test tests/native-host.test.mjs native/desktop/test/host-contract.test.mjs tests/native-adapters.test.mjs",
+    "qa:native:desktop": "xvfb-run -a node native/desktop/electron-smoke.mjs"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",
@@ -44,7 +46,8 @@
     "./registry/third-party-assets": "./registry/third-party-assets.v1.json",
     "./integrations/motion": "./integrations/optional-motion.mjs",
     "./css/depth": "./styles/gc.v1.depth.css",
-    "./assets/scenes": "./assets/gc-scenes.svg"
+    "./assets/scenes": "./assets/gc-scenes.svg",
+    "./native/host-client": "./src/gc-native-host.mjs"
   },
   "files": [
     "src",

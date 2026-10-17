@@ -2,6 +2,14 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Native host bridge: Android and Electron desktop — 2026-10-17
+- Added a minimal **versioned, allowlisted GC UI native host client** with request validation, capability handshake, timeouts, response correlation, browser fallback and documented TypeScript APIs.
+- Added an Android SDK 36 / WebViewAssetLoader host with restricted main-frame origin messaging, optional haptic selection feedback, native theme/system-bar updates, edge-to-edge safe-area handling and persisted native appearance.
+- Added an optional sandboxed Electron desktop preview, context-isolated preload, denied remote/permission requests, testable narrow IPC policy and verified native appearance integration.
+- **Real-device validation:** Android debug APK assembled, installed and cold-started; Phone profile auto-selected, native feedback returned success, status/navigation safe areas and system icon contrast reviewed in light/dark; dark native bars remained synchronized after repeated cold starts.
+- **Tests:** 114 Node unit/source tests, 11 native-contract tests, 50 Chromium interactions and targeted hosted/unhosted browser tests passed; real Electron Xvfb smoke passed. 7,988 semantic color checks passed, and npm pack verified 21 exports. Results and open release gates: [Native QA](docs/QA_NATIVE_HOSTS_2026_10_17.md).
+- Native host source is optional and **not** part of the browser core dependency graph. No production signing, installers or manual assistive-technology signoff is claimed.
+
 ## Experimental typed form-controller and reflow wave — 2026-10-16
 - Extracted native password reveal and bounded number controls from the Forms Lab into `src/gc-form-controls.mjs`, exported as experimental typed helpers in `src/index.mjs`.
 - Added direct controller lifecycle/privacy/bounds tests; password controllers now reject buttons without a stable accessible name and re-mask exposed values on teardown.

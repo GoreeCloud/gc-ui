@@ -1,0 +1,69 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createNativeHostClient,createNativeTransport,validateNativeHostRequest,applyVerifiedHostCapabilities} from '../src/gc-native-host.mjs';
+const req=(id,action,payload={})=>JSON.stringify({v:1,type:'gc-host/request',id,action,payload});
+function fixture(){
+ const subscribers=new Set(),messages=[];
+ const transport={platform:'desktop',subscribe:fn=>{subscribers.add(fn);return()=>subscribers.delete(fn)},
+  postMessage:msg=>{messages.push(JSON.parse(msg))}};
+ const respond=(message)=>{for(const fn of subscribers)fn({data:JSON.stringify(message)})};
+ return {transport,messages,respond,subscribers};
+}
+test('request envelope prevents oversized, arbitrary, and malformed actions',()=>{
+ assert.equal(validateNativeHostRequest(req('request_1','getCapabilities')).action,'getCapabilities');
+ assert.equal(validateNativeHostRequest(req('request_2','setAppearance',{mode:'dark'})).payload.mode,'dark');
+ for(const raw of ['garbage','{}',req('a','runShell'),req('a','getCapabilities',{file:'/etc/passwd'}),
+  req('a','setAppearance',{mode:'other'}),req('hi!','getCapabilities'),req('a','getCapabilities')+'x'.repeat(2500)]){
+  assert.throws(()=>validateNativeHostRequest(raw));
+ }
+});
+test('browser fallback requires no host and returns a descriptive nonconnected client',async()=>{
+ assert.equal(createNativeTransport({}),null);
+ const client=createNativeHostClient({transport:null});
+ assert.equal(client.available,false);
+ await assert.rejects(client.request('getCapabilities'),/No native host/);
+});
+test('host client correlates out-of-order replies, ignores invalid response and unsubscribes',async()=>{
+ const f=fixture(),client=createNativeHostClient({transport:f.transport,timeoutMs:500});
+ const first=client.request('getCapabilities'),second=client.request('selectionFeedback');
+ assert.equal(f.messages.length,2);
+ f.respond({v:1,type:'gc-host/response',id:'unexpected',ok:true,result:{}});
+ f.respond({v:1,type:'gc-host/response',id:f.messages[1].id,ok:true,result:{performed:true}});
+ f.respond({v:1,type:'gc-host/response',id:f.messages[0].id,ok:true,result:{host:'electron'}});
+ assert.deepEqual(await second,{performed:true});
+ assert.deepEqual(await first,{host:'electron'});
+ client.destroy();assert.equal(f.subscribers.size,0);
+ await assert.rejects(client.request('getCapabilities'),/destroyed/);
+});
+test('time limits, action validation, and destroy reject pending host calls',async()=>{
+ const f=fixture(),client=createNativeHostClient({transport:f.transport,timeoutMs:50});
+ await assert.rejects(client.request('selectionFeedback',{unexpected:1}),/payload/);
+ await assert.rejects(client.request('getCapabilities'),/timeout/);
+ const pending=client.request('getCapabilities');
+ client.destroy();
+ await assert.rejects(pending,/destroyed/);
+});
+test('capabilities require trusted schema before marking a profile as native',()=>{
+ const root={dataset:{}};
+ assert.throws(()=>applyVerifiedHostCapabilities(root,{platform:'desktop',nativeAdapterInstalled:true}),/Invalid/);
+ const result=applyVerifiedHostCapabilities(root,{
+  protocol:1,platform:'phone',host:'android',nativeAdapterInstalled:true,
+  highContrast:true,selectionFeedback:true,appearanceControl:true
+ });
+ assert.equal(result.nativeAdapterInstalled,true);
+ assert.equal(result.maxDepth,'e0');
+ assert.equal(root.dataset.gcNativeHost,'android');
+ assert.equal(root.dataset.gcPlatform,'phone');
+});
+test('desktop and android transports expose only postMessage and subscription',()=>{
+ let listener;
+ const desktop=createNativeTransport({GCNativeHost:{postMessage(){},subscribe:fn=>{listener=fn;return()=>{listener=null}}}});
+ assert.equal(desktop.platform,'desktop');desktop.subscribe(()=>{})();assert.equal(listener,null);
+ const android={postMessage(){},onmessage:null};
+ const t=createNativeTransport({GCAndroidHost:android});
+ let calls=0;
+ const unsubscribe=t.subscribe(()=>calls++);
+ android.onmessage({data:'hello'});
+ assert.equal(calls,1);
+ unsubscribe();assert.equal(android.onmessage,null);
+});

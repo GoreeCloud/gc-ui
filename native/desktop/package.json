@@ -1,0 +1,16 @@
+{
+  "name": "@goreecloud/gc-ui-desktop-preview",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Optional sandboxed Electron host for GC UI Experience Studio",
+  "main": "main.mjs",
+  "scripts": {
+    "start": "electron .",
+    "test": "node --test test/*.test.mjs"
+  },
+  "devDependencies": {
+    "electron": "35.1.5",
+    "playwright": "1.64.1"
+  }
+}

@@ -62,3 +62,6 @@ Profiles preserve explicit high contrast, reduced motion, reduced transparency a
 A passing automated suite is not permission to deploy arbitrary Lens, media gradients or extended animations. Remaining gates include real composited text contrast measurement, low-end GPU/power profiling, Safari testing, native SDK integration, physical keyboard/remote/rotary input, TalkBack/VoiceOver/Orca manual review, translation/RTL checks, and approved visual regression baselines.
 
 See [materials](SURFACES_ENVIRONMENT.md), [motion](MOTION_INPUT.md), [platform layout](LAYOUT_PLATFORMS.md) and [licensed external assets](THIRD_PARTY_ASSETS.md).
+
+## Native preview follow-up
+Two scoped host proofs now exist in [Android](../native/android) and [Electron desktop](../native/desktop). Both use the small allowlisted [versioned host client](../src/gc-native-host.mjs) and opt in only from their trusted local application origins. The Studio remains fully operable without a host and displays native capabilities only after the host answers. These are isolated alpha previews, not claims of production platform coverage. See [Native Host Integration](NATIVE_HOSTS.md) for build steps, trust boundaries, verification and outstanding release gates.

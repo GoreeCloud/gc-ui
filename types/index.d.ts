@@ -232,3 +232,38 @@ export declare function createChoreography(options?:{
  media?:(query:string)=>MediaQueryList;
  root?:HTMLElement;
 }):GCChoreography;
+
+/** Optional Android/Electron message bridge. Never exposes arbitrary native commands. */
+export type GCNativeAction='getCapabilities'|'setAppearance'|'selectionFeedback';
+export interface GCNativeCapabilities {
+ protocol:1;
+ host:'android'|'electron';
+ platform:'phone'|'tablet'|'desktop';
+ nativeAdapterInstalled:true;
+ highContrast?:boolean;
+ reducedMotion?:boolean;
+ reducedTransparency?:boolean;
+ lowPower?:boolean;
+ selectionFeedback?:boolean;
+ appearanceControl?:boolean;
+}
+export interface GCNativeTransport {
+ platform?:string;
+ postMessage(text:string):void;
+ subscribe(listener:(event:{data:string}|string)=>void):()=>void;
+}
+export interface GCNativeHostClient {
+ available:boolean;
+ platform:string;
+ request(action:GCNativeAction,payload?:{mode?:'system'|'light'|'dark'}):Promise<unknown>;
+ destroy():void;
+}
+export declare const GC_NATIVE_PROTOCOL_VERSION:1;
+export declare const GC_NATIVE_ACTIONS:ReadonlyArray<GCNativeAction>;
+export declare function validateNativeHostRequest(value:string):{
+ v:1;type:'gc-host/request';id:string;action:GCNativeAction;payload:Record<string,unknown>;
+};
+export declare function createNativeTransport(scope?:object):GCNativeTransport|null;
+export declare function createNativeHostClient(options?:{transport?:GCNativeTransport|null;timeoutMs?:number}):GCNativeHostClient;
+export declare function applyVerifiedHostCapabilities(root:HTMLElement,capabilities:GCNativeCapabilities,options?:GCPlatformSystem):
+ Readonly<GCPlatformProfile&{nativeAdapterInstalled:true;selectionFeedback:boolean;appearanceControl:boolean}>;

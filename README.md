@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## Native host previews — Android and desktop
+
+The [Android local-asset WebView host](native/android) and [sandboxed Electron desktop host](native/desktop) now communicate with the Experience Studio through a [versioned, allowlisted message client](src/gc-native-host.mjs). Android exposes native platform signals, appearance bar styling and selection haptics; Electron exposes native window appearance through a restricted preload. Neither host permits arbitrary OS commands or remote web navigation. Both are optional; all web labs still run unhosted. Native hosts are separate from the npm core package, and **host packaging/device certification is still an alpha QA task**. Follow [Native Host Integration](docs/NATIVE_HOSTS.md) and the [native QA record](docs/QA_NATIVE_HOSTS_2026_10_17.md) for reproducible build, device and test evidence.
+
 ## Experience Studio — semantic depth, original illustration, platform profiles
 
 The [Experience Studio](lab/experience-studio.html) adds three original, semantic-color SVG scenes (workspace, reading, analysis); constrained depth tiers E0–E3; cancellable choreography of at most three visual groups; and **explicit** responsive web, phone, tablet, desktop, television, wearable and spatial *design profiles*. Profiles do not install native SDK adapters or infer the user's hardware. Materials degrade to nondecorative surfaces in high-contrast, forced-colors and resource-limited settings. See the [experience implementation contract](docs/EXPERIENCE_STUDIO.md) and [October 17 QA record](docs/QA_EXPERIENCE_STUDIO_2026_10_17.md). The work remains experimental.
