@@ -45,6 +45,9 @@
  box-shadow:0 12px 34px rgba(12,18,40,.10);
 }
 .gc-material-surface[data-gc-treatment=lens]{
+ /* Secondary Lens copy must remain readable over arbitrary dark imagery.
+    Keep muted semantic roles elsewhere; strengthen them only inside a Lens. */
+ --gc-v1-color-on-surface-muted:var(--gc-v1-color-on-surface);
  background:color-mix(in srgb,var(--gc-v1-color-surface) 91%,transparent);
  border-color:var(--gc-v1-color-outline);
  -webkit-backdrop-filter:blur(var(--gc-v1-component-lens-blur,24px));
