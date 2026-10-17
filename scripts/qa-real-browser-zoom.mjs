@@ -37,8 +37,8 @@ const server=createServer(async(req,res)=>{
 });
 await new Promise(r=>server.listen(0,'127.0.0.1',r));
 const baseURL='http://127.0.0.1:'+server.address().port;
-const observations=[];
-let browser=null;
+const observations=[],screenshotFailures=[];
+let screenshotCount=0,browser=null;
 try{
  await mkdir(out,{recursive:true});
  const engine=engineName==='chromium'?chromium:firefox;
@@ -88,8 +88,17 @@ try{
     observations.push({lab,scale,direction,...current});
    }
    await page.evaluate(()=>document.documentElement.dir='ltr');
-   await page.screenshot({path:resolve(out,lab+'-'+scale*100+'.png'),
-    animations:'disabled',timeout:30000});
+   try{
+    await page.screenshot({path:resolve(out,lab+'-'+scale*100+'.png'),
+     animations:'disabled',timeout:15000});
+    screenshotCount++;
+   }catch(error){
+    // Some CI Xvfb/GPU combinations cannot implement Page.captureScreenshot
+    // at real 200%/400% zoom. This does not invalidate assertions on actual
+    // DPR, viewport, hit targets, or keyboard behavior. Surface the gap.
+    screenshotFailures.push({lab,scale,message:String(error).slice(0,350)});
+    console.warn('WARN screenshot unavailable '+engineName+' '+lab+' '+scale*100+'%: '+error.message.split('\n')[0]);
+   }
    console.log('PASS '+engineName+' '+lab+' '+scale*100+'% native zoom LTR/RTL');
   }
  }
@@ -105,7 +114,12 @@ try{
   return {dpr:devicePixelRatio,innerHeight,mozInnerScreenX:window.mozInnerScreenX,mozInnerScreenY:window.mozInnerScreenY,screenX,screenY,outerHeight,header:box(header),nav:box(nav),link:box(link),mid,hit:document.elementFromPoint(mid.x,mid.y)?.outerHTML.slice(0,240)};
  });
  console.log('400% geometry '+engineName+' '+JSON.stringify(geometry));
- await page.screenshot({path:resolve(out,'adaptive-interaction-400.png'),animations:'disabled'});
+ try{
+  await page.screenshot({path:resolve(out,'adaptive-interaction-400.png'),animations:'disabled'});
+ }catch(error){
+  screenshotFailures.push({lab:'adaptive interaction',scale:4,message:String(error).slice(0,350)});
+  console.warn('WARN interaction screenshot unavailable: '+error.message.split('\n')[0]);
+ }
  if(engineName==='firefox'){
   const px=Math.round((geometry.mozInnerScreenX+geometry.mid.x)*geometry.dpr);
   const py=Math.round((geometry.mozInnerScreenY+geometry.mid.y)*geometry.dpr);
@@ -151,11 +165,12 @@ try{
  assert(Math.abs(reset.dpr-1)<0.025,'Native browser zoom failed to reset');
  await writeFile(resolve(out,'metrics.json'),JSON.stringify({
   engine:engineName,windowId,initial,reset,observations,
+  screenshotCount,screenshotFailures,
   interaction:'PASS',method:'XTest Ctrl+= in isolated Xvfb browser window',
   limitations:'Not manual screen-reader speech, Safari, OS text scaling or visual certification'
  },null,2)+'\n');
  console.log(JSON.stringify({engine:engineName,status:'PASS',layoutChecks:observations.length,
-  screenshots:10,interaction:'PASS',reset}));
+  screenshots:screenshotCount,screenshotFailures:screenshotFailures.length,interaction:'PASS',reset}));
 } finally {
  await browser?.close();
  await new Promise((res,rej)=>server.close(err=>err?rej(err):res()));
