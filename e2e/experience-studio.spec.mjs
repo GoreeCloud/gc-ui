@@ -39,3 +39,39 @@ test('studio keeps semantics at 320px, supports motion skip and forced-colors',a
  await page.locator('#animate').click();
  await expect(page.locator('#profile-status')).toContainText('Motion skipped');
 });
+
+test('browser-only platform profiles never unlock native host controls',async({page})=>{
+ await page.addInitScript(()=>{
+  delete window.GCNativeHost;
+  delete window.GCAndroidHost;
+ });
+ await page.setViewportSize({width:320,height:720});
+ await page.goto('/lab/experience-studio.html');
+ const feedback=page.getByRole('button',{name:'Test native selection feedback'});
+ const status=page.locator('#profile-status');
+ const hostStatus=page.locator('#host-status');
+ const root=page.locator('html');
+ await expect(hostStatus).toHaveText('Browser preview · no native host connected.');
+ await expect(feedback).toBeDisabled();
+ for(const [platform,nav,target] of [
+  ['tv','directional','64'],
+  ['wearable','single-task','48'],
+  ['spatial','host-managed','48']
+ ]){
+  await page.locator('#platform').selectOption(platform);
+  await expect(root).toHaveAttribute('data-gc-platform',platform);
+  await expect(status).toContainText('navigation: '+nav);
+  await expect(status).toContainText('targets: '+target+'px');
+  await expect(hostStatus).toHaveText('Browser preview · no native host connected.');
+  await expect(feedback).toBeDisabled();
+  expect(await root.getAttribute('data-gc-native-host')).toBeNull();
+ }
+ await page.locator('#conserve').check();
+ await expect(root).toHaveAttribute('data-gc-resource-mode','conserve');
+ await page.locator('#animate').focus();
+ await page.locator('#animate').press('Enter');
+ await expect(status).toHaveText('Motion skipped; content remains visible.');
+ await expect(page.locator('#scene-title')).toBeVisible();
+ await expect(feedback).toBeDisabled();
+ expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
+});
