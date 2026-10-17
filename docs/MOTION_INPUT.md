@@ -57,3 +57,6 @@ Feedback is semantic (selection, warning, confirmation), opt-in according to pla
 
 ## 9. Measurements
 Record start latency (target <50ms for local state reaction), movement smoothness, reduced-motion parity, focus stability, task completion while moving, and frame drops on representative low/mid devices. Failing comfort beats hitting an arbitrary 60fps number. Performance targets are product-specific and require profiling.
+
+## 10. Optional third-party motion engines
+GC UI's default motion presets use the native Web Animations API and preserve reduced-motion semantics. The optional [Motion, FormKit AutoAnimate and Lottie Web adapters](../integrations/optional-motion.mjs) are **not** automatic dependencies. Motion data/art, including downloaded Lottie files, must be reviewed for licensing, flashing, motion reduction and network use independently. See [third-party asset policy](THIRD_PARTY_ASSETS.md). These adapters are experimental, not a stable platform binding.

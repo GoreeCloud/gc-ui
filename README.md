@@ -59,6 +59,12 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## Contextual surfaces and licensed extensions
+
+The new [Material Environment Lab](lab/environment.html) demonstrates a **static ambient lighting system**, reading/workspace/analysis/media surface contexts, adaptive quiet/balanced/expressive tonal intensity, functional Surface/Lens distinctions, and native Web Animations presets. The reusable [material CSS](styles/gc.v1.materials.css), [surface controller](src/gc-surface-runtime.mjs), and [motion presets](src/gc-motion-presets.mjs) are experimental and require device/accessibility review.
+
+An opt-in [third-party asset registry](registry/third-party-assets.v1.json) catalogs **21 locally bundled SVGs from seven icon families**, with their exact license files in assets/third-party. These do *not* replace original GC icons. [Motion, AutoAnimate and Lottie Web adapters](integrations/optional-motion.mjs) accept independently installed libraries; the base package loads no third-party runtime or CDN. Animation data and media content have their own licenses. See [material system](docs/SURFACES_ENVIRONMENT.md), [asset policy](docs/THIRD_PARTY_ASSETS.md), and the [October 17 verification record](docs/QA_MATERIAL_ENVIRONMENT_2026_10_17.md).
+
 ## Open decisions
 
 Token naming, iconographic geometry, full dynamic color generation, bidirectional layouts, high-contrast themes, platform bindings, and component APIs require future design review. Do not interpret the alpha as a complete accessibility certification or finished system.

@@ -31,3 +31,6 @@ If an icon supplements visible text, mark the image decorative. If it is the onl
 
 ## Open visual review
 Raster rendering at 16/20/24/32px, baseline consistency in platform fonts, RTL examples, and filled/outlined matched pairs require a deliberate visual QA pass. Unit tests enforce structural constraints but cannot certify visual quality.
+
+## Optional third-party glyph compatibility
+The original GC glyph library remains the **default visual identity**. An [opt-in external glyph sprite](../assets/third-party/gc-third-party-glyphs.svg) contains 21 icons from seven outside libraries with independent licenses and source links. These are *not* original GC glyphs and do not automatically conform to GC stroke, optical size or RTL policy. Prefer one external icon family per bounded context rather than mixing styles in a single control group. See [third-party asset governance](THIRD_PARTY_ASSETS.md).

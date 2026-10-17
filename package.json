@@ -2,7 +2,7 @@
   "name": "@goreecloud/gc-ui",
   "version": "0.2.0-alpha.1",
   "private": true,
-  "description": "GoreeCloud UI (GC UI) — GoreeCloud's original adaptive interface design language",
+  "description": "GoreeCloud UI (GC UI) \u2014 GoreeCloud's original adaptive interface design language",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
@@ -12,8 +12,8 @@
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:reflow && npm run test:e2e:effective-zoom && npm run test:e2e:accessibility && npm run test:e2e:visual",
-    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs",
-    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs --workers=1 --timeout=90000",
+    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs",
+    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs e2e/environment-visual.spec.mjs --workers=1 --timeout=90000",
     "test:e2e:firefox": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/effective-zoom.spec.mjs --browser firefox --workers=1",
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",
     "pack:check": "node scripts/check-pack-manifest.mjs",
@@ -38,7 +38,11 @@
     "./brand/icon": "./assets/gc-mark.svg",
     "./brand/symbol": "./assets/gc-symbol.svg",
     "./brand/logo": "./assets/gc-logo.svg",
-    "./brand/logo-dark": "./assets/gc-logo-dark.svg"
+    "./brand/logo-dark": "./assets/gc-logo-dark.svg",
+    "./css/materials": "./styles/gc.v1.materials.css",
+    "./assets/third-party-glyphs": "./assets/third-party/gc-third-party-glyphs.svg",
+    "./registry/third-party-assets": "./registry/third-party-assets.v1.json",
+    "./integrations/motion": "./integrations/optional-motion.mjs"
   },
   "files": [
     "src",
@@ -54,7 +58,11 @@
     "assets/gc-mark.svg",
     "assets/gc-symbol.svg",
     "assets/gc-logo.svg",
-    "assets/gc-logo-dark.svg"
+    "assets/gc-logo-dark.svg",
+    "styles/gc.v1.materials.css",
+    "assets/third-party",
+    "registry/third-party-assets.v1.json",
+    "integrations"
   ],
   "sideEffects": [
     "./styles/*.css"

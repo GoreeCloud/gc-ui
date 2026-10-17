@@ -55,6 +55,9 @@ All dimensions use CSS px on web, logical dp/pt equivalents on native; **never**
 - Shadow scale: E0 none; E1 0 2px 8px rgba(12,18,40,.07); E2 0 8px 24px rgba(12,18,40,.10); E3 0 16px 40px rgba(12,18,40,.16); E4 0 24px 64px rgba(12,18,40,.22). Dark themes rely more on tone and outline, less on shadow.
 - Backdrop blur is an **optional enhancement**. System contrast, reduced transparency, forced-colors, GPU constraints or unsupported browsers require Lens/solid.
 
+### Contextual material environment (experimental implementation)
+GC UI MAY apply **static, low-contrast ambient light** to Canvas when the context benefits from it. The environment MUST NOT animate continuously, chase pointer position, sit between readable content and its required scrim, or express state solely through illumination. Semantic Surface treatments include tonal, inset, raised, ambient, focus and bounded Lens. Contexts workspace, reading, analysis and media select appropriate restraint; user/system contrast preferences override decoration. The Lens budget and opacity/contrast requirements above still apply. See [Surface Environment](SURFACES_ENVIRONMENT.md) and [Third-Party Assets](THIRD_PARTY_ASSETS.md).
+
 ## 6. Color architecture
 Five families: primary, secondary, tertiary, neutral, neutral-variant. Semantic roles: canvas, on-canvas, surface, surface-raised, surface-tonal, on-surface, on-surface-muted, surface-inverse, on-surface-inverse; primary/on-primary, secondary/on-secondary, tertiary/on-tertiary; containers/on-containers; outline/outline-strong/divider; success, warning, danger, info each with on and container pair; focus; selection; scrim; link; visited-link; lens-fill/lens-border. Never expose raw palette values to feature components.
 Colors MUST be evaluated in light, dark, increased contrast and on actual backdrops. Refer to COLOR_THEMES for algorithms and seed fallback rules. Status is never color alone.

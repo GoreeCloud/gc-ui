@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoreeCloud UI · Material Environment Lab</title>
+<meta name="description" content="Interactive GC UI environmental lighting, adaptive surfaces and licensed third-party glyph lab">
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.materials.css">
+<link rel="stylesheet" href="./environment.css">
+<script type="module" src="./environment.mjs"></script>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<div class="gc-environment site">
+<header class="topbar">
+ <a class="identity" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Material Environment Lab</small></span></a>
+ <nav aria-label="Lab navigation"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a></nav>
+ <button id="appearance" type="button" class="action secondary" aria-label="Switch to dark appearance">Dark mode</button>
+</header>
+<main id="main">
+<section class="hero">
+ <p class="eyebrow">THE MATERIAL ENVIRONMENT / EXPERIMENTAL</p>
+ <h1>A richer language<br>of <em>light &amp; depth.</em></h1>
+ <p class="lead">A quiet environmental glow, context-sensitive surface hierarchy, and expressive—but optional—visual resources. The information always comes first.</p>
+ <div class="hero-tags"><span>Static lighting</span><span>Accessible contrast</span><span>Opt-in assets</span></div>
+</section>
+<section class="controls gc-material-surface" data-gc-treatment="raised" aria-labelledby="control-title">
+ <div class="section-label"><div><p class="eyebrow">CONTROL THE ENVIRONMENT</p><h2 id="control-title">Choose how this space feels.</h2></div><p>These preferences affect the lab's materials without animating the background.</p></div>
+ <div class="control-grid">
+  <label for="context">Content context<select id="context"><option value="workspace">Workspace</option><option value="reading">Reading</option><option value="analysis">Analysis</option><option value="media">Media</option></select></label>
+  <label for="intensity">Tonal intensity<select id="intensity"><option value="auto">Adaptive</option><option value="quiet">Quiet</option><option value="balanced">Balanced</option><option value="expressive">Expressive</option></select></label>
+  <label for="illumination">Environmental lighting<select id="illumination"><option value="auto">Automatic</option><option value="soft">Soft</option><option value="off">Off</option></select></label>
+ </div>
+ <p class="effective" role="status" id="effective" aria-live="polite"></p>
+</section>
+<section class="showcase" aria-labelledby="show-title">
+ <div class="section-label"><div><p class="eyebrow">COMPOSITE MATERIALS</p><h2 id="show-title">Depth without distraction.</h2></div><p>Each plane has a job: foundational atmosphere, focused information, or temporary controls.</p></div>
+ <div class="preview">
+   <article class="hero-card gc-material-surface" data-gc-treatment="focus">
+     <div class="labelrow"><span class="eyebrow">FOCUS SURFACE</span><span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg></span></div>
+     <h3>Make room for<br><em>important work.</em></h3>
+     <p>Readable content stays grounded while the surrounding scene offers gentle, responsive context.</p>
+     <div class="progress-title"><span>Design system foundations</span><strong>84%</strong></div><div class="progress-track" role="progressbar" aria-label="Design system foundations" aria-valuemin="0" aria-valuemax="100" aria-valuenow="84"><span></span></div>
+     <button class="action primary" id="replay" type="button">Replay a calm transition <span aria-hidden="true">↗</span></button>
+   </article>
+   <aside class="side-cards">
+     <div class="gc-material-surface micro-card" data-gc-treatment="tonal"><span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg></span><strong>Tonal</strong><p>Grouping without another white card.</p></div>
+     <div class="gc-material-surface micro-card" data-gc-treatment="ambient"><span class="mini-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="../assets/gc-glyphs.svg#gc-info"></use></svg></span><strong>Ambient</strong><p>Bounded accents, semantic content.</p></div>
+   </aside>
+   <div class="lens gc-material-surface" data-gc-treatment="lens"><span aria-hidden="true">◈</span> <strong>Temporary lens</strong> <span class="lens-state">Adaptive material</span></div>
+ </div>
+ <p class="quiet-note">Lens remains optional. High contrast and reduced transparency override decorative compositing, and the environment never requires motion.</p>
+</section>
+<section class="providers" aria-labelledby="providers-title">
+ <div class="section-label"><div><p class="eyebrow">LICENSED EXTENSIONS</p><h2 id="providers-title">Many sources. One intentional system.</h2></div><p>21 locally bundled glyphs from seven free icon libraries, kept separate from the 12 original GC glyphs.</p></div>
+ <div class="provider-grid" id="provider-grid">
+  <article class="gc-material-surface provider"><h3>Lucide <span>ISC + MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-sun"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-layers"/></svg><svg role="img" aria-label="Sparkles"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-sparkles"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Tabler Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-sun"/></svg><svg role="img" aria-label="Adjustments"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-adjustments-horizontal"/></svg><svg role="img" aria-label="Layout grid"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-layout-grid"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Heroicons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-heroicons-sun"/></svg><svg role="img" aria-label="Storage"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-heroicons-circle-stack"/></svg><svg role="img" aria-label="Sparkles"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-heroicons-sparkles"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Bootstrap Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-bootstrap-sun"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-bootstrap-layers"/></svg><svg role="img" aria-label="Stars"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-bootstrap-stars"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Feather <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-sun"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-layers"/></svg><svg role="img" aria-label="Lightning"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-zap"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Iconoir <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-sun-light"/></svg><svg role="img" aria-label="Grid"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-view-grid"/></svg><svg role="img" aria-label="Flash"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-flash"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Phosphor Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-sun"/></svg><svg role="img" aria-label="Stack"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-stack"/></svg><svg role="img" aria-label="Sparkle"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-sparkle"/></svg></div></article>
+ </div>
+ <p class="quiet-note">Each pack retains its own style and license; use one coherent family per component surface. <a href="../docs/THIRD_PARTY_ASSETS.md">Licenses, attribution, and optional motion integrations</a></p>
+</section>
+</main>
+<footer>Experimental GC UI materials · <a href="../docs/SURFACES_ENVIRONMENT.md">Read the surface specification</a> · <a href="./catalog.html">Component catalog</a></footer>
+</div>
+</body>
+</html>

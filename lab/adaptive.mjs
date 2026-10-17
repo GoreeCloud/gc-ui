@@ -1,7 +1,9 @@
 import {createThemeController} from '../src/gc-theme-runtime.mjs';
+import {createSurfaceController} from '../src/gc-surface-runtime.mjs';
 import {initDialog} from '../src/gc-interactions.mjs';
 
 const theme=createThemeController();
+const environment=createSurfaceController();
 const dialog=initDialog(document.getElementById('details-sheet'));
 const labels={
  overview:{title:'Your overview.',subtitle:'A connected workspace that feels right at every screen size.',heading:'Today at a glance'},
@@ -17,6 +19,7 @@ const themeToggle=document.getElementById('appearance-toggle');
 function routeFromHash(){const route=location.hash.slice(1);return Object.hasOwn(labels,route)?route:'overview'}
 function renderRoute(){
  const route=routeFromHash(),current=labels[route];
+ environment.set({context:route==='library'?'reading':route==='activity'?'analysis':'workspace'});
  document.title='GoreeCloud UI · '+route[0].toUpperCase()+route.slice(1);
  title.textContent=current.title;
  subtitle.textContent=current.subtitle;

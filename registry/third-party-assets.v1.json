@@ -1,0 +1,275 @@
+{
+  "version": "1.0.0-preview",
+  "purpose": "Optional third-party glyph resources; original GC glyphs remain default",
+  "providers": [
+    {
+      "id": "lucide",
+      "name": "Lucide",
+      "repo": "https://github.com/lucide-icons/lucide",
+      "license": "ISC + Feather-derived MIT",
+      "licenseFile": "assets/third-party/lucide/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "1ef60af944de207e0d5176905a0759ba12e6ee8d"
+    },
+    {
+      "id": "tabler",
+      "name": "Tabler Icons",
+      "repo": "https://github.com/tabler/tabler-icons",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/tabler/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d"
+    },
+    {
+      "id": "heroicons",
+      "name": "Heroicons",
+      "repo": "https://github.com/tailwindlabs/heroicons",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/heroicons/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "616b7a4dbbf3d011760af8066262cd5c6b3868f3"
+    },
+    {
+      "id": "bootstrap",
+      "name": "Bootstrap Icons",
+      "repo": "https://github.com/twbs/icons",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/bootstrap/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "e568465481c0c541f63a78f6452d09387711d489"
+    },
+    {
+      "id": "feather",
+      "name": "Feather",
+      "repo": "https://github.com/feathericons/feather",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/feather/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "3dc050d97405062eba78aa57115c0a15c63abdaa"
+    },
+    {
+      "id": "iconoir",
+      "name": "Iconoir",
+      "repo": "https://github.com/iconoir-icons/iconoir",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/iconoir/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "69f9309517a04bb7f872ec4144615baccec22ceb"
+    },
+    {
+      "id": "phosphor",
+      "name": "Phosphor Icons",
+      "repo": "https://github.com/phosphor-icons/core",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/phosphor/LICENSE",
+      "bundledIcons": 3,
+      "mode": "local/opt-in",
+      "revision": "2b75f3ad12b420c9504ef05df8d2564a28f8500e"
+    }
+  ],
+  "icons": [
+    {
+      "id": "gc-ext-lucide-sun",
+      "provider": "lucide",
+      "name": "sun",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/sun.svg",
+      "svg": "assets/third-party/lucide/sun.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-layers",
+      "provider": "lucide",
+      "name": "layers",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/layers.svg",
+      "svg": "assets/third-party/lucide/layers.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-sparkles",
+      "provider": "lucide",
+      "name": "sparkles",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/sparkles.svg",
+      "svg": "assets/third-party/lucide/sparkles.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-sun",
+      "provider": "tabler",
+      "name": "sun",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/sun.svg",
+      "svg": "assets/third-party/tabler/sun.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-adjustments-horizontal",
+      "provider": "tabler",
+      "name": "adjustments-horizontal",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/adjustments-horizontal.svg",
+      "svg": "assets/third-party/tabler/adjustments-horizontal.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-layout-grid",
+      "provider": "tabler",
+      "name": "layout-grid",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/layout-grid.svg",
+      "svg": "assets/third-party/tabler/layout-grid.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-sun",
+      "provider": "heroicons",
+      "name": "sun",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/sun.svg",
+      "svg": "assets/third-party/heroicons/sun.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-circle-stack",
+      "provider": "heroicons",
+      "name": "circle-stack",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/circle-stack.svg",
+      "svg": "assets/third-party/heroicons/circle-stack.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-sparkles",
+      "provider": "heroicons",
+      "name": "sparkles",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/sparkles.svg",
+      "svg": "assets/third-party/heroicons/sparkles.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-bootstrap-sun",
+      "provider": "bootstrap",
+      "name": "sun",
+      "source": "https://github.com/twbs/icons/blob/e568465481c0c541f63a78f6452d09387711d489/icons/sun.svg",
+      "svg": "assets/third-party/bootstrap/sun.svg",
+      "viewBox": "0 0 16 16"
+    },
+    {
+      "id": "gc-ext-bootstrap-layers",
+      "provider": "bootstrap",
+      "name": "layers",
+      "source": "https://github.com/twbs/icons/blob/e568465481c0c541f63a78f6452d09387711d489/icons/layers.svg",
+      "svg": "assets/third-party/bootstrap/layers.svg",
+      "viewBox": "0 0 16 16"
+    },
+    {
+      "id": "gc-ext-bootstrap-stars",
+      "provider": "bootstrap",
+      "name": "stars",
+      "source": "https://github.com/twbs/icons/blob/e568465481c0c541f63a78f6452d09387711d489/icons/stars.svg",
+      "svg": "assets/third-party/bootstrap/stars.svg",
+      "viewBox": "0 0 16 16"
+    },
+    {
+      "id": "gc-ext-feather-sun",
+      "provider": "feather",
+      "name": "sun",
+      "source": "https://github.com/feathericons/feather/blob/3dc050d97405062eba78aa57115c0a15c63abdaa/icons/sun.svg",
+      "svg": "assets/third-party/feather/sun.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-feather-layers",
+      "provider": "feather",
+      "name": "layers",
+      "source": "https://github.com/feathericons/feather/blob/3dc050d97405062eba78aa57115c0a15c63abdaa/icons/layers.svg",
+      "svg": "assets/third-party/feather/layers.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-feather-zap",
+      "provider": "feather",
+      "name": "zap",
+      "source": "https://github.com/feathericons/feather/blob/3dc050d97405062eba78aa57115c0a15c63abdaa/icons/zap.svg",
+      "svg": "assets/third-party/feather/zap.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-iconoir-sun-light",
+      "provider": "iconoir",
+      "name": "sun-light",
+      "source": "https://github.com/iconoir-icons/iconoir/blob/69f9309517a04bb7f872ec4144615baccec22ceb/icons/regular/sun-light.svg",
+      "svg": "assets/third-party/iconoir/sun-light.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-iconoir-view-grid",
+      "provider": "iconoir",
+      "name": "view-grid",
+      "source": "https://github.com/iconoir-icons/iconoir/blob/69f9309517a04bb7f872ec4144615baccec22ceb/icons/regular/view-grid.svg",
+      "svg": "assets/third-party/iconoir/view-grid.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-iconoir-flash",
+      "provider": "iconoir",
+      "name": "flash",
+      "source": "https://github.com/iconoir-icons/iconoir/blob/69f9309517a04bb7f872ec4144615baccec22ceb/icons/regular/flash.svg",
+      "svg": "assets/third-party/iconoir/flash.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-phosphor-sun",
+      "provider": "phosphor",
+      "name": "sun",
+      "source": "https://github.com/phosphor-icons/core/blob/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/sun.svg",
+      "svg": "assets/third-party/phosphor/sun.svg",
+      "viewBox": "0 0 256 256"
+    },
+    {
+      "id": "gc-ext-phosphor-stack",
+      "provider": "phosphor",
+      "name": "stack",
+      "source": "https://github.com/phosphor-icons/core/blob/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/stack.svg",
+      "svg": "assets/third-party/phosphor/stack.svg",
+      "viewBox": "0 0 256 256"
+    },
+    {
+      "id": "gc-ext-phosphor-sparkle",
+      "provider": "phosphor",
+      "name": "sparkle",
+      "source": "https://github.com/phosphor-icons/core/blob/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/sparkle.svg",
+      "svg": "assets/third-party/phosphor/sparkle.svg",
+      "viewBox": "0 0 256 256"
+    }
+  ],
+  "optionalEngines": [
+    {
+      "id": "motion",
+      "name": "Motion",
+      "package": "motion",
+      "license": "MIT",
+      "bundled": false,
+      "source": "https://github.com/motiondivision/motion",
+      "role": "optional state transitions"
+    },
+    {
+      "id": "autoanimate",
+      "name": "FormKit AutoAnimate",
+      "package": "@formkit/auto-animate",
+      "license": "MIT",
+      "bundled": false,
+      "source": "https://github.com/formkit/auto-animate",
+      "role": "optional list reordering"
+    },
+    {
+      "id": "lottie",
+      "name": "Lottie Web",
+      "package": "lottie-web",
+      "license": "MIT",
+      "bundled": false,
+      "source": "https://github.com/airbnb/lottie-web",
+      "role": "optional licensed animation playback"
+    }
+  ]
+}

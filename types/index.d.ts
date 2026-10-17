@@ -101,3 +101,57 @@ export declare function initNumberStepper(
   increase:HTMLButtonElement,
   options?:{onChange?:(value:number)=>void}
 ):GCNumberStepperController;
+
+/** Experimental material contexts. Never infer accessibility preferences from content. */
+export type GCSurfaceContext='workspace'|'reading'|'analysis'|'media';
+export type GCSurfaceIntensity='auto'|'quiet'|'balanced'|'expressive';
+export type GCSurfaceIllumination='auto'|'soft'|'off';
+export interface GCSurfaceConfiguration {
+ context:GCSurfaceContext;
+ intensity:GCSurfaceIntensity;
+ illumination:GCSurfaceIllumination;
+}
+export interface GCSurfaceSystem {
+ highContrast?:boolean;
+ forcedColors?:boolean;
+ reducedTransparency?:boolean;
+ reducedMotion?:boolean;
+}
+export interface GCResolvedEnvironment {
+ context:GCSurfaceContext;
+ intensity:'quiet'|'balanced'|'expressive';
+ illumination:'soft'|'off';
+ solidLens:boolean;
+ motionAllowed:boolean;
+}
+export interface GCSurfaceController {
+ get():GCSurfaceConfiguration;
+ resolved():GCResolvedEnvironment;
+ set(patch:Partial<GCSurfaceConfiguration>):GCSurfaceConfiguration;
+ reset():GCSurfaceConfiguration;
+ destroy():void;
+}
+export interface GCSurfaceControllerOptions {
+ root?:HTMLElement;
+ media?:(query:string)=>MediaQueryList;
+ storage?:Storage|null;
+ key?:string;
+}
+export declare const GC_SURFACE_DEFAULTS:Readonly<GCSurfaceConfiguration>;
+export declare function normalizeSurfaceConfig(input?:Partial<GCSurfaceConfiguration>|null):GCSurfaceConfiguration;
+export declare function resolveSurfaceEnvironment(config?:Partial<GCSurfaceConfiguration>,system?:GCSurfaceSystem):GCResolvedEnvironment;
+export declare function createSurfaceController(options?:GCSurfaceControllerOptions):GCSurfaceController;
+
+export type GCMotionPreset='reveal'|'soften'|'settle'|'slideInline'|'dismiss';
+export declare const GC_MOTION_PRESETS:Readonly<Record<GCMotionPreset,Readonly<Keyframe[]>>>;
+export interface GCMotionOptions {
+ direction?:'ltr'|'rtl';
+ reducedMotion?:boolean;
+ media?:(query:string)=>MediaQueryList;
+ root?:HTMLElement;
+}
+export declare function getMotionPreset(name:GCMotionPreset,options?:GCMotionOptions):{
+ frames:Keyframe[];timing:KeyframeAnimationOptions;
+};
+export declare function motionAllowed(options?:GCMotionOptions):boolean;
+export declare function playMotionPreset(element:Element,name:GCMotionPreset,options?:GCMotionOptions):Animation|null;

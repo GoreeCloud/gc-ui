@@ -27,5 +27,16 @@ for(const name of shipped){
  if(/^(lab\/|e2e\/|tests\/|test-results\/|playwright-report\/|\.github\/)/.test(name))
   throw new Error('Development-only asset unexpectedly packed: '+name);
 }
+// External icon redistribution requires each exact upstream license and each source SVG
+// to accompany the packaged derived sprite. A missing notice is a release failure.
+const vendors=JSON.parse(readFileSync(resolve(root,'registry/third-party-assets.v1.json'),'utf8'));
+for(const provider of vendors.providers){
+ if(!shipped.has(provider.licenseFile))throw new Error('Third-party license missing from package: '+provider.id);
+}
+for(const asset of vendors.icons){
+ if(!shipped.has(asset.svg))throw new Error('Third-party source icon missing from package: '+asset.id);
+}
+if(!shipped.has('assets/third-party/gc-third-party-glyphs.svg'))
+ throw new Error('Third-party optional sprite missing from package');
 if(!pkg.private)throw new Error('Alpha library must remain private until release approval');
 console.log('GC UI npm dry-run: '+shipped.size+' files, all '+required.size+' required exports included; no test/lab output.');

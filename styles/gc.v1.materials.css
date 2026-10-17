@@ -1,0 +1,78 @@
+/* GC UI context-aware surfaces. No animation of gradients, parallax, global blur or hover tracking. */
+.gc-environment {
+  --gc-env-ambient:10%;
+  --gc-env-peripheral:8%;
+  background-color:var(--gc-v1-color-canvas);
+  background-image:
+    radial-gradient(ellipse 58% 48% at 90% -5%,color-mix(in srgb,var(--gc-v1-color-primary-container) var(--gc-env-ambient),transparent),transparent 95%),
+    radial-gradient(ellipse 55% 40% at -12% 58%,color-mix(in srgb,var(--gc-v1-color-tertiary-container) var(--gc-env-peripheral),transparent),transparent 95%);
+  color:var(--gc-v1-color-on-canvas);
+}
+:root[data-gc-surface-intensity=quiet] .gc-environment {--gc-env-ambient:5%;--gc-env-peripheral:3%}
+:root[data-gc-surface-intensity=balanced] .gc-environment {--gc-env-ambient:13%;--gc-env-peripheral:8%}
+:root[data-gc-surface-intensity=expressive] .gc-environment {--gc-env-ambient:21%;--gc-env-peripheral:12%}
+:root[data-gc-surface-context=reading] .gc-environment {--gc-env-ambient:4%;--gc-env-peripheral:2%}
+:root[data-gc-surface-context=analysis] .gc-environment {--gc-env-ambient:6%;--gc-env-peripheral:3%}
+:root[data-gc-surface-context=media] .gc-environment {--gc-env-ambient:16%;--gc-env-peripheral:10%}
+:root[data-gc-illumination=off] .gc-environment {background-image:none}
+.gc-material-surface {
+  color:var(--gc-v1-color-on-surface);
+  background:var(--gc-v1-color-surface);
+  border:var(--gc-v1-foundation-material-edge,1px) solid var(--gc-v1-color-divider);
+  border-radius:var(--gc-v1-component-card-radius,26px);
+  position:relative;
+  isolation:isolate;
+  min-width:0;
+}
+.gc-material-surface[data-gc-treatment=tonal]{background:var(--gc-v1-color-surface-tonal)}
+.gc-material-surface[data-gc-treatment=inset]{background:var(--gc-v1-color-surface-inset)}
+.gc-material-surface[data-gc-treatment=raised]{
+ background:var(--gc-v1-color-surface-raised);
+ box-shadow:0 8px 25px rgba(12,18,40,.07),0 1px 3px rgba(12,18,40,.04);
+}
+.gc-material-surface[data-gc-treatment=ambient]{
+ background:color-mix(in srgb,var(--gc-v1-color-surface) 84%,var(--gc-v1-color-primary-container));
+}
+.gc-material-surface[data-gc-treatment=focus]{
+ background:var(--gc-v1-color-surface-raised);
+ border-color:var(--gc-v1-color-outline-strong);
+ box-shadow:0 12px 34px rgba(12,18,40,.10);
+}
+.gc-material-surface[data-gc-treatment=lens]{
+ background:color-mix(in srgb,var(--gc-v1-color-surface) 91%,transparent);
+ border-color:var(--gc-v1-color-outline);
+ -webkit-backdrop-filter:blur(var(--gc-v1-component-lens-blur,24px));
+ backdrop-filter:blur(var(--gc-v1-component-lens-blur,24px));
+ box-shadow:0 8px 24px rgba(12,18,40,.09);
+}
+:root[data-gc-surface-context=reading] .gc-material-surface[data-gc-treatment=ambient],
+:root[data-gc-surface-context=analysis] .gc-material-surface[data-gc-treatment=ambient]{
+ background:var(--gc-v1-color-surface);
+}
+:root[data-gc-surface-context=analysis] .gc-material-surface[data-gc-treatment=raised],
+:root[data-gc-surface-context=analysis] .gc-material-surface[data-gc-treatment=focus]{
+ box-shadow:none;
+ border-color:var(--gc-v1-color-outline);
+}
+:root[data-gc-surface-lens=solid] .gc-material-surface[data-gc-treatment=lens],
+:root[data-gc-material=solid] .gc-material-surface[data-gc-treatment=lens]{
+ background:var(--gc-v1-color-surface-raised);
+ -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+@media(prefers-reduced-transparency:reduce){
+ .gc-material-surface[data-gc-treatment=lens]{background:var(--gc-v1-color-surface-raised);-webkit-backdrop-filter:none;backdrop-filter:none}
+}
+@media(prefers-contrast:more){
+ .gc-environment{background-image:none!important}
+ .gc-material-surface{box-shadow:none!important;border-color:var(--gc-v1-color-outline-strong)!important}
+ .gc-material-surface[data-gc-treatment=lens]{background:var(--gc-v1-color-surface-raised);backdrop-filter:none;-webkit-backdrop-filter:none}
+}
+:root[data-gc-contrast=high] .gc-environment{background-image:none}
+:root[data-gc-contrast=high] .gc-material-surface{box-shadow:none;border-color:var(--gc-v1-color-outline-strong)}
+@media(forced-colors:active){
+ .gc-environment{background:Canvas!important;color:CanvasText!important}
+ .gc-material-surface,.gc-material-surface[data-gc-treatment]{
+   background:Canvas!important;color:CanvasText!important;border-color:CanvasText!important;
+   box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+ }
+}

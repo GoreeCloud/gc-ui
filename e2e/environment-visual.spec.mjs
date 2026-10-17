@@ -1,0 +1,18 @@
+import {test,expect} from '@playwright/test';
+for(const variant of [
+ {name:'workspace-light',width:1440,height:900},
+ {name:'reading-dark',width:1440,height:900,context:'reading',dark:true},
+ {name:'compact',width:375,height:812},
+ {name:'compact-320',width:320,height:740}
+]){
+ test('capture material environment '+variant.name,async({page},testInfo)=>{
+  await page.setViewportSize({width:variant.width,height:variant.height});
+  await page.goto('/lab/environment.html');
+  if(variant.context)await page.locator('#context').selectOption(variant.context);
+  if(variant.dark)await page.getByRole('button',{name:'Switch to dark appearance'}).click();
+  await expect(page.locator('.provider')).toHaveCount(7);
+  await page.evaluate(()=>document.fonts?.ready);
+  const png=await page.screenshot({fullPage:true,animations:'disabled'});
+  await testInfo.attach('gc-environment-'+variant.name,{body:png,contentType:'image/png'});
+ });
+}
