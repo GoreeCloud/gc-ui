@@ -125,3 +125,16 @@ test('throwing and incomplete native subscriptions fail closed without blocking 
   assert.equal(sent,0);
  }
 });
+
+test('client teardown settles pending calls even when native unsubscribe throws',async()=>{
+ let unsubscribes=0;
+ const client=createNativeHostClient({transport:{
+  platform:'desktop',postMessage(){},
+  subscribe(){return ()=>{unsubscribes++;throw new Error('Native bridge already closed')}}
+ }});
+ const pending=client.request('getCapabilities');
+ assert.doesNotThrow(()=>client.destroy());
+ await assert.rejects(pending,/destroyed/);
+ client.destroy();
+ assert.equal(unsubscribes,1);
+});
