@@ -2,6 +2,12 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Experimental typed form-controller and reflow wave — 2026-10-16
+- Extracted native password reveal and bounded number controls from the Forms Lab into `src/gc-form-controls.mjs`, exported as experimental typed helpers in `src/index.mjs`.
+- Added direct controller lifecycle/privacy/bounds tests; password controllers now reject buttons without a stable accessible name and re-mask exposed values on teardown.
+- Added an automated RTL and doubled-text reflow stage across five labs at 320, 375, 600 and 768 CSS px, executed in the Chromium CI pipeline.
+- Aligned README current catalog figures to **32 experimental**, **31 specification-only**, and **0 stable**; older dated test checkpoints remain historical, not current QA claims.
+
 ## Physical Android Firefox validation and mobile footer fix — 2026-10-16
 - Exercised the actual USB Android Firefox UI: touch bottom navigation, light/dark mode, Details sheet, Android Back, virtual keyboard, linked validation errors, local success, and landscape two-column content.
 - Found cramped footer links against the fixed bottom bar; expanded compact footer end padding from 112px to 168px plus safe-area inset, added 320/360/375px hit-target clearance regression, and **visually verified the fix on a freshly loaded physical phone page**.
