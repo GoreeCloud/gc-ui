@@ -60,6 +60,9 @@ The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the C
 - F17 prefers the platform-native select for mobile typeahead and accessible option behavior; selection changes only the local demonstration status.
 - F21 allows manual numeric input as well as 48px minimum increment/decrement controls. The specimen normalizes out-of-bounds numbers on change, updates the label/status in a live region and disables buttons at the configured minimum/maximum.
 - O54 explicitly distinguishes a simulated connection failure from actual network traffic. The alert offers one effective retry action. Successful retry hides the error, exposes confirmation as a polite status and returns focus to the stable Simulate button. Existing form content remains untouched.
-- These four references are tracked as **experimental** in the catalog; `lab/forms.mjs` is a specimen controller, not a published JavaScript API.
+- These four references are tracked as **experimental** in the catalog; `lab/forms.mjs` retains specimen orchestration; password reveal and bounded number-stepper behavior are **experimental typed exports** from `src/gc-form-controls.mjs`, not stable production APIs.
 
 The shared `.gc-skip-link` stays at an absolute negative block position while idle and becomes a fixed positive-position link only on keyboard focus. This avoids misleading full-page screenshot artifacts after page scroll while retaining visible keyboard skip navigation.
+
+## Extracted experimental controller layer
+F12 and F21 now use `initPasswordReveal` and `initNumberStepper` from `src/gc-form-controls.mjs`, exported through `src/index.mjs` with declarations in `types/index.d.ts`. The password controller demands a stable accessible name, preserves the value when toggling, and re-masks it on teardown. The bounded integer stepper rejects invalid range contracts, clamps typed values on change, updates disabled endpoints, and unsubscribes on teardown. Source and browser regressions cover the specimen and direct lifecycle. Form validation, search suggestions, native select status, and simulated retry remain lab-only behavior. See [Web API alpha](WEB_API_ALPHA.md).
