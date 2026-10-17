@@ -160,3 +160,7 @@ The [physical Android Firefox TalkBack checkpoint](docs/QA_TALKBACK_ANDROID_FIRE
 Native password reveal and bounded integer-stepper behaviors now ship as **typed experimental source exports** (`initPasswordReveal` and `initNumberStepper`) rather than duplicated lab handlers. The form demo still uses local-only sample inputs; no credentials are stored or sent. [Web API guidance](docs/WEB_API_ALPHA.md) describes the lifecycle and constraints. A new `npm run test:e2e:reflow` gate checks RTL and doubled text at four narrow/medium viewport sizes across all five labs. The canonical registry remains **32 experimental, 31 specification-only and zero stable**.
 
 The [experimental form API and reflow QA checkpoint](docs/QA_FORM_API_REFLOW_2026-10-16.md) confirms **186 passing automated test executions** and a [successful three-job GitHub Actions run](https://github.com/GoreeCloud/gc-ui/actions/runs/38985325187) for the verified source commit. Owner-attested physical TalkBack speech remains a separate, scoped PASS; untested AT, browser zoom, translations and platform adapters are still release gates.
+
+
+### Toast interaction stabilization
+The [toast hover/focus QA checkpoint](docs/QA_TOAST_FOCUS_2026-10-16.md) records a narrow accessibility-lifecycle fix: auto-dismissal now stays paused while a timed toast is hovered **or** keyboard-focused, without allowing stale toast events to affect newer messages. The source remains experimental and any accessibility acceptance requires real assistive-technology review.

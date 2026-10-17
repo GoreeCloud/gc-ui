@@ -121,3 +121,33 @@ test('superseded toasts cannot reschedule dismissal of the current toast',async(
  assert.equal(children[0].textContent,'new');
  toast.destroy();
 });
+
+
+test('toast remains until neither pointer nor focus is inside it',async()=>{
+ const children=[];
+ const region={
+  setAttribute(){},
+  ownerDocument:{createElement:()=>({
+   listeners:{},addEventListener(type,fn){this.listeners[type]=fn},
+   contains(target){return target===this.child},
+   remove(){const at=children.indexOf(this);if(at!==-1)children.splice(at,1)}
+  })},
+  appendChild(node){children.push(node)}
+ };
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const toast=createToast(region);
+ toast.show('Keep reading',{duration:25});
+ const el=children[0];
+ el.listeners.pointerenter();
+ el.listeners.focusin();
+ el.listeners.pointerleave();
+ await new Promise(resolve=>setTimeout(resolve,60));
+ assert.equal(children.length,1,'pointer exit must not dismiss the focused toast');
+ el.listeners.focusout({relatedTarget:el.child={}});
+ await new Promise(resolve=>setTimeout(resolve,40));
+ assert.equal(children.length,1,'focus moving within the toast must not restart its timer');
+ el.listeners.focusout({relatedTarget:null});
+ await new Promise(resolve=>setTimeout(resolve,60));
+ assert.equal(children.length,0,'toast can expire after both pointer and focus have left');
+ toast.destroy();
+});
