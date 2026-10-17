@@ -152,3 +152,6 @@ The [native forms stabilization checkpoint](docs/QA_NATIVE_FORMS_2026-10-16.md) 
 
 ### Physical Android Firefox QA
 The [real-device Android Firefox checkpoint](docs/QA_ANDROID_FIREFOX_REAL_DEVICE_2026-10-16.md) verifies touch navigation, theme, native Details/Back, on-screen keyboard, local form validation, and landscape adaptation on an authorized USB phone. It also documents a **physically discovered and fixed footer touch-clearance issue**. The implementation passed **175 automated test executions** and a [successful three-job CI run](https://github.com/GoreeCloud/gc-ui/actions/runs/38979945053). Real TalkBack and cross-device signoff are still open.
+
+### Physical TalkBack focus checks
+The [physical Android Firefox TalkBack checkpoint](docs/QA_TALKBACK_ANDROID_FIREFOX_2026-10-16.md) documents successful accessibility focus, route activation, modal isolation, and linked form errors. Spoken output was **not** captured; this is not a complete screen-reader acceptance test or WCAG certification.
