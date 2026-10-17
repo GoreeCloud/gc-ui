@@ -281,3 +281,27 @@ test('toast expiry resumes only after both keyboard focus and hover have left',a
  await page.mouse.move(0,0);
  await expect(toast).toHaveCount(0,{timeout:2000});
 });
+
+test('programmatic toast dismissal and destroy restore focus to its opener',async({page})=>{
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:'Show notification'});
+ await trigger.focus();
+ await page.evaluate(async()=>{
+  const {createToast}=await import('/src/gc-interactions.mjs');
+  window.__programmaticToast=createToast(document.querySelector('#toast-region'));
+  window.__programmaticToast.show('Programmatic dismissal',{duration:0});
+ });
+ const toast=page.locator('#toast-region .gc-toast');
+ const close=toast.getByRole('button',{name:'Dismiss notification'});
+ await close.focus();
+ await expect(close).toBeFocused();
+ await page.evaluate(()=>window.__programmaticToast.dismiss());
+ await expect(toast).toHaveCount(0);
+ await expect(trigger).toBeFocused();
+ await page.evaluate(()=>window.__programmaticToast.show('Controller teardown',{duration:0}));
+ await close.focus();
+ await expect(close).toBeFocused();
+ await page.evaluate(()=>window.__programmaticToast.destroy());
+ await expect(toast).toHaveCount(0);
+ await expect(trigger).toBeFocused();
+});
