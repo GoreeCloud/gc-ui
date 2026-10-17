@@ -199,3 +199,30 @@ test('toast does not time out while focused after pointer exit',async({page})=>{
  await message.evaluate(el=>el.blur());
  await expect(message).toHaveCount(0,{timeout:1000});
 });
+
+
+test('destroyed toast controller cannot announce after teardown or erase a replacement',async({page})=>{
+ await page.goto('/lab/components.html');
+ const state=await page.evaluate(async()=>{
+  const {createToast}=await import('/src/gc-interactions.mjs');
+  const region=document.createElement('div');
+  document.body.append(region);
+  const old=createToast(region);
+  const dismissOld=old.show('Temporary',{duration:0});
+  old.destroy();
+  let rejected=false;
+  try{old.show('Must not render',{duration:0})}
+  catch(error){rejected=/destroyed/.test(error.message)}
+  const fresh=createToast(region);
+  fresh.show('Replacement',{duration:0});
+  dismissOld();
+  old.dismiss();
+  old.destroy();
+  const content=region.textContent;
+  fresh.destroy();
+  const cleared=region.childElementCount===0;
+  region.remove();
+  return {rejected,content,cleared};
+ });
+ expect(state).toEqual({rejected:true,content:'Replacement',cleared:true});
+});
