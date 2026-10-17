@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
-const html=read('lab/forms.html'),script=read('lab/forms.mjs'),css=read('styles/gc.v1.components.css');
+const html=read('lab/forms.html'),script=read('lab/forms.mjs'),css=read('styles/gc.v1.components.css'),formApi=read('src/gc-form-controls.mjs');
 
 test('textarea and form fields retain native labels, help and constraints',()=>{
  for(const id of ['brief-name','brief-email','brief-notes']){
@@ -45,8 +45,8 @@ test('native passphrase, select and bounded number field carry explicit semantic
  assert.match(html,/id="passphrase-reveal"[^>]+aria-label="Reveal sample passphrase" aria-pressed="false"/);
  assert.match(html,/<select id="demo-density"/);
  assert.match(html,/id="demo-collaborators"[^>]+type="number" min="1" max="12" step="1"/);
- assert.match(script,/reveal\.setAttribute\('aria-pressed'/);
- assert.match(script,/quantity\.focus\(\)/);
+ assert.match(formApi,/button\.setAttribute\('aria-pressed'/);
+ assert.match(formApi,/input\.focus\(\)/);
  assert.match(css,/\.gc-passphrase-wrap/);
  assert.match(css,/\.gc-stepper-button:focus-visible/);
 });
@@ -61,4 +61,11 @@ test('composition input does not trigger keyboard suggestion selection premature
  assert.match(script,/compositionstart/);
  assert.match(script,/compositionend/);
  assert.match(script,/if\(composing\|\|event\.isComposing\|\|event\.keyCode===229\)return/);
+});
+
+test('form specimens use exported experimental native controllers',()=>{
+ assert.match(script,/initPasswordReveal\(/);
+ assert.match(script,/initNumberStepper\(/);
+ assert.match(read('src/index.mjs'),/initPasswordReveal,initNumberStepper/);
+ assert.match(read('types/index.d.ts'),/GCNumberStepperController/);
 });
