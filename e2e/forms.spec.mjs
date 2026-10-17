@@ -210,3 +210,23 @@ test('unfocused skip link does not float over scrolled form content',async({page
  const shown=await skip.boundingBox();
  expect(shown.y).toBeGreaterThanOrEqual(0);
 });
+
+test('forms lab explicitly disables submission without JavaScript and never puts values in the URL',async({browser})=>{
+ const context=await browser.newContext({javaScriptEnabled:false});
+ try{
+  const page=await context.newPage();
+  await page.goto('/lab/forms.html');
+  const submit=page.getByRole('button',{name:'Create brief'});
+  await expect(submit).toBeDisabled();
+  await expect(page.getByText('JavaScript is required to validate this local demonstration.',{exact:false})).toBeVisible();
+  for(const selector of ['#brief-name','#brief-email','#brief-notes'])
+   await expect(page.locator(selector)).not.toHaveAttribute('name',/.+/);
+  await page.locator('#brief-name').fill('QA-NOJS-DUMMY');
+  await page.locator('#brief-email').fill('nobody@example.invalid');
+  await page.locator('#brief-notes').fill('No-JS sample values only');
+  await page.locator('#brief-name').press('Enter');
+  await expect(submit).toBeDisabled();
+  await expect(page).toHaveURL(/\/lab\/forms\.html$/);
+  expect(new URL(page.url()).search).toBe('');
+ }finally{await context.close()}
+});
