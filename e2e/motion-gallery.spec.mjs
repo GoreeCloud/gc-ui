@@ -15,3 +15,35 @@ test('motion gallery presets remain keyboard-operable, cancels and honors reduce
  await page.setViewportSize({width:320,height:700});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
+
+test('system reduced motion and high contrast suppress motion without hiding content',async({page})=>{
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await page.setViewportSize({width:320,height:700});
+ await page.goto('/lab/motion-gallery.html');
+ const sample=page.locator('#sample');
+ const play=page.getByRole('button',{name:'Play transition'});
+ const status=page.locator('#motion-status');
+ await expect(page.locator('#demo-reduced')).not.toBeChecked();
+ expect(await page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
+ const dismiss=page.getByRole('button',{name:'Dismiss',exact:true});
+ await dismiss.focus();
+ await dismiss.press('Enter');
+ await expect(dismiss).toHaveAttribute('aria-pressed','true');
+ await play.focus();
+ await play.press('Enter');
+ await expect(status).toHaveText('Motion skipped; the content remains available.');
+ await expect(sample.getByRole('heading',{name:'An anchored transition.'})).toBeVisible();
+ await expect(play).toBeFocused();
+ expect(await sample.evaluate(el=>el.getAnimations().length)).toBe(0);
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await page.evaluate(()=>document.documentElement.dataset.gcContrast='high');
+ await play.press('Enter');
+ await expect(status).toHaveText('Motion skipped; the content remains available.');
+ await expect(sample.getByRole('heading',{name:'An anchored transition.'})).toBeVisible();
+ expect(await sample.evaluate(el=>el.getAnimations().length)).toBe(0);
+ await page.evaluate(()=>delete document.documentElement.dataset.gcContrast);
+ await play.press('Enter');
+ await expect(status).toHaveText('dismiss played.');
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(1);
+});
