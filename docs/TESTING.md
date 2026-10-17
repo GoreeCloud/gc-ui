@@ -10,7 +10,7 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
-The alpha suite currently defines 36 interaction scenarios across Components, Foundations, Registry, Adaptive and Forms labs, 15 axe-core accessibility smoke scenarios, and 13 independent screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
+The alpha suite currently defines 36 interaction scenarios across Components, Foundations, Registry, Adaptive and Forms labs, **5 additional narrow-screen text reflow/RTL scenarios**, 15 axe-core accessibility smoke scenarios, and 13 independent screenshot-capture tests. This is a test inventory, not a claim that GitHub Actions or browser audits passed.
 The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
 ```sh
 npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3
@@ -54,7 +54,7 @@ For adaptive navigation contract details, see [Adaptive shell architecture](ADAP
 The complete Node source gate and Chromium Playwright suite passed on a connected Linux laptop, and limited Android Firefox touch/navigation tests were performed on a OnePlus N200. See the [dated device testing record](DEVICE_TESTING_2026_10_16.md) for exact counts, first-run failures and their corrections, transport setup, and open browser compatibility findings.
 
 ## Browser execution order (hardware-tested)
-Run `npm run test:e2e` to execute 36 interaction scenarios first, 15 axe accessibility screens second, followed by 13 independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
+Run `npm run test:e2e` to execute 36 interaction scenarios first, **5 reflow checks next**, 15 axe accessibility screens third, followed by 13 independent screenshot-capture tests using one browser worker and a 90-second timeout per capture. This prevents concurrent full-page screenshots from delaying interaction assertions. To isolate a stage, use `npm run test:e2e:interaction` or `npm run test:e2e:visual`. A passing browser run verifies only the scripted scenarios; hardware and screen-reader signoff remain separate.
 
 ## Firefox engine smoke testing
 Run `npm run test:e2e:firefox` after `npx playwright install firefox`. It runs the same 36 interactive scenarios in the Firefox desktop browser engine. It does **not** simulate physical Android Firefox or approve accessibility. A separate optional Firefox CI job provides recurrence; only completed run results count as verified.
@@ -82,3 +82,8 @@ See [October 16 real-device QA](QA_ANDROID_FIREFOX_REAL_DEVICE_2026-10-16.md) fo
 
 ## TalkBack hardware checkpoint
 [Physical Android Firefox TalkBack QA](QA_TALKBACK_ANDROID_FIREFOX_2026-10-16.md) verifies selected navigation focus, double-tap activation, dialog accessibility isolation, and focusable error-summary links on a real device. The desktop connection cannot record TalkBack speech, but the **device owner listened to the tested interactions and explicitly confirmed the output was read properly and accurately — PASS**. Exact wording was not transcribed; untested spoken outcomes and WCAG certification remain open. At the owner's subsequent request, TalkBack was turned off via USB and Android verified `accessibility_enabled=0` with no active accessibility services.
+
+## Experimental public form controllers and reflow protection
+The passphrase and bounded number-stepper specimens now use typed, experimental source imports from `src/gc-form-controls.mjs`. `tests/form-controllers.test.mjs` checks input validation, stable accessible naming, teardown masking, range validation and event cleanup. The source and types are exported from `src/index.mjs` and `types/index.d.ts`. They do **not** establish stable support.
+
+`npm run test:e2e:reflow` covers all five labs at 320/375/600/768 CSS px with doubled document/body text and RTL direction, rejecting horizontal overflow. It supplements, but does **not replace**, browser-level 200–400% zoom, translated strings and physical assistive-technology review. The full Chromium pipeline includes this stage between interaction tests and axe scans; Firefox still runs its separate 36-case interaction suite.
