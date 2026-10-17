@@ -1,6 +1,10 @@
 # GC UI — Accessibility, Verification & Release Gates
 **Target:** WCAG 2.2 AA for web experiences; preserve native platform accessibility APIs elsewhere. Not a certificate of current implementation. Design approval is not conformance testing.
 
+## Current Android TalkBack manual checkpoint (2026-10-17)
+
+The GC UI Android WebView Studio manual checklist **TB-01 through TB-12 is user-reported 12/12 PASS**. See the [reported manual acceptance](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Individual spoken transcripts/session metadata are not stored in this report. This is progress on one Android implementation's assistive-technology matrix, not a global WCAG 2.2 AA conformance claim, Android device-family certification or completion of VoiceOver/Orca/NVDA acceptance.
+
 ## 1. Normative acceptance tests
 | Domain | Requirement | Evidence |
 |---|---|---|

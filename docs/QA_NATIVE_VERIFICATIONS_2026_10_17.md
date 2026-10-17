@@ -4,6 +4,10 @@
 **Tested source:** e77d207a451853134cb0cefc68b81caccc3d3301 in GoreeCloud/gc-ui.
 **Status:** Experimental alpha; not WCAG certification or production-release approval.
 
+## Later manual TalkBack acceptance report
+
+On 2026-10-17 the person conducting the Android TalkBack walkthrough confirmed **all twelve TB-01 through TB-12 tests PASSED**. See the [user-reported acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Earlier statements about a disabled screen reader below describe the assistant's *previous* ADB session only; they are not a current claim that the user has not performed the manual tests. Actual individual spoken phrases were not supplied and are not invented here.
+
 ## Verification method
 
 Verified the published source in an isolated local Git worktree, with dedicated Playwright server ports to prevent reusing another branch's web server. Rebuilt and installed the latest Android debug APK over the GC UI preview application only. No device-wide accessibility, animation, battery-saver, brightness, or navigation settings were changed. Android screenshots and hierarchy XML stayed on the authorized laptop and are not publicly uploaded.

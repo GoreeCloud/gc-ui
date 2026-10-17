@@ -8,12 +8,12 @@
 |---|---|---|
 | Firefox/Orca Test 54 recheck after PRs #7/#9 | **PENDING** | Requires a real screen-reader listening session with step-by-step observations |
 | Firefox/Orca Test 56 recheck after PR #10 | **PENDING** | Requires spoken-status and keyboard/focus observations, including native 400% zoom |
-| Android/TalkBack on a real device | **PENDING** | No currently online authorized Remote Desktop Commander device; prior Android Firefox touch checks did not test TalkBack |
+| Android/TalkBack TB-01 through TB-12 | **12/12 PASS — user reported** | The test operator confirmed every manual case passed; see [acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Spoken transcripts were not provided. |
 | Electron host, real platform assistive technology | **PENDING** | Build/launch CI is not an accessible hardware-host walkthrough |
 | Worst-backdrop Lens role audit | **AUTOMATED TEST ADDED; pending independent CI** | sRGB black/white endpoint model; verify against the final CI run |
 | Real imagery, fonts, focus/indicators, CPU/GPU/power | **PENDING** | Requires rendered screenshots and device inspection |
 
-As of this checkpoint, `goreecloud-vps-01` and `personal-laptop-ideapad3-01` were reported **offline**. Do not record any manual PASS based on scripted assertions or earlier user-reported acceptance. Do not copy personal screenshots, test-device IDs, account data or screen-reader audio into this public repository.
+As of the original pre-acceptance checkpoint, `goreecloud-vps-01` and `personal-laptop-ideapad3-01` were reported **offline**. Do not infer manual PASS from scripted assertions. The later explicit report from the person who completed all twelve TalkBack cases is recorded as **user-reported PASS**, not as assistant-observed speech. Do not copy personal screenshots, test-device IDs, account data or screen-reader audio into this public repository.
 
 ## Session setup
 
@@ -61,7 +61,7 @@ Human review must also cover real photos and gradients behind the Lens, light an
 |---|---|---|---|---|---|
 | F54 | To record | Safe no-JS Forms Lab, static examples, reenable JS | Not yet observed | BLOCKED | — |
 | F56 | To record | Spoken toast and keyboard/focus control at 100%/400% | Not yet observed | BLOCKED | — |
-| N-Android | To record | Verified native and fail-closed browser profiles under TalkBack | Not yet observed | BLOCKED | — |
+| N-Android | 2026-10-17 user report | TalkBack TB-01 to TB-12, plus separate invalid-native-host scenario | All twelve TalkBack tests reported PASS; separate invalid-injection walkthrough was not individually reported | PARTIAL (TalkBack 12/12 PASS) | [TalkBack record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md) |
 | N-Desktop | To record | Keyboard/AT acceptance in actual Electron host | Not yet observed | BLOCKED | — |
 | Lens-visual | To record | Legible real imagery and focus/indicator contrast | Not yet observed | BLOCKED | — |
 

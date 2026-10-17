@@ -1,6 +1,12 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Android TalkBack completion update
+
+- **12/12 Android TalkBack cases TB-01 through TB-12 PASS — user-reported.** The test operator confirmed completing every case; see [TalkBack manual acceptance](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md).
+- Older ADB notes showing TalkBack disabled refer to earlier assistant-run sessions and remain valid historical observations, not the current status of the user-completed checklist.
+- Verbatim spoken output, the operator session's device/build and TalkBack version were not furnished. Other platform accessibility reviews, device coverage, GPU/energy and production certification remain open.
+
 ## 2026-10-17 Native verification checkpoint
 - Independently retested the published e77d207 source with 122 core tests, 18 native contracts, 31 Chromium and 10 Firefox targeted browser checks. See [Native Verifications](QA_NATIVE_VERIFICATIONS_2026_10_17.md) and the two successful hosted CI runs.
 - The rebuilt Android debug APK launched on the API 36 OnePlus device; local navigation and Back returned correctly. A fresh four-run comparison did not demonstrate consistent performance or energy improvements.
@@ -31,7 +37,7 @@
 
 ## Remaining before stable / production-ready release
 - Component library implementation for all 63 patterns with versioned APIs, stories, a11y examples, async/validation states and no dependency on the demo DOM.
-- Manual assistive-technology audits and written results for VoiceOver, TalkBack and NVDA. Native platform adapters and ergonomics reviews.
+- Outstanding platform and multi-device assistive-technology audits (VoiceOver, NVDA, Firefox/Orca and desktop); the Android TalkBack 12-case checklist is **user-reported 12/12 PASS**, without individual spoken transcripts archived. Native adapter/ergonomics reviews remain.
 - Contrast audit for every non-text indicator, semi-transparent Lens composite over every specified reference image class, forced color behavior and dynamic color seed.
 - Visual snapshots: Chrome, Firefox, Safari; responsive breakpoints, 200–400% zoom, RTL, multiple fonts/complex scripts, 1x/2x DPR.
 - Full original vector glyph collection, icon licensing records and selected variants.

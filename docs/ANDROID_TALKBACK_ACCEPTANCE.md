@@ -3,6 +3,12 @@
 **Project:** GC UI Android WebView Experience Studio (alpha).
 **Status:** Not certified. Run on representative Android API versions and screen sizes; record TalkBack version, WebView provider, app commit, device API, preferred font size and navigation mode.
 
+## User-confirmed completion — 2026-10-17
+
+**All twelve cases TB-01 through TB-12: PASS (user-reported manual verification).** The person who performed the tests confirmed all passing outcomes. See the [acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md).
+
+The remaining sections preserve the test procedure and earlier diagnostic evidence. Detailed spoken-output transcripts and test-session metadata were not provided; no assistant-observed listening result is claimed. Other platform and production release gates remain separate.
+
 ## Preconditions and safeguards
 
 The testing operator must control the device. Ask the operator to enable TalkBack using Android Settings > Accessibility and restore their original accessibility settings at the end. **Do not automatically toggle enabled accessibility services or mutate global Android settings via ADB.** The benchmark script does not do so. Use headphones or quiet workspace where spoken output is audible. Do not publish screen-reader logs or screenshots containing personal data.
@@ -36,4 +42,4 @@ Read-only inspection commands: adb shell dumpsys accessibility; adb shell settin
 
 ## Exit criteria
 
-TB-01 through TB-10 require recorded human PASS on at least one Android phone. TB-11/12 and a second Android WebView/device class remain required before production recommendations. Browser checks and performance measurements are independent evidence, not substitutes.
+All TB-01 through TB-12 are **user-reported PASS**. A second device/WebView class, detailed narration artifacts and independent production release assessments remain separate gates. Browser checks and performance measurements do not substitute for manual acceptance.

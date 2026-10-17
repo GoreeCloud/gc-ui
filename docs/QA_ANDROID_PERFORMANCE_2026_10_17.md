@@ -3,6 +3,10 @@
 **Project:** GoreeCloud/gc-ui, experimental Android WebView Experience Studio.
 **Release status:** Alpha, not performance certification or native accessibility acceptance.
 
+## Later TalkBack acceptance update
+
+The user who conducted the manual tests confirmed **12/12 TalkBack cases PASS** on 2026-10-17. The [manual acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md) captures that report. The disabled-service / NOT RUN observations below refer to the *earlier instrumented session*, not the later manual test outcome.
+
 ## Scope and reproducibility
 
 A reversible Studio checkbox, **Preview resource conservation**, applies the same presentational restrictions as a native low-power hint: decorative environment lighting, static shadows, Lens blur and coordinated motion are suppressed, while content and controls remain. It is not an Android OS battery-saver toggle. Android's debug build accepts a bounded launch extra named gcui_preview_mode with only the value conserve recognized; release builds ignore this extra. Local debug WebView evaluates a static dataset attribute and logs only the current mode, allowing the ADB test to refuse mismatched states.
