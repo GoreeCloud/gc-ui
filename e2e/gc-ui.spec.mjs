@@ -252,3 +252,32 @@ test('toast has a keyboard dismiss control and pauses its timeout during focus',
  await expect(toast).toHaveCount(0);
  await expect(trigger).toBeFocused();
 });
+
+test('toast expiry resumes only after both keyboard focus and hover have left',async({page})=>{
+ await page.setViewportSize({width:320,height:740});
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:'Show notification'});
+ const toast=page.locator('#toast-region .gc-toast');
+ await trigger.focus();
+ await page.evaluate(async()=>{
+  const {createToast}=await import('/src/gc-interactions.mjs');
+  window.__dualPauseToast=createToast(document.querySelector('#toast-region'));
+  window.__dualPauseToast.show('Focus protects toast after pointer exit',{duration:900});
+ });
+ await toast.hover();
+ await toast.getByRole('button',{name:'Dismiss notification'}).focus();
+ await page.mouse.move(0,0);
+ await page.waitForTimeout(1100);
+ await expect(toast).toBeVisible();
+ await trigger.focus();
+ await expect(toast).toHaveCount(0,{timeout:2000});
+
+ await page.evaluate(()=>window.__dualPauseToast.show('Hover protects toast after focus exit',{duration:900}));
+ await toast.getByRole('button',{name:'Dismiss notification'}).focus();
+ await toast.hover();
+ await trigger.focus();
+ await page.waitForTimeout(1100);
+ await expect(toast).toBeVisible();
+ await page.mouse.move(0,0);
+ await expect(toast).toHaveCount(0,{timeout:2000});
+});
