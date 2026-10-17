@@ -88,11 +88,21 @@ export function createToast(region){
  function show(message,{duration=6000}={}){
   if(destroyed)throw new Error('Toast controller was destroyed');
   dismiss();
-  const el=region.ownerDocument.createElement('div');
-  el.className='gc-toast';el.textContent=String(message);region.appendChild(el);active=el;
+  const doc=region.ownerDocument,returnFocus=doc.activeElement;
+  const el=doc.createElement('div');
+  el.className='gc-toast';
+  const text=doc.createElement('span');
+  text.className='gc-toast-message';
+  text.textContent=String(message);
+  const close=doc.createElement('button');
+  close.type='button';
+  close.className='gc-toast-dismiss';
+  close.setAttribute('aria-label','Dismiss notification');
+  close.textContent='Dismiss';
+  el.append(text,close);region.appendChild(el);active=el;
   if(duration>0)timer=setTimeout(dismiss,duration);
-  // Pointer hover and keyboard focus can overlap: leaving either must not
-  // dismiss a toast while the other interaction still needs to read it.
+  // A real, keyboard-focusable dismissal control makes focus-based
+  // timer suspension reachable without scripting a tabindex onto the toast.
   let hovered=false,focused=false;
   const pause=()=>{if(active===el&&timer!==null){clearTimeout(timer);timer=null}};
   const resume=()=>{
@@ -105,6 +115,13 @@ export function createToast(region){
   el.addEventListener('focusout',event=>{
    if(event?.relatedTarget&&el.contains?.(event.relatedTarget))return;
    focused=false;resume();
+  });
+  close.addEventListener('click',()=>{
+   if(active!==el)return;
+   const hadFocus=el.contains(doc.activeElement);
+   dismiss();
+   if(hadFocus&&returnFocus?.isConnected&&typeof returnFocus.focus==='function')
+    returnFocus.focus();
   });
   return ()=>{if(active===el)dismiss()};
  }
