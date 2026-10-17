@@ -7,6 +7,8 @@ export function initPasswordReveal(input,button){
   throw new TypeError('Expected a native password input');
  if(button?.localName!=='button')throw new TypeError('Expected a native button');
  if(button.type!=='button')throw new TypeError('Password reveal button must be type=button');
+ if(!button.getAttribute('aria-label')&&!button.getAttribute('aria-labelledby'))
+  throw new TypeError('Password reveal needs a stable accessible button name');
  let destroyed=false;
  const ensureActive=()=>{if(destroyed)throw new Error('Password controller was destroyed')};
  const setVisible=visible=>{
