@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GC UI · Experience Studio</title>
+<meta name="description" content="Original illustrations, semantic depth, coordinated motion and device-independent platform profiles">
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.materials.css">
+<link rel="stylesheet" href="../styles/gc.v1.depth.css">
+<link rel="stylesheet" href="./experience-studio.css">
+<script type="module" src="./experience-studio.mjs"></script>
+</head>
+<body>
+<a class="gc-skip" href="#main">Skip to studio</a>
+<div class="gc-environment studio">
+ <header class="topbar">
+  <a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Experience Studio · Alpha</small></span></a>
+  <nav aria-label="Other design labs"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
+  <button id="appearance" class="mode-button" type="button" aria-label="Switch to dark appearance">Dark mode</button>
+ </header>
+ <main id="main">
+  <section class="intro" aria-labelledby="studio-title">
+   <p class="eyebrow">SEMANTIC DEPTH / ORIGINAL SCENES / ADAPTIVE PROFILES</p>
+   <h1 id="studio-title">One language.<br><em>Many environments.</em></h1>
+   <p>Illustrations add context, depth explains hierarchy, and transitions show continuity. Every layer remains legible when motion, glass, or atmosphere is turned off.</p>
+  </section>
+  <section class="controls gc-depth-surface" data-gc-depth="e1" aria-labelledby="controls-title">
+   <div class="section-heading"><div><p class="eyebrow">EXPERIMENTAL CONTROLS</p><h2 id="controls-title">Tune the experience.</h2></div><p>These are explicit design profiles, not hardware detection or native SDK integration.</p></div>
+   <div class="fields">
+    <label for="scene">Content context<select id="scene"><option value="workspace">Workspace</option><option value="reading">Reading</option><option value="analysis">Analysis</option></select></label>
+    <label for="platform">Platform profile<select id="platform"><option value="web">Responsive web</option><option value="phone">Phone</option><option value="tablet">Tablet</option><option value="desktop">Desktop</option><option value="tv">Television</option><option value="wearable">Wearable</option><option value="spatial">Spatial computing</option></select></label>
+    <label for="detail">Surface priority<select id="detail"><option value="active">Active task (E2)</option><option value="content">Content (E1)</option><option value="overlay">Transient controls (E3)</option></select></label>
+   </div>
+   <label class="setting-check"><input type="checkbox" id="reduced"> Preview without motion</label>
+   <p id="profile-status" class="status" role="status" aria-live="polite" aria-atomic="true"></p>
+  </section>
+  <section class="demo" aria-labelledby="demo-heading">
+   <div class="section-heading"><div><p class="eyebrow">THE COMPOSED MATERIAL</p><h2 id="demo-heading">Content drives the scene.</h2></div><p>Illustrations are original GC UI vector geometry, tinted by semantic color roles.</p></div>
+   <div class="composition">
+    <article id="feature" class="feature gc-depth-surface" data-gc-depth="e2">
+     <div class="scene-art" aria-hidden="true"><svg class="gc-scene" viewBox="0 0 280 176"><use id="scene-use" href="../assets/gc-scenes.svg#gc-scene-workspace"></use></svg></div>
+     <div class="feature-copy">
+      <p class="eyebrow" id="scene-eyebrow">WORKSPACE / FOCUS</p>
+      <h3 id="scene-title">A clearer place to make.</h3>
+      <p id="scene-description">Tonal grouping and one focused plane help work stay organized.</p>
+      <div class="actions"><button type="button" id="animate" class="action primary">Show coordinated transition</button><button type="button" id="cancel" class="action secondary">Stop</button></div>
+     </div>
+    </article>
+    <aside class="rail">
+     <div class="gc-depth-surface depth-sample" data-gc-depth="e0"><small>CONTEXT / E0</small><strong>Atmosphere supports attention.</strong><span>Not every plane needs a shadow.</span></div>
+     <div class="gc-depth-surface depth-sample" data-gc-depth="e1"><small>CONTENT / E1</small><strong>Structure creates clarity.</strong><span>Semantic boundaries stay stable.</span></div>
+     <div class="gc-depth-surface depth-sample" data-gc-depth="e3"><small>TRANSIENT / E3</small><strong>Only where useful.</strong><span>Overlay emphasis is deliberately rare.</span></div>
+    </aside>
+   </div>
+   <p class="footnote">The browser preview does not claim native rendering. High contrast, forced colors, reduced transparency, reduced data and reduced motion remain authoritative.</p>
+  </section>
+  <section class="scene-index" aria-labelledby="scene-index-title">
+   <div class="section-heading"><div><p class="eyebrow">ORIGINAL GC UI VISUALS</p><h2 id="scene-index-title">Three purposeful scenes.</h2></div><p>Each works without photography, icon fonts, or third-party artwork.</p></div>
+   <div class="scene-list">
+    <article class="gc-depth-surface scene-tile" data-gc-depth="e0"><svg class="gc-scene" aria-hidden="true" viewBox="0 0 280 176"><use href="../assets/gc-scenes.svg#gc-scene-workspace"></use></svg><h3>Workspace</h3><p>Creation and multitasking</p></article>
+    <article class="gc-depth-surface scene-tile" data-gc-depth="e0"><svg class="gc-scene" aria-hidden="true" viewBox="0 0 280 176"><use href="../assets/gc-scenes.svg#gc-scene-reading"></use></svg><h3>Reading</h3><p>Quiet focus and legibility</p></article>
+    <article class="gc-depth-surface scene-tile" data-gc-depth="e0"><svg class="gc-scene" aria-hidden="true" viewBox="0 0 280 176"><use href="../assets/gc-scenes.svg#gc-scene-analysis"></use></svg><h3>Analysis</h3><p>Patterns without clutter</p></article>
+   </div>
+  </section>
+ </main>
+ <footer>Experimental GC UI Studio · <a href="../docs/EXPERIENCE_STUDIO.md">Architecture and limitations</a> · <a href="./adaptive.html">Adaptive Shell</a></footer>
+</div>
+</body></html>

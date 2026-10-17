@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Original GoreeCloud UI illustration geometries; monochrome semantic currentColor. -->
+<svg xmlns="http://www.w3.org/2000/svg">
+ <symbol id="gc-scene-workspace" viewBox="0 0 280 176">
+  <rect x="31" y="20" width="218" height="132" rx="22" fill="currentColor" opacity=".09"/>
+  <rect x="47" y="36" width="186" height="100" rx="13" fill="none" stroke="currentColor" stroke-width="2.5"/>
+  <path d="M48 61h185" stroke="currentColor" opacity=".5" stroke-width="2"/>
+  <circle cx="60" cy="49" r="3" fill="currentColor"/><circle cx="72" cy="49" r="3" fill="currentColor" opacity=".5"/>
+  <rect x="59" y="73" width="72" height="50" rx="10" fill="currentColor" opacity=".20"/>
+  <rect x="143" y="73" width="77" height="12" rx="6" fill="currentColor" opacity=".5"/>
+  <rect x="143" y="93" width="55" height="8" rx="4" fill="currentColor" opacity=".25"/>
+  <rect x="143" y="108" width="68" height="8" rx="4" fill="currentColor" opacity=".22"/>
+  <path d="M72 108l14-15 13 9 18-20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/>
+  <circle cx="117" cy="82" r="4" fill="currentColor"/>
+  <rect x="100" y="143" width="80" height="8" rx="4" fill="currentColor" opacity=".3"/>
+ </symbol>
+ <symbol id="gc-scene-reading" viewBox="0 0 280 176">
+  <ellipse cx="140" cy="146" rx="100" ry="14" fill="currentColor" opacity=".10"/>
+  <path d="M140 51c-36-19-71-16-94-3v85c27-10 59-8 94 9 35-17 67-19 94-9V48c-23-13-58-16-94 3Z" fill="currentColor" opacity=".15" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+  <path d="M140 51v91" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+  <path d="M61 66c22-7 42-4 59 2M61 83c22-7 42-4 59 2M61 100c22-7 42-4 59 2M160 68c18-7 39-9 59-2M160 85c18-7 39-9 59-2M160 102c18-7 39-9 59-2" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
+  <circle cx="207" cy="32" r="13" fill="currentColor" opacity=".16"/>
+  <path d="M207 19v26m-13-13h26" stroke="currentColor" stroke-width="2.5" opacity=".55"/>
+ </symbol>
+ <symbol id="gc-scene-analysis" viewBox="0 0 280 176">
+  <rect x="34" y="20" width="212" height="134" rx="22" fill="currentColor" opacity=".09"/>
+  <path d="M61 134V45m0 89h166" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity=".60"/>
+  <rect x="81" y="93" width="29" height="41" rx="7" fill="currentColor" opacity=".20"/>
+  <rect x="123" y="72" width="29" height="62" rx="7" fill="currentColor" opacity=".36"/>
+  <rect x="165" y="49" width="29" height="85" rx="7" fill="currentColor" opacity=".58"/>
+  <path d="M92 76l45-25 42-21 34 13" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="92" cy="76" r="4" fill="currentColor"/><circle cx="137" cy="51" r="4" fill="currentColor"/>
+  <circle cx="179" cy="30" r="4" fill="currentColor"/><circle cx="213" cy="43" r="4" fill="currentColor"/>
+ </symbol>
+</svg>

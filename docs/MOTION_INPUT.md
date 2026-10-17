@@ -63,3 +63,6 @@ GC UI's default motion presets use the native Web Animations API and preserve re
 
 ## 11. Managed transition lifecycle (experimental)
 The new [motion coordinator](../src/gc-transition-coordinator.mjs) cancels an earlier animation on the same element before starting the next preset, removes completed fill layers, exposes cancel/cancelAll and destroy, and skips playback when WAAPI or user/system motion permission is absent. This prevents stale transitions from surviving route or state changes. The [interactive Motion Gallery](../lab/motion-gallery.html) demonstrates cancellation, RTL inline movement, and a reduced-motion preview.
+
+## 12. Staggered choreography (experimental)
+The [choreography controller](../src/gc-choreography.mjs) animates at most **three** visible DOM groups with a 0–45ms bounded stagger, cancels replaced sequences, and skips all visual motion under reduced-motion, forced-colors or high-contrast preferences. The DOM and focus remain authoritative; no timing gates block the task. Unlike the per-element coordinator, this is designed for a bounded group of related changes, not large item lists.

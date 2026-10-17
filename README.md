@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## Experience Studio — semantic depth, original illustration, platform profiles
+
+The [Experience Studio](lab/experience-studio.html) adds three original, semantic-color SVG scenes (workspace, reading, analysis); constrained depth tiers E0–E3; cancellable choreography of at most three visual groups; and **explicit** responsive web, phone, tablet, desktop, television, wearable and spatial *design profiles*. Profiles do not install native SDK adapters or infer the user's hardware. Materials degrade to nondecorative surfaces in high-contrast, forced-colors and resource-limited settings. See the [experience implementation contract](docs/EXPERIENCE_STUDIO.md) and [October 17 QA record](docs/QA_EXPERIENCE_STUDIO_2026_10_17.md). The work remains experimental.
+
 ## Parallel material, asset and motion extensions
 
 Three isolated development branches were integrated together: (1) **logical lighting direction** (overhead, leading, trailing), RTL mirroring and reduced-data fallback; (2) **33 vetted local glyphs across nine open-source families** with a searchable [Icon Atlas](lab/icon-atlas.html); and (3) a cancel-safe managed **motion coordinator** with a [Motion Gallery](lab/motion-gallery.html). The original GC glyphs remain the default, and no third-party animation runtime is required.

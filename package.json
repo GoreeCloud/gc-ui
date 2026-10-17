@@ -12,8 +12,8 @@
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:reflow && npm run test:e2e:effective-zoom && npm run test:e2e:accessibility && npm run test:e2e:visual",
-    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/icon-atlas.spec.mjs e2e/motion-gallery.spec.mjs",
-    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs e2e/environment-visual.spec.mjs --workers=1 --timeout=90000",
+    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/icon-atlas.spec.mjs e2e/motion-gallery.spec.mjs e2e/experience-studio.spec.mjs",
+    "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs e2e/environment-visual.spec.mjs e2e/experience-studio-visual.spec.mjs --workers=1 --timeout=90000",
     "test:e2e:firefox": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/effective-zoom.spec.mjs --browser firefox --workers=1",
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",
     "pack:check": "node scripts/check-pack-manifest.mjs",
@@ -42,7 +42,9 @@
     "./css/materials": "./styles/gc.v1.materials.css",
     "./assets/third-party-glyphs": "./assets/third-party/gc-third-party-glyphs.svg",
     "./registry/third-party-assets": "./registry/third-party-assets.v1.json",
-    "./integrations/motion": "./integrations/optional-motion.mjs"
+    "./integrations/motion": "./integrations/optional-motion.mjs",
+    "./css/depth": "./styles/gc.v1.depth.css",
+    "./assets/scenes": "./assets/gc-scenes.svg"
   },
   "files": [
     "src",
@@ -62,7 +64,9 @@
     "styles/gc.v1.materials.css",
     "assets/third-party",
     "registry/third-party-assets.v1.json",
-    "integrations"
+    "integrations",
+    "styles/gc.v1.depth.css",
+    "assets/gc-scenes.svg"
   ],
   "sideEffects": [
     "./styles/*.css"

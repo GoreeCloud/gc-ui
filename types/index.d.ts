@@ -170,3 +170,65 @@ export declare function createMotionCoordinator(options?:{
  media?:(query:string)=>MediaQueryList;
  root?:HTMLElement;
 }):GCMotionCoordinator;
+
+/** Experimental environment scene depth. Shadows never convey required state. */
+export type GCDepthTier='e0'|'e1'|'e2'|'e3';
+export type GCSurfacePurpose='background'|'content'|'active'|'overlay';
+export interface GCDepthOptions {
+ context?:GCSurfaceContext;
+ purpose?:GCSurfacePurpose;
+ requested?:GCDepthTier|null;
+ highContrast?:boolean;
+ forcedColors?:boolean;
+ reducedTransparency?:boolean;
+ lowPower?:boolean;
+}
+export declare const GC_DEPTH_TIERS:ReadonlyArray<GCDepthTier>;
+export declare function resolveMaterialDepth(options?:GCDepthOptions):Readonly<{
+ depth:GCDepthTier;
+ context:GCSurfaceContext;
+ purpose:GCSurfacePurpose;
+ shadow:boolean;
+ lens:boolean;
+ decorativeLight:boolean;
+}>;
+
+/** Explicit platform design profiles—not native SDK bindings or OS detection. */
+export type GCPlatformKind='web'|'phone'|'tablet'|'desktop'|'tv'|'wearable'|'spatial';
+export interface GCPlatformSystem {
+ highContrast?:boolean;
+ reducedMotion?:boolean;
+ reducedTransparency?:boolean;
+ lowPower?:boolean;
+}
+export interface GCPlatformProfile {
+ kind:GCPlatformKind;
+ targetPx:number;
+ navigation:string;
+ focus:string;
+ maxDepth:GCDepthTier;
+ motion:'none'|'standard'|'short';
+ lens:'solid'|'bounded'|'host-managed';
+ nativeAdapterInstalled:false;
+}
+export declare const GC_PLATFORM_PROFILES:Readonly<Record<GCPlatformKind,Readonly<{
+ target:number;nav:string;focus:string;depth:GCDepthTier;motion:string;lens:string;
+}>>>;
+export declare function resolvePlatformProfile(kind?:GCPlatformKind,options?:GCPlatformSystem):Readonly<GCPlatformProfile>;
+export declare function applyPlatformProfile(root:HTMLElement,kind:GCPlatformKind,options?:GCPlatformSystem):Readonly<GCPlatformProfile>;
+
+export interface GCChoreography {
+ play(items:Element[],options?:{
+  preset?:GCMotionPreset;
+  stagger?:number;
+  direction?:'ltr'|'rtl';
+  reducedMotion?:boolean;
+ }):{animated:number;skipped:number};
+ cancel():void;
+ activeCount():number;
+ destroy():void;
+}
+export declare function createChoreography(options?:{
+ media?:(query:string)=>MediaQueryList;
+ root?:HTMLElement;
+}):GCChoreography;

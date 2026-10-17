@@ -51,3 +51,6 @@ Each mode must share one route state, one selection state and one focus restorat
 
 ## 10. Performance and network resilience
 Avoid heavy GPU effects on TV and low-powered phones. Pages remain usable while fonts/images load, on slow connections, and offline where cached content exists. Prefer native system controls for cross-platform text input and accessibility. Content hierarchy is visible without client JavaScript where product permits progressive enhancement.
+
+## 11. Experimental adapter profiles
+The [platform profile resolver](../src/gc-platform-profile.mjs) exposes design intent for responsive web, phone, tablet, desktop, TV, wearable and spatial platforms (target sizing, navigation, focus, material budget, motion). It does **not** claim actual iOS/Android/visionOS/TV operating system integration; native platform host code must implement safe areas, input, feedback and system materials. See [Experience Studio](EXPERIENCE_STUDIO.md).

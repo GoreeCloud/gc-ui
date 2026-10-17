@@ -1,0 +1,56 @@
+/* Experimental semantic depth: static, bounded shadow/edge, never scroll-followed physics. */
+.gc-depth-surface{
+ --gc-depth-shadow:none;
+ --gc-depth-y:0px;
+ --gc-depth-edge:var(--gc-v1-color-divider);
+ position:relative;
+ isolation:isolate;
+ border:1px solid var(--gc-depth-edge);
+ border-radius:var(--gc-v1-component-card-radius,24px);
+ background:var(--gc-v1-color-surface);
+ color:var(--gc-v1-color-on-surface);
+ box-shadow:var(--gc-depth-shadow);
+ min-width:0;
+}
+.gc-depth-surface[data-gc-depth=e0]{
+ background:var(--gc-v1-color-surface-tonal);
+ --gc-depth-edge:var(--gc-v1-color-divider);
+}
+.gc-depth-surface[data-gc-depth=e1]{
+ --gc-depth-shadow:0 3px 10px rgba(22,30,61,.05),0 1px 3px rgba(22,30,61,.04);
+}
+.gc-depth-surface[data-gc-depth=e2]{
+ background:var(--gc-v1-color-surface-raised);
+ --gc-depth-shadow:0 10px 28px rgba(22,30,61,.10),0 2px 6px rgba(22,30,61,.045);
+ --gc-depth-edge:var(--gc-v1-color-outline);
+}
+.gc-depth-surface[data-gc-depth=e3]{
+ background:var(--gc-v1-color-surface-raised);
+ --gc-depth-shadow:0 16px 40px rgba(22,30,61,.12),0 4px 12px rgba(22,30,61,.06);
+ --gc-depth-edge:var(--gc-v1-color-outline-strong);
+}
+:root[data-gc-mode=dark] .gc-depth-surface{
+ --gc-depth-shadow:none;
+}
+:root[data-gc-mode=dark] .gc-depth-surface[data-gc-depth=e2],
+:root[data-gc-mode=dark] .gc-depth-surface[data-gc-depth=e3]{
+ border-width:2px; /* elevated separation without black halo */
+}
+.gc-scene{
+ display:block;width:100%;max-width:320px;height:auto;aspect-ratio:280/176;
+ color:var(--gc-v1-color-primary);
+}
+:root[data-gc-contrast=high] .gc-depth-surface,
+:root[data-gc-platform-depth=e0] .gc-depth-surface{
+ --gc-depth-shadow:none;
+ border-color:var(--gc-v1-color-outline-strong);
+}
+@media(prefers-reduced-transparency:reduce),(prefers-reduced-data:reduce){
+ .gc-depth-surface{--gc-depth-shadow:none}
+}
+@media(forced-colors:active){
+ .gc-depth-surface,.gc-depth-surface[data-gc-depth]{
+  background:Canvas!important;color:CanvasText!important;border:2px solid CanvasText!important;box-shadow:none!important;
+ }
+ .gc-scene{color:CanvasText!important}
+}

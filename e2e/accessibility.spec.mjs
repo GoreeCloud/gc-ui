@@ -27,7 +27,7 @@ async function audit(page,testInfo,label){
   result.id+': '+result.nodes.map(node=>node.target.join(' ')).join(', ')
  ),'Confirmed accessibility violations for '+label).toEqual([]);
 }
-for(const name of ['v1','components','catalog','adaptive','forms','environment','icon-atlas','motion-gallery']){
+for(const name of ['v1','components','catalog','adaptive','forms','environment','icon-atlas','motion-gallery','experience-studio']){
  test('axe WCAG A/AA baseline — '+name,async({page},testInfo)=>{
   await page.goto('/lab/'+name+'.html');
   await audit(page,testInfo,name);
