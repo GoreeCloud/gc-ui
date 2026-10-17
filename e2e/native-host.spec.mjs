@@ -168,3 +168,24 @@ test('debug preview URL starts in conservation mode with semantic content unchan
  await expect(page.locator('#feature')).toHaveAttribute('data-gc-depth','e0');
  await expect(page.getByRole('heading',{name:'A clearer place to make.'})).toBeVisible();
 });
+
+test('throwing native subscription leaves the Studio interactive in browser mode',async({page})=>{
+ const errors=[];
+ page.on('pageerror',error=>errors.push(error.message));
+ await page.addInitScript(()=>{
+  window.GCNativeHost={
+   postMessage(){throw new Error('No native messages should be sent')},
+   subscribe(){throw new Error('Broken preload subscription')}
+  };
+ });
+ await page.goto('/lab/experience-studio.html');
+ await expect(page.locator('#host-status')).toHaveText('Browser preview · no native host connected.');
+ await expect(page.locator('#host-feedback')).toBeDisabled();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-platform','web');
+ await expect(page.locator('html')).not.toHaveAttribute('data-gc-native-host',/./);
+ await page.locator('#scene').selectOption('analysis');
+ await expect(page.locator('#scene-title')).toHaveText('See the signal, not the shine.');
+ await page.getByRole('button',{name:'Switch to dark appearance'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+ expect(errors).toEqual([]);
+});
