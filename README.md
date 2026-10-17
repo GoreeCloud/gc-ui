@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## Android 35, restricted WebView Perfetto and real Orca speech diagnostics
+
+The [deep native QA checkpoint](docs/QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md) documents Android 35 emulator install/render/navigation, aggregate WebView/Sandbox Renderer/SurfaceFlinger traces, and genuine Orca-generated speech in the sandboxed Electron preview. This does **not** establish unplugged energy consumption, a second physical device or human desktop screen-reader listening acceptance. Android TalkBack 12/12 user-confirmed PASS remains complete.
+
 ## GPU instrumentation and Linux AT-SPI verification
 
 The [GPU/AT-SPI QA checkpoint](docs/QA_NATIVE_GPU_ATSPI_2026_10_17.md) records eight Android Activity HWUI graphics runs and real Electron AT-SPI role/name verification. Native CI includes GPU and AT-SPI parser contracts and Electron keyboard semantics; the real Linux AT-SPI inspection passes locally but is not a hosted runner acceptance gate. Battery-energy and human desktop speech testing remain open; Android TalkBack 12/12 user-confirmed PASS remains complete.

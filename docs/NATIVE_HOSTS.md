@@ -97,3 +97,6 @@ A GC UI drawable-layer-only [SurfaceFlinger presentation probe](../scripts/qa-an
 
 ## Android GPU and Linux native accessibility diagnostics
 Use the [HWUI GPU probe](../scripts/qa-android-gpu.py) for sampled Activity graphics histogram buckets and the [Electron AT-SPI probe](../scripts/qa-electron-atspi.py) for real Linux exposed names/roles. Both are limited diagnostics, not energy or human screen-reader speech testing. See [GPU and AT-SPI QA](QA_NATIVE_GPU_ATSPI_2026_10_17.md). Android TalkBack 12/12 user-confirmed acceptance is complete.
+
+## Android 35, WebView Perfetto and Orca speech events
+The [deep native QA report](QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md) provides Android 35 emulator compatibility, the bounded [Perfetto app/WebView/SurfaceFlinger probe](../scripts/qa-android-perfetto.py), and the [Orca generated-speech probe](../scripts/qa-orca-speech.py). Both scripts use narrow, privacy-preserving outputs and parser regressions; native hosted CI tests only the parsers. Neither is a disconnected battery-power assessment or a human desktop screen-reader signoff.

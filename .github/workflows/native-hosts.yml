@@ -4,6 +4,10 @@ on:
   push:
     branches: [main]
     paths:
+      - 'scripts/qa-android-perfetto.py'
+      - 'scripts/test_qa_android_perfetto.py'
+      - 'scripts/qa-orca-speech.py'
+      - 'scripts/test_qa_orca_speech.py'
       - 'native/**'
       - 'scripts/qa-android-performance.py'
       - 'scripts/qa-android-compositor.py'
@@ -11,10 +15,6 @@ on:
       - 'scripts/test_qa_android_gpu.py'
       - 'scripts/qa-electron-atspi.py'
       - 'scripts/test_qa_electron_atspi.py'
-      - 'scripts/test_qa_electron_atspi.py'
-      - 'scripts/qa-electron-atspi.py'
-      - 'scripts/test_qa_android_gpu.py'
-      - 'scripts/qa-android-gpu.py'
       - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
@@ -31,6 +31,10 @@ on:
   pull_request:
     branches: [main]
     paths:
+      - 'scripts/qa-android-perfetto.py'
+      - 'scripts/test_qa_android_perfetto.py'
+      - 'scripts/qa-orca-speech.py'
+      - 'scripts/test_qa_orca_speech.py'
       - 'native/**'
       - 'scripts/qa-android-performance.py'
       - 'scripts/qa-android-compositor.py'
@@ -38,10 +42,6 @@ on:
       - 'scripts/test_qa_android_gpu.py'
       - 'scripts/qa-electron-atspi.py'
       - 'scripts/test_qa_electron_atspi.py'
-      - 'scripts/test_qa_electron_atspi.py'
-      - 'scripts/qa-electron-atspi.py'
-      - 'scripts/test_qa_android_gpu.py'
-      - 'scripts/qa-android-gpu.py'
       - 'scripts/test_qa_android_compositor.py'
       - 'scripts/test_qa_android_performance.py'
       - 'src/gc-native-host.mjs'
@@ -79,10 +79,10 @@ jobs:
         run: npm run test:android:gpu:parsers
       - name: Verify desktop AT-SPI role/name policy parsing
         run: npm run test:desktop:atspi:parsers
-      - name: Verify bounded Activity HWUI GPU histogram parser
-        run: npm run test:android:gpu:parsers
-      - name: Verify Linux AT-SPI accessibility acceptance contracts
-        run: npm run test:desktop:atspi:parsers
+      - name: Verify GC UI Perfetto trace metric parser
+        run: npm run test:android:perfetto:parsers
+      - name: Verify Orca generated-speech event parser
+        run: npm run test:desktop:orca:parsers
 
   android-debug:
     name: Compile isolated GC UI Android preview

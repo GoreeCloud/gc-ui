@@ -1,0 +1,26 @@
+{
+  "schema": "gc-ui-orca-generated-speech-qa.v1",
+  "orca_version": "42.0",
+  "native_host": "sandboxed Electron with forced renderer accessibility on isolated X11/DBus",
+  "focus_accepted": {
+    "Switch to dark appearance": true,
+    "Platform profile": true,
+    "Preview resource conservation": true
+  },
+  "checks": {
+    "platform_role": true,
+    "platform_value": true,
+    "conservation_role_state": true,
+    "appearance_role": true
+  },
+  "all_required_generated": true,
+  "matched_utterances": {
+    "platform_role": "Platform profile combo box.",
+    "platform_value": "Desktop.",
+    "conservation_role_state": "Preview resource conservation check box not checked.",
+    "appearance_role": "Switch to dark appearance push button."
+  },
+  "audio_actually_heard_by_human": false,
+  "operator_desktop_accessibility_changed": false,
+  "privacy": "Raw Orca debug trace and temp preferences discarded after parsing."
+}

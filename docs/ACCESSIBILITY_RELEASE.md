@@ -5,6 +5,10 @@
 
 The GC UI Android WebView Studio manual checklist **TB-01 through TB-12 is user-reported 12/12 PASS**. See the [reported manual acceptance](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Individual spoken transcripts/session metadata are not stored in this report. This is progress on one Android implementation's assistive-technology matrix, not a global WCAG 2.2 AA conformance claim, Android device-family certification or completion of VoiceOver/Orca/NVDA acceptance.
 
+## Genuine Orca-generated speech checkpoint (2026-10-17)
+
+On the actual Linux Electron 44.9.0 Studio, Orca 42 generated four expected control-role/value/state announcements during a private Xvfb/D-Bus run. See [deep native QA](QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md). This is verified *machine-generated speech output*, not human listening/gesture signoff or comprehensive Orca/NVDA/VoiceOver acceptance. Android TalkBack's 12-case user-reported PASS remains independently complete.
+
 ## 1. Normative acceptance tests
 | Domain | Requirement | Evidence |
 |---|---|---|

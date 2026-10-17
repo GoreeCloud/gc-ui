@@ -1,6 +1,12 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Deep Native Verification — Android 35, WebView Perfetto and Orca
+- [Deep native QA](QA_DEEP_NATIVE_VERIFICATION_2026_10_17.md) records Android 35 emulator rendering and navigation on older WebView 124, alongside the API 36 physical-device WebView 152 baseline. The API coverage gate is broader, but a second physical phone is still unavailable.
+- Restricted Perfetto app/WebView/SurfaceFlinger traces include actual GC UI draw, Skia-related CPU slices and sandbox renderer CPU scheduling; they do not prove Conservation savings or hardware GPU energy.
+- Actual Orca 42 generated four expected speech announcements from Electron focus transitions in an isolated Linux session. User-audible manual Orca navigation, Windows NVDA and macOS VoiceOver remain separate.
+- Disconnected battery-power measurement is blocked by the physical USB connection; a second physical phone is not connected. Android TalkBack user-confirmed 12/12 PASS remains accepted.
+
 ## 2026-10-17 Activity HWUI GPU and Linux AT-SPI checkpoint
 - The [GPU and AT-SPI QA report](QA_NATIVE_GPU_ATSPI_2026_10_17.md) adds real Android Activity HWUI GPU histogram profiling (8 runs, debug mode verified), a reproducible parser/CI test, and real Linux Electron AT-SPI exposure with 10/10 required names/roles among 156 visited nodes. The live AT-SPI probe passed on the workstation only; hosted Ubuntu could not register Electron in AT-SPI, so CI retains parser checks and Electron keyboard semantics instead.
 - HWUI p90/p95 timing buckets were lower for Conservation in this short workload, but **WebView renderer/compositor GPU timing, battery energy and statistical significance remain unverified**.

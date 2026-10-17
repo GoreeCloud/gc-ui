@@ -28,7 +28,10 @@
     "test:android:compositor:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_compositor.py",
     "test:android:gpu:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_gpu.py",
     "test:desktop:atspi:parsers": "python3 -m unittest discover -s scripts -p test_qa_electron_atspi.py",
-    "qa:desktop:atspi": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-electron-atspi.py"
+    "qa:desktop:atspi": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-electron-atspi.py",
+    "test:android:perfetto:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_perfetto.py",
+    "test:desktop:orca:parsers": "python3 -m unittest discover -s scripts -p test_qa_orca_speech.py",
+    "qa:desktop:orca:generated-speech": "xvfb-run -a dbus-run-session -- /usr/bin/python3 scripts/qa-orca-speech.py"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

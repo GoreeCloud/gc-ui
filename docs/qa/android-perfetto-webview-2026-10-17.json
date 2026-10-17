@@ -1,0 +1,70 @@
+{
+  "schema": "gc-ui-perfetto-aggregate.v1",
+  "context": {
+    "android_api": "36",
+    "device_model": "DE2117",
+    "device_settings_changed": false,
+    "scope": "App WebViewFunctor, Skia GPU-related CPU slices, SurfaceFlinger Skia CPU slices and renderer CPU schedule; not actual GPU utilization/energy."
+  },
+  "runs": [
+    {
+      "mode": "normal",
+      "mode_verified": true,
+      "trace_payload_bytes": 8269146,
+      "aggregate": {
+        "gc_ui_webview_draw_gl": {
+          "samples": 250,
+          "mean_ms": 1.085,
+          "max_ms": 3.723
+        },
+        "gc_ui_skia_gpu_execute": {
+          "samples": 527,
+          "mean_ms": 0.104,
+          "max_ms": 3.664
+        },
+        "surfaceflinger_skia_gpu_execute": {
+          "samples": 35,
+          "mean_ms": 0.387,
+          "max_ms": 1.546
+        },
+        "webview_renderer_cpu_schedule": {
+          "samples": 2861,
+          "mean_ms": 0.175,
+          "max_ms": 2.899
+        }
+      }
+    },
+    {
+      "mode": "conserve",
+      "mode_verified": true,
+      "trace_payload_bytes": 8298684,
+      "aggregate": {
+        "gc_ui_webview_draw_gl": {
+          "samples": 255,
+          "mean_ms": 1.115,
+          "max_ms": 3.066
+        },
+        "gc_ui_skia_gpu_execute": {
+          "samples": 509,
+          "mean_ms": 0.092,
+          "max_ms": 0.224
+        },
+        "surfaceflinger_skia_gpu_execute": {
+          "samples": 36,
+          "mean_ms": 0.379,
+          "max_ms": 1.476
+        },
+        "webview_renderer_cpu_schedule": {
+          "samples": 2908,
+          "mean_ms": 0.178,
+          "max_ms": 2.907
+        }
+      }
+    }
+  ],
+  "caveats": [
+    "Two sequential eight-second traces; no statistical power/energy claims.",
+    "GPU-related CPU slices are not hardware GPU execution duration.",
+    "Raw system trace discarded after query; no raw process names other than known GC UI, SurfaceFlinger, WebView aggregates exported."
+  ]
+}
