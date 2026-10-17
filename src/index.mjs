@@ -2,6 +2,7 @@
 export {generateTheme,contrastRatio} from './gc-color-engine.mjs';
 export {GC_SURFACE_DEFAULTS,normalizeSurfaceConfig,resolveSurfaceEnvironment,createSurfaceController} from './gc-surface-runtime.mjs';
 export {GC_MOTION_PRESETS,getMotionPreset,motionAllowed,playMotionPreset} from './gc-motion-presets.mjs';
+export {createMotionCoordinator} from './gc-transition-coordinator.mjs';
 export {GC_THEME_DEFAULTS,normalizeTheme,resolveTheme,createThemeController} from './gc-theme-runtime.mjs';
 export {nextTabIndex,initTabs,initDialog,createToast,runAsyncAction} from './gc-interactions.mjs';
 export {nextMenuIndex,initMenu} from './gc-menu.mjs';

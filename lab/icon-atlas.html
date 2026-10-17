@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoreeCloud UI · Licensed Icon Atlas</title>
+<meta name="description" content="Explore locally licensed external icons and their verified provenance">
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.materials.css">
+<link rel="stylesheet" href="./icon-atlas.css">
+<script type="module" src="./icon-atlas.mjs"></script>
+</head>
+<body><a class="skip" href="#atlas-main">Skip to icon atlas</a>
+<div class="gc-environment page">
+<header class="toolbar"><a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Optional asset catalogue</small></span></a><nav aria-label="Labs"><a href="./environment.html">Material lab</a><a href="./components.html">Components</a></nav></header>
+<main id="atlas-main">
+<div class="intro"><p class="eyebrow">OPEN-SOURCE EXTENSION / ALPHA</p><h1>The icon atlas.</h1><p>Browse vetted, locally bundled symbols. External libraries retain their source identities, copyright notices, and licenses. GC UI's original glyphs remain the default.</p></div>
+<section class="filters gc-material-surface" data-gc-treatment="raised" aria-label="Icon search and filters">
+<label>Find an icon<input id="icon-search" type="search" placeholder="Try: sun, layer, search…" autocomplete="off"></label>
+<label>Icon family<select id="family"><option value="all">All licensed families</option></select></label>
+</section>
+<div class="summary" role="status" aria-live="polite" aria-atomic="true" id="result-count">Loading the local icon manifest…</div>
+<section id="icon-grid" class="grid" aria-label="Available licensed glyphs"></section>
+<p id="empty" class="empty" hidden>No icons match this filter. Try a different search or family.</p>
+<p class="note">Each card lists the upstream family and shows the source icon geometry. Copy its local symbol ID to use it in applications. External marks are not original GC glyphs.</p>
+</main>
+<footer>Source <a href="../registry/third-party-assets.v1.json">inventory</a> · <a href="../docs/THIRD_PARTY_ASSETS.md">Licenses and use rules</a></footer>
+</div></body></html>

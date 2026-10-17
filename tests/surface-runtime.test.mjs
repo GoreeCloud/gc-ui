@@ -45,3 +45,13 @@ test('controller changes effective attributes, persists, responds to media and s
  for(const item of Object.values(items))assert.equal(item.listeners.size,0);
  assert.throws(()=>ctl.set({context:'media'}));
 });
+
+test('lighting direction is validated and reflected into the environment',()=>{
+ assert.equal(normalizeSurfaceConfig({lightDirection:'below'}).lightDirection,'overhead');
+ assert.equal(resolveSurfaceEnvironment({lightDirection:'leading'}).lightDirection,'leading');
+ const root={dataset:{}};
+ const controller=createSurfaceController({root,media:()=>null,storage:null});
+ controller.set({lightDirection:'trailing'});
+ assert.equal(root.dataset.gcLightDirection,'trailing');
+ controller.destroy();
+});

@@ -4,7 +4,7 @@
 
 ## Bundled assets
 
-The [machine-readable asset manifest](../registry/third-party-assets.v1.json) tracks **21 locally copied source SVG files** from **seven free icon libraries**, their upstream source paths and commit revisions, plus a derived namespaced sprite. Every upstream library's license text is kept beside its source SVGs under assets/third-party. No external CDN is required to display these icons.
+The [machine-readable asset manifest](../registry/third-party-assets.v1.json) tracks **33 locally copied source SVG files** from **nine free icon libraries**, their upstream source paths and commit revisions, plus a derived namespaced sprite. Every upstream library's license text is kept beside its source SVGs under assets/third-party. No external CDN is required to display these icons.
 
 | Library | Governing license | Included icons | Notes |
 |---|---|---:|---|
@@ -15,6 +15,8 @@ The [machine-readable asset manifest](../registry/third-party-assets.v1.json) tr
 | [Feather](https://github.com/feathericons/feather) | MIT | 3 | minimal outlines |
 | [Iconoir](https://github.com/iconoir-icons/iconoir) | MIT | 3 | geometric outlines |
 | [Phosphor Icons](https://github.com/phosphor-icons/core) | MIT | 3 | filled regular shapes |
+| [GitHub Octicons](https://github.com/primer/octicons) | MIT | 6 | development and productivity icons |
+| [Fluent UI System Icons](https://github.com/microsoft/fluentui-system-icons) | MIT | 6 | interface utility symbols |
 
 **Free does not imply public domain.** Preserve the copyright/license notices. Source SVG geometries are retained; the separate convenience sprite composes them under gc-ext-provider-name identifiers, with currentColor where applicable. Use one consistent family per bounded component group, and review imported visual weight, contrast and RTL metaphors before use.
 
@@ -67,3 +69,7 @@ Do not assume assets offered for free online permit redistribution. License term
 Test contrast and accessible names for each essential glyph; test screen-reader, keyboard, RTL and high zoom. Check autoplay, pausing, reduced motion, flashes, loading states, CPU/GPU usage, network policy and resource byte budgets for any motion/media integration. Licensing, performance and accessibility are separate release gates.
 
 See [GC original glyph library](ICONS_LIBRARY.md), [motion](MOTION_INPUT.md) and [contextual materials](SURFACES_ENVIRONMENT.md).
+
+## Searchable extension atlas
+
+The standalone [Licensed Icon Atlas](../lab/icon-atlas.html) browses the local manifest with family and text filters. Search results are built with safe DOM APIs rather than injecting upstream markup; SVG shapes resolve through the locally bundled sprite. The atlas is a discoverability aid for optional icons, not a claim that all nine families visually harmonize without per-screen review.

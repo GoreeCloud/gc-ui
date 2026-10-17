@@ -15,7 +15,7 @@
 <div class="gc-environment site">
 <header class="topbar">
  <a class="identity" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Material Environment Lab</small></span></a>
- <nav aria-label="Lab navigation"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a></nav>
+ <nav aria-label="Lab navigation"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a><a href="./icon-atlas.html">Icons</a><a href="./motion-gallery.html">Motion</a></nav>
  <button id="appearance" type="button" class="action secondary" aria-label="Switch to dark appearance">Dark mode</button>
 </header>
 <main id="main">
@@ -30,6 +30,7 @@
  <div class="control-grid">
   <label for="context">Content context<select id="context"><option value="workspace">Workspace</option><option value="reading">Reading</option><option value="analysis">Analysis</option><option value="media">Media</option></select></label>
   <label for="intensity">Tonal intensity<select id="intensity"><option value="auto">Adaptive</option><option value="quiet">Quiet</option><option value="balanced">Balanced</option><option value="expressive">Expressive</option></select></label>
+  <label for="lightDirection">Light direction<select id="lightDirection"><option value="overhead">Overhead</option><option value="leading">Leading edge</option><option value="trailing">Trailing edge</option></select></label>
   <label for="illumination">Environmental lighting<select id="illumination"><option value="auto">Automatic</option><option value="soft">Soft</option><option value="off">Off</option></select></label>
  </div>
  <p class="effective" role="status" id="effective" aria-live="polite"></p>
@@ -53,7 +54,7 @@
  <p class="quiet-note">Lens remains optional. High contrast and reduced transparency override decorative compositing, and the environment never requires motion.</p>
 </section>
 <section class="providers" aria-labelledby="providers-title">
- <div class="section-label"><div><p class="eyebrow">LICENSED EXTENSIONS</p><h2 id="providers-title">Many sources. One intentional system.</h2></div><p>21 locally bundled glyphs from seven free icon libraries, kept separate from the 12 original GC glyphs.</p></div>
+ <div class="section-label"><div><p class="eyebrow">LICENSED EXTENSIONS</p><h2 id="providers-title">Many sources. One intentional system.</h2></div><p>33 locally bundled glyphs from nine free icon libraries, kept separate from the 12 original GC glyphs.</p></div>
  <div class="provider-grid" id="provider-grid">
   <article class="gc-material-surface provider"><h3>Lucide <span>ISC + MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-sun"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-layers"/></svg><svg role="img" aria-label="Sparkles"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-sparkles"/></svg></div></article>
   <article class="gc-material-surface provider"><h3>Tabler Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-sun"/></svg><svg role="img" aria-label="Adjustments"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-adjustments-horizontal"/></svg><svg role="img" aria-label="Layout grid"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-layout-grid"/></svg></div></article>
@@ -62,6 +63,8 @@
   <article class="gc-material-surface provider"><h3>Feather <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-sun"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-layers"/></svg><svg role="img" aria-label="Lightning"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-feather-zap"/></svg></div></article>
   <article class="gc-material-surface provider"><h3>Iconoir <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-sun-light"/></svg><svg role="img" aria-label="Grid"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-view-grid"/></svg><svg role="img" aria-label="Flash"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-iconoir-flash"/></svg></div></article>
   <article class="gc-material-surface provider"><h3>Phosphor Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-sun"/></svg><svg role="img" aria-label="Stack"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-stack"/></svg><svg role="img" aria-label="Sparkle"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-phosphor-sparkle"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>GitHub Octicons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-octicons-sun-24"/></svg><svg role="img" aria-label="Stack"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-octicons-stack-24"/></svg><svg role="img" aria-label="Settings"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-octicons-gear-24"/></svg></div></article>
+  <article class="gc-material-surface provider"><h3>Fluent UI Icons <span>MIT</span></h3><div class="icons"><svg role="img" aria-label="Sun"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-fluent-weather-sunny"/></svg><svg role="img" aria-label="Layers"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-fluent-layer"/></svg><svg role="img" aria-label="Flash"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-fluent-flash"/></svg></div></article>
  </div>
  <p class="quiet-note">Each pack retains its own style and license; use one coherent family per component surface. <a href="../docs/THIRD_PARTY_ASSETS.md">Licenses, attribution, and optional motion integrations</a></p>
 </section>

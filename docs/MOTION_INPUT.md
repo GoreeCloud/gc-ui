@@ -60,3 +60,6 @@ Record start latency (target <50ms for local state reaction), movement smoothnes
 
 ## 10. Optional third-party motion engines
 GC UI's default motion presets use the native Web Animations API and preserve reduced-motion semantics. The optional [Motion, FormKit AutoAnimate and Lottie Web adapters](../integrations/optional-motion.mjs) are **not** automatic dependencies. Motion data/art, including downloaded Lottie files, must be reviewed for licensing, flashing, motion reduction and network use independently. See [third-party asset policy](THIRD_PARTY_ASSETS.md). These adapters are experimental, not a stable platform binding.
+
+## 11. Managed transition lifecycle (experimental)
+The new [motion coordinator](../src/gc-transition-coordinator.mjs) cancels an earlier animation on the same element before starting the next preset, removes completed fill layers, exposes cancel/cancelAll and destroy, and skips playback when WAAPI or user/system motion permission is absent. This prevents stale transitions from surviving route or state changes. The [interactive Motion Gallery](../lab/motion-gallery.html) demonstrates cancellation, RTL inline movement, and a reduced-motion preview.

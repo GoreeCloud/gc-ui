@@ -110,6 +110,7 @@ export interface GCSurfaceConfiguration {
  context:GCSurfaceContext;
  intensity:GCSurfaceIntensity;
  illumination:GCSurfaceIllumination;
+ lightDirection:'overhead'|'leading'|'trailing';
 }
 export interface GCSurfaceSystem {
  highContrast?:boolean;
@@ -121,6 +122,7 @@ export interface GCResolvedEnvironment {
  context:GCSurfaceContext;
  intensity:'quiet'|'balanced'|'expressive';
  illumination:'soft'|'off';
+ lightDirection:'overhead'|'leading'|'trailing';
  solidLens:boolean;
  motionAllowed:boolean;
 }
@@ -155,3 +157,16 @@ export declare function getMotionPreset(name:GCMotionPreset,options?:GCMotionOpt
 };
 export declare function motionAllowed(options?:GCMotionOptions):boolean;
 export declare function playMotionPreset(element:Element,name:GCMotionPreset,options?:GCMotionOptions):Animation|null;
+
+/** Experimental managed transition API: one WAAPI animation per element. */
+export interface GCMotionCoordinator {
+ play(element:Element,name:GCMotionPreset,options?:{direction?:'ltr'|'rtl';reducedMotion?:boolean}):Animation|null;
+ cancel(element:Element):boolean;
+ cancelAll():void;
+ activeCount():number;
+ destroy():void;
+}
+export declare function createMotionCoordinator(options?:{
+ media?:(query:string)=>MediaQueryList;
+ root?:HTMLElement;
+}):GCMotionCoordinator;

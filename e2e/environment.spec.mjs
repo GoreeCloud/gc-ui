@@ -16,8 +16,8 @@ test('environmental controls adjust content context, tonal intensity and lightin
  await page.getByRole('button',{name:'Switch to dark appearance'}).click();
  await expect(root).toHaveAttribute('data-gc-mode','dark');
  await expect(page.locator('#effective')).toContainText('reading context');
- await expect(page.locator('.provider')).toHaveCount(7);
- await expect(page.locator('.provider .icons svg')).toHaveCount(21);
+ await expect(page.locator('.provider')).toHaveCount(9);
+ await expect(page.locator('.provider .icons svg')).toHaveCount(27);
 });
 test('environment lab responsive and comfortable in reduced/forced settings',async({page})=>{
  await page.setViewportSize({width:320,height:700});
@@ -41,4 +41,15 @@ test('adaptive shell switches material context with route changes',async({page})
  await expect(page.locator('html')).toHaveAttribute('data-gc-surface-context','analysis');
  await page.locator('.gc-nav-sidebar [data-gc-route="library"]').click();
  await expect(page.locator('html')).toHaveAttribute('data-gc-surface-context','reading');
+});
+
+test('light direction follows RTL logical leading/trailing axes',async({page})=>{
+ await page.goto('/lab/environment.html');
+ await page.locator('#lightDirection').selectOption('leading');
+ await expect(page.locator('html')).toHaveAttribute('data-gc-light-direction','leading');
+ const before=await page.locator('.gc-environment').evaluate(el=>getComputedStyle(el).getPropertyValue('--gc-env-main-x').trim());
+ await page.evaluate(()=>document.documentElement.dir='rtl');
+ const after=await page.locator('.gc-environment').evaluate(el=>getComputedStyle(el).getPropertyValue('--gc-env-main-x').trim());
+ expect(before).toBe('12%');
+ expect(after).toBe('88%');
 });

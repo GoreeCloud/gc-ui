@@ -71,6 +71,26 @@
       "bundledIcons": 3,
       "mode": "local/opt-in",
       "revision": "2b75f3ad12b420c9504ef05df8d2564a28f8500e"
+    },
+    {
+      "id": "octicons",
+      "name": "GitHub Octicons",
+      "repo": "https://github.com/primer/octicons",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/octicons/LICENSE",
+      "bundledIcons": 6,
+      "mode": "local/opt-in",
+      "revision": "6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d"
+    },
+    {
+      "id": "fluent",
+      "name": "Fluent UI System Icons",
+      "repo": "https://github.com/microsoft/fluentui-system-icons",
+      "license": "MIT",
+      "licenseFile": "assets/third-party/fluent/LICENSE",
+      "bundledIcons": 6,
+      "mode": "local/opt-in",
+      "revision": "a347af95478f989038cccbf085978865264c048a"
     }
   ],
   "icons": [
@@ -241,6 +261,102 @@
       "source": "https://github.com/phosphor-icons/core/blob/2b75f3ad12b420c9504ef05df8d2564a28f8500e/assets/regular/sparkle.svg",
       "svg": "assets/third-party/phosphor/sparkle.svg",
       "viewBox": "0 0 256 256"
+    },
+    {
+      "id": "gc-ext-octicons-sun-24",
+      "provider": "octicons",
+      "name": "sun-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/sun-24.svg",
+      "svg": "assets/third-party/octicons/sun-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-octicons-gear-24",
+      "provider": "octicons",
+      "name": "gear-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/gear-24.svg",
+      "svg": "assets/third-party/octicons/gear-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-octicons-apps-24",
+      "provider": "octicons",
+      "name": "apps-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/apps-24.svg",
+      "svg": "assets/third-party/octicons/apps-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-octicons-stack-24",
+      "provider": "octicons",
+      "name": "stack-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/stack-24.svg",
+      "svg": "assets/third-party/octicons/stack-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-octicons-sparkle-fill-24",
+      "provider": "octicons",
+      "name": "sparkle-fill-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/sparkle-fill-24.svg",
+      "svg": "assets/third-party/octicons/sparkle-fill-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-octicons-check-circle-24",
+      "provider": "octicons",
+      "name": "check-circle-24",
+      "source": "https://github.com/primer/octicons/blob/6dbe38e4e9b4987b2c9332d719c57fbbdd083e2d/icons/check-circle-24.svg",
+      "svg": "assets/third-party/octicons/check-circle-24.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-weather-sunny",
+      "provider": "fluent",
+      "name": "weather-sunny",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Weather%20Sunny/SVG/ic_fluent_weather_sunny_24_regular.svg",
+      "svg": "assets/third-party/fluent/weather-sunny.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-weather-moon",
+      "provider": "fluent",
+      "name": "weather-moon",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Weather%20Moon/SVG/ic_fluent_weather_moon_24_regular.svg",
+      "svg": "assets/third-party/fluent/weather-moon.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-settings",
+      "provider": "fluent",
+      "name": "settings",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Settings/SVG/ic_fluent_settings_24_regular.svg",
+      "svg": "assets/third-party/fluent/settings.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-apps",
+      "provider": "fluent",
+      "name": "apps",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Apps/SVG/ic_fluent_apps_24_regular.svg",
+      "svg": "assets/third-party/fluent/apps.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-layer",
+      "provider": "fluent",
+      "name": "layer",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Layer/SVG/ic_fluent_layer_24_regular.svg",
+      "svg": "assets/third-party/fluent/layer.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-fluent-flash",
+      "provider": "fluent",
+      "name": "flash",
+      "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Flash/SVG/ic_fluent_flash_24_regular.svg",
+      "svg": "assets/third-party/fluent/flash.svg",
+      "viewBox": "0 0 24 24"
     }
   ],
   "optionalEngines": [

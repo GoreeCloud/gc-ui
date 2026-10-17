@@ -2,12 +2,18 @@
 .gc-environment {
   --gc-env-ambient:10%;
   --gc-env-peripheral:8%;
+  --gc-env-main-x:90%;
+  --gc-env-side-x:-12%;
   background-color:var(--gc-v1-color-canvas);
   background-image:
-    radial-gradient(ellipse 58% 48% at 90% -5%,color-mix(in srgb,var(--gc-v1-color-primary-container) var(--gc-env-ambient),transparent),transparent 95%),
-    radial-gradient(ellipse 55% 40% at -12% 58%,color-mix(in srgb,var(--gc-v1-color-tertiary-container) var(--gc-env-peripheral),transparent),transparent 95%);
+    radial-gradient(ellipse 58% 48% at var(--gc-env-main-x) -5%,color-mix(in srgb,var(--gc-v1-color-primary-container) var(--gc-env-ambient),transparent),transparent 95%),
+    radial-gradient(ellipse 55% 40% at var(--gc-env-side-x) 58%,color-mix(in srgb,var(--gc-v1-color-tertiary-container) var(--gc-env-peripheral),transparent),transparent 95%);
   color:var(--gc-v1-color-on-canvas);
 }
+:root[data-gc-light-direction=leading] .gc-environment{--gc-env-main-x:12%;--gc-env-side-x:108%}
+:root[data-gc-light-direction=trailing] .gc-environment{--gc-env-main-x:88%;--gc-env-side-x:-8%}
+:root[dir=rtl][data-gc-light-direction=leading] .gc-environment{--gc-env-main-x:88%;--gc-env-side-x:-8%}
+:root[dir=rtl][data-gc-light-direction=trailing] .gc-environment{--gc-env-main-x:12%;--gc-env-side-x:108%}
 :root[data-gc-surface-intensity=quiet] .gc-environment {--gc-env-ambient:5%;--gc-env-peripheral:3%}
 :root[data-gc-surface-intensity=balanced] .gc-environment {--gc-env-ambient:13%;--gc-env-peripheral:8%}
 :root[data-gc-surface-intensity=expressive] .gc-environment {--gc-env-ambient:21%;--gc-env-peripheral:12%}
@@ -75,4 +81,10 @@
    background:Canvas!important;color:CanvasText!important;border-color:CanvasText!important;
    box-shadow:none!important;backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
  }
+}
+
+/* Preserve low-data and slow-renderer reading comfort without scripting device detection. */
+@media(prefers-reduced-data:reduce){
+ .gc-environment{background-image:none!important}
+ .gc-material-surface[data-gc-treatment=lens]{background:var(--gc-v1-color-surface-raised);-webkit-backdrop-filter:none;backdrop-filter:none}
 }

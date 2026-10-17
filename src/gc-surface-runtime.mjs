@@ -1,9 +1,10 @@
 /** Context-aware GC UI surface preferences. Static material state, no pointer tracking or background animation. */
-export const GC_SURFACE_DEFAULTS=Object.freeze({context:'workspace',intensity:'auto',illumination:'auto'});
+export const GC_SURFACE_DEFAULTS=Object.freeze({context:'workspace',intensity:'auto',illumination:'auto',lightDirection:'overhead'});
 const modes=Object.freeze({
  context:['workspace','reading','analysis','media'],
  intensity:['auto','quiet','balanced','expressive'],
- illumination:['auto','soft','off']
+ illumination:['auto','soft','off'],
+ lightDirection:['overhead','leading','trailing']
 });
 const makeMedia=(fn,query)=>{try{return fn?.(query)||null}catch{return null}};
 export function normalizeSurfaceConfig(input={}){
@@ -21,6 +22,7 @@ export function resolveSurfaceEnvironment(config={},system={}){
   context:c.context,
   intensity:safe?'quiet':intensity,
   illumination,
+  lightDirection:c.lightDirection,
   solidLens:Boolean(safe||system.reducedTransparency),
   motionAllowed:!Boolean(system.reducedMotion||safe)
  };
@@ -52,6 +54,7 @@ export function createSurfaceController({
   root.dataset.gcSurfaceContext=effective.context;
   root.dataset.gcSurfaceIntensity=effective.intensity;
   root.dataset.gcIllumination=effective.illumination;
+  root.dataset.gcLightDirection=effective.lightDirection;
   root.dataset.gcSurfaceLens=effective.solidLens?'solid':'auto';
   if(typeof CustomEvent==='function')root.dispatchEvent?.(new CustomEvent('gc-surface-change',{detail:{...effective}}));
  }

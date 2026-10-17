@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoreeCloud UI · Motion Grammar</title>
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.materials.css">
+<link rel="stylesheet" href="./motion-gallery.css">
+<script type="module" src="./motion-gallery.mjs"></script></head>
+<body>
+<a class="skip" href="#main">Skip to motion samples</a>
+<div class="gc-environment view">
+<header class="topbar"><a href="./v1.html" class="brand"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Motion Grammar</small></span></a><nav aria-label="Other laboratories"><a href="./environment.html">Surfaces</a><a href="./icon-atlas.html">Icons</a></nav></header>
+<main id="main">
+<div class="hero"><p class="eyebrow">FUNCTION FIRST / MOTION SECOND</p><h1>Movement with meaning.</h1><p>Small interactions connect an action to its result. The DOM and focus are always usable without animation.</p></div>
+<section class="selector gc-material-surface" data-gc-treatment="raised" aria-labelledby="motion-controls">
+<h2 id="motion-controls">Choose a transition</h2>
+<div class="choices" role="group" aria-label="Motion preset">
+<button type="button" data-preset="reveal" aria-pressed="true">Reveal</button>
+<button type="button" data-preset="soften" aria-pressed="false">Soften</button>
+<button type="button" data-preset="settle" aria-pressed="false">Settle</button>
+<button type="button" data-preset="slideInline" aria-pressed="false">Slide inline</button>
+<button type="button" data-preset="dismiss" aria-pressed="false">Dismiss</button>
+</div>
+<div class="settings">
+<label>Direction<select id="direction"><option value="ltr">Left to right</option><option value="rtl">Right to left</option></select></label>
+<label class="toggle"><input type="checkbox" id="demo-reduced"> Preview without animation</label>
+</div>
+</section>
+<section class="stage" aria-label="Motion demonstration">
+<div class="gc-material-surface sample" id="sample" data-gc-treatment="focus">
+<span class="eyebrow">WORKSPACE / CONTINUITY</span>
+<div class="icon-circle" aria-hidden="true"><svg viewBox="0 0 24 24"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg></div>
+<h2>An anchored transition.</h2>
+<p>The surface remains legible while its movement provides a small continuity cue.</p>
+<div class="actions"><button type="button" class="primary action" id="play">Play transition</button><button type="button" class="secondary action" id="stop">Stop motion</button></div>
+</div>
+</section>
+<p id="motion-status" class="status" aria-live="polite" role="status">Reveal selected. Ready to play.</p>
+<p class="explanation">Effects are intentionally short (120–320ms). Switching presets cancels the preceding animation; reduced-motion settings immediately suppress playback. View more in <a href="../docs/MOTION_INPUT.md">GC UI Motion Rules</a>.</p>
+</main><footer>GC UI experimental motion demo · <a href="./environment.html">Material environment</a></footer>
+</div></body></html>
