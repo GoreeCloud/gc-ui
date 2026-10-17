@@ -37,6 +37,15 @@ a{color:inherit}
 @media(max-width:599px){.gc-main-content{padding:38px 20px calc(124px + env(safe-area-inset-bottom))}.gc-page-header{display:block;margin-bottom:40px}.gc-page-header h1{font-size:45px}.gc-page-header>.gc-button{margin-top:20px}.gc-metric-grid{grid-template-columns:1fr}.gc-metric-card{min-height:160px}.gc-activity-list li{align-items:flex-start;flex-wrap:wrap}.gc-activity-list time{margin-inline-start:58px}.gc-shell-caption{display:none}.gc-shell-footer{padding-bottom:calc(168px + env(safe-area-inset-bottom))}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
+/* Balanced Surface Color: tonal chrome and deliberate, softly distinct content planes.
+   Selection/status remain semantic. The fills are not applied in high-contrast mode. */
+.gc-metric-card:nth-child(1){background:color-mix(in srgb,var(--gc-v1-color-primary-container) 55%,var(--gc-v1-color-surface))}
+.gc-metric-card:nth-child(2){background:color-mix(in srgb,var(--gc-v1-color-secondary-container) 55%,var(--gc-v1-color-surface))}
+.gc-metric-card:nth-child(3){background:color-mix(in srgb,var(--gc-v1-color-tertiary-container) 52%,var(--gc-v1-color-surface))}
+.gc-activity-list li:nth-child(even){background:color-mix(in srgb,var(--gc-v1-color-surface-tonal) 62%,var(--gc-v1-color-surface))}
+:root[data-gc-contrast=high] .gc-metric-card,:root[data-gc-contrast=high] .gc-activity-list li{background:var(--gc-v1-color-surface)}
+@media(forced-colors:active){.gc-metric-card,.gc-activity-list li{background:Canvas!important;color:CanvasText!important}}
+
 /* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
 img.gc-shell-mark{display:block;object-fit:contain;flex:none;background:none;padding:0}
 

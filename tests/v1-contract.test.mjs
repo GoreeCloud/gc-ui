@@ -29,6 +29,17 @@ test('machine-readable tokens conform to DTCG token leaf structure',()=>{
   walk(registry);
   assert.ok(count>=140,'expected comprehensive token registry');
 });
+test('default light Canvas, Surface and Tonal roles are not a white-on-white sheet',()=>{
+ const light=registry.color.light;
+ assert.notEqual(color(light.canvas),'#FFFFFF');
+ assert.notEqual(color(light.surface),'#FFFFFF');
+ assert.notEqual(color(light.canvas),color(light.surface));
+ assert.notEqual(color(light.surface),color(light.surfaceTonal));
+ assert.notEqual(color(light.surface),color(light.surfaceRaised));
+ for(const plane of ['canvas','surfaceTonal','surfaceInset']){
+  assert.ok(contrast(color(light[plane]),color(light.onSurfaceMuted))>=4.5,plane+' muted contrast');
+ }
+});
 test('CSS output reproducibly matches the registry',()=>{
   assert.equal(buildStyles(registry),generated);
 });

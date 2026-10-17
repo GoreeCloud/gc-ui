@@ -12,7 +12,7 @@
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:reflow && npm run test:e2e:effective-zoom && npm run test:e2e:accessibility && npm run test:e2e:visual",
-    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs",
+    "test:e2e:interaction": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs",
     "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs --workers=1 --timeout=90000",
     "test:e2e:firefox": "playwright test e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/effective-zoom.spec.mjs --browser firefox --workers=1",
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",

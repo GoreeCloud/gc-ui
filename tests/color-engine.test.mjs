@@ -27,6 +27,16 @@ test('generated semantic foregrounds pass WCAG normal-text contrast for diverse 
   }
 });
 
+test('custom-seed light modes remain tonal rather than all-white and preserve readable planes',()=>{
+  for(const seed of ['#000000','#FFFFFF','#5145D9','#087C8D','#AE4D3F','#3F744B','#FF0000','#00FF00','#0000FF','#DEBFAA','#FFFF00']){
+    const {roles}=generateTheme(seed,'light');
+    assert.notEqual(roles.canvas,roles.surface,'Canvas must differ from Surface');
+    assert.notEqual(roles.surface,roles.surfaceRaised,'Raised must be distinct from Surface');
+    assert.notEqual(roles.surface,roles.surfaceTonal,'Tonal must differ from Surface');
+    assert.ok(contrastRatio(roles.surfaceTonal,roles.onSurface)>=4.5,seed+' tonal body contrast');
+    assert.ok(contrastRatio(roles.surfaceTonal,roles.onSurfaceMuted)>=4.5,seed+' tonal muted contrast');
+  }
+});
 test('every generated semantic role is an opaque sRGB color',()=>{
   for(const seed of ['#000000','#FFFFFF','#5145D9','#087C8D','#AE4D3F','#3F744B','#FF0000','#00FF00','#0000FF','#DEBFAA','#FFFF00']){
     for(const mode of ['light','dark']){

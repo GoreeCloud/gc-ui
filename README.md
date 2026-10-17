@@ -53,6 +53,12 @@ tests/                    Dependency-free token contract tests
 
 **Calm information. Expressive personality. Purposeful depth.** Read the [language specification](docs/DESIGN_LANGUAGE.md) and [component contract](docs/COMPONENTS.md) before adding new UI.
 
+## Balanced Surface Color
+
+Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a bright **Raised Surface**, and clearly differentiated **Tonal/Inset Surfaces** rather than defaulting to an almost fully white page. The Foundations Lab includes a four-plane comparison; the Adaptive Shell demonstrates restrained primary, secondary, and tertiary container colors for information cards. Custom-seed themes follow the same hierarchy. High-contrast and forced-colors remain authoritative.
+
+See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
+
 ## Open decisions
 
 Token naming, iconographic geometry, full dynamic color generation, bidirectional layouts, high-contrast themes, platform bindings, and component APIs require future design review. Do not interpret the alpha as a complete accessibility certification or finished system.

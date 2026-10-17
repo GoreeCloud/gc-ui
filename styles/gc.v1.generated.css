@@ -81,13 +81,13 @@
   --gc-v1-component-icon-stroke: 1.75px;
   --gc-v1-component-focus-width: 3px;
   --gc-v1-component-focus-offset: 3px;
-  --gc-v1-color-canvas: #F7F8FC;
+  --gc-v1-color-canvas: #ECF0F8;
   --gc-v1-color-on-canvas: #20243A;
-  --gc-v1-color-surface: #FFFFFF;
+  --gc-v1-color-surface: #F9FAFD;
   --gc-v1-color-on-surface: #20243A;
   --gc-v1-color-surface-raised: #FFFFFF;
-  --gc-v1-color-surface-tonal: #F4F5FA;
-  --gc-v1-color-surface-inset: #EDF0F8;
+  --gc-v1-color-surface-tonal: #E5EBF6;
+  --gc-v1-color-surface-inset: #DFE6F3;
   --gc-v1-color-on-surface-muted: #5F657B;
   --gc-v1-color-inverse-surface: #252B3D;
   --gc-v1-color-inverse-on-surface: #F7F8FC;

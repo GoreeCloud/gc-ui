@@ -30,5 +30,19 @@ footer{padding:36px 20px 54px;text-align:center;color:var(--gc-v1-color-on-surfa
 :root[data-gc-contrast="high"] .lens{background:var(--gc-v1-color-surface);-webkit-backdrop-filter:none;backdrop-filter:none}
 .effective-material{display:block;margin-top:12px;font-size:12px;color:var(--gc-v1-color-on-surface-muted);line-height:1.5}
 
+/* Balanced Surface Color is a semantic plane system, not an accent-coverage quota. */
+.tone-showcase{margin-top:24px;padding:24px;border:1px solid var(--gc-v1-color-divider);border-radius:26px;background:var(--gc-v1-color-surface-tonal)}
+.tone-showcase-intro{display:flex;justify-content:space-between;align-items:baseline;gap:18px}
+.tone-showcase-intro h3{margin:0 0 14px;font-size:21px;letter-spacing:-.025em}
+.tone-showcase-intro p{margin:0 0 14px;font-size:13px;color:var(--gc-v1-color-on-surface-muted);max-width:440px}
+.tone-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.tone-sample{display:flex;flex-direction:column;justify-content:space-between;min-height:126px;border-radius:17px;padding:17px;border:1px solid var(--gc-v1-color-outline);color:var(--gc-v1-color-on-surface)}
+.tone-sample strong{font-size:15px}.tone-sample span{font-size:12px;line-height:1.4;color:var(--gc-v1-color-on-surface-muted)}
+.tone-canvas{background:var(--gc-v1-color-canvas)}.tone-tonal{background:var(--gc-v1-color-surface-tonal)}
+.tone-surface{background:var(--gc-v1-color-surface)}.tone-raised{background:var(--gc-v1-color-surface-raised)}
+@media(max-width:750px){.tone-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tone-showcase-intro{display:block}}
+@media(max-width:470px){.tone-showcase{padding:14px}.tone-sample{min-height:112px;padding:13px}}
+@media(forced-colors:active){.tone-showcase,.tone-sample{background:Canvas!important;color:CanvasText!important;border-color:CanvasText!important}.tone-sample span{color:CanvasText!important}}
+
 /* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
 img.brandmark{display:block;object-fit:contain;flex:none;background:none;padding:0}

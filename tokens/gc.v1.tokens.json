@@ -304,7 +304,7 @@
     "light": {
       "canvas": {
         "$type": "color",
-        "$value": "#F7F8FC"
+        "$value": "#ECF0F8"
       },
       "onCanvas": {
         "$type": "color",
@@ -312,7 +312,7 @@
       },
       "surface": {
         "$type": "color",
-        "$value": "#FFFFFF"
+        "$value": "#F9FAFD"
       },
       "onSurface": {
         "$type": "color",
@@ -324,11 +324,11 @@
       },
       "surfaceTonal": {
         "$type": "color",
-        "$value": "#F4F5FA"
+        "$value": "#E5EBF6"
       },
       "surfaceInset": {
         "$type": "color",
-        "$value": "#EDF0F8"
+        "$value": "#DFE6F3"
       },
       "onSurfaceMuted": {
         "$type": "color",

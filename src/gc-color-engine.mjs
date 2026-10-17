@@ -75,8 +75,8 @@ export function generateTheme(seed,mode='light'){
     roles[id]=bg;roles['on'+id[0].toUpperCase()+id.slice(1)]=on;
   }
   const n=families.neutral,v=families.neutralVariant;
-  roles.canvas=n[dark?10:98];roles.surface=n[dark?20:100];roles.surfaceRaised=n[dark?30:100];
-  roles.surfaceTonal=v[dark?20:95];roles.surfaceInset=n[dark?5:95];
+  roles.canvas=n[dark?10:95];roles.surface=n[dark?20:98];roles.surfaceRaised=n[dark?30:100];
+  roles.surfaceTonal=v[dark?20:90];roles.surfaceInset=n[dark?5:90];
   roles.onCanvas=readable(roles.canvas,n[dark?95:10]);
   roles.onSurface=readable(roles.surface,n[dark?95:10]);
   roles.onSurfaceMuted=readable(roles.surface,n[dark?80:30]);

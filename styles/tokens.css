@@ -32,9 +32,9 @@
   --gc-accent-soft: #eef9ef; --gc-accent-border: #b8d9bc; --gc-accent-rgb: 64, 130, 77;
 }
 :root[data-mode="light"] {
-  --gc-canvas: #f7f8fc; --gc-canvas-alt: #f0f2fa; --gc-surface: #fff; --gc-surface-raised: #fff;
-  --gc-surface-tonal: #f4f5fa; --gc-text: #20243a; --gc-text-soft: #666c80; --gc-text-faint: #8c91a3;
-  --gc-outline: #e5e7f0; --gc-divider: #eceef5; --gc-lens-fill: rgba(255,255,255,.72);
+  --gc-canvas: #ecf0f8; --gc-canvas-alt: #dfe6f3; --gc-surface: #f9fafd; --gc-surface-raised: #fff;
+  --gc-surface-tonal: #e5ebf6; --gc-text: #20243a; --gc-text-soft: #666c80; --gc-text-faint: #8c91a3;
+  --gc-outline: #e5e7f0; --gc-divider: #eceef5; --gc-lens-fill: rgba(249,250,253,.84);
   --gc-lens-stroke: rgba(255,255,255,.9); --gc-lens-shadow: 0 14px 48px rgba(35,40,72,.11), 0 2px 8px rgba(35,40,72,.05);
   --gc-positive: #23764a; --gc-positive-container: #e5f6eb; --gc-negative: #ae3d4e; --gc-negative-container: #ffeced;
   --gc-selection: rgba(var(--gc-accent-rgb), .1); --gc-art-glow: rgba(var(--gc-accent-rgb),.12);

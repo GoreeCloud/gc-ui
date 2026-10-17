@@ -26,11 +26,11 @@ These are initial default values used for reference and documentation; implement
 
 | Role | Light | Dark |
 |---|---|---|
-| canvas | #F7F8FC | #10131E |
+| canvas | #ECF0F8 | #10131E |
 | onCanvas | #20243A | #F2F2FA |
-| surface | #FFFFFF | #1D2231 |
+| surface | #F9FAFD | #1D2231 |
 | surfaceRaised | #FFFFFF | #252B3D |
-| surfaceTonal | #F4F5FA | #292F40 |
+| surfaceTonal | #E5EBF6 | #292F40 |
 | onSurface | #20243A | #F2F2FA |
 | onSurfaceMuted | #5F657B | #B3B9CF |
 | outline | #8990A7 | #747C99 |
@@ -45,7 +45,7 @@ These are initial default values used for reference and documentation; implement
 | onDanger | #FFFFFF | #5B1827 |
 | info | #136B8F | #9CDFF7 |
 | onInfo | #FFFFFF | #153E4E |
-For final production ship, audit all pairs and run the theme verifier for each curated theme; a table is not evidence of passing WCAG.
+For final production ship, audit all pairs and run the theme verifier for each curated theme; a table is not evidence of passing WCAG. The light-mode baseline now uses tonal Canvas/Surface separation; the brighter #FFFFFF is reserved for the raised plane.
 
 ## 4. Accent reference palettes
 | Palette | Seed | Emotional register | Good for |
