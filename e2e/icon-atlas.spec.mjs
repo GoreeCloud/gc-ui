@@ -14,3 +14,25 @@ test('local icon atlas provides searchable attributed glyphs with semantic contr
  await page.setViewportSize({width:320,height:720});
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(320);
 });
+
+test('clipboard write rejection preserves copy button focus and exposes the symbol ID',async({page})=>{
+ await page.addInitScript(()=>{
+  Object.defineProperty(navigator,'clipboard',{
+   configurable:true,
+   value:{writeText:()=>Promise.reject(new DOMException('Clipboard permission denied','NotAllowedError'))}
+  });
+ });
+ await page.setViewportSize({width:320,height:720});
+ await page.goto('/lab/icon-atlas.html');
+ await page.locator('#family').selectOption('fluent');
+ await page.locator('#icon-search').fill('weather');
+ await expect(page.locator('.icon-card')).toHaveCount(2);
+ const copy=page.getByRole('button',{name:'Copy symbol ID for weather sunny'});
+ await copy.focus();
+ await copy.press('Enter');
+ await expect(page.locator('#result-count')).toHaveText('Symbol: gc-ext-fluent-weather-sunny');
+ await expect(copy).toBeFocused();
+ await expect(page.locator('#empty')).toBeHidden();
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(1);
+});
