@@ -1,4 +1,5 @@
 import {createThemeController} from '../src/gc-theme-runtime.mjs';
+import {initPasswordReveal,initNumberStepper} from '../src/gc-form-controls.mjs';
 
 createThemeController();
 
@@ -191,43 +192,19 @@ document.getElementById('empty-reset').addEventListener('click',resetSearch);
 renderResults();
 
 /* Native-first experimental field and recovery controls (local-only specimens). */
-const passphrase=document.getElementById('demo-passphrase');
-const reveal=document.getElementById('passphrase-reveal');
-reveal.addEventListener('click',()=>{
- const visible=passphrase.type==='password';
- passphrase.type=visible?'text':'password';
- reveal.setAttribute('aria-pressed',String(visible));
- reveal.textContent=visible?'Hide':'Show';
-});
+initPasswordReveal(document.getElementById('demo-passphrase'),document.getElementById('passphrase-reveal'));
 const density=document.getElementById('demo-density');
-const quantity=document.getElementById('demo-collaborators');
-const decrease=document.getElementById('demo-decrease');
-const increase=document.getElementById('demo-increase');
 const preferenceState=document.getElementById('preference-state');
-const minimum=Number(quantity.min),maximum=Number(quantity.max);
-function normalizeQuantity(){
- const value=Number(quantity.value);
- const normalized=quantity.value.trim()===''||!Number.isFinite(value)
-  ?minimum:Math.max(minimum,Math.min(maximum,Math.round(value)));
- quantity.value=String(normalized);
- return normalized;
-}
-function updatePreferences(){
- const n=normalizeQuantity();
- decrease.disabled=n<=minimum;
- increase.disabled=n>=maximum;
- preferenceState.textContent=density.selectedOptions[0].text+' density · '+n+' '+(n===1?'collaborator':'collaborators');
-}
-function changeQuantity(delta){
- quantity.value=String(normalizeQuantity()+delta);
- updatePreferences();
- quantity.focus();
-}
-decrease.addEventListener('click',()=>changeQuantity(-1));
-increase.addEventListener('click',()=>changeQuantity(1));
-quantity.addEventListener('change',updatePreferences);
-density.addEventListener('change',updatePreferences);
-updatePreferences();
+const quantity=document.getElementById('demo-collaborators');
+const stepper=initNumberStepper(
+ quantity,document.getElementById('demo-decrease'),document.getElementById('demo-increase'),{
+  onChange:n=>{
+   preferenceState.textContent=density.selectedOptions[0].text+' density · '+n+
+    ' '+(n===1?'collaborator':'collaborators');
+  }
+ }
+);
+density.addEventListener('change',()=>stepper.set(stepper.get()));
 
 const failure=document.getElementById('recovery-error');
 const recovered=document.getElementById('recovery-success');
