@@ -211,3 +211,41 @@ test('toast renders a keyboard-accessible dismiss button and returns focus',asyn
  assert.equal(trigger.focused,true,'dismiss action must restore keyboard focus to previous control');
  toast.destroy();
 });
+
+test('external toast dismissal and teardown restore only focus held inside the toast',async()=>{
+ const children=[];
+ let restored=0;
+ const doc={activeElement:null,createElement:tag=>({
+  tag,parts:[],listeners:{},attrs:{},
+  setAttribute(name,value){this.attrs[name]=value},
+  append(...nodes){this.parts.push(...nodes)},
+  contains(node){return this.parts.includes(node)},
+  addEventListener(name,fn){this.listeners[name]=fn},
+  remove(){const at=children.indexOf(this);if(at!==-1)children.splice(at,1)}
+ })};
+ const opener={isConnected:true,focus(){restored++;doc.activeElement=this}};
+ const elsewhere={isConnected:true,focus(){doc.activeElement=this}};
+ doc.activeElement=opener;
+ const region={ownerDocument:doc,setAttribute(){},appendChild(node){children.push(node)}};
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const toast=createToast(region);
+ toast.show('Dismissed from code',{duration:0});
+ doc.activeElement=children[0].parts[1];
+ toast.dismiss();
+ assert.equal(children.length,0);
+ assert.equal(doc.activeElement,opener);
+ assert.equal(restored,1,'programmatic dismissal must return focus to the opener');
+ toast.show('Destroyed from code',{duration:0});
+ doc.activeElement=children[0].parts[1];
+ toast.destroy();
+ assert.equal(doc.activeElement,opener);
+ assert.equal(restored,2,'teardown must not leave focus in a removed notification');
+ assert.equal(children.length,0);
+ const replacement=createToast(region);
+ replacement.show('Not focused',{duration:0});
+ doc.activeElement=elsewhere;
+ replacement.dismiss();
+ assert.equal(doc.activeElement,elsewhere,'dismissal must not steal focus from other controls');
+ assert.equal(restored,2);
+ replacement.destroy();
+});

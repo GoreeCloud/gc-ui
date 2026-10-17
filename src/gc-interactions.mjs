@@ -83,12 +83,24 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
 export function createToast(region){
  if(!region)throw new TypeError('Toast region required');
  region.setAttribute('role','status');region.setAttribute('aria-live','polite');region.setAttribute('aria-atomic','true');
- let timer=null,active=null,destroyed=false;
- const dismiss=()=>{if(timer!==null)clearTimeout(timer);timer=null;active?.remove();active=null};
+ let timer=null,active=null,destroyed=false,returnFocus=null;
+ const dismiss=()=>{
+  if(timer!==null)clearTimeout(timer);
+  timer=null;
+  const retiring=active,target=returnFocus;
+  active=null;returnFocus=null;
+  if(!retiring)return;
+  // Retire a focused notification without leaving focus on a detached button;
+  // if focus already moved elsewhere, leave it untouched.
+  const hadFocus=retiring.contains?.(region.ownerDocument.activeElement)===true;
+  retiring.remove();
+  if(hadFocus&&target?.isConnected&&typeof target.focus==='function')target.focus();
+ };
  function show(message,{duration=6000}={}){
   if(destroyed)throw new Error('Toast controller was destroyed');
   dismiss();
-  const doc=region.ownerDocument,returnFocus=doc.activeElement;
+  const doc=region.ownerDocument;
+  returnFocus=doc.activeElement;
   const el=doc.createElement('div');
   el.className='gc-toast';
   const text=doc.createElement('span');
@@ -116,13 +128,7 @@ export function createToast(region){
    if(event?.relatedTarget&&el.contains?.(event.relatedTarget))return;
    focused=false;resume();
   });
-  close.addEventListener('click',()=>{
-   if(active!==el)return;
-   const hadFocus=el.contains(doc.activeElement);
-   dismiss();
-   if(hadFocus&&returnFocus?.isConnected&&typeof returnFocus.focus==='function')
-    returnFocus.focus();
-  });
+  close.addEventListener('click',()=>{if(active===el)dismiss()});
   return ()=>{if(active===el)dismiss()};
  }
  return {show,dismiss,destroy(){

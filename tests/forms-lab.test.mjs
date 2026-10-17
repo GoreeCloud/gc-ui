@@ -69,3 +69,32 @@ test('form specimens use exported experimental native controllers',()=>{
  assert.match(read('src/index.mjs'),/initPasswordReveal,initNumberStepper/);
  assert.match(read('types/index.d.ts'),/GCNumberStepperController/);
 });
+
+test('no-JavaScript markup is safe and includes all six real example projects',()=>{
+ const form=html.match(/<form id="brief-form"[\s\S]*?<\/form>/)?.[0];
+ assert.ok(form,'brief form exists');
+ assert.match(form,/<button id="brief-submit"[^>]+disabled>/);
+ for(const fieldId of ['brief-name','brief-email','brief-notes']){
+  const tag=form.match(new RegExp('<(?:input|textarea)[^>]+id="'+fieldId+'"[^>]*>'))?.[0];
+  assert.ok(tag,fieldId+' is part of the form');
+  assert.doesNotMatch(tag,/\sname=/);
+ }
+ const list=html.match(/<ul id="project-results"[\s\S]*?<\/ul>/)?.[0];
+ assert.ok(list,'static project list is available without scripts');
+ const fallback=[...list.matchAll(/<li><strong>([^<]+)<\/strong><span>([^<]+)<\/span><\/li>/g)]
+  .map(([,name,type])=>({name,type}));
+ const dynamic=[...script.matchAll(/\{name:'([^']+)',type:'([^']+)'\}/g)]
+  .map(([,name,type])=>({name,type}));
+ assert.equal(fallback.length,6);
+ assert.deepEqual(fallback,dynamic,'the static list and interactive search fixtures stay in sync');
+ for(const id of ['project-search','demo-passphrase','passphrase-reveal',
+  'demo-density','demo-collaborators','demo-decrease','demo-increase','simulate-failure']){
+  const control=html.match(new RegExp('<(?:input|select|button)[^>]+id="'+id+'"[^>]*>'))?.[0];
+  assert.ok(control,id+' is available as a native control');
+  assert.match(control,/\sdisabled[\s>]/,id+' must start disabled');
+ }
+ for(const id of ['search-js-required','preferences-js-required','recovery-js-required'])
+  assert.match(html,new RegExp('id="'+id+'"'));
+ assert.match(script,/search\.disabled=false/);
+ assert.match(script,/simulate\.disabled=false/);
+});

@@ -45,7 +45,7 @@
      <span class="gc-field-error" id="brief-notes-error" hidden>Write at least 10 characters of notes.</span>
     </div>
     <button id="brief-submit" class="gc-button" data-variant="primary" type="submit" disabled>Create brief</button>
-    <noscript><p class="gc-field-description" role="status">JavaScript is required to validate this local demonstration. Create brief is disabled; no project data will be sent.</p></noscript>
+    <p id="brief-js-required" class="gc-field-description" role="status">JavaScript is required to validate this local demonstration. Create brief is disabled; no project data will be sent.</p>
     <div id="brief-success" class="gc-banner" data-intent="success" role="status" hidden><strong>Brief ready</strong><p>Validated locally. No data has been submitted or saved.</p></div>
    </form>
   </section>
@@ -55,15 +55,23 @@
     <label class="gc-field-label" for="project-search">Search projects</label>
     <div class="gc-search-anchor">
      <div class="gc-search-wrap">
-      <input id="project-search" class="gc-search-input" type="search" role="combobox" autocomplete="off" aria-expanded="false" aria-autocomplete="list" aria-controls="project-suggestions" aria-describedby="search-instructions" placeholder="Search by project name">
+      <input id="project-search" class="gc-search-input" type="search" role="combobox" autocomplete="off" aria-expanded="false" aria-autocomplete="list" aria-controls="project-suggestions" aria-describedby="search-js-required" placeholder="Search by project name" disabled>
       <button id="search-clear" class="gc-search-clear" type="button" aria-label="Clear search" hidden>×</button>
      </div>
      <ul id="project-suggestions" class="gc-search-suggestions" role="listbox" aria-label="Project suggestions" hidden></ul>
     </div>
-    <span id="search-instructions" class="gc-field-description">Type to filter the example projects. Use arrow keys for suggestions.</span>
+    <span id="search-instructions" class="gc-field-description" hidden>Type to filter the example projects. Use arrow keys for suggestions.</span>
    </div>
+   <p id="search-js-required" class="gc-field-description">Interactive project filtering requires JavaScript. The six example projects are listed below.</p>
    <p id="project-result-count" class="gc-search-count" role="status" aria-live="polite" aria-atomic="true">6 projects found</p>
-   <ul id="project-results" class="gc-search-results" aria-label="Matching example projects"></ul>
+   <ul id="project-results" class="gc-search-results" aria-label="Example projects">
+    <li><strong>Studio refresh</strong><span>Design system</span></li>
+    <li><strong>Mobile launch</strong><span>Product</span></li>
+    <li><strong>Research library</strong><span>Knowledge</span></li>
+    <li><strong>Team dashboard</strong><span>Workspace</span></li>
+    <li><strong>Design tokens</strong><span>Foundation</span></li>
+    <li><strong>Community portal</strong><span>Platform</span></li>
+   </ul>
    <section class="gc-empty-state" id="project-empty" aria-labelledby="empty-title" hidden>
     <span class="gc-empty-symbol" aria-hidden="true">◇</span>
     <h3 id="empty-title">No matching projects</h3>
@@ -73,17 +81,18 @@
   </section>
   <section class="gc-card gc-form-panel" aria-labelledby="preferences-title">
    <div class="gc-form-panel-heading"><span class="gc-badge" data-intent="info">F12 · F17 · F21</span><h2 id="preferences-title">Choose your settings</h2><p>Native input behavior, readable boundaries and no surprise changes. Use demonstration values only.</p></div>
+   <p id="preferences-js-required" class="gc-field-description">These sample settings are read-only until JavaScript is available. No credentials or preferences are collected.</p>
    <div class="gc-field">
     <label class="gc-field-label" for="demo-passphrase">Sample passphrase</label>
     <div class="gc-passphrase-wrap">
-     <input id="demo-passphrase" class="gc-input gc-passphrase-input" type="password" name="demo-passphrase" autocomplete="new-password" aria-describedby="passphrase-help" placeholder="Try an invented sample">
-     <button id="passphrase-reveal" type="button" class="gc-passphrase-reveal" aria-label="Reveal sample passphrase" aria-pressed="false">Show</button>
+     <input id="demo-passphrase" class="gc-input gc-passphrase-input" type="password" name="demo-passphrase" autocomplete="new-password" aria-describedby="passphrase-help" placeholder="Try an invented sample" disabled>
+     <button id="passphrase-reveal" type="button" class="gc-passphrase-reveal" aria-label="Reveal sample passphrase" aria-pressed="false" disabled>Show</button>
     </div>
     <span class="gc-field-description" id="passphrase-help">Demonstration only. Do not enter actual credentials; this value is never submitted or stored.</span>
    </div>
    <div class="gc-field">
     <label class="gc-field-label" for="demo-density">Workspace density</label>
-    <select id="demo-density" class="gc-input gc-native-select" aria-describedby="density-help">
+    <select id="demo-density" class="gc-input gc-native-select" aria-describedby="density-help" disabled>
      <option value="compact">Compact</option>
      <option value="comfortable" selected>Comfortable</option>
      <option value="spacious">Spacious</option>
@@ -93,9 +102,9 @@
    <div class="gc-field">
     <label class="gc-field-label" for="demo-collaborators">Collaborators</label>
     <div class="gc-stepper">
-     <button id="demo-decrease" type="button" aria-label="Remove one collaborator" class="gc-stepper-button">−</button>
-     <input id="demo-collaborators" class="gc-input gc-stepper-input" type="number" min="1" max="12" step="1" value="3" inputmode="numeric" aria-describedby="collaborator-help">
-     <button id="demo-increase" type="button" aria-label="Add one collaborator" class="gc-stepper-button">+</button>
+     <button id="demo-decrease" type="button" aria-label="Remove one collaborator" class="gc-stepper-button" disabled>−</button>
+     <input id="demo-collaborators" class="gc-input gc-stepper-input" type="number" min="1" max="12" step="1" value="3" inputmode="numeric" aria-describedby="collaborator-help" disabled>
+     <button id="demo-increase" type="button" aria-label="Add one collaborator" class="gc-stepper-button" disabled>+</button>
     </div>
     <span class="gc-field-description" id="collaborator-help">Choose 1–12. You can type the number or use the buttons.</span>
    </div>
@@ -104,7 +113,8 @@
   <section class="gc-card gc-form-panel" aria-labelledby="recovery-title">
    <div class="gc-form-panel-heading"><span class="gc-badge" data-intent="info">O54</span><h2 id="recovery-title">Make errors recoverable</h2><p>A failed operation should explain what happened and offer a clear retry path without discarding your work.</p></div>
    <div class="gc-recovery-preview" aria-hidden="true"><span class="gc-recovery-symbol">↻</span><strong>Demo service status</strong><small>No network or account connection</small></div>
-   <button id="simulate-failure" type="button" class="gc-button" data-variant="secondary">Simulate a temporary error</button>
+   <button id="simulate-failure" type="button" class="gc-button" data-variant="secondary" disabled>Simulate a temporary error</button>
+   <p id="recovery-js-required" class="gc-field-description">The simulated failure and retry need JavaScript. No network request is made.</p>
    <section id="recovery-error" class="gc-recovery-error" role="alert" aria-labelledby="recovery-error-title" hidden>
     <h3 id="recovery-error-title">Temporary connection problem</h3>
     <p>This is an example service error. Your local form entries remain unchanged, and no request was made.</p>

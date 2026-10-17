@@ -2,6 +2,13 @@ import {test,expect} from '@playwright/test';
 
 test('brief validation focuses a linked summary and preserves entered values',async({page})=>{
  await page.goto('/lab/forms.html');
+ await expect(page.locator('#brief-js-required')).toBeHidden();
+ await expect(page.locator('#brief-submit')).toBeEnabled();
+ for(const id of ['search-js-required','preferences-js-required','recovery-js-required'])
+  await expect(page.locator('#'+id)).toBeHidden();
+ for(const id of ['project-search','demo-passphrase','passphrase-reveal','demo-density','demo-collaborators','simulate-failure'])
+  await expect(page.locator('#'+id)).toBeEnabled();
+ await expect(page.locator('#project-results li')).toHaveCount(6);
  await page.getByLabel('Project name').fill('Studio refresh');
  await page.getByRole('button',{name:'Create brief'}).click();
  const summary=page.locator('#brief-errors');
@@ -218,7 +225,20 @@ test('forms lab explicitly disables submission without JavaScript and never puts
   await page.goto('/lab/forms.html');
   const submit=page.getByRole('button',{name:'Create brief'});
   await expect(submit).toBeDisabled();
+  await expect(page.locator('#brief-js-required')).toBeVisible();
   await expect(page.getByText('JavaScript is required to validate this local demonstration.',{exact:false})).toBeVisible();
+  await expect(page.locator('#search-js-required')).toBeVisible();
+  await expect(page.locator('#preferences-js-required')).toBeVisible();
+  await expect(page.locator('#recovery-js-required')).toBeVisible();
+  await expect(page.locator('#search-instructions')).toBeHidden();
+  await expect(page.locator('#project-search')).toBeDisabled();
+  await expect(page.locator('#project-search')).toHaveAttribute('aria-describedby','search-js-required');
+  await expect(page.locator('#project-result-count')).toHaveText('6 projects found');
+  await expect(page.locator('#project-results li')).toHaveCount(6);
+  await expect(page.locator('#project-results')).toContainText('Design tokens');
+  for(const id of ['demo-passphrase','passphrase-reveal','demo-density','demo-collaborators','demo-decrease','demo-increase','simulate-failure'])
+   await expect(page.locator('#'+id)).toBeDisabled();
+  await expect(page.getByRole('link',{name:'Component Registry'})).toHaveAttribute('href','./catalog.html');
   for(const selector of ['#brief-name','#brief-email','#brief-notes'])
    await expect(page.locator(selector)).not.toHaveAttribute('name',/.+/);
   await page.locator('#brief-name').fill('QA-NOJS-DUMMY');
