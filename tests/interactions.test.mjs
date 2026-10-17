@@ -42,7 +42,7 @@ test('stale toast dismiss handles do not remove a newer message',async()=>{
  toast.show('second',{duration:0});
  dismissOld();
  assert.equal(elements.length,1);
- assert.equal(elements[0].textContent,'second');
+ assert.equal(elements[0].parts[0].textContent,'second');
  toast.dismiss();
  assert.equal(elements.length,0);
 });
