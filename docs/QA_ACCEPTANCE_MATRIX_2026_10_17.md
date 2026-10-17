@@ -51,6 +51,8 @@ Record environment, date, platform/browser version, assistive-technology version
 
 The automated auditor checks Lens normal-text foregrounds over the sRGB composite of semantic Surface at the CSS opacity, with **black and white** as backdrop bounds; it samples both default/high-contrast role schemes and 722 generated custom themes. A separate browser test samples real computed Lens colors at representative custom seeds in Chromium/Firefox. Secondary Lens copy intentionally uses the stronger semantic foreground role *only inside the Lens*.
 
+The subsequent indicator stabilization adds a 3:1 analytic boundary check for the stronger `outlineStrong` token across the same arbitrary-backdrop extrema, plus a 3:1 focusRing check against six semantic surface roles per scheme. Browser tests additionally sample the resolved Lens border against extreme underlays and inspect the actual keyboard-focused skip-link outline in light and dark themes. These are **automated gates**, not manual signoff.
+
 Human review must also cover real photos and gradients behind the Lens, light and dark themes, custom accents, forced colors, reduced transparency, browser native 200%/400% zoom, keyboard focus rings and UI indicators (3:1 where applicable), RTL/localized copy, font rasterization, blur/compositor differences and low-powered hardware. Record failed samples with **nonpersonal** seed, background description, foreground element, platform and observed ratio/screenshot if appropriate. Never treat an analytic endpoint result or a Playwright rendering as blanket WCAG certification.
 
 ## Acceptance record template
