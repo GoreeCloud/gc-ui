@@ -22,10 +22,11 @@
 - Android Gradle debug build succeeded using local JDK 21, Android SDK 36 and Gradle 9.5.
 - Updated APK installed and cold-launched on a connected Android API 36 device. The WebView survived Home/background and foreground return; task state remained and native Android Phone-profile handshake was visible.
 - Screenshot review verified legible text, a correct dark palette and unoccluded status/navigation bars; captures were not committed.
+- A separate local-navigation check on Android API 36 followed the Studio brand link to the GC UI foundations page, then used the system Back key to return to the Studio. Both transitions rendered correctly and preserved dark appearance. This establishes one software Back-key path, not predictive-back gesture coverage.
 - One Android dumpsys meminfo snapshot returned approximately **69 MB total PSS**. This is only a single memory diagnostic, not a measurement of battery savings, frame time, retained-memory growth or energy consumption. No system accessibility, animation or power settings were changed.
 
 ## Open release gates
-- Manual TalkBack, real-time native system preference switching, orientation, keyboard, back gestures and long-running state restoration require further validation.
+- Manual TalkBack, real-time native system preference switching, orientation, keyboard, predictive-back swipe gestures and long-running state restoration require further validation. One local WebView Back-key navigation path was verified on device.
 - Low-power/GPU measurement needs a repeatable brightness, thermal, network and scroll protocol on representative slower devices; no savings percentage is claimed.
 - Windows/macOS native host signoff, code signing, production updates, Android Play readiness and independent security testing remain open.
 - These automated checks do not certify general WCAG conformance or native platform production readiness.
