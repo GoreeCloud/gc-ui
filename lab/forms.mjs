@@ -53,6 +53,7 @@ brief.addEventListener('submit',event=>{
 });
 // Only enable submission after the local-only handler is ready.
 // Without JavaScript the button remains disabled and no form data has name attributes.
+document.getElementById('brief-js-required').hidden=true;
 document.getElementById('brief-submit').disabled=false;
 summaryList.addEventListener('click',event=>{
  const link=event.target.closest?.('a[href^="#"]');

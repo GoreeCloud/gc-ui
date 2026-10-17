@@ -2,6 +2,8 @@ import {test,expect} from '@playwright/test';
 
 test('brief validation focuses a linked summary and preserves entered values',async({page})=>{
  await page.goto('/lab/forms.html');
+ await expect(page.locator('#brief-js-required')).toBeHidden();
+ await expect(page.locator('#brief-submit')).toBeEnabled();
  await page.getByLabel('Project name').fill('Studio refresh');
  await page.getByRole('button',{name:'Create brief'}).click();
  const summary=page.locator('#brief-errors');
@@ -218,6 +220,7 @@ test('forms lab explicitly disables submission without JavaScript and never puts
   await page.goto('/lab/forms.html');
   const submit=page.getByRole('button',{name:'Create brief'});
   await expect(submit).toBeDisabled();
+  await expect(page.locator('#brief-js-required')).toBeVisible();
   await expect(page.getByText('JavaScript is required to validate this local demonstration.',{exact:false})).toBeVisible();
   for(const selector of ['#brief-name','#brief-email','#brief-notes'])
    await expect(page.locator(selector)).not.toHaveAttribute('name',/.+/);
