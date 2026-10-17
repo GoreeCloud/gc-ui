@@ -83,4 +83,31 @@ The `./css/components` stylesheet includes `.gc-textarea`, `.gc-field-foot`, `.g
 See [Forms and search interaction contract](FORMS_CONTRACT.md) for keyboard, failure, accessibility and privacy notes.
 
 ## Experimental native-first settings and recovery
-The exported `./css/components` file now styles `.gc-passphrase-wrap`, `.gc-passphrase-reveal`, `.gc-native-select`, `.gc-stepper`, `.gc-stepper-button` and `.gc-recovery-error`. These complement the Forms Lab. Password reveal, select updates, stepper bounds, and retry-state logic live in `lab/forms.mjs` **only** and are not API exports. The reference includes IME-aware search composition guards but still requires manual AT and multilingual keyboard testing. See [Forms contract](FORMS_CONTRACT.md).
+The exported `./css/components` file now styles `.gc-passphrase-wrap`, `.gc-passphrase-reveal`, `.gc-native-select`, `.gc-stepper`, `.gc-stepper-button` and `.gc-recovery-error`. These complement the Forms Lab. Password reveal and bounded number-stepper behavior are now imported from the **experimental** package API, `initPasswordReveal` and `initNumberStepper`; native select updates and local simulated retry behavior remain in `lab/forms.mjs`. These APIs are not stable or published. The reference includes IME-aware search composition guards but still requires manual AT and multilingual keyboard testing. See [Forms contract](FORMS_CONTRACT.md).
+
+## Experimental native form controllers (source API)
+
+```js
+import {initPasswordReveal,initNumberStepper} from '/src/index.mjs';
+
+const secret=initPasswordReveal(
+  document.querySelector('#demo-passphrase'),
+  document.querySelector('#passphrase-reveal')
+);
+const count=initNumberStepper(
+  document.querySelector('#demo-collaborators'),
+  document.querySelector('#demo-decrease'),
+  document.querySelector('#demo-increase'),
+  {onChange(value){ console.log('Example count:',value); }}
+);
+
+// Unmounting an example:
+count.destroy();
+secret.destroy(); // also re-masks a revealed input, without clearing its value
+```
+
+The reveal helper requires a native `type=password` input and a `type=button` control with a **stable accessible name** (`aria-label` or `aria-labelledby`). It toggles `aria-pressed` and the visible Show/Hide label; teardown restores password masking.
+
+The number helper requires a native `type=number` input with finite integer `min`, `max`, and a positive integer `step` that divides the range. It clamps/rounds manual changes on blur or change, disables the increment/decrement buttons at endpoints, and returns focus to the input after a step-button activation. `get()`, `set(number)` and `destroy()` are available. Direct typing is not normalized on every keystroke. Invalid options throw rather than silently producing a broken range. The host owns the visible count message via `onChange`.
+
+Both helpers have TypeScript signatures in `types/index.d.ts`, framework-neutral Node lifecycle tests, and browser specimens. **Experimental only**: these interfaces may change, have no production security certification, and do not make the remaining forms library stable.
