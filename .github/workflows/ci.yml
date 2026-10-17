@@ -39,6 +39,7 @@ jobs:
           node --check e2e/accessibility.spec.mjs
           node --check e2e/forms.spec.mjs
           node --check e2e/reflow.spec.mjs
+          node --check e2e/effective-zoom.spec.mjs
           node --check e2e/forms-visual.spec.mjs
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs

@@ -164,3 +164,7 @@ The [experimental form API and reflow QA checkpoint](docs/QA_FORM_API_REFLOW_202
 
 ### Toast interaction stabilization
 The [toast hover/focus QA checkpoint](docs/QA_TOAST_FOCUS_2026-10-16.md) records a narrow accessibility-lifecycle fix: auto-dismissal now stays paused while a timed toast is hovered **or** keyboard-focused, without allowing stale toast events to affect newer messages. The source remains experimental and any accessibility acceptance requires real assistive-technology review.
+
+
+### Effective viewport reflow verification
+The experimental browser suite now includes `npm run test:e2e:effective-zoom`: at 1280×800 as a reference physical window, it verifies **200%-equivalent (640×400 CSS px)** and **400%-equivalent (320×200 CSS px)** viewport layouts in LTR and RTL across all five labs. It also exercises native forms, menus, compact navigation, modal focus and footer links at the smallest size. This uses viewport equivalence, **not** browser-toolbar zoom; true 200%/400% browser zoom and hardware assistive technology still require manual verification. See [effective-viewport QA](docs/QA_EFFECTIVE_ZOOM_2026-10-16.md).
