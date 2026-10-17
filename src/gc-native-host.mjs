@@ -87,7 +87,8 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
  }
  return Object.freeze({available:true,platform:transport.platform||'native',request,
   destroy(){
-   if(closed)return;closed=true;unsubscribe?.();
+   if(closed)return;closed=true;
+   try{unsubscribe()}catch{/* Never strand pending requests if a disappearing bridge throws on teardown. */}
    for(const v of pending.values()){clearTimeout(v.timeout);v.reject(new Error('Native host client destroyed'))}
    pending.clear();
   }});
