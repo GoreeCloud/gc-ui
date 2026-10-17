@@ -95,3 +95,46 @@ test('host hints never disable browser safety preferences and low power is prese
   highContrast:false,reducedMotion:false,reducedTransparency:false,lowPower:false,forcedColors:false
  });
 });
+
+test('native injection getter failures preserve browser fallback and allow a valid Android bridge',()=>{
+ const android={postMessage(){},onmessage:null};
+ const scope=Object.defineProperty({GCAndroidHost:android},'GCNativeHost',{
+  get(){throw new Error('preload not ready')}
+ });
+ const transport=createNativeTransport(scope);
+ assert.equal(transport.platform,'android');
+ assert.equal(createNativeTransport(Object.defineProperty({},'GCAndroidHost',{
+  get(){throw new Error('Android injection failed')}
+ })),null);
+});
+
+test('throwing and incomplete native subscriptions fail closed without blocking web controls',async()=>{
+ for(const subscribe of [
+  ()=>{throw new Error('preload registration failed')},
+  ()=>undefined,
+  ()=>null
+ ]){
+  let sent=0;
+  const client=createNativeHostClient({transport:{
+   platform:'desktop',postMessage(){sent++},subscribe
+  }});
+  assert.equal(client.available,false);
+  assert.equal(client.platform,'web');
+  await assert.rejects(client.request('selectionFeedback'),/Native host subscription unavailable/);
+  client.destroy();
+  assert.equal(sent,0);
+ }
+});
+
+test('client teardown settles pending calls even when native unsubscribe throws',async()=>{
+ let unsubscribes=0;
+ const client=createNativeHostClient({transport:{
+  platform:'desktop',postMessage(){},
+  subscribe(){return ()=>{unsubscribes++;throw new Error('Native bridge already closed')}}
+ }});
+ const pending=client.request('getCapabilities');
+ assert.doesNotThrow(()=>client.destroy());
+ await assert.rejects(pending,/destroyed/);
+ client.destroy();
+ assert.equal(unsubscribes,1);
+});
