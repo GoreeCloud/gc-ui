@@ -1,4 +1,6 @@
 import {test,expect} from '@playwright/test';
+import {readFileSync} from 'node:fs';
+const iconInventory=JSON.parse(readFileSync(new URL('../registry/third-party-assets.v1.json',import.meta.url),'utf8'));
 for(const variant of [
  {name:'workspace-light',width:1440,height:900},
  {name:'reading-dark',width:1440,height:900,context:'reading',dark:true},
@@ -10,7 +12,7 @@ for(const variant of [
   await page.goto('/lab/environment.html');
   if(variant.context)await page.locator('#context').selectOption(variant.context);
   if(variant.dark)await page.getByRole('button',{name:'Switch to dark appearance'}).click();
-  await expect(page.locator('.provider')).toHaveCount(7);
+  await expect(page.locator('.provider')).toHaveCount(iconInventory.providers.length);
   await page.evaluate(()=>document.fonts?.ready);
   const png=await page.screenshot({fullPage:true,animations:'disabled'});
   await testInfo.attach('gc-environment-'+variant.name,{body:png,contentType:'image/png'});
