@@ -4,7 +4,7 @@
  * A translucent Lens may cover a photograph or any other backdrop. Checking
  * both black and white *under* its sRGB alpha mix bounds contrast for every
  * opaque sRGB backdrop, including arbitrary images and blurred composites.
- * This tests flat foreground roles, not glyph rasterization, focus rings,
+ * This tests flat text/boundary/focus roles, not glyph rasterization,
  * filters outside the Lens, blend modes, or platform compositor fidelity.
  */
 import {readFileSync} from 'node:fs';
@@ -35,23 +35,37 @@ const ratio=(a,b)=>{
 };
 const blend=(front,back)=>front.map((v,i)=>alpha*v+(1-alpha)*back[i]);
 const failures=[];
-let checks=0,schemes=0,minRatio=Infinity,minimum=null;
+const minima={text:null,boundary:null,focus:null};
+let checks=0,schemes=0;
+const boundaryRoles=['canvas','surface','surfaceRaised','surfaceInset','surfaceTonal','primaryContainer'];
+function check(kind,name,foreground,background,backdrop,required){
+ const value=ratio(foreground,background);
+ checks++;
+ if(!minima[kind]||value<minima[kind].value)
+  minima[kind]={name,backdrop,ratio:+value.toFixed(3),value};
+ if(value+1e-8<required)failures.push({kind,name,backdrop,ratio:+value.toFixed(3),required});
+}
 function audit(name,roles){
  const fg=rgb(roles.onSurface),surface=rgb(roles.surface);
- // The Lens's scoped muted alias intentionally resolves to onSurface.
- // Endpoints only bound contrast if foreground luminance is *outside* the
- // possible backdrop-luminance interval; otherwise an intermediate gray
- // could match the text even when both endpoint ratios happen to pass.
+ const boundary=rgb(roles.outlineStrong),focus=rgb(roles.focusRing);
+ // Endpoints only bound contrast if foreground luminance cannot be
+ // reached by a composite over an intermediate dark/light backdrop.
  const dark=blend(surface,[0,0,0]),bright=blend(surface,[255,255,255]);
- const fgL=luminance(fg),darkL=luminance(dark),brightL=luminance(bright);
- if(fgL>=darkL&&fgL<=brightL)
-  failures.push({name,reason:'Foreground luminance intersects the possible composite background range'});
- for(const [backdrop,back] of [['black',[0,0,0]],['white',[255,255,255]]]){
-  const bg=blend(surface,back),value=ratio(fg,bg);
-  checks++;
-  if(value<minRatio){minRatio=value;minimum={name,backdrop,ratio:+value.toFixed(3)}}
-  if(value<4.5)failures.push({name,backdrop,ratio:+value.toFixed(3)});
+ const range=[luminance(dark),luminance(bright)];
+ for(const [kind,color] of [['text',fg],['boundary',boundary]]){
+  const value=luminance(color);
+  if(value>=range[0]&&value<=range[1])
+   failures.push({kind,name,reason:'Foreground luminance intersects the composite background range'});
  }
+ // The Lens surface may sit over arbitrary opaque sRGB pixels.
+ for(const [backdrop,back] of [['black',[0,0,0]],['white',[255,255,255]]]){
+  const bg=blend(surface,back);
+  check('text',name,fg,bg,backdrop,4.5);
+  check('boundary',name,boundary,bg,backdrop,3);
+ }
+ // Keyboard focus indicators must remain distinct on common opaque roles.
+ for(const role of boundaryRoles)
+  check('focus',name,focus,rgb(roles[role]),role,3);
  schemes++;
 }
 const rolesFrom=values=>Object.fromEntries(Object.entries(values).map(([key,value])=>[key,value.$value]));
@@ -63,5 +77,5 @@ for(const mode of ['light','dark']){
   audit(seed+' '+mode,generateTheme(seed,mode).roles);
  }
 }
-console.log(JSON.stringify({name:'GC UI translucent Lens worst-backdrop contrast',lensAlpha:alpha,schemes,backdropChecks:checks,minimum,failed:failures.length,examples:failures.slice(0,12),scope:'onSurface and Lens-scoped secondary text; arbitrary opaque sRGB backdrop endpoints, not a rendered image/accessibility certification'},null,2));
+console.log(JSON.stringify({name:'GC UI Lens text, boundary and focus contrast',lensAlpha:alpha,schemes,checks,minimumByKind:Object.fromEntries(Object.entries(minima).map(([kind,entry])=>[kind,entry&&{name:entry.name,backdrop:entry.backdrop,ratio:entry.ratio}])),failed:failures.length,examples:failures.slice(0,12),scope:'opaque sRGB backdrop bounds and semantic focus roles; not a pixel rasterization, photo/blur or WCAG certification'},null,2));
 if(failures.length)process.exitCode=1;
