@@ -56,14 +56,6 @@ def scan_electron_accessibility(pyatspi)->tuple[list[tuple[str,str]],int]:
     visit(apps[0],0)
     return nodes,visited
 
-def electron_arguments(binary:Path, hosted_ci:bool=False)->list[str]:
-    args=[str(binary),"native/desktop","--force-renderer-accessibility"]
-    # Electron Playwright's hosted smoke already applies this for Linux CI.
-    # Do not weaken the OS sandbox on the operator's ordinary desktop session.
-    if hosted_ci:
-        args.append("--no-sandbox")
-    return args
-
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--electron",type=Path,
@@ -73,8 +65,7 @@ def main():
     if not args.electron.is_file():raise RuntimeError("Pinned desktop Electron not installed")
     import pyatspi
     env={**os.environ,"NO_AT_BRIDGE":"0","ELECTRON_DISABLE_SECURITY_WARNINGS":"true"}
-    hosted_ci=os.environ.get("GITHUB_ACTIONS")=="true"
-    proc=subprocess.Popen(electron_arguments(args.electron,hosted_ci),
+    proc=subprocess.Popen([str(args.electron),"native/desktop","--force-renderer-accessibility"],
                           cwd=REPO,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,env=env)
     try:
         last=None
@@ -92,7 +83,6 @@ def main():
         output={
             "schema":"gc-ui-electron-atspi-qa.v1",
             "host":"Linux X11 virtual display in isolated D-Bus session",
-            "runner_os_sandbox_exception":hosted_ci,
             "method":"AT-SPI document role/name inspection with Electron force-renderer-accessibility flag",
             "result":result,
             "visited_accessible_nodes":total,

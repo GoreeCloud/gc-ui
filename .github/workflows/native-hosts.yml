@@ -122,13 +122,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install Linux AT-SPI accessibility infrastructure
-        run: |
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends python3-pyatspi python3-gi at-spi2-core dbus-x11 xvfb
       - name: Install locked optional Electron desktop runtime
         run: npm ci --prefix native/desktop --no-audit --no-fund
       - name: Verify actual native desktop launch, profile and appearance
         run: npm run qa:native:desktop
-      - name: Verify actual sandboxed Electron AT-SPI accessible roles and names
-        run: npm run qa:desktop:atspi

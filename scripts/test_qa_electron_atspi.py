@@ -5,10 +5,6 @@ spec=importlib.util.spec_from_file_location("atspi",Path(__file__).parent/"qa-el
 m=importlib.util.module_from_spec(spec)
 spec.loader.exec_module(m)
 class AtspiTest(unittest.TestCase):
- def test_hosted_flag_is_not_applied_on_local_desktop(self):
-  binary=Path("/opt/electron")
-  self.assertNotIn("--no-sandbox",m.electron_arguments(binary,False))
-  self.assertIn("--no-sandbox",m.electron_arguments(binary,True))
  def test_all_named_controls_are_required(self):
   nodes=list(m.REQUIRED)+[("push button","Switch to dark appearance")]
   x=m.verify_tree(nodes)

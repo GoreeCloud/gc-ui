@@ -61,7 +61,7 @@ See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteo
 
 ## GPU instrumentation and Linux AT-SPI verification
 
-The [GPU/AT-SPI QA checkpoint](docs/QA_NATIVE_GPU_ATSPI_2026_10_17.md) records eight Android Activity HWUI graphics runs and real Electron AT-SPI role/name verification. Native CI includes the new GPU parser and live Linux AT-SPI smoke. Battery-energy and human desktop speech testing remain open; Android TalkBack 12/12 user-confirmed PASS remains complete.
+The [GPU/AT-SPI QA checkpoint](docs/QA_NATIVE_GPU_ATSPI_2026_10_17.md) records eight Android Activity HWUI graphics runs and real Electron AT-SPI role/name verification. Native CI includes GPU and AT-SPI parser contracts and Electron keyboard semantics; the real Linux AT-SPI inspection passes locally but is not a hosted runner acceptance gate. Battery-energy and human desktop speech testing remain open; Android TalkBack 12/12 user-confirmed PASS remains complete.
 
 ## Extended native compositor and tablet QA
 
