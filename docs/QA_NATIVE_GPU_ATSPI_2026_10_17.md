@@ -6,7 +6,7 @@
 
 **Physical Android graphics:** The connected OnePlus DE2117 (API 36) was tested in eight balanced Normal/Conservation runs (Normal, Conserve, Conserve, Normal; Conserve, Normal, Normal, Conserve). Every run confirmed the actual native resource mode through the debug-only readback, cleared only the GC UI Activity graphics counters, and used six scrolling gestures. The probe reads the Activity Hardware UI renderer (HWUI) GPU histogram, including the pipeline identifier and exceptional 4950 ms bucket instead of hiding outliers. The new parser has four regression tests and is checked by native CI.
 
-**Linux accessibility:** In a temporary Xvfb and D-Bus session, sandboxed Electron 44.9.0 was launched with the Chromium diagnostic force-renderer-accessibility flag. Orca successfully enumerated the Electron app. Python AT-SPI inspected 156 accessibility nodes, including headings, combo boxes, both preview checkboxes, native selection feedback, motion controls and the appearance button. Ten required document/role/name assertions passed. The new repeatable smoke has three independent policy parser tests and is exercised as an additional hosted Linux native CI step.
+**Linux accessibility:** In a temporary Xvfb and D-Bus session, sandboxed Electron 44.9.0 was launched with the Chromium diagnostic force-renderer-accessibility flag. Orca successfully enumerated the Electron app. Python AT-SPI inspected 156 accessibility nodes, including headings, combo boxes, both preview checkboxes, native selection feedback, motion controls and the appearance button. Ten required document/role/name assertions passed. The new repeatable smoke has four independent policy parser tests and is exercised as an additional hosted Linux native CI step.
 
 **Physical-power and extra-device limitations:** The phone remained USB-powered. No external current/power meter or disconnected-phone telemetry was available, and there is only one authorized physical Android phone connected. The existing separate Android 36 tablet emulator expands form-factor and WebView-provider coverage, but is neither an extra physical phone nor an extra OS API version. No other repository or emulator profile was changed.
 
@@ -37,6 +37,8 @@ On Linux with pinned optional Electron node dependencies plus installed Xvfb, db
 
     npm run test:desktop:atspi:parsers
     npm run qa:desktop:atspi
+
+The initial hosted AT-SPI run failed to start raw Electron (whereas the Playwright Electron launch passed). For hosted GitHub Actions diagnostics only, the AT-SPI probe now applies the same no-sandbox command-line flag that Playwright applies by default. The local workstation retains the default OS sandbox; the isolated runner AT-SPI smoke is **not evidence of an active OS sandbox**. This test-only flag does not change the app distribution or its webPreferences. The follow-up hosted job must pass before the AT-SPI CI gate is considered green.
 
 The test tools do not change system brightness, battery saver, accessibility services, network or energy settings. The real AT-SPI test runs in an isolated virtual graphical session, not the desktop user's working session.
 
