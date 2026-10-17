@@ -76,3 +76,6 @@ Manual TalkBack/VoiceOver and keyboard testing, navigation/back gestures, Androi
 
 ## Hardening verification (follow-up)
 The Android request interceptor now restricts both navigation and subresource requests to the synthetic HTTPS app-assets origin and its assets path; missing and nonlocal requests produce a 403 empty response, even without relying on the absent INTERNET permission. The Electron host uses a canonicalized allowlist of public asset directories and file extensions, rejects symlink escapes and repository metadata, and adds a restrictive Content Security Policy on local resources. Host capability claims are checked against the expected Android-phone/tablet versus Electron-desktop combinations and strictly boolean preference flags. See [the native security QA report](QA_NATIVE_SECURITY_2026_10_17.md).
+
+## Electron runtime maintenance
+The optional desktop preview is pinned to stable Electron 44.9.0 (October 17, 2026), with the runtime version asserted by its real-launch smoke test. A dedicated GitHub Actions desktop-native job runs the pinned Electron build under Xvfb. See [Electron runtime QA](QA_DESKTOP_ELECTRON_2026_10_17.md) for evidence and remaining cross-platform gates.

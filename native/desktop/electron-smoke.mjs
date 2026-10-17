@@ -23,6 +23,9 @@ try{
  await win.getByRole('button',{name:'Switch to '+next+' appearance'}).click();
  await win.waitForFunction(mode=>document.documentElement.dataset.gcMode===mode,next);
  const title=await win.title();
+ const version=await app.evaluate(()=>process.versions.electron);
+ const expected=require('./package.json').devDependencies.electron;
+ if(version!==expected)throw new Error('Electron runtime is not pinned version: '+version+' instead of '+expected);
  await win.screenshot({path:'/tmp/gc-electron-native-preview.png',fullPage:true});
- console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,platform,verifiedHost:before,appearance:next}));
+ console.log('ELECTRON HOST SMOKE PASS',JSON.stringify({title,version,platform,verifiedHost:before,appearance:next}));
 }finally{if(app)await app.close()}

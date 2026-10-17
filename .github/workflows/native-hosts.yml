@@ -68,3 +68,17 @@ jobs:
         run: ./gradlew :app:assembleDebug --no-daemon
       - name: Inspect the compiled APK exists
         run: test -s native/android/app/build/outputs/apk/debug/app-debug.apk
+
+  desktop-native:
+    name: Launch pinned sandboxed GC UI Electron host
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install locked optional Electron desktop runtime
+        run: npm ci --prefix native/desktop --no-audit --no-fund
+      - name: Verify actual native desktop launch, profile and appearance
+        run: npm run qa:native:desktop
