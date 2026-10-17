@@ -36,11 +36,12 @@ A human must confirm, with a real screen reader and audio output:
 4. Route announcements, dialog entry/exit/close and restored trigger focus.
 5. High contrast, reduced transparency, keyboard occlusion and long text at native zoom.
 
-**Orca is installed on the authorized Linux laptop, but automated DOM and X11 checks alone cannot establish what a person hears**. Orca spoken utterances and user comprehension have not been owner-confirmed for this wave. Manual Safari/macOS and Windows/browser zoom, OS text scaling and a visual-review signoff likewise remain unverified. Do not claim WCAG certification or stable-component maturity based solely on this checkpoint.
+**Orca is installed on the authorized Linux laptop, but automated DOM and X11 checks alone cannot establish what a person hears**. The user has now confirmed an audible toast announcement and native dialog announcement/focus return in the human listening session below; the remaining screen-reader scenarios have not been signed off. Manual Safari/macOS and Windows/browser zoom, OS text scaling and a visual-review signoff likewise remain unverified. Do not claim WCAG certification or stable-component maturity based solely on this checkpoint.
 
 ## Human Orca listening session (2026-10-16)
 
 Environment: authorized Linux laptop, Orca 42.0, Firefox with GC UI Components Lab (`http://127.0.0.1:4173/lab/components.html`). The assistant verified that Orca and speech processes were running, the Firefox window was exposed through AT-SPI, and a PulseAudio sink was present; the assistant cannot hear laptop audio.
 
 - **Toast live announcement — user-reported PASS.** The user confirmed the listening test after activating the “Show notification” control, for the text “A quiet notification with an accessible live announcement.” This establishes one human-reported audible announcement; it does **not** establish timing under interruption, hover/focus persistence, visual review, or full screen-reader acceptance.
-- Dialog announcement, focus restoration, route changes, validation-summary speech and remaining manual checks: **not yet tested by user in this listening session**.
+- **Native modal dialog announcement, Escape dismissal and trigger focus restoration — user-reported PASS.** The user confirmed all four steps of Test 2: activating the Components Lab “Delete” button, hearing the “Delete this example?” title and description, pressing Escape to dismiss, and returning to the Delete button. This is human-reported Orca/Firefox behavior for this scenario, not independent audio capture or a cross-screen-reader certification.
+- Route announcements, validation-summary speech, toast timing under interruption/focus or hover, and remaining manual checks: **not yet tested by user in this listening session**.
