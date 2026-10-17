@@ -75,3 +75,39 @@ test('browser-only platform profiles never unlock native host controls',async({p
  await expect(feedback).toBeDisabled();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
 });
+
+test('native bridge failures and unverified capabilities preserve the browser fallback',async({page})=>{
+ await page.setViewportSize({width:320,height:720});
+ await page.addInitScript(()=>{
+  let subscriber=null;
+  window.GCNativeHost={
+   subscribe(fn){subscriber=fn;return ()=>{subscriber=null}},
+   postMessage(request){
+    const envelope=JSON.parse(request);
+    queueMicrotask(()=>subscriber?.(JSON.stringify({
+     v:1,type:'gc-host/response',id:envelope.id,ok:true,
+     result:{protocol:2,host:'electron',platform:'desktop',
+      nativeAdapterInstalled:true,selectionFeedback:true,appearanceControl:true}
+    })));
+   }
+  };
+ });
+ await page.goto('/lab/experience-studio.html');
+ const root=page.locator('html');
+ await expect(page.locator('#host-status')).toHaveText('Native bridge unavailable; browser preview remains usable.');
+ await expect(page.locator('#host-feedback')).toBeDisabled();
+ await expect(root).not.toHaveAttribute('data-gc-native-host',/./);
+ await expect(root).toHaveAttribute('data-gc-platform','web');
+ await page.locator('#scene').selectOption('reading');
+ await expect(page.locator('#scene-title')).toHaveText('Make clarity the centerpiece.');
+ await page.locator('#conserve').check();
+ await expect(root).toHaveAttribute('data-gc-resource-mode','conserve');
+ const play=page.getByRole('button',{name:'Show coordinated transition'});
+ await play.focus();
+ await play.press('Enter');
+ await expect(page.locator('#profile-status')).toHaveText('Motion skipped; content remains visible.');
+ await expect(play).toBeFocused();
+ await expect(page.locator('#scene-title')).toBeVisible();
+ const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+ expect(overflow).toBeLessThanOrEqual(1);
+});
