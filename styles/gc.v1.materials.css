@@ -49,7 +49,8 @@
     Keep muted semantic roles elsewhere; strengthen them only inside a Lens. */
  --gc-v1-color-on-surface-muted:var(--gc-v1-color-on-surface);
  background:color-mix(in srgb,var(--gc-v1-color-surface) 91%,transparent);
- border-color:var(--gc-v1-color-outline);
+ /* Distinguish the floating control plane from any composited backdrop. */
+ border-color:var(--gc-v1-color-outline-strong);
  -webkit-backdrop-filter:blur(var(--gc-v1-component-lens-blur,24px));
  backdrop-filter:blur(var(--gc-v1-component-lens-blur,24px));
  box-shadow:0 8px 24px rgba(12,18,40,.09);
