@@ -18,7 +18,9 @@
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",
     "pack:check": "node scripts/check-pack-manifest.mjs",
     "test:e2e:reflow": "playwright test e2e/reflow.spec.mjs --workers=1",
-    "test:e2e:effective-zoom": "playwright test e2e/effective-zoom.spec.mjs --workers=1"
+    "test:e2e:effective-zoom": "playwright test e2e/effective-zoom.spec.mjs --workers=1",
+    "qa:native-zoom:chromium": "GC_ZOOM_ISOLATED_DISPLAY=1 XDG_SESSION_TYPE=x11 GDK_BACKEND=x11 MOZ_ENABLE_WAYLAND=0 xvfb-run -a -s '-screen 0 1440x900x24' node scripts/qa-real-browser-zoom.mjs chromium",
+    "qa:native-zoom:firefox": "GC_ZOOM_ISOLATED_DISPLAY=1 XDG_SESSION_TYPE=x11 GDK_BACKEND=x11 MOZ_ENABLE_WAYLAND=0 xvfb-run -a -s '-screen 0 1440x900x24' node scripts/qa-real-browser-zoom.mjs firefox"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

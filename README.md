@@ -172,3 +172,7 @@ The experimental browser suite now includes `npm run test:e2e:effective-zoom`: a
 
 ### Toast lifecycle verification
 The [toast controller teardown QA record](docs/QA_TOAST_TEARDOWN_2026-10-16.md) documents another experimental lifecycle safeguard: `destroy()` cancels the active notification and permanently retires that instance; old dismissal handles cannot disrupt a replacement controller on the same region. The API remains experimental.
+
+
+### Genuine browser zoom acceptance (Linux X11)
+`npm run qa:native-zoom:chromium` and `npm run qa:native-zoom:firefox` open full browsers on **isolated Xvfb displays**, send native browser-window zoom shortcuts and verify device-pixel ratio/actual viewport changes. Both commands exercise all five labs at **200% and 400%** in LTR and RTL, capture screenshots, and check 400% navigation, dialogs, footer links, and form focus. They complement—not replace—the existing effective-viewport simulation, and require Linux/Xvfb/X11/XTest/Python. See [real-zoom and assistive technology QA](docs/QA_REAL_BROWSER_ZOOM_2026-10-16.md). Manual assistive technology speech and Safari browser zoom still require human signoff.

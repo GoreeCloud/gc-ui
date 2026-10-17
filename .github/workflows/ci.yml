@@ -44,6 +44,8 @@ jobs:
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs
           node --check scripts/check-pack-manifest.mjs
+          node --check scripts/qa-real-browser-zoom.mjs
+          python3 -c "import ast,pathlib;ast.parse(pathlib.Path('scripts/qa-x11-zoom.py').read_text())"
           node --check src/index.mjs
       - name: Resolve reference lab local assets
         run: node tests/check-lab-references.mjs
@@ -63,6 +65,11 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Test responsive browser behaviors
         run: npm run test:e2e
+      - name: Verify genuine 200% and 400% Chromium browser zoom
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y x11-utils libxtst6
+          npm run qa:native-zoom:chromium
       - name: Upload visual captures and failure traces
         if: always()
         uses: actions/upload-artifact@v4
@@ -89,11 +96,16 @@ jobs:
         run: npx playwright install --with-deps firefox
       - name: Verify keyboard, theme and adaptive navigation in Firefox
         run: npm run test:e2e:firefox
-      - name: Upload Firefox failure traces
-        if: failure()
+      - name: Verify genuine 200% and 400% Firefox browser zoom
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y x11-utils libxtst6
+          npm run qa:native-zoom:firefox
+      - name: Upload Firefox browser QA evidence
+        if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: gc-ui-firefox-failure-evidence
+          name: gc-ui-firefox-qa-evidence
           path: test-results/
           retention-days: 7
           if-no-files-found: ignore

@@ -99,3 +99,11 @@ The [typed native form and reflow QA checkpoint](QA_FORM_API_REFLOW_2026-10-16.m
 
 ## Toast controller teardown regression
 `tests/interactions.test.mjs` and `e2e/gc-ui.spec.mjs` reject any notification created by a retired `createToast()` controller and guard against stale dismissal handles mutating a new instance on the same status region. The controller's `destroy()` operation is idempotent, while post-destroy `show()` throws. [Teardown QA](QA_TOAST_TEARDOWN_2026-10-16.md) records verification and its limitations.
+
+
+## Native browser zoom: not a viewport simulation
+Run `npm run qa:native-zoom:chromium` and `npm run qa:native-zoom:firefox` on Linux with Xvfb, Python, xwininfo (x11-utils), libX11 and libXtst. The scripts deliberately refuse to send X11 input unless `GC_ZOOM_ISOLATED_DISPLAY=1` is set by the wrapper. They open full headed browsers in fresh contexts with **no Playwright viewport emulation**, issue browser-level Ctrl+= shortcuts through XTest, and assert real DPR and CSS viewport reduction at 200% and 400%. Each suite asserts 20 combinations (5 labs × 2 zoom levels × 2 directions), attempts ten browser screenshots and saves a machine-readable JSON summary in `test-results/real-browser-zoom/<engine>/` (recording any unavailable screenshot capture in the JSON rather than silently claiming a capture), and exercises navigation/dialog/form reachability at 400%.
+
+Firefox's Playwright-generated pointer `locator.click()` can misplace the click at 400% *native* zoom; an actual X11 mouse event reached the bottom-nav element and triggered a real DOM pointerdown, pointerup and click. Therefore the Firefox native QA uses XTest pointer input for that link and keyboard Enter for other control activations; Chromium uses Playwright clicks. This isolates the test automation coordinate problem from the product CSS.
+
+These suites do **not** prove Safari support, macOS/Windows zoom fidelity, OS text scaling, screen-reader speech quality, high-magnification visual quality, or WCAG conformance. Obtain human review for those open gates. [QA record](QA_REAL_BROWSER_ZOOM_2026-10-16.md).
