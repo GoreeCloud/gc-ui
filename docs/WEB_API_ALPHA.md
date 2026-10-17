@@ -40,7 +40,7 @@ Custom seed generation uses an original OKLCH tonal mapping, not Google's HCT al
 
 **Dialogs:** `initDialog(nativeDialog)` binds buttons with `data-gc-dialog-open=dialog-id` and `data-gc-dialog-close`, using native `showModal()`, Escape and focus management. Buttons that open dialogs still need informative labels. Opening/closing is idempotent; dynamic onSelect behavior remains the app's responsibility.
 
-**Toasts:** `createToast(region)` sets polite live-region semantics and creates plain-text messages. The `show()` return value dismisses only its own toast; stale callbacks cannot dismiss newer notifications. `duration:0` disables automatic timeout. The user must still be able to obtain essential information after a toast disappears.
+**Toasts:** `createToast(region)` sets polite live-region semantics and creates plain-text messages. The `show()` return value dismisses only its own toast; stale callbacks cannot dismiss newer notifications. `duration:0` disables automatic timeout. For timed toasts, pointer hover and focus within the toast independently pause automatic dismissal; the timeout restarts only after both have left. Moving focus between descendants does not restart the timer. These messages are informational: essential information still needs a persistent source after a toast disappears, and live-region announcements require manual screen-reader review.
 
 **Async actions:** `runAsyncAction(button,()=>promise)` rejects duplicate activations, sets aria-busy, disables the button while pending, and restores it on success or failure. It does not invent success messages; the caller must handle errors and status announcements.
 

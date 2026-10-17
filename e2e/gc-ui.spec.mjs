@@ -176,3 +176,26 @@ test('disabled tab states cannot become the active panel',async({page})=>{
   await overview.press('ArrowRight');
   await expect(activity).toHaveAttribute('aria-selected','true');
 });
+
+
+test('toast does not time out while focused after pointer exit',async({page})=>{
+ await page.goto('/lab/components.html');
+ await page.evaluate(async()=>{
+  const {createToast}=await import('/src/gc-interactions.mjs');
+  const region=document.querySelector('#toast-region');
+  window.__gcToastTest=createToast(region);
+  window.__gcToastTest.show('Keyboard readable toast',{duration:120});
+  const notice=region.querySelector('.gc-toast');
+  notice.tabIndex=0;
+  // Establish focus in the same event-loop turn as the short timer so
+  // Firefox cannot legitimately expire it before a remote locator action.
+  notice.focus();
+ });
+ const message=page.locator('#toast-region .gc-toast');
+ await message.hover();
+ await page.mouse.move(0,0);
+ await page.waitForTimeout(250);
+ await expect(message).toBeVisible();
+ await message.evaluate(el=>el.blur());
+ await expect(message).toHaveCount(0,{timeout:1000});
+});
