@@ -2,6 +2,10 @@
 
 **Checkpoint:** October 17, 2026. **Repository:** GoreeCloud/gc-ui only. **Maturity:** experimental alpha; not a stable native or energy-optimized release.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Purpose and scope
 
 Extended the existing native-host checks beyond Android Activity UI-thread frame counters. The new [SurfaceFlinger presentation probe](../scripts/qa-android-compositor.py) samples **only the GC UI drawable SurfaceFlinger layer** on an authorized Android test phone. It performs balanced Normal/Conservation scroll sequences, verifies the current rendered mode using the debug-only log readback and records aggregate frame-presentation intervals. No global brightness, accessibility, battery-saver, navigation or energy settings were changed. The only local system diagnostic mutation is clearing **GC UI's own per-layer latency history** at the start of each run.

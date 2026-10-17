@@ -1,6 +1,13 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## Current release policy clarification — 2026-10-17
+
+**The owner confirms that the residual hardware/power/platform-human-test items are NOT stable design-system release requirements.** The authoritative [Stable Release Scope](STABLE_RELEASE_SCOPE.md) supersedes prior dated notes that labeled a second physical Android phone, unplugged energy measurements, full GPU profiling, human desktop Orca/VoiceOver/NVDA sessions or unshipped signed native installers as universal stable blockers.
+
+A stable release is judged on the **actually supported shipped APIs/components**: documented versioned exports, functional/accessible/security safeguards, reproducible artifacts, applicable regressions and owner approval. Optional QA remains valuable and historically accurate but may not block a scoped release. The project remains at **private 0.2.0-alpha.1**, so no stable package is automatically announced by this correction.
+
+
 ## 2026-10-17 Remaining native-gate checkpoint
 - [Remaining native-gates QA](QA_REMAINING_NATIVE_GATES_2026_10_17.md) adds read-only fail-closed power/device preflight. **Hosted macOS and Windows Electron preview security/semantic/keyboard jobs both PASSED**, as did Linux native Android build/host and Chromium/Firefox (5/5 native, 3/3 core jobs on source commit ebaa536).
 - Only one USB-charging physical phone is connected; unplugged-power consumption and a second physical device are **not verified**.
@@ -56,15 +63,15 @@
 - Node test suites for token shape, generated CSS parity, predefined color contrast, sampled dynamic seed contrast, alpha markup.
 - GitHub Actions for syntax, token and unit-contract testing.
 
-## Remaining before stable / production-ready release
-- Component library implementation for all 63 patterns with versioned APIs, stories, a11y examples, async/validation states and no dependency on the demo DOM.
-- Outstanding platform and multi-device assistive-technology audits (VoiceOver, NVDA, Firefox/Orca and desktop); the Android TalkBack 12-case checklist is **user-reported 12/12 PASS**, without individual spoken transcripts archived. Native adapter/ergonomics reviews remain.
+## Scope-dependent work for stable package; optional broader roadmap
+- **Stable-scope requirement:** Select and implement the actual **public component subset**, with versioned contracts and useful examples; the full 63-pattern specification is not a shipment prerequisite.
+- **Optional evidence:** Extra desktop VoiceOver/NVDA/Orca sessions, wider hardware/platform matrices and native adapter ergonomics. Android TalkBack **12/12 user-reported PASS** remains completed; a specific accessibility claim may need targeted additional validation.
 - Contrast audit for every non-text indicator, semi-transparent Lens composite over every specified reference image class, forced color behavior and dynamic color seed.
 - Visual snapshots: Chrome, Firefox, Safari; responsive breakpoints, 200–400% zoom, RTL, multiple fonts/complex scripts, 1x/2x DPR.
-- Full original vector glyph collection, icon licensing records and selected variants.
-- Production wallpaper/platform provider integrations with consent, versioned palette algorithms and cross-platform output parity.
-- Performance profiling for blur, scrolling and animation on representative lower-powered hardware.
-- Release engineering: published packages, changelog, docs site, migration guides, semantic-versioned API guarantees, security review.
+- **Scoped:** Ensure all **included** assets and glyphs have valid license records; finishing every planned original vector/glyph variant is optional.
+- **Optional integration:** Platform wallpaper/native provider implementations, consent flows and parity, unless the stable package expressly includes them.
+- **Ongoing quality:** Functional/performance regressions for shipped materials; extended low-end physical hardware GPU/power profiling is optional, not a stable-release prerequisite.
+- **Stable-scope requirement:** Versioned tested distributable, install/usage docs, changelog/migration policy, exported API compatibility and applicable security/license checks. A complete docs site or native installers are optional unless included in the release.
 
 ## Release decision
 - Alpha lab: usable as a design reference, **not** shipped as a supported component package.

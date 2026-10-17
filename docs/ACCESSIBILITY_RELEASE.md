@@ -1,6 +1,8 @@
 # GC UI — Accessibility, Verification & Release Gates
 **Target:** WCAG 2.2 AA for web experiences; preserve native platform accessibility APIs elsewhere. Not a certificate of current implementation. Design approval is not conformance testing.
 
+**Stable design-system release policy:** [Stable Release Scope](STABLE_RELEASE_SCOPE.md). This accessibility matrix remains a normative goal/reference, but extra physical platforms and universal human VoiceOver/NVDA/Orca sessions are not independent stable-release prerequisites.
+
 ## Current Android TalkBack manual checkpoint (2026-10-17)
 
 The GC UI Android WebView Studio manual checklist **TB-01 through TB-12 is user-reported 12/12 PASS**. See the [reported manual acceptance](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Individual spoken transcripts/session metadata are not stored in this report. This is progress on one Android implementation's assistive-technology matrix, not a global WCAG 2.2 AA conformance claim, Android device-family certification or completion of VoiceOver/Orca/NVDA acceptance.
@@ -45,9 +47,11 @@ Use short, specific labels; consistent navigation; predictable primary action po
 | experimental | concept or first prototype | design anatomy, known limitations |
 | alpha | functional reference; APIs may change | unit tests, semantic markup, documented gaps |
 | beta | integration-ready | broad keyboard/a11y automation, responsive matrix, theme contrast validation, versioned APIs |
-| stable | production-supported | manual AT review on representative OS/browser pairs, regression suite, adoption reference, security/performance review, changelog and migration guide |
+| stable | supported scoped release | documented and tested semantic/keyboard/focus/contrast/reflow behavior for shipped components; applicable regression/security evidence, versioned package and release guidance. Broader manual AT matrices are **recommended/claim-dependent**, not universal blockers; see [Stable Release Scope](STABLE_RELEASE_SCOPE.md). |
 
-## 7. Required manual assistive-technology matrix
+## 7. Recommended platform-specific assistive-technology coverage (not a blanket stable-release prerequisite)
+This matrix is a **quality-improvement and supported-platform claims checklist**. The absence of a particular physical device or human AT session is **not by itself** a blocker for a scoped GC UI design-system release; supported shipped controls must still be accessible.
+
 - VoiceOver + Safari on macOS/iOS; TalkBack + Chrome on Android; NVDA + Chrome/Firefox on Windows.
 - Keyboard only, switch access where available, voice control naming, 200% and 400% zoom.
 - Touch exploration, remote directional focus for TV, RTL and long-translation layout.
@@ -59,7 +63,7 @@ Unit: token schema and valid references, no missing role, no duplicate public na
 Integration: keyboard navigation and route/focus tests with Playwright; axe-core for known automation coverage.  
 Visual: per-theme/button state screenshots, compare DPR 1/2, 320/768/1280/1920 widths; forced colors snapshots.  
 Contrast: background compositor computes real ratios; prevents a theme with failing pairs from publishing.  
-Document any false positives/known exceptions; manual sign-off always required.
+Document false positives and exceptions. Targeted manual review is encouraged and required if a release claims specific independently verified AT compatibility or a contractual audit; a platform-wide human listening matrix is **not** a universal design-system stable-release blocker.
 
 ## 9. References
 WCAG 2.2: https://www.w3.org/TR/WCAG22/  

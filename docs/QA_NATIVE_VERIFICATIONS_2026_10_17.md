@@ -4,6 +4,10 @@
 **Tested source:** e77d207a451853134cb0cefc68b81caccc3d3301 in GoreeCloud/gc-ui.
 **Status:** Experimental alpha; not WCAG certification or production-release approval.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Later manual TalkBack acceptance report
 
 On 2026-10-17 the person conducting the Android TalkBack walkthrough confirmed **all twelve TB-01 through TB-12 tests PASSED**. See the [user-reported acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Earlier statements about a disabled screen reader below describe the assistant's *previous* ADB session only; they are not a current claim that the user has not performed the manual tests. Actual individual spoken phrases were not supplied and are not invented here.

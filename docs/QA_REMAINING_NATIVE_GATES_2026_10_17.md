@@ -2,6 +2,10 @@
 
 **Date:** 2026-10-17. **Repository:** GoreeCloud/gc-ui. **Status:** Experimental alpha. No battery savings, human VoiceOver/NVDA signoff or production signing claimed.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Equipment and disconnected-power gate
 
 A new read-only [power/device preflight](../scripts/qa-android-power-readiness.py) inspected connected devices and BatteryManager status. It changes no ADB/network, charging, accessibility, brightness or app settings.

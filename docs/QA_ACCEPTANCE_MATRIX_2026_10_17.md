@@ -2,6 +2,8 @@
 
 **Checkpoint:** 2026-10-17. **Repository:** `GoreeCloud/gc-ui` only. **Release:** experimental alpha, not a WCAG claim or hardware acceptance.
 
+**Subsequent owner decision:** Optional platform-screen-reader listening, hardware/energy profiling and extra physical devices in this dated matrix are **not universal stable design-system release blockers**. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md); individual historic QA statuses and compliance-claim limits are preserved.
+
 ## Evidence status
 
 | Gate | Status | Why |

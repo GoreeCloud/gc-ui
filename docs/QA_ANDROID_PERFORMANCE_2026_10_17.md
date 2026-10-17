@@ -3,6 +3,10 @@
 **Project:** GoreeCloud/gc-ui, experimental Android WebView Experience Studio.
 **Release status:** Alpha, not performance certification or native accessibility acceptance.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Later TalkBack acceptance update
 
 The user who conducted the manual tests confirmed **12/12 TalkBack cases PASS** on 2026-10-17. The [manual acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md) captures that report. The disabled-service / NOT RUN observations below refer to the *earlier instrumented session*, not the later manual test outcome.

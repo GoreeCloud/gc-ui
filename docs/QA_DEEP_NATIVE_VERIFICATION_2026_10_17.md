@@ -2,6 +2,10 @@
 
 **Date:** 2026-10-17. **Scope:** GoreeCloud/gc-ui only. **Status:** Experimental alpha, not power or accessibility certification.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Results
 
 - **Android 15 / API 35 emulator: PASS.** A dedicated GC UI-only Pixel 2-style emulator running Android API 35 and com.android.webview 124.0.6367.219 installed and launched the GC UI debug APK, recovered from first-boot WebView initialization, rendered the Experience Studio, opened the GC UI design-language page, and returned to Studio using Android Back. The emulator was shut down afterwards. The Android API 36 physical-phone/WebView 152 baseline remains verified separately. This is a second **API version**, but NOT a second physical device.

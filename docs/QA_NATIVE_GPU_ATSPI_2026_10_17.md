@@ -2,6 +2,10 @@
 
 **Date:** 2026-10-17. **Project:** GoreeCloud/gc-ui only. **Status:** Experimental alpha, not a production release, power-efficiency certification or spoken screen-reader acceptance.
 
+## Subsequent owner release-scope decision
+
+**Owner clarification (2026-10-17):** Additional physical Android devices, disconnected-energy measurements, full GPU profiling, and extra human desktop VoiceOver/NVDA/Orca sessions are **optional QA**, **not stable GC UI design-system release requirements**. Older "release gate"/"BLOCKED" labels below describe that session's test status, not universal stable-release blockers. Existing evidence and claim limitations are unchanged. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
+
 ## Concurrent workstreams
 
 **Physical Android graphics:** The connected OnePlus DE2117 (API 36) was tested in eight balanced Normal/Conservation runs (Normal, Conserve, Conserve, Normal; Conserve, Normal, Normal, Conserve). Every run confirmed the actual native resource mode through the debug-only readback, cleared only the GC UI Activity graphics counters, and used six scrolling gestures. The probe reads the Activity Hardware UI renderer (HWUI) GPU histogram, including the pipeline identifier and exceptional 4950 ms bucket instead of hiding outliers. The new parser has four regression tests and is checked by native CI.

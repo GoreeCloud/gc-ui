@@ -45,7 +45,7 @@ Native Web Animations presets include reveal, soften, settle, slideInline and di
 
 Check composited 4.5:1 body text contrast, 3:1 UI indicators, real focus rings, dark/light/high-contrast themes, forced colors, reduced transparency and reduced motion. Verify 320px, 200/400% browser zoom, localization, RTL, touch and keyboard, and profile frame/GPU cost on representative devices.
 
-Automated source and browser tests are evidence, not certification. Actual screen-reader signoff, cross-browser visual comparison, native platform integration, low-end hardware power tests and full media background contrast analysis remain open before any stable release.
+Automated source/browser tests are evidence, not certification. Stable **shipped** surfaces must preserve contrast, focus, motion and forced-color fallbacks in their declared supported environments. Extra low-end hardware power testing, complete native integration, and broad manual screen-reader matrices are **optional studies**, not universal stable design-system prerequisites. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
 
 ## Lighting direction and resource restraint
 A stable semantic direction (overhead, leading, or trailing) positions the same two low-intensity ambient washes without changing textual contrast. The leading/trailing choices mirror under RTL; no light animation runs while switching directions. CSS prefers-reduced-data disables the washes and expensive Lens blur when browsers support it. Direction changes are user/application settings, not access to camera or physical lighting sensors.

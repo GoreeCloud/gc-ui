@@ -42,4 +42,4 @@ Read-only inspection commands: adb shell dumpsys accessibility; adb shell settin
 
 ## Exit criteria
 
-All TB-01 through TB-12 are **user-reported PASS**. A second device/WebView class, detailed narration artifacts and independent production release assessments remain separate gates. Browser checks and performance measurements do not substitute for manual acceptance.
+All TB-01 through TB-12 are **user-reported PASS**. A second device/WebView class and individual narration artifacts remain **optional QA/traceability**, not mandatory stable design-system blockers. Native-store distribution, if undertaken, has its own applicable requirements. Browser checks and performance measurements do not substitute for the accepted manual results. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).

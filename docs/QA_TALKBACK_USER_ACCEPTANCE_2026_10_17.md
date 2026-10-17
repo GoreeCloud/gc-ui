@@ -29,4 +29,4 @@
 - These results cover TB-01 through TB-12. They do not imply completion of a separate invalid-native-bridge walkthrough under TalkBack, Firefox/Orca, Electron screen readers, VoiceOver/NVDA, cross-device compatibility, independent WCAG auditing, power/GPU profiling, or production release signing.
 - Additional case-level narration or device metadata can be added later for formal audited traceability, without marking the user-completed checklist unperformed.
 
-**Decision:** Android TalkBack TB-01 through TB-12 are **user-accepted, 12/12 PASS**; all independent release gates retain their previous states.
+**Decision:** Android TalkBack TB-01 through TB-12 are **user-accepted, 12/12 PASS**. Later [owner release-scope guidance](STABLE_RELEASE_SCOPE.md) clarifies that optional hardware, power, and extra platform human-listening studies are **not stable design-system blockers**. The TalkBack result is unchanged.

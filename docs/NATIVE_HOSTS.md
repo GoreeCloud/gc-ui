@@ -16,7 +16,7 @@ Messages have validated IDs, size limits, request timeouts, concurrency limits a
 
 The [Experience Studio](../lab/experience-studio.html) connects when either native transport is injected and remains fully usable without a host. Once a verified host responds, the platform design profile is set to the native profile; users can still manually preview other profiles in the Studio.
 
-Native bridge startup is fail-closed: if a desktop/Android injection throws during detection, or listener subscription throws or supplies no unsubscribe function, the Studio stays in unhosted web-preview mode. It does not send native actions or enable native controls without a successfully subscribed, validated bridge. Unit and Playwright regressions cover broken injections; browser and physical-host QA remain separate release gates.
+Native bridge startup is fail-closed: if a desktop/Android injection throws during detection, or listener subscription throws or supplies no unsubscribe function, the Studio stays in unhosted web-preview mode. It does not send native actions or enable native controls without a successfully subscribed, validated bridge. Unit and Playwright regressions cover broken injections. Browser and physical-host QA remain distinct evidence; extra physical hardware is optional for the stable **design-system package**, not a universal release gate. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
 
 ## Android WebView host
 
@@ -40,7 +40,7 @@ Requires a full JDK with javac (JDK 21 used in validation), Android SDK platform
     adb install -r app/build/outputs/apk/debug/app-debug.apk
     adb shell am start -n com.goreecloud.gcui.preview/.GCNativeActivity
 
-This is a debug preview with development signing. Store-ready signing, app resource shrinking, host instrumentation, edge-to-edge system bars, orientation and accessibility testing remain separate release requirements.
+This is a debug preview with development signing. Store-ready signing and app-store distribution checks are **requirements only for an actual native-store deliverable**, not for the stable GC UI design-system package. Orientation, accessibility and host instrumentation remain scoped quality tests; see [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
 
 ## Desktop Electron host
 
@@ -72,9 +72,11 @@ The optional host uses its own lockfile. Core GC UI builds and browser labs are 
 
 Separate Android compile, APK installation and real-device launch from source-level policy tests. Separate Electron smoke tests from browser mocks. The [native QA report](QA_NATIVE_HOSTS_2026_10_17.md) records the evidence for this milestone.
 
-## Remaining release gates
+## Optional native research and release-specific distribution
 
-The Android TalkBack twelve-case checklist has **user-reported PASS (12/12)**; see the [manual acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Separate VoiceOver/Orca/NVDA, desktop keyboard/screen-reader testing, broader navigation/predictive-back, Android WebView behavior across API levels and device families, native haptic preferences, system appearance/contrast coverage, power/GPU profiling and native installers/signed release builds still require review. Desktop app packaging, CSP-hardening, native menus, macOS/Windows and notarization are not claimed complete.
+The Android TalkBack twelve-case checklist has **user-reported PASS (12/12)**; see the [manual acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Further VoiceOver/Orca/NVDA sessions, second physical Android phone, predictive-back gestures, expanded device families, energy/GPU instrumentation, and extensive platform accessibility matrices remain **optional follow-up QA**, not universal blockers for the scoped stable design-system release. Automated Linux/Windows/macOS Electron launch smoke passes are documented separately.
+
+When an **Android store app or signed desktop installer is actually distributed**, its applicable packaging, signing, device-compatibility and security acceptance must be satisfied for *that deliverable*. Such native distribution is not a requirement for a stable design-system library. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md).
 
 ## Hardening verification (follow-up)
 The Android request interceptor now restricts both navigation and subresource requests to the synthetic HTTPS app-assets origin and its assets path; missing and nonlocal requests produce a 403 empty response, even without relying on the absent INTERNET permission. The Electron host uses a canonicalized allowlist of public asset directories and file extensions, rejects symlink escapes and repository metadata, and adds a restrictive Content Security Policy on local resources. Host capability claims are checked against the expected Android-phone/tablet versus Electron-desktop combinations and strictly boolean preference flags. See [the native security QA report](QA_NATIVE_SECURITY_2026_10_17.md).

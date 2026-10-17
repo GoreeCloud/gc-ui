@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## Stable release scope — owner-approved
+
+The [stable release scope](docs/STABLE_RELEASE_SCOPE.md) governs GC UI design-system releases: ship a documented, versioned, tested **supported subset**, not the entire aspirational 63-pattern/native-platform catalog. A second physical Android phone, unplugged energy/GPU instrumentation, and additional manual desktop VoiceOver/NVDA/Orca sessions are **optional QA**, not blockers for a scoped stable design-system release. Accessibility/security functionality of what *is* shipped remains mandatory; do not claim unverified WCAG certification, native installers, AT parity or power savings. The source remains experimental \`0.2.0-alpha.1\` until a real scoped package is approved.
+
 ## Concurrent power readiness and desktop portability gates
 
 The [remaining native-gates QA](docs/QA_REMAINING_NATIVE_GATES_2026_10_17.md) adds an Android read-only power/device preflight and hosted macOS/Windows pinned Electron launch checks. USB battery snapshots are not energy savings and automated GUI tests are not VoiceOver/NVDA spoken acceptance. Android TalkBack user-reported 12/12 PASS remains complete.
