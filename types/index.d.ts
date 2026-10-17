@@ -80,3 +80,23 @@ export interface GCMenuOptions {
   onSelect?:(item:HTMLElement,event:Event)=>void;
 }
 export declare function initMenu(trigger:HTMLButtonElement,menu:HTMLElement,options?:GCMenuOptions):GCMenuController;
+
+/** Experimental native form controllers; not stable before GC UI 1.0. */
+export interface GCPasswordRevealController {
+  isRevealed():boolean;
+  hide():boolean;
+  destroy():void;
+}
+export declare function initPasswordReveal(input:HTMLInputElement,button:HTMLButtonElement):GCPasswordRevealController;
+
+export interface GCNumberStepperController {
+  get():number;
+  set(value:number):number;
+  destroy():void;
+}
+export declare function initNumberStepper(
+  input:HTMLInputElement,
+  decrease:HTMLButtonElement,
+  increase:HTMLButtonElement,
+  options?:{onChange?:(value:number)=>void}
+):GCNumberStepperController;
