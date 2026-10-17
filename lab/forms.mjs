@@ -194,6 +194,12 @@ function resetSearch(){
 clear.addEventListener('click',resetSearch);
 document.getElementById('empty-reset').addEventListener('click',resetSearch);
 renderResults();
+// Keep the real example list readable without JS; activate filtering only
+// after the event handlers and first render are ready.
+document.getElementById('search-js-required').hidden=true;
+document.getElementById('search-instructions').hidden=false;
+search.setAttribute('aria-describedby','search-instructions');
+search.disabled=false;
 
 /* Native-first experimental field and recovery controls (local-only specimens). */
 initPasswordReveal(document.getElementById('demo-passphrase'),document.getElementById('passphrase-reveal'));
@@ -209,6 +215,10 @@ const stepper=initNumberStepper(
  }
 );
 density.addEventListener('change',()=>stepper.set(stepper.get()));
+// The native controls start as read-only examples when scripts are absent.
+for(const id of ['demo-passphrase','passphrase-reveal','demo-density','demo-collaborators'])
+ document.getElementById(id).disabled=false;
+document.getElementById('preferences-js-required').hidden=true;
 
 const failure=document.getElementById('recovery-error');
 const recovered=document.getElementById('recovery-success');
@@ -222,3 +232,5 @@ document.getElementById('recovery-retry').addEventListener('click',()=>{
  recovered.hidden=false;
  simulate.focus();
 });
+document.getElementById('recovery-js-required').hidden=true;
+simulate.disabled=false;
