@@ -39,7 +39,13 @@ let checks=0,schemes=0,minRatio=Infinity,minimum=null;
 function audit(name,roles){
  const fg=rgb(roles.onSurface),surface=rgb(roles.surface);
  // The Lens's scoped muted alias intentionally resolves to onSurface.
- // Two endpoints are sufficient: luminance is monotonic in each channel.
+ // Endpoints only bound contrast if foreground luminance is *outside* the
+ // possible backdrop-luminance interval; otherwise an intermediate gray
+ // could match the text even when both endpoint ratios happen to pass.
+ const dark=blend(surface,[0,0,0]),bright=blend(surface,[255,255,255]);
+ const fgL=luminance(fg),darkL=luminance(dark),brightL=luminance(bright);
+ if(fgL>=darkL&&fgL<=brightL)
+  failures.push({name,reason:'Foreground luminance intersects the possible composite background range'});
  for(const [backdrop,back] of [['black',[0,0,0]],['white',[255,255,255]]]){
   const bg=blend(surface,back),value=ratio(fg,bg);
   checks++;
