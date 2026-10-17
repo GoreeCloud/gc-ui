@@ -3,7 +3,7 @@ import {test,expect} from '@playwright/test';
 // Canvas composes the browser's resolved color-mix() just as a uniformly
 // colored underlay would. Black and white bound any opaque sRGB backdrop;
 // this does not sample real photographs, text antialiasing or OS compositors.
-test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seeds',async({page})=>{
+test('translucent Lens text and border retain 4.5:1 and 3:1 over extreme backdrops',async({page})=>{
  await page.goto('/lab/environment.html');
  const samples=await page.evaluate(async()=>{
   const {generateTheme}=await import('/src/gc-color-engine.mjs');
@@ -49,6 +49,14 @@ test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seed
      const bg=getComputedStyle(lens).backgroundColor;
      const backFilter=getComputedStyle(lens).backdropFilter;
      if(bg==='transparent'||backFilter==='none')throw new Error('Translucent Lens was not rendered');
+     const boundary=sampledColor(getComputedStyle(lens).borderTopColor);
+     for(const underlay of ['#000000','#ffffff']){
+      const rendered=compositedColor(underlay,bg);
+      const ratio=contrast(boundary,rendered);
+      const result={seed,mode,name:'boundary',underlay,ratio};
+      results.push(result);
+      if(ratio<3)failures.push(result);
+     }
      for(const [name,element] of [['primary',primary],['secondary',secondary]]){
       const fg=sampledColor(getComputedStyle(element).color);
       for(const underlay of ['#000000','#ffffff']){
@@ -67,7 +75,7 @@ test('translucent Lens copy retains 4.5:1 over extreme backdrops and custom seed
   }
   return {results,failures};
  });
- expect(samples.results).toHaveLength(40);
+ expect(samples.results).toHaveLength(60);
  expect(samples.failures).toEqual([]);
 });
 
