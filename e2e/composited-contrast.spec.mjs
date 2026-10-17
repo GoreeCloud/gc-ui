@@ -94,3 +94,42 @@ test('Lens resolves to an opaque blur-free plane when solid surface is requested
  },bg);
  expect(alpha).toBe(255);
 });
+
+test('real keyboard focus outline remains visible on the environmental skip link in both themes',async({page})=>{
+ await page.goto('/lab/environment.html');
+ for(const mode of ['light','dark']){
+  if(mode==='dark'){
+   await page.getByRole('button',{name:'Switch to dark appearance'}).click();
+   await page.reload();
+  }
+  await expect(page.locator('html')).toHaveAttribute('data-gc-mode',mode);
+  await page.keyboard.press('Tab');
+  const skip=page.getByRole('link',{name:'Skip to content'});
+  await expect(skip).toBeFocused();
+  const appearance=await skip.evaluate(el=>{
+   const style=getComputedStyle(el),root=getComputedStyle(document.documentElement);
+   return {width:parseFloat(style.outlineWidth),kind:style.outlineStyle,
+    foreground:style.outlineColor,
+    surface:style.backgroundColor,
+    token:root.getPropertyValue('--gc-v1-color-focus-ring').trim()};
+  });
+  expect(appearance.kind).toBe('solid');
+  expect(appearance.width).toBeGreaterThanOrEqual(3);
+  const contrast=await page.evaluate(({foreground,surface})=>{
+   const ctx=document.createElement('canvas').getContext('2d');
+   const channels=color=>{
+    ctx.fillStyle=color;
+    ctx.fillRect(0,0,1,1);
+    return Array.from(ctx.getImageData(0,0,1,1).data).slice(0,3);
+   };
+   const lum=color=>channels(color).reduce((sum,value,i)=>{
+    const srgb=value/255;
+    const linear=srgb<=.04045?srgb/12.92:((srgb+.055)/1.055)**2.4;
+    return sum+linear*[.2126,.7152,.0722][i];
+   },0);
+   const a=lum(foreground),b=lum(surface);
+   return (Math.max(a,b)+.05)/(Math.min(a,b)+.05);
+  },appearance);
+  expect(contrast).toBeGreaterThanOrEqual(3);
+ }
+});
