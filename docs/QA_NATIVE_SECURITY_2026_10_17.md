@@ -25,3 +25,6 @@
 - Do not report a production security certification from these automated checks.
 
 **Release decision:** Native hosts remain private experimental previews. The tightened bridge and resource restrictions are suitable for continued prototype development within GC UI.
+
+## Hosted CI follow-up
+The first native workflow run confirmed native-contracts PASS but Android setup failed before compilation because android-actions/setup-android@v3 invoked sdkmanager for the obsolete Android SDK package named tools (GitHub run 39048091259). The workflow was revised to use the command-line tools already present on the GitHub-hosted Ubuntu runner and install only platform 36 and build-tools 36.0.0. A subsequent hosted run must pass before the Android CI gate is considered verified; the local APK build and device launch remain separately verified.

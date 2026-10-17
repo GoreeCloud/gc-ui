@@ -53,9 +53,16 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
       - name: Install matching Android platform and build tools
-        run: sdkmanager "platforms;android-36" "build-tools;36.0.0"
+        # Hosted Ubuntu already contains SDK command-line tools.
+        # The removed action requested the obsolete Android SDK tools package.
+        run: |
+          SDKMANAGER="$(command -v sdkmanager || true)"
+          if [ -z "$SDKMANAGER" ]; then
+            SDKMANAGER="$(find "$ANDROID_HOME/cmdline-tools" -type f -name sdkmanager | sort -V | tail -n 1)"
+          fi
+          test -x "$SDKMANAGER"
+          "$SDKMANAGER" --install "platforms;android-36" "build-tools;36.0.0"
       - name: Build debug APK from tracked sources and checked-in Gradle wrapper
         working-directory: native/android
         run: ./gradlew :app:assembleDebug --no-daemon
