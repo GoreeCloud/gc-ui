@@ -24,22 +24,30 @@ export function validateNativeHostRequest(value){
   action:obj.action,payload:normalizeAction(obj.action,obj.payload)};
 }
 export function createNativeTransport(scope=globalThis){
- const desktop=scope?.GCNativeHost;
- if(desktop&&typeof desktop.postMessage==='function'&&typeof desktop.subscribe==='function')
-  return {platform:'desktop',postMessage:text=>desktop.postMessage(text),subscribe:fn=>desktop.subscribe(fn)};
- const android=scope?.GCAndroidHost;
- if(android&&typeof android.postMessage==='function'){
-  return {platform:'android',postMessage:text=>android.postMessage(text),subscribe:fn=>{
-   const previous=android.onmessage;
-   const listener=event=>{previous?.(event);fn(event)};
-   android.onmessage=listener;
-   return ()=>{if(android.onmessage===listener)android.onmessage=previous};
-  }};
- }
+ // A partially injected or broken native bridge must not crash the browser lab.
+ try{
+  const desktop=scope?.GCNativeHost;
+  if(desktop&&typeof desktop.postMessage==='function'&&typeof desktop.subscribe==='function')
+   return {platform:'desktop',postMessage:text=>desktop.postMessage(text),subscribe:fn=>desktop.subscribe(fn)};
+ }catch{/* Ignore a broken desktop bridge and probe Android or use the web fallback. */}
+ try{
+  const android=scope?.GCAndroidHost;
+  if(android&&typeof android.postMessage==='function'){
+   return {platform:'android',postMessage:text=>android.postMessage(text),subscribe:fn=>{
+    const previous=android.onmessage;
+    const listener=event=>{previous?.(event);fn(event)};
+    android.onmessage=listener;
+    return ()=>{if(android.onmessage===listener)android.onmessage=previous};
+   }};
+  }
+ }catch{/* A broken Android bridge is not evidence of native capability. */}
  return null;
 }
+function unavailableNativeHost(reason='No native host'){
+ return Object.freeze({available:false,platform:'web',request:()=>Promise.reject(new Error(reason)),destroy(){}});
+}
 export function createNativeHostClient({transport=createNativeTransport(),timeoutMs=3000}={}){
- if(!transport)return Object.freeze({available:false,platform:'web',request:()=>Promise.reject(new Error('No native host')),destroy(){}});
+ if(!transport)return unavailableNativeHost();
  if(typeof transport.postMessage!=='function'||typeof transport.subscribe!=='function')throw new TypeError('Invalid host transport');
  const pending=new Map();
  let closed=false,seq=0;
@@ -55,7 +63,12 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
   if(data.ok===true)current.resolve(data.result);
   else current.reject(new Error(typeof data.error==='string'?data.error.slice(0,160):'Native host refused request'));
  };
- const unsubscribe=transport.subscribe(onResponse);
+ // Native preload/Android injections may be incomplete during startup.
+ // Requiring a valid cleanup function also prevents a teardown-time exception.
+ let unsubscribe;
+ try{unsubscribe=transport.subscribe(onResponse)}
+ catch{return unavailableNativeHost('Native host subscription unavailable')}
+ if(typeof unsubscribe!=='function')return unavailableNativeHost('Native host subscription unavailable');
  function request(action,payload={}){
   if(closed)return Promise.reject(new Error('Native host client destroyed'));
   let safe;
