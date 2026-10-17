@@ -16,6 +16,8 @@ Messages have validated IDs, size limits, request timeouts, concurrency limits a
 
 The [Experience Studio](../lab/experience-studio.html) connects when either native transport is injected and remains fully usable without a host. Once a verified host responds, the platform design profile is set to the native profile; users can still manually preview other profiles in the Studio.
 
+Native bridge startup is fail-closed: if a desktop/Android injection throws during detection, or listener subscription throws or supplies no unsubscribe function, the Studio stays in unhosted web-preview mode. It does not send native actions or enable native controls without a successfully subscribed, validated bridge. Unit and Playwright regressions cover broken injections; browser and physical-host QA remain separate release gates.
+
 ## Android WebView host
 
 The [Android project](../native/android) is a Java/Android Gradle application targeting SDK 35 and compiling with SDK 36 and AndroidX WebKit.
