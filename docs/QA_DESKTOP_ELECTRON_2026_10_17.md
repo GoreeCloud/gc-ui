@@ -11,7 +11,7 @@ The optional Electron desktop preview is upgraded from pinned **35.1.5** to pinn
 - The desktop smoke test checks the **actual Electron runtime version** against the exact version declared in the optional desktop package. Result: Electron 44.9.0, native desktop profile, native appearance toggle PASS.
 - npm audit against the desktop dependency set returned **0 known vulnerabilities** (at the time of the local audit; not proof of future absence).
 - GC UI core checks: 115 Node tests passed and package exports/token generation validated. Native host contract checks: 14 tests passed.
-- Three native CI jobs now exist: protocol/policy contracts, Android debug build, and pinned Linux Electron launch. The new Electron hosted job must be verified via GitHub Actions; a locally parsed workflow is not a passing hosted run.
+- Three native CI jobs now exist: protocol/policy contracts, Android debug build, and pinned Linux Electron launch. The full GitHub-hosted native workflow PASSED all three jobs on commit 0b810b2 (run 39048783630), including the real Electron 44.9.0 launch, Android debug build and native contracts.
 
 ## Remaining release gates
 Electron security maintenance continues as new stable releases are issued. Existing desktop limitations remain: unsigned debug host, missing installers and automatic update policy, no Windows or macOS device testing, incomplete native accessibility/assistive technology review, no screenshot pixel baselines or hostile-origin penetration testing, and no production deployment permission.

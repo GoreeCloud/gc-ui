@@ -1,6 +1,13 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Native host milestone addendum
+- Experimental Android WebView host and sandboxed Electron desktop host are implemented and retained as isolated, optional preview projects. Android was built, installed and launched on a connected API 36 phone, including native capability/profile reporting, system-bar safe areas, dark appearance and selection feedback.
+- Native host messaging is versioned, bounded, allowlisted and origin-restricted. Android denies nonlocal subresources and Electron denies non-public repo files, remote resources and arbitrary OS permissions.
+- Optional desktop host uses pinned Electron 44.9.0; local and GitHub-hosted Linux native launch both passed. Core GC UI still has no Electron or Android runtime dependency.
+- GitHub native-host workflow run [39048783630](https://github.com/GoreeCloud/gc-ui/actions/runs/39048783630): **three of three jobs passed** (Android build, Electron desktop launch and native contract checks). GC UI core run [39048783701](https://github.com/GoreeCloud/gc-ui/actions/runs/39048783701): **three of three jobs passed** (tokens/unit and Chromium/Firefox browser checks).
+- These checks support continued alpha development. They are **not** release signing, OS integration certification or manual assistive technology approval. Remaining native release gates are in [Native Host Integration](NATIVE_HOSTS.md).
+
 ## Completed and present in repository
 - Original GC UI philosophy and Canvas / Surface / Lens material contracts.
 - Normative design language, color/theming, 63-component pattern catalog, typography/glyph construction, motion/input, adaptive/platform, accessibility gates and token implementation docs.
