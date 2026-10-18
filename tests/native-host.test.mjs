@@ -69,7 +69,8 @@ test('desktop and android transports expose only postMessage and subscription',(
 });
 
 test('Android transport delivers host replies even when an earlier message callback fails',async()=>{
- const earlier=()=>{throw new Error('unrelated listener failed')};
+ let previousReceiver;
+ const earlier=function(){previousReceiver=this;throw new Error('unrelated listener failed')};
  const android={postMessage(){},onmessage:earlier};
  const client=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:android}),timeoutMs:250});
  const response=client.request('getCapabilities');
@@ -77,6 +78,7 @@ test('Android transport delivers host replies even when an earlier message callb
   v:1,type:'gc-host/response',id:'gc1',ok:true,result:{host:'android'}
  })});
  assert.deepEqual(await response,{host:'android'});
+ assert.equal(previousReceiver,android,'previous callback retains the original receiver');
  client.destroy();
  assert.equal(android.onmessage,earlier,'teardown restores the preexisting callback');
 
