@@ -72,7 +72,7 @@ writeFileSync(script,[
  "import tokens from '@goreecloud/gc-ui/tokens' with {type:'json'};",
  "const want=['GC_THEME_DEFAULTS','GC_UI_VERSION','contrastRatio','createThemeController','generateTheme','normalizeTheme','resolveTheme'];",
  "assert.deepEqual(Object.keys(gc).sort(),want.sort());",
- "assert.equal(gc.GC_UI_VERSION,'1.0.0-rc.1');",
+ "assert.equal(gc.GC_UI_VERSION,'"+releaseVersion+"');",
  "assert.equal(typeof tokens.color.light.canvas.$value,'string');",
  "const scheme=gc.generateTheme('#3978D3','light');",
  "assert.equal(scheme.algorithm,'gc-oklch-1');",
