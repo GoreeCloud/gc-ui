@@ -305,3 +305,33 @@ test('programmatic toast dismissal and destroy restore focus to its opener',asyn
  await expect(toast).toHaveCount(0);
  await expect(trigger).toBeFocused();
 });
+
+
+test('real CSSOM restores existing color overrides and leaves newer app changes alone',async({page})=>{
+ await page.goto('/lab/components.html');
+ const observed=await page.evaluate(async()=>{
+  const {createThemeController}=await import('/src/gc-theme-runtime.mjs');
+  const root=document.createElement('section');
+  document.body.append(root);
+  const property='--gc-v1-color-primary';
+  root.style.setProperty(property,'#13579B','important');
+  const controller=createThemeController({root,storage:null,media:()=>null});
+  controller.set({accent:'custom',seed:'#2A78B9'});
+  const customApplied=root.style.getPropertyValue(property).trim().toUpperCase()!=='#13579B';
+  controller.set({accent:'iris'});
+  const restored=root.style.getPropertyValue(property).trim().toUpperCase();
+  const restoredPriority=root.style.getPropertyPriority(property);
+  controller.set({accent:'custom',seed:'#2A78B9'});
+  root.style.setProperty(property,'#334455','important');
+  controller.destroy();
+  const external=root.style.getPropertyValue(property).trim().toUpperCase();
+  const externalPriority=root.style.getPropertyPriority(property);
+  const generatedRemoved=root.style.getPropertyValue('--gc-v1-color-on-primary')==='';
+  root.remove();
+  return {customApplied,restored,restoredPriority,external,externalPriority,generatedRemoved};
+ });
+ expect(observed).toEqual({
+  customApplied:true,restored:'#13579B',restoredPriority:'important',
+  external:'#334455',externalPriority:'important',generatedRemoved:true
+ });
+});
