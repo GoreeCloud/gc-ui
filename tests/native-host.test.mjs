@@ -35,6 +35,38 @@ test('host client correlates out-of-order replies, ignores invalid response and 
  client.destroy();assert.equal(f.subscribers.size,0);
  await assert.rejects(client.request('getCapabilities'),/destroyed/);
 });
+test('independent native clients never confuse replies on the same transport',async()=>{
+ const f=fixture();
+ const alpha=createNativeHostClient({transport:f.transport,timeoutMs:500});
+ const beta=createNativeHostClient({transport:f.transport,timeoutMs:500});
+ const one=alpha.request('getCapabilities'),two=beta.request('selectionFeedback');
+ assert.equal(f.messages.length,2);
+ assert.notEqual(f.messages[0].id,f.messages[1].id,'client request IDs must not collide');
+ f.respond({v:1,type:'gc-host/response',id:f.messages[1].id,ok:true,result:{owner:'beta'}});
+ f.respond({v:1,type:'gc-host/response',id:f.messages[0].id,ok:true,result:{owner:'alpha'}});
+ assert.deepEqual(await one,{owner:'alpha'});
+ assert.deepEqual(await two,{owner:'beta'});
+ alpha.destroy();beta.destroy();
+ assert.equal(f.subscribers.size,0);
+});
+
+test('a new client cannot consume a stale response for an earlier client',async()=>{
+ const f=fixture();
+ const first=createNativeHostClient({transport:f.transport,timeoutMs:500});
+ const unfinished=first.request('getCapabilities');
+ const oldId=f.messages[0].id;
+ first.destroy();
+ await assert.rejects(unfinished,/destroyed/);
+ const next=createNativeHostClient({transport:f.transport,timeoutMs:500});
+ const current=next.request('getCapabilities');
+ const currentId=f.messages[1].id;
+ assert.notEqual(oldId,currentId);
+ f.respond({v:1,type:'gc-host/response',id:oldId,ok:true,result:{outdated:true}});
+ f.respond({v:1,type:'gc-host/response',id:currentId,ok:true,result:{current:true}});
+ assert.deepEqual(await current,{current:true});
+ next.destroy();
+});
+
 test('time limits, action validation, and destroy reject pending host calls',async()=>{
  const f=fixture(),client=createNativeHostClient({transport:f.transport,timeoutMs:50});
  await assert.rejects(client.request('selectionFeedback',{unexpected:1}),/payload/);
@@ -71,22 +103,24 @@ test('desktop and android transports expose only postMessage and subscription',(
 test('Android transport delivers host replies even when an earlier message callback fails',async()=>{
  let previousReceiver;
  const earlier=function(){previousReceiver=this;throw new Error('unrelated listener failed')};
- const android={postMessage(){},onmessage:earlier};
+ let firstRequest;
+ const android={postMessage(text){firstRequest=JSON.parse(text)},onmessage:earlier};
  const client=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:android}),timeoutMs:250});
  const response=client.request('getCapabilities');
  android.onmessage({data:JSON.stringify({
-  v:1,type:'gc-host/response',id:'gc1',ok:true,result:{host:'android'}
+  v:1,type:'gc-host/response',id:firstRequest.id,ok:true,result:{host:'android'}
  })});
  assert.deepEqual(await response,{host:'android'});
  assert.equal(previousReceiver,android,'previous callback retains the original receiver');
  client.destroy();
  assert.equal(android.onmessage,earlier,'teardown restores the preexisting callback');
 
- const invalid={postMessage(){},onmessage:'not-a-function'};
+ let secondRequest;
+ const invalid={postMessage(text){secondRequest=JSON.parse(text)},onmessage:'not-a-function'};
  const next=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:invalid}),timeoutMs:250});
  const pending=next.request('selectionFeedback');
  invalid.onmessage({data:JSON.stringify({
-  v:1,type:'gc-host/response',id:'gc1',ok:true,result:{performed:true}
+  v:1,type:'gc-host/response',id:secondRequest.id,ok:true,result:{performed:true}
  })});
  assert.deepEqual(await pending,{performed:true});
  next.destroy();
