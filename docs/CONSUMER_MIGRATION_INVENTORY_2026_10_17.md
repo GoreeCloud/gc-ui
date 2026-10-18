@@ -67,6 +67,21 @@ Of the historical registry's **15 distinct repository names**, **13 were found**
 
 **Found ≠ audited or adopted.** Existence checks were not sufficient to validate executable source, Glaze usage, GC UI import adoption, deployments, acceptance, or the owner of the actual current app. Avoid redirecting a migration PR to a guessed successor repository.
 
+### Canonical repository ownership correction (do not target historical monorepo paths)
+
+The authoritative [GoreeCloud GitHub Repository Index v1.42](https://drive.google.com/file/d/1DXaEn3BDL18F1UrQpHUdkmGhLyAdiY0a/view), last verified **2026-10-12**, expressly supersedes the old `android-app-defaults/apps/launcher`, `apps/keyboard`, `apps/gallery`, and `apps/since` ownership assertions. The index confirms the former monorepo now retains only Camera and Clock application modules. These independent repositories were also individually verified via the authorized GitHub identity on 2026-10-17:
+
+| Historical Glaze registry product/source | Current source-owning repository verified | Observed default-branch tree | Migration boundary |
+| --- | --- | --- | --- |
+| Launcher — `android-app-defaults/apps/launcher` | [`GoreeCloud/launcher`](https://github.com/GoreeCloud/launcher) | `23f27b60e2b98aec00fa3e4a0ed17938000c2026` (one tree entry) | Early-stage `main` only; independently verify active Development branch/build before UI edits |
+| Keyboard — `android-app-defaults/apps/keyboard` | [`GoreeCloud/keyboard`](https://github.com/GoreeCloud/keyboard) | `264dac81dabfdaf028851cf4dff09912c351f23b` (7 entries; historical `docs/GLAZE-ADOPTION.md`) | Old adoption note is not live runtime or release proof |
+| Gallery — `android-app-defaults/apps/gallery` | [`GoreeCloud/gallery`](https://github.com/GoreeCloud/gallery) | `99ba2db393f89c01558e89336140a802e5ef1a10` (4 entries) | New-source development, not inherited monorepo Glaze import proof |
+| Since — `android-app-defaults/apps/since` | [`GoreeCloud/since`](https://github.com/GoreeCloud/since) | `8a4a90208e868fae11ab4dc5a3f32f7eb9901f55` (125 entries) | Verify actual active source/API before planning a UI transition |
+
+The same canonical index identifies [`GoreeCloud/tasks`](https://github.com/GoreeCloud/tasks) as an early-stage **Tasks** repository and [`GoreeCloud/notebook`](https://github.com/GoreeCloud/notebook) as an early-stage **Notebook** repository. Their existence and descriptions resolve *current named product candidates*, **not** old-source lineage, transferred data, current deployed apps or automatic identity equivalence with the historical `goreecloud-tasks` / `goreecloud-notes` paths. In particular, do not silently equate **Notebook** with **Notes**. Confirm the owner's current product classification and source-of-truth where this affects any substantive migration.
+
+**Priority:** Do not open new feature or migration PRs for Launcher, Keyboard, Gallery or Since against the historical monorepo directories. Read their independent repository/Development branch state first. No historical Glaze registry `sourcePath` was changed by this report.
+
 ### Concrete source evidence for initial migration triage
 
 The following selected paths were read or observed in the current default-branch trees; they are **unmigrated-candidate leads**, not an exhaustive complete-code audit. Git tree SHA values identify the inspected *tree snapshot*, not a production release or a consumer acceptance commit.
