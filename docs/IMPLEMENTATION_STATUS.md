@@ -1,6 +1,14 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 integrated Foundations and native-host stability checkpoint
+
+- [PR #20](https://github.com/GoreeCloud/gc-ui/pull/20) makes `createThemeController` restore consuming applications' existing inline color declarations and priorities, while preserving newer external style changes. [PR #23](https://github.com/GoreeCloud/gc-ui/pull/23) verifies this using actual Chromium/Firefox CSSOM behavior.
+- [PR #21](https://github.com/GoreeCloud/gc-ui/pull/21) assigns distinct request IDs across concurrent native-host clients, protecting response correlation and replaced-client lifetimes.
+- [PR #22](https://github.com/GoreeCloud/gc-ui/pull/22) makes shared Android transport callback subscriptions independent and safely disposable in either order, retaining pre-existing callbacks and failing closed after external replacement. An initial Android CI attempt encountered Maven Central HTTP 429 dependency throttling; the exact-head job rerun subsequently **passed**, without changing or bypassing build gates.
+- **Fully integrated `main` source:** `f5719c9abd5695bdea3a06d7a6deb4d43d940d0e`. [Core quality gates](https://github.com/GoreeCloud/gc-ui/actions/runs/39092293044) and [native host quality gates](https://github.com/GoreeCloud/gc-ui/actions/runs/39092293073) **both passed on this identical merged revision**, including Chromium, Firefox, Android debug APK compilation and Electron host validation.
+- **Release identity unchanged:** private `0.2.0-alpha.1` root source; private, unsigned, `UNLICENSED` Foundations `1.0.0-rc.1` candidate. No stable tag, published npm package, production deployment, verified downstream GC UI migration, ecosystem-wide Glaze retirement, or completed manual Firefox/Orca acceptance is claimed.
+
 ## 2026-10-17 latest source-stability checkpoint
 
 - [PR #16](https://github.com/GoreeCloud/gc-ui/pull/16) corrects the source-authority guard's handling of Git-ignored Android generated assets after local Gradle builds; first-party source remains guarded.
