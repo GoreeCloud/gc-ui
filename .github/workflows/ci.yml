@@ -131,3 +131,34 @@ jobs:
           path: test-results/
           retention-days: 7
           if-no-files-found: ignore
+
+  foundations-stable:
+    name: Stable Foundations archive, types and browser contracts
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify Apache-2.0 Foundations stable distribution archive
+        run: npm run release:foundations:stable:verify
+      - name: Compile installed stable distribution consumer types
+        run: npm run release:foundations:types
+      - name: Retain unsigned stable build candidate and checksum
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-ui-foundations-v1-stable-qa
+          path: |
+            dist/foundations-verify/goreecloud-gc-ui-1.0.0.tgz
+            dist/foundations-verify/SHA256SUMS
+          retention-days: 30
+          if-no-files-found: error
+      - name: Install pinned Playwright browser contract runner
+        run: npm install --no-save --no-package-lock @playwright/test@1.64.1
+      - name: Install browser dependencies
+        run: npx playwright install --with-deps chromium firefox
+      - name: Test installed stable tarball in Chromium
+        run: GC_FOUNDATIONS_VERSION=1.0.0 npx playwright test e2e/foundations-packaged.spec.mjs --browser chromium
+      - name: Test installed stable tarball in Firefox
+        run: GC_FOUNDATIONS_VERSION=1.0.0 npx playwright test e2e/foundations-packaged.spec.mjs --browser firefox
