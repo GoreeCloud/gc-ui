@@ -6,7 +6,7 @@ const read=()=>JSON.parse(readFileSync(new URL('../registry/consumer-migration-r
 const cloned=()=>structuredClone(read());
 test('exact-head provider reconciliation is internally consistent and no adoption is invented',()=>{
  const count=verifyLedgerFile();
- assert.deepEqual(count,{entries:18,repositoriesConfirmed:14,sourceSubtreesConfirmed:4,productIdentityOpen:3,unresolved:1,sourceAuditsRecorded:2,migrationsAccepted:0});
+ assert.deepEqual(count,{entries:18,repositoriesConfirmed:14,sourceSubtreesConfirmed:4,productIdentityOpen:3,unresolved:1,sourceAuditsRecorded:4,migrationsAccepted:0});
 });
 test('different old and new canonical Android locations preserve history',()=>{
  const x=read().entries;
@@ -67,4 +67,23 @@ test('rejects invented, unproven or mismatched source audit evidence',()=>{
  assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticAuditEvidence.totals.active=-1;})),/audit count invalid/);
  assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticSourceAudit='not-run';})),/unrun source audit/);
  assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.migrationComplete=true;})),/unsupported adoption/);
+});
+
+test('reader and since audits are bounded to actual exact-head application source',()=>{
+ const reader=read().entries.find(x=>x.legacyProduct==='GoreeCloud Reader');
+ const since=read().entries.find(x=>x.legacyProduct==='GoreeCloud Since');
+ assert.equal(reader.migration.staticSourceAudit,'legacy-dependency-evidence');
+ assert.equal(reader.migration.staticAuditEvidence.totals.active,35);
+ assert.equal(reader.migration.staticAuditEvidence.sourcePath,'apps');
+ assert.equal(since.migration.staticSourceAudit,'manual-review-required');
+ assert.deepEqual(since.migration.staticAuditEvidence.totals,
+  {active:0,review:4,informational:0,incomplete:0});
+ assert.equal(since.migration.migrationComplete,false);
+ assert.equal(since.migration.actualGcUiAcceptance,'not-evaluated');
+});
+test('prevents unsupported clean label for a review-only source audit',()=>{
+ const x=cloned();
+ const entry=x.entries.find(e=>e.legacyProduct==='GoreeCloud Since');
+ entry.migration.staticSourceAudit='no-legacy-evidence-detected';
+ assert.throws(()=>verifyConsumerReconciliation(x),/contradicts findings/);
 });

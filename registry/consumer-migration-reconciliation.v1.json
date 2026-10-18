@@ -319,13 +319,28 @@
         "repoId": 1363506725,
         "headSha": "402deebb7bfc2865f42d871d6e1dc9a8d20b40a8",
         "identityState": "source-path-verified",
-        "sourceRemarks": "Live apps/android and apps/web subtrees verified",
-        "verifiedAt": "2026-10-17"
+        "sourceRemarks": "Current apps/web local stylesheet includes --glaze-* tokens; scanner found legacy source references; actual GC UI migration not accepted",
+        "verifiedAt": "2026-10-18"
       },
       "migration": {
-        "staticSourceAudit": "not-run",
+        "staticSourceAudit": "legacy-dependency-evidence",
         "actualGcUiAcceptance": "not-evaluated",
-        "migrationComplete": false
+        "migrationComplete": false,
+        "staticAuditEvidence": {
+          "auditorRevision": "ad730f63cb28e8337627a6b79372345deeb9556d",
+          "consumerRevision": "402deebb7bfc2865f42d871d6e1dc9a8d20b40a8",
+          "sourcePath": "apps",
+          "scannedAt": "2026-10-18",
+          "filesScanned": 16,
+          "bytesScanned": 38788,
+          "totals": {
+            "active": 35,
+            "review": 1,
+            "informational": 1,
+            "incomplete": 0
+          },
+          "incompleteReasons": []
+        }
       }
     },
     {
@@ -385,13 +400,28 @@
         "repoId": 1410129274,
         "headSha": "8a4a90208e868fae11ab4dc5a3f32f7eb9901f55",
         "identityState": "source-path-verified",
-        "sourceRemarks": "Live standalone Android app source subtree verified",
-        "verifiedAt": "2026-10-17"
+        "sourceRemarks": "Current app/ Android source has legacy theme documentation and localized strings; no direct legacy dependency detected, migration not accepted",
+        "verifiedAt": "2026-10-18"
       },
       "migration": {
-        "staticSourceAudit": "not-run",
+        "staticSourceAudit": "manual-review-required",
         "actualGcUiAcceptance": "not-evaluated",
-        "migrationComplete": false
+        "migrationComplete": false,
+        "staticAuditEvidence": {
+          "auditorRevision": "ad730f63cb28e8337627a6b79372345deeb9556d",
+          "consumerRevision": "8a4a90208e868fae11ab4dc5a3f32f7eb9901f55",
+          "sourcePath": "app",
+          "scannedAt": "2026-10-18",
+          "filesScanned": 55,
+          "bytesScanned": 515800,
+          "totals": {
+            "active": 0,
+            "review": 4,
+            "informational": 0,
+            "incomplete": 0
+          },
+          "incompleteReasons": []
+        }
       }
     },
     {

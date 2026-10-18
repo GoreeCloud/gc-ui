@@ -38,13 +38,13 @@ A [read-only preliminary Website audit](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) i
 
 **Verified repository** ≠ **working source** ≠ **legacy dependency detected** ≠ **GC UI migrated** ≠ **production accepted**.
 
-The ledger has **14 verified product repository identities**, of which **four** have separately verified non-root application source paths; **three** entries require product-owner mapping confirmation, and **one** is unresolved. All 18 remain `actualGcUiAcceptance:not-evaluated` and `migrationComplete:false`. The first two dated static audits were added on October 18; see the audit checkpoint below.
+The ledger has **14 verified product repository identities**, of which **four** have separately verified non-root application source paths; **three** entries require product-owner mapping confirmation, and **one** is unresolved. All 18 remain `actualGcUiAcceptance:not-evaluated` and `migrationComplete:false`. Four bounded source audits were recorded on October 18; see the dated audit checkpoint below.
 
 Use `npm run migration:reconcile:check` to enforce these integrity distinctions. Use the existing [read-only legacy source auditor](CONSUMER_MIGRATION_AUDIT.md) on the **verified, authorized** source checkout only. A checkout may be clean of explicit legacy names yet still fail GC UI user-experience, keyboard, contrast, privacy, native-platform or package acceptance.
 
 ## Bounded source spot checks — October 17, 2026
 
-These findings supplement the 18-consumer identity ledger with **individual source-file observations**. They are not complete static audit runs, build verification, live dependency tests or accepted GC UI migrations. This section captures older spot checks; the October 18 bounded scans below now supersede `not-run` for Memos and Website only. Actual GC UI acceptance and migration completion remain unchanged.
+These findings supplement the 18-consumer identity ledger with **individual source-file observations**. They are not complete static audit runs, build verification, live dependency tests or accepted GC UI migrations. This section captures older spot checks; the October 18 bounded scans below now supersede `not-run` for Memos, Website, Reader and Since only. Actual GC UI acceptance and migration completion remain unchanged.
 
 - **Memos:** current source tree `538ef410ba8248ae83eb69dae9fba0ae0ed09cb3` contains `web/public/goreecloud/glaze/css/glaze-v1.4.1.css` and `web/public/goreecloud/glaze/js/glaze-v1.7.0.mjs`. Its `docs/GLAZE-ADOPTION.md` describes a pinned HTML stylesheet and unaccepted consumer conformance. Read real `web/` entrypoints before a controlled replacement.
 - **Main website:** tree `4746af244b8e59f4939fb327f923e3bbfff5e335` contains legacy CSS under `sites/design/css`; the read-back `sites/main/glaze.lock.json` records version `1.7.0` and `source-adopted-unaccepted`. Inspect actual per-site imports and acceptance independently.
@@ -63,16 +63,22 @@ Docs-only/scaffold consumers should first establish what UI is actually being bu
 
 ## First exact-head static consumer audits — October 18, 2026
 
-The owner-authorized laptop made **read-only, shallow GitHub checkouts** of two confirmed GoreeCloud consumer repositories. Repo `main` SHAs were independently compared with live GitHub before scanning; the GC UI scanner source is pinned to `ad730f63cb28e8337627a6b79372345deeb9556d`. The scans ran via `auditConsumer()` without writing into either consumer. Machine-readable results are recorded alongside source revision and scan limits in [the ledger](../registry/consumer-migration-reconciliation.v1.json). These bounded findings apply only to the named source subtrees; skipped generated/vendor directories remain outside scanner coverage.
+The owner-authorized laptop made **read-only, shallow GitHub checkouts** of four confirmed GoreeCloud consumer repositories in two audit batches. Repo `main` SHAs were independently compared with live GitHub before scanning; the GC UI scanner source is pinned to `ad730f63cb28e8337627a6b79372345deeb9556d`. The scans ran via `auditConsumer()` without writing into either consumer. Machine-readable results are recorded alongside source revision and scan limits in [the ledger](../registry/consumer-migration-reconciliation.v1.json). These bounded findings apply only to the named source subtrees; skipped generated/vendor directories remain outside scanner coverage.
 
 | Product / scanned path | Consumer `main` | Files / bytes | Active / review / informational | Status |
 |---|---|---:|---:|---|
 | [Memos](https://github.com/GoreeCloud/memos) `web/` | `51d4a17384362e5d872d7f4a80906108c676ca99` | 754 / 6,115,164 | 41 / 36 / 0 | **INCOMPLETE** — 1 unreadable-as-text source |
 | [Website](https://github.com/GoreeCloud/static-websites) `sites/main/` | `4746af244b8e59f4939fb327f923e3bbfff5e335` | 122 / 853,510 | 356 / 223 / 120 | **LEGACY-DEPENDENCY-EVIDENCE** — no scanner incompleteness |
+| [Reader](https://github.com/GoreeCloud/reader) `apps/` | `402deebb7bfc2865f42d871d6e1dc9a8d20b40a8` | 16 / 38,788 | 35 / 1 / 1 | **LEGACY-DEPENDENCY-EVIDENCE** — no scanner incompleteness |
+| [Since](https://github.com/GoreeCloud/since) `app/` | `8a4a90208e868fae11ab4dc5a3f32f7eb9901f55` | 55 / 515,800 | 0 / 4 / 0 | **MANUAL-REVIEW-REQUIRED** — no scanner incompleteness |
 
 **Memos evidence:** `web/index.html` actively references both `/goreecloud/glaze/css/glaze-v1.4.1.css` and `/goreecloud/glaze/js/glaze-v1.7.0.mjs`; both assets exist. The scanner reports one `binary-content-in-text-file` reason at `web/src/components/MemoContent/useSearchMatchHighlight.ts`, caused by two actual NUL bytes in string-literal delimiters. Preserve **incomplete** (do not silently ignore the file) until owning Memos code is investigated and reaudited. No claim is made about deployed Memos or migration completion.
 
 **Website evidence:** `sites/main/index.html` contains current `data-glaze-version=1.7.0`, a legacy Glaze UI meta marker, legacy design copy and active Glaze branding. Its `sites/main/css/glaze.css`, `css/glaze-polish.css` and `css/repositories.css` hold substantial old CSS/token references. The scanner completed within its defined source limits, but this does not prove runtime inclusion of every detected reference or establish production state.
+
+**Reader evidence:** `apps/web/index.html` links to `app.css`, where 34 matched source lines use `--glaze-*` custom properties. One extra active finding is the legacy-named rendered test file `apps/web/tests/glaze-rendered.spec.mjs`. The zero-incomplete scanner result does not indicate that Reader's Android app or web preview passed GC UI adoption testing.
+
+**Since evidence:** Four legacy design references are *review*-severity, rather than active: `SinceTheme.kt` describes Stable Glaze UI guidance, a visual evidence test mentions Glaze conformance, and the English and Arabic `icon_accent_deferred` resources say the feature awaits a Glaze mapping. This is a source-documentation/UX migration concern, **not evidence of a detected Glaze runtime dependency**. Preserve the native Material 3 platform semantics and localization; verify real adoption separately.
 
 The auditor emits **one finding per matched line and some directory/file markers**, not one per unique dependency. Findings include old documentation, CSS source, declarations and test code; counts are not application breakage metrics. **Zero successful GC UI consumer migrations** are claimed. Actual downstream changes must be authorized in each owning repository and verified with application-specific visual, keyboard/assistive-technology, security, package and rollback acceptance. The Firefox/Orca **GC UI** acceptance already passed and is not reopened by consumer evidence.
 
