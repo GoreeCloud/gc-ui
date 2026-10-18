@@ -23,8 +23,8 @@ function run(bin,args,opts={}){
     '\n'+String(proc.error||proc.stderr||proc.stdout).slice(-1100));
  return proc.stdout;
 }
-run(process.execPath,['scripts/build-foundations-candidate.mjs']);
-run(process.execPath,['scripts/build-foundations-candidate.mjs','--check']);
+run(process.execPath,['scripts/build-foundations-candidate.mjs',...(stable?['--stable']:[])]);
+run(process.execPath,['scripts/build-foundations-candidate.mjs','--check',...(stable?['--stable']:[])]);
 rmSync(destination,{recursive:true,force:true});
 mkdirSync(destination,{recursive:true});
 const pack=JSON.parse(run(npm,['pack','--json','--ignore-scripts','--pack-destination',destination],{cwd:staging}));
