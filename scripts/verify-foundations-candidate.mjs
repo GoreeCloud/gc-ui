@@ -42,6 +42,8 @@ assert.equal(metadata.private,true,'Candidate must not be publishable without ap
 assert.equal(metadata.license,'UNLICENSED','Cannot invent a license');
 assert.equal(Object.keys(metadata.exports).length,3,'Unsupported entrypoint exposed');
 const provenance=JSON.parse(readFileSync(join(staging,'provenance.json'),'utf8'));
+assert.equal(provenance.releaseCandidate,metadata.version);
+assert.deepEqual(Object.keys(provenance.files).sort(),expected.filter(file=>file!=='provenance.json').sort());
 for(const [name,hash] of Object.entries(provenance.files)){
  const content=readFileSync(join(staging,name));
  assert.equal(createHash('sha256').update(content).digest('hex'),hash,
