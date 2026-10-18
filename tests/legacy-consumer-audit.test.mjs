@@ -102,6 +102,20 @@ test('legacy source directories are active while archival filenames remain nonbl
   assert.equal(report.status,'legacy-dependency-evidence');
  });
 });
+test('historical acceptance JSON stays preserved without suppressing runtime evidence',()=>{
+ fixture(root=>{
+  make(root,'acceptance/glaze-v1.7-accepted.json',JSON.stringify({old:'@goreecloud/glaze',decision:'historical'}));
+  make(root,'evidence/glaze-v1.6.yml','old_token: --glz-surface');
+  make(root,'acceptance/verify-glaze.js',"import '@goreecloud/glaze';");
+  make(root,'css/glaze-runtime.css',':root { --glz-surface: red; }');
+  const report=auditConsumer(root);
+  assert.ok(report.findings.some(x=>x.path.endsWith('v1.7-accepted.json')&&x.type==='historical-acceptance-or-evidence'&&x.severity==='informational'));
+  assert.ok(report.findings.some(x=>x.path.endsWith('v1.6.yml')&&x.severity==='informational'));
+  assert.ok(report.findings.some(x=>x.path.endsWith('verify-glaze.js')&&x.severity==='active'));
+  assert.ok(report.findings.some(x=>x.path.endsWith('glaze-runtime.css')&&x.severity==='active'));
+  assert.equal(report.status,'legacy-dependency-evidence');
+ });
+});
 test('empty directories are not clean',()=>{
  fixture(root=>{
   assert.equal(auditConsumer(root).status,'incomplete');

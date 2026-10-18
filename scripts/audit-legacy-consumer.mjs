@@ -31,12 +31,17 @@ const TOKEN=/--(?:glaze|glz)[-\w]+\b|\$glaze[-_\w]+|\bGlz[A-Z]\w*(?:Color|Token|
 const COMPONENT=/<\/?(?:glaze[-:]|glz[A-Z])|(?:^|[\s"'./])(?:glaze|glz)-(?:button|field|card|dialog|component|surface|lens|badge|icon|nav|menu)[-\w]*/i;
 const ASSET=/(?:url\s*\(|\b(?:src|href|assets?|icons?|stylesheet|styles?)\s*[:=(])[^;\n]{0,200}\bglaze\b/i;
 const DOCUMENTATION=/\.(?:md|mdx|txt)$/i;
+// Dated acceptance/evidence records preserve provenance. Only non-executable
+// document formats in these top-level directories are historical; executable
+// scripts/source under the same directory still require normal scrutiny.
+const HISTORICAL_RECORD=/^(?:acceptance|evidence)\/.*\.(?:json|ya?ml|md|mdx|txt)$/i;
 
 function isText(filename){
  return TEXT_EXTENSIONS.has(extname(filename).toLowerCase())||
   TEXT_BASENAMES.has(filename)||/^(?:\.?env\.example|\.gitignore)$/.test(filename);
 }
 function semanticType(path,line){
+ if(HISTORICAL_RECORD.test(path))return 'historical-acceptance-or-evidence';
  if(DOCUMENTATION.test(path)){
   return DEPENDENCY.test(line) || IMPORT.test(line) || TOKEN.test(line)?
    'documentation-migration-reference':'historical-or-documentation-mention';
@@ -82,7 +87,7 @@ export function auditConsumer(root,{maxFiles=MAX_FILES,maxSize=MAX_SIZE,maxBytes
     stack.push({dir:file,depth:depth+1});continue;
    }
    if(!entry.isFile())continue;
-   if(PREDECESSOR.test(entry.name))issues.push({path,line:0,type:'legacy-filename',severity:DOCUMENTATION.test(path)?'informational':'active'});
+   if(PREDECESSOR.test(entry.name))issues.push({path,line:0,type:'legacy-filename',severity:DOCUMENTATION.test(path)||HISTORICAL_RECORD.test(path)?'informational':'active'});
    if(!isText(entry.name))continue;
    if(counts.files>=maxFiles){incomplete.push({reason:'max-files',path});stop=true;break;}
    const size=lstatSync(file).size;
@@ -97,7 +102,7 @@ export function auditConsumer(root,{maxFiles=MAX_FILES,maxSize=MAX_SIZE,maxBytes
     const line=lines[i];
     if(!PREDECESSOR.test(line))continue;
     const type=semanticType(path,line);
-    const severity=type==='historical-or-documentation-mention'?'informational':
+    const severity=['historical-or-documentation-mention','historical-acceptance-or-evidence'].includes(type)?'informational':
       type==='documentation-migration-reference'||type==='unclassified-source-reference'?'review':'active';
     issues.push({path,line:i+1,type,severity});
    }

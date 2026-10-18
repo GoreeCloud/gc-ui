@@ -2,6 +2,10 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Read-only Website legacy evidence classifier (2026-10-17)
+- Improved historical provenance classification: prior acceptance/evidence Markdown/JSON/YAML is informational rather than an active runtime dependency; executable scripts remain subject to strict legacy detection. Added tests preserving active source visibility.
+- Audited an **older Website feature checkout read-only** (not main): 125 text files, 358 active source matches, 226 review items, 122 historical records; no source changes or GC UI migration claim.
+
 ## Live consumer source reconciliation (2026-10-17)
 - Cross-checked the canonical October 12 GoreeCloud Drive repository index with live GitHub repository IDs, exact commits and source trees for the 18 historical Glaze consumer entries. Identified 14 verified product repositories, 4 known app subtrees, 3 tentative product mappings and 1 unresolved product; **zero downstream migrations claimed**.
 - Replaced stale Android monorepo target assumptions with verified standalone Launcher, Keyboard, Gallery and Since repositories; marked scaffold and docs-only source appropriately. Added integrity checks prohibiting invented GC UI acceptance, fabricated evidence or reintroduction of obsolete ownership paths.

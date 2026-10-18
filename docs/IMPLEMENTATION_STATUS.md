@@ -1,6 +1,10 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Website legacy source probe (feature checkout only)
+- [Read-only Website probe](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md): scanned 125 files from a clean local feature checkout; found 358 active-reference line matches, 226 review-only matches and 122 historical/informational references. This is **not** the Website current main SHA and does not establish loaded runtime dependencies or GC UI consumer acceptance.
+- Improved the legacy consumer auditor so non-executable historical acceptance/evidence records are classified informational without hiding executable old scripts or active CSS.
+
 ## 2026-10-17 Live GitHub consumer identity reconciliation
 - [Current reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) verifies 14 current product repository identities across the dated 18-entry legacy inventory, with four application source subtrees. Three mappings still need product confirmation and Notes remains unresolved. [Ledger](../registry/consumer-migration-reconciliation.v1.json) pins exact GitHub revisions and records **zero GC UI consumer migrations**.
 - The former Android app-defaults Launcher/Keyboard/Gallery/Since paths are obsolete; do not treat their scaffold standalone repositories as working or accepted GC UI consumers.

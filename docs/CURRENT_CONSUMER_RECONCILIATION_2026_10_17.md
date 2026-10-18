@@ -30,6 +30,10 @@ The [machine-readable exact-head reconciliation](../registry/consumer-migration-
 
 **Separate direct source-tree check:** [`GoreeCloud/android-app-defaults`](https://github.com/GoreeCloud/android-app-defaults) currently has `apps/camera` and `apps/clock` only. It is not the active Launcher, Keyboard, Gallery or Since source. Exact repository `main` SHA and ID for every verified candidate are stored in the JSON ledger.
 
+### Bounded Website source probe (separate feature revision)
+
+A [read-only preliminary Website audit](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) identified old CSS, HTML and validation references in a **feature checkout** at \`ba4a8a8\`. Its head is **not** the verified Website main revision \`4746af2\`; therefore the exact-main ledger correctly remains \`staticSourceAudit:not-run\`. No production or GC UI migration acceptance is inferred.
+
 ## Acceptance interpretation
 
 **Verified repository** ≠ **working source** ≠ **legacy dependency detected** ≠ **GC UI migrated** ≠ **production accepted**.

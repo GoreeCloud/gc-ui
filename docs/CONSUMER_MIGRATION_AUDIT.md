@@ -24,6 +24,8 @@ No root path is inferred. The auditor **does not execute files, change imports, 
 
 **Report model:** `gc-ui-consumer-audit.v1` with `status`, `scan`, `totals`, `findings` and `incomplete`. `consumerConformant` and `migrationComplete` are always `false`: a static source scan alone cannot verify rendered UX, native/platform conventions, privacy, accessibility, packaging or runtime cutover.
 
+Top-level \`acceptance/\` and \`evidence/\` Markdown, JSON and YAML records are informational provenance, not active source dependencies, but executable scripts in those directories still count as active. See the [read-only Website feature-branch probe](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) for a practical example; its results are **not** current-main adoption evidence.
+
 Historical prose in `.md` and `.txt` is nonblocking by default. Documentation containing an import or old token instruction is marked for review. Code mentions outside recognized imports are likewise review-required. Names of legacy binary assets are detected without opening their bytes. Case-specific findings can include false positives; review each before taking action.
 
 ## Current live source destinations
