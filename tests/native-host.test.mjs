@@ -100,6 +100,57 @@ test('desktop and android transports expose only postMessage and subscription',(
  unsubscribe();assert.equal(android.onmessage,null);
 });
 
+test('Android host subscriptions can retire in reverse or original order',()=>{
+ let priorCalls=0,alphaCalls=0,betaCalls=0;
+ const original=()=>{priorCalls++};
+ const android={postMessage(){},onmessage:original};
+ const alpha=createNativeTransport({GCAndroidHost:android});
+ const beta=createNativeTransport({GCAndroidHost:android});
+ const retireAlpha=alpha.subscribe(()=>{alphaCalls++});
+ const retireBeta=beta.subscribe(()=>{betaCalls++});
+ const dispatcher=android.onmessage;
+ dispatcher({data:'one'});
+ assert.deepEqual([priorCalls,alphaCalls,betaCalls],[1,1,1]);
+ retireAlpha();
+ dispatcher({data:'two'});
+ assert.deepEqual([priorCalls,alphaCalls,betaCalls],[2,1,2]);
+ retireBeta();
+ assert.equal(android.onmessage,original,'all clients retired: restore original callback');
+ retireBeta();retireAlpha();
+ assert.equal(android.onmessage,original,'teardown is idempotent');
+ const nextA=alpha.subscribe(()=>{alphaCalls++});
+ const nextB=beta.subscribe(()=>{betaCalls++});
+ nextB();nextA();
+ assert.equal(android.onmessage,original,'reverse teardown also restores original callback');
+});
+
+test('external Android callback replacement is preserved and later clients fail closed',async()=>{
+ const android={postMessage(){},onmessage:null};
+ const transport=createNativeTransport({GCAndroidHost:android});
+ const first=createNativeHostClient({transport});
+ assert.equal(first.available,true);
+ const external=()=>{};
+ android.onmessage=external;
+ const second=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:android})});
+ assert.equal(second.available,false,'an overwritten dispatcher is not a working bridge');
+ await assert.rejects(second.request('getCapabilities'),/subscription unavailable/);
+ first.destroy();
+ assert.equal(android.onmessage,external,'teardown must never replace an external callback');
+});
+
+test('a failing Android subscriber cannot prevent another client from receiving an event',()=>{
+ let received=0;
+ const android={postMessage(){},onmessage:null};
+ const first=createNativeTransport({GCAndroidHost:android});
+ const second=createNativeTransport({GCAndroidHost:android});
+ const stopBroken=first.subscribe(()=>{throw new Error('broken listener')});
+ const stopHealthy=second.subscribe(()=>{received++});
+ assert.doesNotThrow(()=>android.onmessage({data:'host-response'}));
+ assert.equal(received,1);
+ stopBroken();stopHealthy();
+ assert.equal(android.onmessage,null);
+});
+
 test('Android transport delivers host replies even when an earlier message callback fails',async()=>{
  let previousReceiver;
  const earlier=function(){previousReceiver=this;throw new Error('unrelated listener failed')};

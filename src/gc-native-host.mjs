@@ -4,6 +4,7 @@ export const GC_NATIVE_PROTOCOL_VERSION=1;
 export const GC_NATIVE_ACTIONS=Object.freeze(['getCapabilities','setAppearance','selectionFeedback']);
 const LIMIT=2048;
 const IDs=/^[A-Za-z0-9_-]{1,64}$/;
+const androidMessageSubscribers=new WeakMap();
 let requestCounter=0;
 function normalizeAction(action,payload){
  if(!GC_NATIVE_ACTIONS.includes(action))throw new RangeError('Unsupported native action');
@@ -35,13 +36,34 @@ export function createNativeTransport(scope=globalThis){
   const android=scope?.GCAndroidHost;
   if(android&&typeof android.postMessage==='function'){
    return {platform:'android',postMessage:text=>android.postMessage(text),subscribe:fn=>{
-    const previous=android.onmessage;
-    const listener=event=>{
-      try{if(typeof previous==='function')previous.call(android,event)}catch{/* An unrelated listener must not block current host responses. */}
-      fn(event);
+    // Multiple GC UI clients can attach to one WebView bridge. A shared dispatcher
+    // permits teardown in any order without leaving an abandoned wrapper installed.
+    let state=androidMessageSubscribers.get(android);
+    if(!state){
+      const previous=android.onmessage,subscribers=new Set();
+      const dispatcher=event=>{
+        try{if(typeof previous==='function')previous.call(android,event)}catch{/* Preserve live host replies. */}
+        for(const subscriber of [...subscribers]){
+          if(!subscribers.has(subscriber))continue;
+          try{subscriber(event)}catch{/* One subscriber cannot silence the others. */}
+        }
+      };
+      state={previous,subscribers,dispatcher};
+      android.onmessage=dispatcher;
+      androidMessageSubscribers.set(android,state);
+    }
+    if(android.onmessage!==state.dispatcher)throw new Error('Android host callback replaced');
+    const subscriber=event=>fn(event);
+    state.subscribers.add(subscriber);
+    let active=true;
+    return ()=>{
+      if(!active)return;
+      active=false;
+      state.subscribers.delete(subscriber);
+      if(state.subscribers.size!==0)return;
+      if(android.onmessage===state.dispatcher)android.onmessage=state.previous;
+      androidMessageSubscribers.delete(android);
     };
-    android.onmessage=listener;
-    return ()=>{if(android.onmessage===listener)android.onmessage=previous};
    }};
   }
  }catch{/* A broken Android bridge is not evidence of native capability. */}
