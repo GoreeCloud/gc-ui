@@ -24,13 +24,13 @@ No root path is inferred. The auditor **does not execute files, change imports, 
 
 **Report model:** `gc-ui-consumer-audit.v1` with `status`, `scan`, `totals`, `findings` and `incomplete`. `consumerConformant` and `migrationComplete` are always `false`: a static source scan alone cannot verify rendered UX, native/platform conventions, privacy, accessibility, packaging or runtime cutover.
 
-Top-level \`acceptance/\` and \`evidence/\` Markdown, JSON and YAML records are informational provenance, not active source dependencies, but executable scripts in those directories still count as active. See the [read-only Website feature-branch probe](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) for a practical example; its results are **not** current-main adoption evidence.
+Top-level `acceptance/` and `evidence/` Markdown, JSON and YAML records are informational provenance, not active source dependencies, but executable scripts in those directories still count as active. See the [read-only Website feature-branch probe](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) for a practical example; its results are **not** current-main adoption evidence.
 
 Historical prose in `.md` and `.txt` is nonblocking by default. Documentation containing an import or old token instruction is marked for review. Code mentions outside recognized imports are likewise review-required. Names of legacy binary assets are detected without opening their bytes. Case-specific findings can include false positives; review each before taking action.
 
 ## Current live source destinations
 
-Use the [October 17 provider-verified reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) and [machine-readable ledger](../registry/consumer-migration-reconciliation.v1.json) before selecting consumer source. Check integrity with \`npm run migration:reconcile:check\`. Do not use the old source paths in the legacy registry as current destinations.
+Use the [October 17 provider-verified reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) and [machine-readable ledger](../registry/consumer-migration-reconciliation.v1.json) before selecting consumer source. Check integrity with `npm run migration:reconcile:check`. Do not use the old source paths in the legacy registry as current destinations.
 
 ## Dated starting inventory, not current deployment proof
 

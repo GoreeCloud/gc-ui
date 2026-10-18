@@ -32,7 +32,7 @@ The [machine-readable exact-head reconciliation](../registry/consumer-migration-
 
 ### Bounded Website source probe (separate feature revision)
 
-A [read-only preliminary Website audit](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) identified old CSS, HTML and validation references in a **feature checkout** at \`ba4a8a8\`. Its head is **not** the verified Website main revision \`4746af2\`; therefore the exact-main ledger correctly remains \`staticSourceAudit:not-run\`. No production or GC UI migration acceptance is inferred.
+A [read-only preliminary Website audit](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md) identified old CSS, HTML and validation references in a **feature checkout** at `ba4a8a8`. Its head is **not** the verified Website main revision `4746af2`; therefore the exact-main ledger correctly remains `staticSourceAudit:not-run`. No production or GC UI migration acceptance is inferred.
 
 ## Acceptance interpretation
 
