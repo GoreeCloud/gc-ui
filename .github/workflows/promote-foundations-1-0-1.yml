@@ -68,5 +68,5 @@ jobs:
           printf '%s  %s\n' "275d7e6dc9503b2e74b3190bcecf176d73d2345860e8a20fa5faa3b326cd2298" "goreecloud-gc-ui-1.0.1.tgz" | sha256sum -c -
       - name: Publish checked release
         run: |
-          gh release edit foundations-v1.0.1 -R GoreeCloud/gc-ui --draft=false
+          gh api -X PATCH repos/GoreeCloud/gc-ui/releases/$(gh api repos/GoreeCloud/gc-ui/releases/tags/foundations-v1.0.1 --jq '.id') -F draft=false >/dev/null
           test "$(gh api repos/GoreeCloud/gc-ui/releases/tags/foundations-v1.0.1 --jq '.draft')" = "false"
