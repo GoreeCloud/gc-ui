@@ -47,7 +47,19 @@ export function createThemeController({
     try{previous[name]=persistence?.getItem(key+name)}catch{}
   }
   let state=normalizeTheme(previous),destroyed=false;
-  const overridden=new Set(),listeners=[];
+  const overridden=new Map(),listeners=[];
+  // Only restore the inline declarations this controller actually replaced.
+  // Existing app-owned values and !important priorities must survive teardown.
+  function clearOverrides(){
+    for(const [name,original] of overridden){
+      const property='--gc-v1-color-'+kebab(name);
+      if(typeof root.style.getPropertyValue==='function' &&
+         root.style.getPropertyValue(property)!==original.owned)continue;
+      if(original.value)root.style.setProperty(property,original.value,original.priority);
+      else root.style.removeProperty(property);
+    }
+    overridden.clear();
+  }
   const system=()=>Object.fromEntries(Object.entries(mql).map(([n,item])=>[n,Boolean(item?.matches)]));
   function render(){
     if(destroyed)return;
@@ -56,12 +68,16 @@ export function createThemeController({
     root.dataset.gcAccent=next.accent;
     root.dataset.gcMaterial=next.material;
     root.dataset.gcContrast=next.contrast;
-    for(const name of overridden)root.style.removeProperty('--gc-v1-color-'+kebab(name));
-    overridden.clear();
+    clearOverrides();
     if(next.accent==='custom'&&next.contrast!=='high'&&!system().forcedColors){
       for(const [name,value] of Object.entries(generateTheme(next.seed,next.mode).roles)){
-        root.style.setProperty('--gc-v1-color-'+kebab(name),value);
-        overridden.add(name);
+        const property='--gc-v1-color-'+kebab(name);
+        overridden.set(name,{
+          value:root.style.getPropertyValue?.(property)||'',
+          priority:root.style.getPropertyPriority?.(property)||'',
+          owned:value
+        });
+        root.style.setProperty(property,value);
       }
     }
     if(typeof CustomEvent==='function')root.dispatchEvent?.(new CustomEvent('gc-theme-change',{detail:{...next}}));
@@ -97,8 +113,7 @@ export function createThemeController({
     destroy(){
       if(destroyed)return;
       for(const [item,fn] of listeners)item.removeEventListener('change',fn);
-      for(const name of overridden)root.style.removeProperty('--gc-v1-color-'+kebab(name));
-      overridden.clear();
+      clearOverrides();
       destroyed=true;
     }
   };
