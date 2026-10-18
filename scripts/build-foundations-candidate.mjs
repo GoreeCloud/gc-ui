@@ -54,7 +54,7 @@ const digests=Object.fromEntries(files.map(([name,value])=>[
  name,createHash('sha256').update(value).digest('hex')
 ]));
 files.push(['provenance.json',JSON.stringify({
- schema:'gc-ui-foundations-provenance.v1',releaseCandidate:VERSION,
+ schema:'gc-ui-foundations-provenance.v1',...(stable?{releaseVersion:VERSION}:{releaseCandidate:VERSION}),
  sourceRepository:'GoreeCloud/gc-ui',status:stable?'stable release build; publication not implied':'candidate only; not published',
  files:digests
 },null,2)+'\n']);
