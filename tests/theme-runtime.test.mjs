@@ -138,3 +138,22 @@ test('destroy does not overwrite newer consumer changes to the dataset',()=>{
  controller.destroy();
  assert.deepEqual(root.dataset,{gcMode:'external-after-render',gcContrast:'external-contrast'});
 });
+
+test('new external priority survives theme-controller teardown even with same color',()=>{
+ const map=new Map();
+ const style={
+  getPropertyValue:name=>map.get(name)?.value||'',
+  getPropertyPriority:name=>map.get(name)?.priority||'',
+  setProperty:(name,value,priority='')=>map.set(name,{value,priority}),
+  removeProperty:name=>map.delete(name)
+ };
+ const root={dataset:{},style,dispatchEvent(){}};
+ const controller=createThemeController({root,media:()=>null,storage:null});
+ controller.set({accent:'custom',seed:'#2A78B9'});
+ const prop='--gc-v1-color-primary';
+ const current=style.getPropertyValue(prop);
+ style.setProperty(prop,current,'important');
+ controller.destroy();
+ assert.deepEqual(map.get(prop),{value:current,priority:'important'});
+ assert.equal(map.has('--gc-v1-color-on-primary'),false);
+});

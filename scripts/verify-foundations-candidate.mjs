@@ -12,7 +12,7 @@ const destination=join(root,'dist','foundations-verify');
 const staging=join(root,'dist','gc-ui-foundations');
 const npm=process.platform==='win32'?'npm.cmd':'npm';
 const stable=process.argv.includes('--stable');
-const releaseVersion=stable?'1.0.0':'1.0.0-rc.1';
+const releaseVersion=stable?'1.0.1':'1.0.0-rc.1';
 function run(bin,args,opts={}){
  const proc=spawnSync(bin,args,{
   cwd:opts.cwd||root,encoding:'utf8',timeout:120000,maxBuffer:8*1024*1024,
@@ -91,7 +91,7 @@ writeFileSync(script,[
  "console.log('CONSUMER INSTALL PASS: exports, JSON, CSS, color contrast, privacy-safe theme controller');"
 ].join('\n')+'\n');
 const contractSource=readFileSync(join(root,'release','foundations','consumer-contract.ts'),'utf8');
-writeFileSync(join(consumer,'typecheck.ts'),stable?contractSource.replace('1.0.0-rc.1','1.0.0'):contractSource);
+writeFileSync(join(consumer,'typecheck.ts'),stable?contractSource.replace('1.0.0-rc.1','1.0.1'):contractSource);
 writeFileSync(join(consumer,'tsconfig.json'),JSON.stringify({
  compilerOptions:{module:'NodeNext',moduleResolution:'NodeNext',target:'ES2022',
   lib:['ES2022','DOM'],strict:true,noEmit:true,skipLibCheck:false},

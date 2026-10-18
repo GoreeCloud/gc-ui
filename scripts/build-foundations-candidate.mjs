@@ -8,7 +8,7 @@ import {createHash} from 'node:crypto';
 const root=resolve(fileURLToPath(new URL('../',import.meta.url)));
 const output=join(root,'dist','gc-ui-foundations');
 const stable=process.argv.includes('--stable');
-const VERSION=stable?'1.0.0':'1.0.0-rc.1';
+const VERSION=stable?'1.0.1':'1.0.0-rc.1';
 const contract=[
  ['src/gc-color-engine.mjs','src/gc-color-engine.mjs'],
  ['src/gc-theme-runtime.mjs','src/gc-theme-runtime.mjs'],
@@ -23,7 +23,7 @@ if(process.argv.some(arg=>arg.startsWith('--')&&arg!=='--check'&&arg!=='--stable
 const types=source('types/index.d.ts').split('export interface GCTabController')[0]
  .replace("GC_UI_VERSION:'0.2.0-alpha.1'","GC_UI_VERSION:'"+VERSION+"'")
  .replace('GC UI experimental web API: signatures may change before stable 1.0.',
-          stable?'GC UI Foundations 1.0.0 stable scope.':'GC UI Foundations release candidate: deliberately narrow scope.');
+          stable?'GC UI Foundations 1.0.1 stable scope.':'GC UI Foundations release candidate: deliberately narrow scope.');
 if(!types.includes("GC_UI_VERSION:'"+VERSION+"'")||!types.includes('createThemeController'))
  throw new Error('Type source drift; review necessary');
 const entry="/** GC UI Foundations v1 "+(stable?'stable':'RC')+" — deliberately restricted API. */\n"+
