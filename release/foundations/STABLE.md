@@ -10,6 +10,6 @@ Use Node.js 20+ for pure ESM utilities and supported current Chromium/Firefox fo
 
 SemVer compatibility: patch versions fix compatible defects; minor versions add compatible capability; incompatible public contract changes require major versions. Pin exact versions and keep verified archives for rollback.
 
-Excluded: experimental component catalog, platform/native preview packages, motion/depth utilities, third-party icons, and legacy Glaze migration. No third-party icon pack is included in this package. Foundations stable does not certify the wider alpha repository.
+Excluded: experimental component catalog, platform/native preview packages, motion/depth utilities, third-party icons, and legacy app migration. No third-party icon pack is included in this package. Foundations stable does not certify the wider alpha repository.
 
 Issue tracker: https://github.com/GoreeCloud/gc-ui/issues .
