@@ -4,6 +4,10 @@
 **Artifact:** locally packable and offline-installable `@goreecloud/gc-ui@1.0.0-rc.1` foundations subset.
 **Disposition:** Validated **release candidate**, NOT stable 1.0.0 and NOT published to npm.
 
+## Design-system succession status
+
+This candidate belongs to the owner-designated, exclusive future design authority: **GoreeCloud UI**. The [succession plan](DESIGN_SYSTEM_SUCCESSION.md) does not convert an unsigned, private release candidate into ecosystem-wide migration acceptance or platform Anchor qualification. The legacy system's independent source is not included.
+
 ## Candidate boundaries
 
 This is the first deliberately **scoped** GC UI distribution, defined under the

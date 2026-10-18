@@ -1,6 +1,6 @@
 # GC UI — Release and Verification Roadmap
 
-**Current owner-approved criteria:** [Stable Release Scope](STABLE_RELEASE_SCOPE.md). This supersedes earlier broad exit criteria that treated optional device/power/platform research as universal stable-release prerequisites.
+**Current owner-approved criteria:** [Stable Release Scope](STABLE_RELEASE_SCOPE.md). [Design-System Succession](DESIGN_SYSTEM_SUCCESSION.md) records the exclusive GC UI destination and separately outstanding governance/consumer retirement work. This supersedes earlier broad exit criteria that treated optional device/power/platform research as universal stable-release prerequisites.
 
 GC UI has a **complete candidate design-language specification** and an **experimental browser implementation**. These are intentionally different maturity tracks: describing a component contract does not make that component available in a production package.
 
@@ -57,7 +57,7 @@ Stable v1.0 is assessed against **declared published scope**, not completion of 
 The current private `0.2.0-alpha.1` preview is not automatically stable merely because release requirements have been clarified.
 
 ## Working rules
-- No Glaze UI code or design tokens imported into GC UI.
+- No predecessor design-system code, tokens, assets or namespaces imported into GC UI; the [authority guard](../scripts/check-design-authority.mjs) enforces this.
 - No changes to repositories other than `GoreeCloud/gc-ui`.
 - No direct copying of Apple or Google proprietary assets. Concepts are inspirations; GC UI retains its own implementation.
 - Experiments live in the labs and do not silently become public stable API.

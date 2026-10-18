@@ -1,7 +1,7 @@
 # GoreeCloud UI (GC UI) — Design Language Specification 1.0
 **Status:** normative design specification candidate; implementation maturity tracked separately.  
 **Scope:** mobile, tablet, foldable, desktop, ultrawide, television, wearable, and spatial experiences.  
-**Owner:** GoreeCloud. **Official name:** GoreeCloud UI. **Short form:** GC UI. **Identity:** original; no dependency on Glaze UI.
+**Owner:** GoreeCloud. **Official name:** GoreeCloud UI. **Short form:** GC UI. **Identity:** original and the designated successor authority; [cutover plan](DESIGN_SYSTEM_SUCCESSION.md).
 
 ## 0. What this document is
 MUST means required to claim GC UI compliance; SHOULD means strongly preferred; MAY is an intentional extension. This is a design contract, not an assertion that every component or platform implementation already exists. Values are GC UI decisions unless explicitly marked as external guidance. Read this alongside COLOR_THEMES, COMPONENT_CATALOG, MOTION_INPUT, LAYOUT_PLATFORMS, ICONOGRAPHY, ACCESSIBILITY_RELEASE, and TOKENS_IMPLEMENTATION.
@@ -118,4 +118,4 @@ Apple HIG, Materials: https://developer.apple.com/design/human-interface-guideli
 Android Developers, M3: https://developer.android.com/develop/ui/compose/designsystems/material3 (semantic roles, color/shape/type theming).  
 W3C WCAG 2.2: https://www.w3.org/TR/WCAG22/ (accessibility requirements).  
 DTCG 2025.10: https://www.designtokens.org/TR/2025.10/ (interchange format; a community report, not a W3C Recommendation).
-GC UI does not use Apple or Google proprietary code, brand artwork or design assets. Glaze UI remains a separate system and is not a dependency.
+GC UI does not use Apple or Google proprietary code, brand artwork or design assets. No predecessor design-system source is imported. The exclusive [GoreeCloud UI succession plan](DESIGN_SYSTEM_SUCCESSION.md) controls target authority and honest migration status.

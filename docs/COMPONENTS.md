@@ -24,7 +24,7 @@ The alpha provides **visual reference implementations** in HTML/CSS/JS, not vers
 2. A user can locate and operate it with only a keyboard.
 3. States are visible without relying exclusively on color or glass blur.
 4. It behaves as expected in light and dark modes, at different zoom levels, and without nonessential motion.
-5. Components never import assets or styles from Glaze UI.
+5. Components never import predecessor-system source, themes, tokens or assets; all supported components use the original GC UI contract. See [succession rules](DESIGN_SYSTEM_SUCCESSION.md).
 
 ## Known alpha limitations
 

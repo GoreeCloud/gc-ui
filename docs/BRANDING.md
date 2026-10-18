@@ -5,7 +5,7 @@
 **Canonical publication commit:** `29ea759c167a86390a2b4ff559e5fc40ec7c99a3` (vector sources and catalog)  
 **Verified derivative publication commit:** `dd13aad` (PNG/icon derivatives and reproducible export script)
 
-GC UI is its own design language and product identity. **It is not the GoreeCloud platform symbol and not Glaze UI.** `GoreeCloud/branding-assets` is authoritative, and local SVG files in this repository are exact synchronized derivatives for standalone hosting, offline documentation, demos, and package consumption.
+GC UI is its own design language and product identity, designated to **permanently replace** the predecessor Glaze design system. **It is not the GoreeCloud platform symbol and not a relabeling of predecessor artwork.** `GoreeCloud/branding-assets` is authoritative, and local SVG files in this repository are exact synchronized derivatives for standalone hosting, offline documentation, demos, and package consumption.
 
 ## Canonical → GC UI consumer mapping
 

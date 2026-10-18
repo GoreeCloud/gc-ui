@@ -1,0 +1,32 @@
+{
+  "schema": "gc-ui-design-succession.v1",
+  "ownerDecisionDate": "2026-10-17",
+  "authority": {
+    "successor": "GoreeCloud UI",
+    "successorShortName": "GC UI",
+    "successorRepository": "GoreeCloud/gc-ui",
+    "successorPackage": "@goreecloud/gc-ui",
+    "predecessor": "Glaze",
+    "outcome": "exclusive-permanent-replacement",
+    "newPredecessorDependenciesAllowed": false,
+    "legacyNameAsNewBrandAllowed": false
+  },
+  "verified": {
+    "currentSourceVersion": "0.2.0-alpha.1",
+    "currentSourceMaturity": "alpha",
+    "foundationsCandidate": "1.0.0-rc.1",
+    "foundationsPublishedStable": false,
+    "predecessorCodeImportedIntoCurrentGCUI": false,
+    "governanceDocumentsAmended": false,
+    "allConsumerMigrationsVerified": false,
+    "predecessorRepositoriesRetired": false,
+    "exclusiveCutoverCompleted": false
+  },
+  "constraints": {
+    "writableRepository": "GoreeCloud/gc-ui",
+    "driveGovernanceReadOnly": true,
+    "thirdPartyRightsAndHistoryPreserved": true,
+    "applicableAccessibilitySecurityReleaseGatesRemain": true
+  },
+  "relatedSpecification": "docs/DESIGN_SYSTEM_SUCCESSION.md"
+}

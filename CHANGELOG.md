@@ -2,6 +2,11 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Owner decision — exclusive GoreeCloud UI design succession (2026-10-17)
+- The owner has designated **GoreeCloud UI** the **permanent exclusive replacement** for Glaze. No dual long-term design authority or predecessor-code/asset relabeling is supported.
+- Recorded a [succession plan](docs/DESIGN_SYSTEM_SUCCESSION.md), machine-readable authority status and fail-fast guard blocking predecessor namespaced content in active implementation files. Ecosystem policy supersession and downstream adoption are **still pending**; history and actual governance statuses are preserved.
+- Package source remains private alpha, Foundations remains an unsigned/private release candidate, and no third-party/repository deletions or license changes occurred.
+
 ## Foundations 1.0.0-rc.1 candidate — 2026-10-17
 - Staged an **installable, unsigned/private** GC UI Foundations tarball with seven limited ESM exports, semantic tokens/CSS and typed declarations, excluding experimental component and native host APIs.
 - Added deterministic build, nine-file npm pack audit, SHA-256 file provenance, offline consumer installation, unsafe subpath exclusion, and TypeScript 5.9.3 consumer checks.

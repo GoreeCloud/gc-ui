@@ -2,6 +2,10 @@
 
 **Owner clarification:** 2026-10-17. **Applies to:** GoreeCloud/gc-ui design-system releases. **Priority:** This policy supersedes older roadmap/QA wording that describes the optional native research tracks below as *mandatory* stable-release blockers.
 
+## Exclusive design authority and separate release maturity
+
+GoreeCloud UI is the owner-designated **permanent successor** to the predecessor design system. The [succession record](DESIGN_SYSTEM_SUCCESSION.md) separates this target authority from still-pending Drive governance supersession, consumer migrations and predecessor retirement. This policy governs the **scoped GC UI artifact only**; passing its release gates does not prove ecosystem-wide cutover or automatically grant the established Seal/Anchor classification.
+
 ## What a stable GC UI design-system release means
 
 A stable release is a deliberately **scoped, versioned, supported distribution** of the GC UI tokens, foundations, and components the project actually publishes. A canonical catalog of 63 *specified* patterns does **not** require all 63 to be implemented or stable simultaneously. Experimental labs, optional Android/Electron previews, unshipped platform adapters, and aspirational fidelity work are outside the stable package's scope unless the release expressly includes them.

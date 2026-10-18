@@ -12,7 +12,7 @@ The acronym can be explained as **GoreeCloud User Interface** or **GoreeCloud UI
 - **Compact interface chrome, logos, navigation, limited-width headings, token documentation and repeated mentions:** use **GC UI**.
 - **Visual identity:** existing GC glyph and logos are compatible with the short form. Do not expand a narrow brand lockup if it harms the adaptive layout.
 - **Developer contracts:** retain `GoreeCloud/gc-ui`, `@goreecloud/gc-ui`, `gc-` CSS selectors, `--gc-` tokens and published path names. Naming guidelines do not authorize breaking programmatic APIs.
-- **Brand scope:** GC UI is an independent GoreeCloud design system, not Glaze UI. Do not rename, alter or depend on Glaze UI to implement these conventions.
+- **Brand scope:** GC UI is the original, exclusive successor to the predecessor design system. Do not repurpose, relabel, or import the predecessor's branding/assets/code to implement these conventions. See [succession plan](DESIGN_SYSTEM_SUCCESSION.md).
 
 ## Copy examples
 

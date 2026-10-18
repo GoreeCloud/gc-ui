@@ -1,6 +1,6 @@
 # GC UI — Roadmap
 
-This roadmap tracks **GC UI** work only. It is not a Glaze UI migration plan.
+This roadmap tracks **GC UI implementation**. The owner has selected GC UI as the **exclusive permanent successor** to Glaze; see [design-system succession](DESIGN_SYSTEM_SUCCESSION.md) for the separate evidence-gated governance/consumer retirement work. The old design system is not a dependency of the destination.
 
 | Phase | Focus | Release conditions |
 | --- | --- | --- |

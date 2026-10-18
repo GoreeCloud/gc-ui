@@ -4,7 +4,11 @@
 
 **GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
 
-GC UI is a separate design system, built independently and without Glaze UI dependencies. Its foundation combines expressive personal color, focused depth, and consistent cross-device interaction. Apple Liquid Glass and Google Material You provide *reference principles*, not source code, branding, or component implementations.
+GC UI is GoreeCloud's **designated permanent successor** to the earlier Glaze design system, developed independently rather than derived from predecessor code or assets. Its foundation combines expressive personal color, focused depth, and consistent cross-device interaction. Apple Liquid Glass and Google Material You provide *reference principles*, not source code, branding, or component implementations.
+
+## Exclusive design-system succession
+
+**Owner direction (2026-10-17):** GoreeCloud UI replaces the old Glaze design system as GoreeCloud's intended **single future design authority**. See [exclusive succession, migration proof gates and scope limitations](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). No GC UI source, assets or runtime imports from the predecessor are permitted. Prior Google Drive Standards/Policies and consuming repositories have **not yet been amended or migrated**; this repo is not claiming the cutover complete. Release stage and licensing remain separately governed.
 
 ## Version
 

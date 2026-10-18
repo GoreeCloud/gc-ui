@@ -6,7 +6,7 @@
 
 **Name:** GoreeCloud UI (short form: GC UI). This is the canonical public full name; "GoreeCloud User Interface" may explain the acronym but is not the preferred full product name.
 
-GC UI exists as a distinct GoreeCloud design language. It is **not Glaze UI**, does not incorporate Glaze UI as a base, and will not rename Glaze UI assets as GC UI. A separate migration plan may eventually replace Glaze UI, but GC UI development must remain self-contained.
+GC UI is GoreeCloud's **designated permanent successor** to the prior Glaze design system. The target is **one authoritative design language**, never two long-term systems. This implementation remains original: predecessor source, tokens and assets must not be renamed or embedded. The [succession plan](DESIGN_SYSTEM_SUCCESSION.md) tracks still-pending platform-governance and consumer migrations; it does not claim those cutovers have happened.
 
 ### Promise
 

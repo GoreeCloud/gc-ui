@@ -1,5 +1,5 @@
 /* GC UI Foundation Tokens — v0.1.0
-   Core -> semantic -> component usage. No Glaze UI dependencies. */
+   Core -> semantic -> component usage. Original first-party tokens only. */
 :root {
   color-scheme: light;
   --gc-font: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif;
