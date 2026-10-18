@@ -1,5 +1,7 @@
 # GC UI Foundations — 1.0.0 Release Candidate 1
 
+**Historical RC evidence; superseded for stable distribution.** The owner approved Apache-2.0, and [Foundations 1.0.0](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0) was published as a supported GitHub-release tarball with [verified checksum and acceptance evidence](FOUNDATIONS_STABLE_RELEASE.md). This dated record's earlier licensing and publication TODOs describe the previous candidate state, not the current public release. npm registry distribution remains a separate unverified channel.
+
 **Checkpoint:** October 17, 2026. **Repository:** GoreeCloud/gc-ui only.
 **Artifact:** locally packable and offline-installable `@goreecloud/gc-ui@1.0.0-rc.1` foundations subset.
 **Disposition:** Validated **release candidate**, NOT stable 1.0.0 and NOT published to npm.
