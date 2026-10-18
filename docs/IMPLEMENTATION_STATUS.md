@@ -1,6 +1,12 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## Scoped Foundations 1.0.0 stable release — verified
+
+- **Published:** [foundations-v1.0.0 GitHub release](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0), Apache-2.0, non-prerelease, 10-file package. Source: `1d8e25330a49cdab4412c1323e95baafd136b7b2`; artifact SHA-256: `8db29188f90da8936f5452a01b2414ffe8f295092320f1d67221c4a95bc28102`.
+- **Exact-source CI:** [core, Chromium, Firefox, stable archive/TypeScript job](https://github.com/GoreeCloud/gc-ui/actions/runs/39098058411) all passed; stable artifact independently redownloaded and offline-installed.
+- **Boundary:** Root development workspace is still `0.2.0-alpha.1`. Third-party icon packs, experimental component catalog and native hosts are excluded. npmjs.org publication is not claimed. Consumer migrations, owner Drive governance supersession and predecessor retirement remain incomplete. See [release record](FOUNDATIONS_STABLE_RELEASE.md).
+
 ## 2026-10-17 integrated Foundations and native-host stability checkpoint
 
 - [PR #20](https://github.com/GoreeCloud/gc-ui/pull/20) makes `createThemeController` restore consuming applications' existing inline color declarations and priorities, while preserving newer external style changes. [PR #23](https://github.com/GoreeCloud/gc-ui/pull/23) verifies this using actual Chromium/Firefox CSSOM behavior.
