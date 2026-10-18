@@ -1,5 +1,9 @@
 # GoreeCloud UI Foundations v1.0.0 — Release notes
 
+**Verified public release:** https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0
+
+Tagged commit: `1d8e25330a49cdab4412c1323e95baafd136b7b2`. Artifact SHA-256: `8db29188f90da8936f5452a01b2414ffe8f295092320f1d67221c4a95bc28102`. Public checksum download and offline install passed. [CI](https://github.com/GoreeCloud/gc-ui/actions/runs/39098058411) passed. npmjs.org publication is not confirmed.
+
 **Scope:** Stable, Apache-2.0 semantic tokens, color generation and DOM theme controller only. Original code; zero runtime dependencies.
 
 **Public API:** `generateTheme`, `contrastRatio`, `GC_THEME_DEFAULTS`, `normalizeTheme`, `resolveTheme`, `createThemeController`, `GC_UI_VERSION`; `/tokens` JSON and `/css/tokens` CSS. TypeScript declarations included. Node.js 20+ and tested current Chromium/Firefox.
