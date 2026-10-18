@@ -150,7 +150,7 @@ jobs:
         with:
           name: gc-ui-foundations-v1-stable-qa
           path: |
-            dist/foundations-verify/goreecloud-gc-ui-1.0.0.tgz
+            dist/foundations-verify/goreecloud-gc-ui-1.0.1.tgz
             dist/foundations-verify/SHA256SUMS
           retention-days: 30
           if-no-files-found: error
@@ -159,6 +159,6 @@ jobs:
       - name: Install browser dependencies
         run: npx playwright install --with-deps chromium firefox
       - name: Test installed stable tarball in Chromium
-        run: GC_FOUNDATIONS_VERSION=1.0.0 npx playwright test e2e/foundations-packaged.spec.mjs --browser chromium
+        run: GC_FOUNDATIONS_VERSION=1.0.1 npx playwright test e2e/foundations-packaged.spec.mjs --browser chromium
       - name: Test installed stable tarball in Firefox
-        run: GC_FOUNDATIONS_VERSION=1.0.0 npx playwright test e2e/foundations-packaged.spec.mjs --browser firefox
+        run: GC_FOUNDATIONS_VERSION=1.0.1 npx playwright test e2e/foundations-packaged.spec.mjs --browser firefox
