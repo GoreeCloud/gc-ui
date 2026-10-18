@@ -18,7 +18,7 @@ test('single-design-authority owner decision is machine readable and release cla
   assert.equal(contract.verified[gate],false,'Do not invent completion: '+gate);
  }
  assert.equal(pkg.private,true);
- assert.equal(pkg.license,'UNLICENSED');
+ assert.equal(pkg.license,'Apache-2.0');
 });
 test('active implementation rejects predecessor namespaced assets, imports and design tokens',()=>{
  for(const malicious of [

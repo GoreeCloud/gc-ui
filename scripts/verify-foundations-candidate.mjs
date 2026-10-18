@@ -11,6 +11,8 @@ const root=resolve(fileURLToPath(new URL('../',import.meta.url)));
 const destination=join(root,'dist','foundations-verify');
 const staging=join(root,'dist','gc-ui-foundations');
 const npm=process.platform==='win32'?'npm.cmd':'npm';
+const stable=process.argv.includes('--stable');
+const releaseVersion=stable?'1.0.0':'1.0.0-rc.1';
 function run(bin,args,opts={}){
  const proc=spawnSync(bin,args,{
   cwd:opts.cwd||root,encoding:'utf8',timeout:120000,maxBuffer:8*1024*1024,
@@ -21,8 +23,8 @@ function run(bin,args,opts={}){
     '\n'+String(proc.error||proc.stderr||proc.stdout).slice(-1100));
  return proc.stdout;
 }
-run(process.execPath,['scripts/build-foundations-candidate.mjs']);
-run(process.execPath,['scripts/build-foundations-candidate.mjs','--check']);
+run(process.execPath,['scripts/build-foundations-candidate.mjs',...(stable?['--stable']:[])]);
+run(process.execPath,['scripts/build-foundations-candidate.mjs','--check',...(stable?['--stable']:[])]);
 rmSync(destination,{recursive:true,force:true});
 mkdirSync(destination,{recursive:true});
 const pack=JSON.parse(run(npm,['pack','--json','--ignore-scripts','--pack-destination',destination],{cwd:staging}));
@@ -36,12 +38,13 @@ const expected=[
  'src/gc-color-engine.mjs','src/gc-theme-runtime.mjs','src/index.mjs',
  'styles/gc.v1.generated.css','tokens/gc.v1.tokens.json','types/index.d.ts'
 ];
+if(stable)expected.push('LICENSE');
 const packed=pack[0].files.map(file=>file.path).sort();
 assert.deepEqual(packed,expected.slice().sort(),'Candidate includes extraneous/missing files');
 const metadata=JSON.parse(readFileSync(join(staging,'package.json'),'utf8'));
-assert.equal(metadata.version,'1.0.0-rc.1');
-assert.equal(metadata.private,true,'Candidate must not be publishable without approval');
-assert.equal(metadata.license,'UNLICENSED','Cannot invent a license');
+assert.equal(metadata.version,releaseVersion);
+assert.equal(metadata.private,!stable,'Invalid release privacy for the selected mode');
+assert.equal(metadata.license,stable?'Apache-2.0':'UNLICENSED','Wrong release license');
 assert.equal(Object.keys(metadata.exports).length,3,'Unsupported entrypoint exposed');
 const provenance=JSON.parse(readFileSync(join(staging,'provenance.json'),'utf8'));
 assert.equal(provenance.releaseCandidate,metadata.version);
@@ -69,7 +72,7 @@ writeFileSync(script,[
  "import tokens from '@goreecloud/gc-ui/tokens' with {type:'json'};",
  "const want=['GC_THEME_DEFAULTS','GC_UI_VERSION','contrastRatio','createThemeController','generateTheme','normalizeTheme','resolveTheme'];",
  "assert.deepEqual(Object.keys(gc).sort(),want.sort());",
- "assert.equal(gc.GC_UI_VERSION,'1.0.0-rc.1');",
+ "assert.equal(gc.GC_UI_VERSION,'"+releaseVersion+"');",
  "assert.equal(typeof tokens.color.light.canvas.$value,'string');",
  "const scheme=gc.generateTheme('#3978D3','light');",
  "assert.equal(scheme.algorithm,'gc-oklch-1');",
@@ -87,7 +90,8 @@ writeFileSync(script,[
  "assert.ok(readFileSync(css,'utf8').includes('forced-colors: active'));",
  "console.log('CONSUMER INSTALL PASS: exports, JSON, CSS, color contrast, privacy-safe theme controller');"
 ].join('\n')+'\n');
-writeFileSync(join(consumer,'typecheck.ts'),readFileSync(join(root,'release','foundations','consumer-contract.ts'),'utf8'));
+const contractSource=readFileSync(join(root,'release','foundations','consumer-contract.ts'),'utf8');
+writeFileSync(join(consumer,'typecheck.ts'),stable?contractSource.replace('1.0.0-rc.1','1.0.0'):contractSource);
 writeFileSync(join(consumer,'tsconfig.json'),JSON.stringify({
  compilerOptions:{module:'NodeNext',moduleResolution:'NodeNext',target:'ES2022',
   lib:['ES2022','DOM'],strict:true,noEmit:true,skipLibCheck:false},

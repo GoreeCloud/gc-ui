@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
 test('release candidate is independently staged and cannot be published accidentally',()=>{
  const builder=read('scripts/build-foundations-candidate.mjs');
- assert.match(builder,/private:true/);
+ assert.match(builder,/private:!stable/);
  assert.match(builder,/UNLICENSED/);
  assert.match(builder,/1\.0\.0-rc\.1/);
  assert.match(builder,/gc-ui-foundations/);

@@ -1,5 +1,8 @@
 # GoreeCloud UI (GC UI)
 
+
+**License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. A versioned Foundations 1.0.0 release has a separate, narrow supported export contract, verified independently.
+
 **The original adaptive interface design language for GoreeCloud.**
 
 **GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
