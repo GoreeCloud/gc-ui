@@ -99,6 +99,9 @@ const forbidden=spawnSync(process.execPath,['--input-type=module','--eval',
  "import('@goreecloud/gc-ui/native/host-client')"],{cwd:consumer,encoding:'utf8',timeout:5000});
 assert.notEqual(forbidden.status,0,'Experimental native subpath must not be importable');
 assert.match(forbidden.stderr,/ERR_PACKAGE_PATH_NOT_EXPORTED/);
+assert.equal(createHash('sha256').update(readFileSync(tarball)).digest('hex'),archiveSha256,
+ 'Release artifact changed during verification');
+console.log('Foundations archive SHA-256: '+archiveSha256);
 console.log(result.trim());
 console.log('Foundations RC verified: offline tarball installation, '+packed.length+
  ' allowlisted files, restricted imports, SHA-256 provenance; '+pack[0].filename);
