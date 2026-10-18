@@ -44,6 +44,7 @@ jobs:
           node --check lab/forms.mjs
           node --check playwright.config.mjs
           node --check e2e/gc-ui.spec.mjs
+          node --check e2e/foundations-packaged.spec.mjs
           node --check e2e/visual-capture.spec.mjs
           node --check e2e/adaptive.spec.mjs
           node --check e2e/adaptive-visual.spec.mjs
