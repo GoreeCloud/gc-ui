@@ -105,6 +105,7 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+          cache: gradle
       - name: Install matching Android platform and build tools
         # Hosted Ubuntu already contains SDK command-line tools.
         # The removed action requested the obsolete Android SDK tools package.
