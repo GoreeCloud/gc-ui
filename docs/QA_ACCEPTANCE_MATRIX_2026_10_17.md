@@ -4,12 +4,20 @@
 
 **Subsequent owner decision:** Optional platform-screen-reader listening, hardware/energy profiling and extra physical devices in this dated matrix are **not universal stable design-system release blockers**. See [Stable Release Scope](STABLE_RELEASE_SCOPE.md); individual historic QA statuses and compliance-claim limits are preserved.
 
+## Recovered Firefox/Orca manual acceptance — owner reaffirmation (2026-10-18)
+
+**Status: PASS (owner-confirmed).** The GoreeCloud owner explicitly reaffirmed on 2026-10-18 that the manual Firefox/Orca screen-reader acceptance had **already PASSED** and that the earlier acceptance document was accidentally purged. This is a correction and reconstruction from surviving records, **not a newly executed listening test**, restored original document, audio capture, or independently witnessed screen-reader transcript. The original session date and all per-step observations cannot be recovered from the information available here.
+
+The surviving [human Firefox/Orca QA log](QA_REAL_BROWSER_ZOOM_2026-10-16.md) records Test 54 and Test 56 as **user-reported PASS**, with later, **post-remediation** user-reported PASS for Forms Lab Test 83 and keyboard-dismissable toast Tests 82 and 97. Earlier PARTIAL feedback for Tests 54/80 remains historical, explicitly superseded by later PASS results. The code concerns documented in earlier issue descriptions were subsequently remedied; they must not be mistaken for the current source state. Separate objective test evidence on 2026-10-18 includes 70/70 Chromium interaction tests, 56/56 Firefox interaction tests, 38/38 accessibility/reflow/zoom tests and 162/162 Node tests; exact-head [CI run 39142048452](https://github.com/GoreeCloud/gc-ui/actions/runs/39142048452) and native-host [CI run 39142048474](https://github.com/GoreeCloud/gc-ui/actions/runs/39142048474) passed.
+
+**Scope limit:** Treat the designated manual Firefox/Orca acceptance as completed and do not demand another test solely because the source document was lost. The preserved log does not reconstruct exact spoken text, every individual post-fix focus action, or a separate native-400%-zoom transcript. No new WCAG certification, cross-platform screen-reader approval, Electron hardware acceptance, or broader stable UI promotion is implied. This dated correction supersedes the *pending* labels for F54/F56 below, not unrelated pending gates.
+
 ## Evidence status
 
 | Gate | Status | Why |
 |---|---|---|
-| Firefox/Orca Test 54 recheck after PRs #7/#9 | **PENDING** | Requires a real screen-reader listening session with step-by-step observations |
-| Firefox/Orca Test 56 recheck after PR #10 | **PENDING** | Requires spoken-status and keyboard/focus observations, including native 400% zoom |
+| Firefox/Orca Test 54 / post-fix no-JS Forms Lab | **PASS — owner-confirmed manual** | Historical Test 54 and post-remediation Test 83 were reported PASS; latest owner confirmation 2026-10-18. Automated no-JavaScript Firefox/Chromium checks also pass. Individual speech transcript from the purged record is unavailable. |
+| Firefox/Orca Test 56 / post-fix toast keyboard access | **PASS — owner-confirmed manual** | Historical Test 56 plus post-remediation Tests 82 and 97 were reported PASS; latest owner confirmation 2026-10-18. Keyboard dismissal, focus restoration and combined hover/focus timing also pass automated Firefox/Chromium checks. Individual audio/zoom observations from the purged record cannot be reconstructed. |
 | Android/TalkBack TB-01 through TB-12 | **12/12 PASS — user reported** | The test operator confirmed every manual case passed; see [acceptance record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md). Spoken transcripts were not provided. |
 | Electron host, real platform assistive technology | **PENDING** | Build/launch CI is not an accessible hardware-host walkthrough |
 | Worst-backdrop Lens role audit | **AUTOMATED TEST ADDED; pending independent CI** | sRGB black/white endpoint model; verify against the final CI run |
@@ -61,10 +69,10 @@ Human review must also cover real photos and gradients behind the Lens, light an
 
 | ID | Device / browser / AT | Expected result | Observed result / actual spoken output | Outcome | Evidence location |
 |---|---|---|---|---|---|
-| F54 | To record | Safe no-JS Forms Lab, static examples, reenable JS | Not yet observed | BLOCKED | — |
-| F56 | To record | Spoken toast and keyboard/focus control at 100%/400% | Not yet observed | BLOCKED | — |
+| F54 | Linux / Firefox / Orca; owner-reported | Safe no-JS Forms Lab, static examples, reenable JS | Latest manual results for Tests 54 and 83: PASS; step-level speech/URL transcript not preserved from the purged record. Automated no-JS tests verified separately on 2026-10-18. | PASS — owner-confirmed | [Surviving manual QA log](QA_REAL_BROWSER_ZOOM_2026-10-16.md), Tests 54/83; [2026-10-18 Chromium/Firefox CI](https://github.com/GoreeCloud/gc-ui/actions/runs/39142048452) |
+| F56 | Linux / Firefox / Orca; owner-reported | Spoken toast and keyboard/focus control; native zoom acceptance | Latest manual results for Tests 56, 82 and 97: PASS; surviving record does not preserve a separate post-remediation 400% speech/zoom trace. Automated dismissal/focus/pointer tests verified separately on 2026-10-18. | PASS — owner-confirmed | [Surviving manual QA log](QA_REAL_BROWSER_ZOOM_2026-10-16.md), Tests 56/82/97; [2026-10-18 Chromium/Firefox CI](https://github.com/GoreeCloud/gc-ui/actions/runs/39142048452) |
 | N-Android | 2026-10-17 user report | TalkBack TB-01 to TB-12, plus separate invalid-native-host scenario | All twelve TalkBack tests reported PASS; separate invalid-injection walkthrough was not individually reported | PARTIAL (TalkBack 12/12 PASS) | [TalkBack record](QA_TALKBACK_USER_ACCEPTANCE_2026_10_17.md) |
 | N-Desktop | To record | Keyboard/AT acceptance in actual Electron host | Not yet observed | BLOCKED | — |
 | Lens-visual | To record | Legible real imagery and focus/indicator contrast | Not yet observed | BLOCKED | — |
 
-Update [issue #5](https://github.com/GoreeCloud/gc-ui/issues/5) and [issue #6](https://github.com/GoreeCloud/gc-ui/issues/6) only after the corresponding manual steps are run and observations are captured. Keep both issues open otherwise.
+Reconcile [issue #5](https://github.com/GoreeCloud/gc-ui/issues/5) and [issue #6](https://github.com/GoreeCloud/gc-ui/issues/6) against the already-recorded owner-reported PASS results and separately verified fixes/tests. Do not reopen a completed manual test merely because its original supporting document was accidentally purged; do not fabricate the missing audio, per-step observations or exact post-remediation zoom traces.
