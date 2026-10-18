@@ -53,6 +53,12 @@ const consumer=join(destination,'consumer');
 mkdirSync(consumer,{recursive:true});
 writeFileSync(join(consumer,'package.json'),JSON.stringify({type:'module',private:true},null,2)+'\n');
 run(npm,['install',tarball,'--offline','--no-save','--ignore-scripts','--no-audit','--no-fund'],{cwd:consumer});
+const installed=join(consumer,'node_modules','@goreecloud','gc-ui');
+for(const [name,hash] of Object.entries(provenance.files)){
+ const bytes=readFileSync(join(installed,name));
+ assert.equal(createHash('sha256').update(bytes).digest('hex'),hash,
+  'Installed Foundations file failed provenance verification: '+name);
+}
 const script=join(consumer,'test-consumer.mjs');
 writeFileSync(script,[
  "import assert from 'node:assert/strict';",
