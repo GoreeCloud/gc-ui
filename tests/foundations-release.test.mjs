@@ -18,6 +18,7 @@ test('candidate exports limited foundations, not experimental components/native 
  for(const unsupported of ['gc-form-controls','gc-native-host','gc-choreography','gc-motion-presets'])
   assert.ok(!builder.includes("'./"+unsupported),"Unexpected experimental source");
  assert.match(read('release/foundations/README.md'),/Not included/);
+ assert.match(read('release/foundations/README.md'),/github\.com\/GoreeCloud\/gc-ui\/blob\/main\/docs\/STABLE_RELEASE_SCOPE\.md/);
 });
 test('release verification installs real tarball and protects provenance',()=>{
  const verify=read('scripts/verify-foundations-candidate.mjs');

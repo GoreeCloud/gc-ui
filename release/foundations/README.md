@@ -52,6 +52,6 @@ handle CSS imports separately from Node's ESM loader.
 - No global WCAG certification, native installer, VoiceOver/NVDA
   certification or energy-savings promise is made.
 
-The source repository's `docs/STABLE_RELEASE_SCOPE.md` contains the
-owner-approved acceptance policy. Optional hardware investigations are
+The source repository's [stable release policy](https://github.com/GoreeCloud/gc-ui/blob/main/docs/STABLE_RELEASE_SCOPE.md)
+contains the owner-approved acceptance criteria. Optional hardware investigations are
 not stable foundations release blockers.
