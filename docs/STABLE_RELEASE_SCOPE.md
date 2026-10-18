@@ -32,6 +32,10 @@ These activities may remain tracked as research, optional QA, platform-specific 
 - Actual accessibility or security defects in shipped supported components **remain defects** and can block those components; removing a universal *test requirement* never licenses broken keyboard, unsafe resources, unreadable text, or misrepresented functionality.
 - **Signed native artifacts** and platform distribution checks become release-specific requirements if and when a native installer or store package is actually shipped.
 
+## Staged package checkpoint (2026-10-17)
+
+[Foundations 1.0.0-rc.1](FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md) is an offline-installable **private candidate** with a deliberately narrow API, types and tested artifact. The root package remains private alpha. The candidate still requires owner decisions on license, package identity and final publication; none of the optional device/energy/desktop human QA became mandatory.
+
 ## Current status is not retroactively promoted
 
 The source currently identifies itself as `0.2.0-alpha.1`, with a private package and experimental component references. Correcting the policy does **not** change the version, make all 63 patterns stable, publish a package, or grant production certification. The next stable milestone should be driven by the **actual exported package and scoped acceptance**, not the optional hardware studies.

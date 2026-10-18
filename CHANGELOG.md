@@ -2,6 +2,11 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Foundations 1.0.0-rc.1 candidate — 2026-10-17
+- Staged an **installable, unsigned/private** GC UI Foundations tarball with seven limited ESM exports, semantic tokens/CSS and typed declarations, excluding experimental component and native host APIs.
+- Added deterministic build, nine-file npm pack audit, SHA-256 file provenance, offline consumer installation, unsafe subpath exclusion, and TypeScript 5.9.3 consumer checks.
+- **No public release yet:** Source remains \`0.2.0-alpha.1\`; candidate remains \`1.0.0-rc.1\` / private / UNLICENSED pending owner decisions about redistribution and final public v1 release. See [Foundations release candidate](docs/FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md).
+
 ## Native host bridge: Android and Electron desktop — 2026-10-17
 - Added a minimal **versioned, allowlisted GC UI native host client** with request validation, capability handshake, timeouts, response correlation, browser fallback and documented TypeScript APIs.
 - Added an Android SDK 36 / WebViewAssetLoader host with restricted main-frame origin messaging, optional haptic selection feedback, native theme/system-bar updates, edge-to-edge safe-area handling and persisted native appearance.

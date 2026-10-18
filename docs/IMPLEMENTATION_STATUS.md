@@ -1,6 +1,10 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Foundations v1 installable release candidate
+- [Foundations RC](FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md): a separate, installable \`@goreecloud/gc-ui@1.0.0-rc.1\` **private staged artifact** containing only seven supported JS exports, a semantic token JSON/CSS pair, types and provenance. A real offline consumer and pinned TypeScript compilation verify package usability; CI will attach unsigned QA tarballs.
+- The release candidate does **not** stabilize the root experimental web component APIs or native hosts, change the root \`0.2.0-alpha.1\` version, publish npm, grant a new license, or tag 1.0.0. Licensing/registry ownership and final public release approval remain independent steps.
+
 ## Current release policy clarification — 2026-10-17
 
 **The owner confirms that the residual hardware/power/platform-human-test items are NOT stable design-system release requirements.** The authoritative [Stable Release Scope](STABLE_RELEASE_SCOPE.md) supersedes prior dated notes that labeled a second physical Android phone, unplugged energy measurements, full GPU profiling, human desktop Orca/VoiceOver/NVDA sessions or unshipped signed native installers as universal stable blockers.

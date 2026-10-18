@@ -59,6 +59,10 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
+## First installable GC UI Foundations release candidate
+
+The [Foundations v1 release candidate](docs/FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md) stages a strictly supported seven-export color/theme API with semantic token JSON/CSS and TypeScript types. The build produces a nine-file **offline-installable npm tarball**, runs a real consumer smoke test and can typecheck from that tarball; GitHub CI retains a candidate QA artifact. **No npm publication, license change, stable tag or native release** occurs. The root project remains private \`0.2.0-alpha.1\` and experimental component APIs stay outside the candidate contract.
+
 ## Stable release scope — owner-approved
 
 The [stable release scope](docs/STABLE_RELEASE_SCOPE.md) governs GC UI design-system releases: ship a documented, versioned, tested **supported subset**, not the entire aspirational 63-pattern/native-platform catalog. A second physical Android phone, unplugged energy/GPU instrumentation, and additional manual desktop VoiceOver/NVDA/Orca sessions are **optional QA**, not blockers for a scoped stable design-system release. Accessibility/security functionality of what *is* shipped remains mandatory; do not claim unverified WCAG certification, native installers, AT parity or power savings. The source remains experimental \`0.2.0-alpha.1\` until a real scoped package is approved.

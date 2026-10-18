@@ -18,6 +18,17 @@ jobs:
           node-version: '22'
       - name: Validate generated tokens and run tests
         run: npm run check
+      - name: Verify the Foundations release candidate using an offline consumer install
+        run: npm run release:foundations:verify
+      - name: Typecheck the installed Foundations tarball with pinned TypeScript
+        run: npm run release:foundations:types
+      - name: Attach unsigned Foundations candidate tarball (not a public release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-ui-foundations-v1-rc1-qa
+          path: dist/foundations-verify/goreecloud-gc-ui-1.0.0-rc.1.tgz
+          retention-days: 30
+          if-no-files-found: error
       - name: Check source module syntax
         run: |
           node --check src/main.js
@@ -44,6 +55,8 @@ jobs:
           node --check scripts/build-v1-tokens.mjs
           node --check scripts/audit-colors.mjs
           node --check scripts/check-pack-manifest.mjs
+          node --check scripts/build-foundations-candidate.mjs
+          node --check scripts/verify-foundations-candidate.mjs
           node --check scripts/qa-real-browser-zoom.mjs
           python3 -c "import ast,pathlib;ast.parse(pathlib.Path('scripts/qa-x11-zoom.py').read_text())"
           node --check src/index.mjs

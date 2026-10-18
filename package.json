@@ -35,7 +35,10 @@
     "test:android:power-readiness:parsers": "python3 -m unittest discover -s scripts -p test_qa_android_power_readiness.py",
     "qa:android:power-readiness": "python3 scripts/qa-android-power-readiness.py",
     "qa:desktop:portability": "node scripts/check-desktop-portability.mjs",
-    "qa:native:desktop:direct": "node native/desktop/electron-smoke.mjs"
+    "qa:native:desktop:direct": "node native/desktop/electron-smoke.mjs",
+    "release:foundations:build": "node scripts/build-foundations-candidate.mjs",
+    "release:foundations:verify": "node scripts/verify-foundations-candidate.mjs",
+    "release:foundations:types": "npm exec --yes --package typescript@5.9.3 -- tsc --project dist/foundations-verify/consumer/tsconfig.json"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

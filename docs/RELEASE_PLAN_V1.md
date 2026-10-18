@@ -10,6 +10,10 @@ GC UI has a **complete candidate design-language specification** and an **experi
 - **Experimental v1 Web Reference:** `lab/v1.html`, `lab/components.html`, custom color engine, theme runtime, CSS primitives and interaction bindings.
 - **Stable Design System v1.0:** **not yet released**. Requires a declared **supported package scope**, tested versioned exports, critical quality/accessibility/security guarantees for what ships, and owner approval. Unshipped native platforms and optional research are not prerequisites.
 
+## Current staged foundations candidate (October 17, 2026)
+
+A reproducible [Foundations 1.0.0-rc.1](FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md) artifact now packages and offline-installs the restricted, typed color/theme/token subset. This is an **installable release candidate**, not stable status, npm publication, licensing approval, or a claim that the broader 63-pattern component set is finished. The stable decision stays scoped and owner-approved.
+
 ## Current evidence and gaps (October 16, 2026)
 | Workstream | Available today | Evidence | Still required |
 |---|---|---|---|
