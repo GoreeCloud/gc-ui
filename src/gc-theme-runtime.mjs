@@ -73,7 +73,8 @@ export function createThemeController({
     for(const [name,original] of overridden){
       const property='--gc-v1-color-'+kebab(name);
       if(typeof root.style.getPropertyValue==='function' &&
-         root.style.getPropertyValue(property)!==original.owned)continue;
+         root.style.getPropertyValue(property)!==original.owned ||
+         (root.style.getPropertyPriority?.(property)||'')!==original.ownedPriority)continue;
       if(original.value)root.style.setProperty(property,original.value,original.priority);
       else root.style.removeProperty(property);
     }
@@ -94,7 +95,8 @@ export function createThemeController({
         overridden.set(name,{
           value:root.style.getPropertyValue?.(property)||'',
           priority:root.style.getPropertyPriority?.(property)||'',
-          owned:value
+          owned:value,
+          ownedPriority:''
         });
         root.style.setProperty(property,value);
       }
