@@ -52,6 +52,7 @@ export function createNativeTransport(scope=globalThis){
       android.onmessage=dispatcher;
       androidMessageSubscribers.set(android,state);
     }
+    if(android.onmessage!==state.dispatcher)throw new Error('Android host callback replaced');
     const subscriber=event=>fn(event);
     state.subscribers.add(subscriber);
     let active=true;
