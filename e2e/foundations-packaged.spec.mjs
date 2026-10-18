@@ -39,7 +39,7 @@ test('installed Foundations package supports browser modules, CSS, tokens and te
   root.remove();
   return result;
  });
- expect(observed.version).toBe('1.0.0-rc.1');
+ expect(observed.version).toBe(process.env.GC_FOUNDATIONS_VERSION||'1.0.0-rc.1');
  expect(observed.exports).toEqual([
   'GC_THEME_DEFAULTS','GC_UI_VERSION','contrastRatio','createThemeController',
   'generateTheme','normalizeTheme','resolveTheme'
