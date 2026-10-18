@@ -114,3 +114,27 @@ test('theme teardown does not overwrite a consuming app newer inline change',()=
  assert.equal(properties.get('--gc-v1-color-primary'),'#112233');
  assert.equal(properties.has('--gc-v1-color-on-primary'),false);
 });
+
+test('destroy restores application-owned data-gc-* attributes and clears newly added state',()=>{
+ const root={dataset:{gcMode:'consumer-mode',gcAccent:'consumer-accent'},
+  style:{setProperty(){},removeProperty(){},getPropertyValue:()=>''},dispatchEvent(){}};
+ const controller=createThemeController({root,storage:null,media:()=>null});
+ assert.equal(root.dataset.gcMode,'light');
+ assert.equal(root.dataset.gcContrast,'standard');
+ controller.set({mode:'dark',accent:'lagoon',material:'solid'});
+ controller.destroy();
+ assert.deepEqual(root.dataset,{gcMode:'consumer-mode',gcAccent:'consumer-accent'});
+ controller.destroy();
+ assert.deepEqual(root.dataset,{gcMode:'consumer-mode',gcAccent:'consumer-accent'});
+});
+
+test('destroy does not overwrite newer consumer changes to the dataset',()=>{
+ const root={dataset:{gcMode:'before'},
+  style:{setProperty(){},removeProperty(){},getPropertyValue:()=>''},dispatchEvent(){}};
+ const controller=createThemeController({root,storage:null,media:()=>null});
+ controller.set({mode:'dark'});
+ root.dataset.gcMode='external-after-render';
+ root.dataset.gcContrast='external-contrast';
+ controller.destroy();
+ assert.deepEqual(root.dataset,{gcMode:'external-after-render',gcContrast:'external-contrast'});
+});

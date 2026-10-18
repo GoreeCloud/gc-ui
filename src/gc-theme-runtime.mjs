@@ -48,6 +48,25 @@ export function createThemeController({
   }
   let state=normalizeTheme(previous),destroyed=false;
   const overridden=new Map(),listeners=[];
+  const datasetKeys=['gcMode','gcAccent','gcMaterial','gcContrast'];
+  const priorDataset=new Map(datasetKeys.map(name=>[
+    name,{present:Object.hasOwn(root.dataset,name),value:root.dataset[name]}
+  ]));
+  const writtenDataset=new Map();
+  function setDataset(name,value){
+    root.dataset[name]=value;
+    writtenDataset.set(name,value);
+  }
+  function restoreDataset(){
+    for(const name of datasetKeys){
+      // If the application replaced a value after our last render, do not steal it.
+      if(root.dataset[name]!==writtenDataset.get(name))continue;
+      const prior=priorDataset.get(name);
+      if(prior.present)root.dataset[name]=prior.value;
+      else delete root.dataset[name];
+    }
+    writtenDataset.clear();
+  }
   // Only restore the inline declarations this controller actually replaced.
   // Existing app-owned values and !important priorities must survive teardown.
   function clearOverrides(){
@@ -64,10 +83,10 @@ export function createThemeController({
   function render(){
     if(destroyed)return;
     const next=resolveTheme(state,system());
-    root.dataset.gcMode=next.mode;
-    root.dataset.gcAccent=next.accent;
-    root.dataset.gcMaterial=next.material;
-    root.dataset.gcContrast=next.contrast;
+    setDataset('gcMode',next.mode);
+    setDataset('gcAccent',next.accent);
+    setDataset('gcMaterial',next.material);
+    setDataset('gcContrast',next.contrast);
     clearOverrides();
     if(next.accent==='custom'&&next.contrast!=='high'&&!system().forcedColors){
       for(const [name,value] of Object.entries(generateTheme(next.seed,next.mode).roles)){
@@ -114,6 +133,7 @@ export function createThemeController({
       if(destroyed)return;
       for(const [item,fn] of listeners)item.removeEventListener('change',fn);
       clearOverrides();
+      restoreDataset();
       destroyed=true;
     }
   };
