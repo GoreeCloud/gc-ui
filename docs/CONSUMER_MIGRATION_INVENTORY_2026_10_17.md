@@ -51,3 +51,45 @@ No consumer repository, Glaze repository, or Google Drive document was modified 
 The old [Glaze conformance policy](https://drive.google.com/file/d/1N4x94phDAgPKGShzTlE4R0CPCM5a8f9U/view) and [universal design standard](https://drive.google.com/file/d/1dQj4rEwPvyGsmgXZdJvFZUWpO-19_ho6/view) still name the predecessor. Their controlled update in the authoritative Drive directories is a **separate outstanding task**, not something this read-only GitHub discovery can complete.
 
 **Lifecycle note:** GC UI's private Foundations `1.0.0-rc.1` is not a publicly qualified `Anchor` design system, and this historical registry is not a GC UI production consumer acceptance record.
+
+## Follow-up: current repository and source-path verification (2026-10-17)
+
+This addendum supplements the **historical October 7 inventory** above; it does not rewrite its 18 product records or turn an old Glaze conformance registry into a live GC UI acceptance register. The GoreeCloud GitHub identity was used for repository existence checks and read-only source inspection on default branches. File paths are **source evidence**, not proof of deployed dependencies or currently running UI.
+
+### Repository identity reconciliation
+
+Of the historical registry's **15 distinct repository names**, **13 were found** as accessible GoreeCloud GitHub repositories under their recorded names. Two were **not found** at those exact names:
+
+| Former registry identity | 2026-10-17 finding | Required next check |
+| --- | --- | --- |
+| `GoreeCloud/goreecloud-tasks` | Repository not found at this exact path; [`GoreeCloud/tasks`](https://github.com/GoreeCloud/tasks) exists, with a one-file `README.md` tree when inspected | Confirm product ownership, authoritative source location and identity using the current repository index; do **not** assume this is a rename or migrated app |
+| `GoreeCloud/goreecloud-notes` | Repository not found at this exact path; [`GoreeCloud/notebook`](https://github.com/GoreeCloud/notebook) exists with a one-file `README.md` tree when inspected | Determine whether Notes was renamed, replaced, retired or resides elsewhere; do **not** equate Notebook with Notes on name similarity alone |
+
+**Found ≠ audited or adopted.** Existence checks were not sufficient to validate executable source, Glaze usage, GC UI import adoption, deployments, acceptance, or the owner of the actual current app. Avoid redirecting a migration PR to a guessed successor repository.
+
+### Concrete source evidence for initial migration triage
+
+The following selected paths were read or observed in the current default-branch trees; they are **unmigrated-candidate leads**, not an exhaustive complete-code audit. Git tree SHA values identify the inspected *tree snapshot*, not a production release or a consumer acceptance commit.
+
+| Recorded consumer | Read-only source evidence | Triage |
+| --- | --- | --- |
+| [GoreeCloud Memos](https://github.com/GoreeCloud/memos) | Tree `538ef410ba8248ae83eb69dae9fba0ae0ed09cb3` includes `web/public/goreecloud/glaze/css/glaze-v1.4.1.css` and `web/public/goreecloud/glaze/js/glaze-v1.7.0.mjs`. [`docs/GLAZE-ADOPTION.md`](https://github.com/GoreeCloud/memos/blob/main/docs/GLAZE-ADOPTION.md) explicitly describes pinned legacy runtime linkage and outstanding local acceptance. | **P1 — explicit old runtime sources.** Resolve current frontend entrypoint, map replacement requirements, validate GC UI package first; no blind import rewrite or production change. |
+| [GoreeCloud Website](https://github.com/GoreeCloud/static-websites) | Tree `4746af244b8e59f4939fb327f923e3bbfff5e335` includes `sites/design/css/glaze.css` and related old CSS. [`sites/main/glaze.lock.json`](https://github.com/GoreeCloud/static-websites/blob/main/sites/main/glaze.lock.json) identifies Glaze `1.7.0`, `source-adopted-unaccepted`. | **P1 — explicit former design-system asset and lock.** Inspect each site's distinct source and qualified build before selecting staged consumer migration. |
+| [GoreeCloud Monitor](https://github.com/GoreeCloud/monitor) | Tree `46897de12f514a43da3a668e3e9c952e63e9dea6` includes [`static/monitoring/css/glaze.1.6.0.css`](https://github.com/GoreeCloud/monitor/blob/main/static/monitoring/css/glaze.1.6.0.css), whose contents define old semantic variables and classes. | **P2 — concrete CSS contract.** Determine live entrypoint/style usage, preserve admin UX and accessibility and qualify a GC UI semantic mapping. |
+| [GoreeCloud Notify](https://github.com/GoreeCloud/notify) | Tree `1e713ceee14fb2549f03fd6ee62dbe38a64a8de22` includes [`client/lib/glaze_theme.dart`](https://github.com/GoreeCloud/notify/blob/main/client/lib/glaze_theme.dart) implementing legacy Flutter material/tokens. | **P2 — native platform contract.** GC UI native adapter maturity and actual Flutter build/interaction evidence required before any migration. |
+| [Advanced Tab Manager / Webspaces](https://github.com/GoreeCloud/firefox-addons) | Tree `cf4aef5bb5f1108f5964b39f57ba768ea3733236` contains `extensions/advanced-tab-manager/src/shared/glaze.css` and `extensions/webspaces/ui/glaze-webspaces.css`. | **P2 — source file candidates.** Check both extension entrypoints, CSP, browser-native UX and permission boundaries. |
+| [GoreeCloud Security Center](https://github.com/GoreeCloud/wardveil) | Tree `577f40827693a4872040249f03cdb69d1411a61c` contains `website/glaze-ui-1.5.0.css` and versioned adoption records. | **P2 — source file candidates.** Security truth and policy gates must remain entirely provider-owned. |
+| [GoreeCloud Privacy Center](https://github.com/GoreeCloud/privacy-shield) | Tree `8be5fee633f1da19b2d195dc6ae235c2f94d16d6` contains `website/glaze-ui-2.1.0.css`. | **P2 — source file candidate.** Consent/permission and provider-truth boundaries are non-negotiable. |
+| [GoreeCloud News & Weather](https://github.com/GoreeCloud/news-weather) | Tree `c2aa6df47dae3629e83d9ba3ce9f727cb68fae0a` contains `docs/GLAZE-ADOPTION-1.7.md`, which is historical/adoption documentation evidence only. | **Discovery** — inspect current runtime source before classifying any live Glaze dependency. |
+
+For other accessible historical candidates, no complete source-content audit was performed in this follow-up. **No absence of legacy dependencies is inferred from uninspected repositories or filename-only results.** Tree matching was deliberately bounded and may miss embedded CSS, imports, differently branded tokens, generated code, vendored binaries, symlinks or deployed artifacts.
+
+### Sequencing and explicit completion gate
+
+1. **Identity:** reconcile the two missing historical names using the authoritative GoreeCloud repository index. Resolve current main branch, owner and product-specific source roots for all 18 records; do not overwrite history with guesses.
+2. **Read-only source inventory:** on the **verified current checkout** for each consumer, run [the bounded legacy auditor](CONSUMER_MIGRATION_AUDIT.md), review path/line findings, and preserve exact revision plus any `incomplete` flags. A clean scan alone is not acceptance.
+3. **First vertical slice:** prioritize Memos and the main website **only after** a supported GC UI package/API and license decision exist; implement original components/tokens, prove browser/accessibility/security behavior, and retain bounded rollback. Existing production-facing Glaze source must not be removed merely because this inventory was updated.
+4. **Native and sensitive surfaces:** tackle Notify's Flutter bridge and Wardveil/Privacy Shield after platform-specific contract and provider-boundary verification. Do not require a one-to-one relabeling of historical Glaze internals.
+5. **Closure:** reconcile Drive authority in place, qualify each actual consumer, verify no live Glaze imports/dependencies or unresolved required bridges, then perform separately verified retirement. The [GC UI succession registry](../registry/design-authority.v1.json) must keep its completion booleans `false` until real evidence establishes otherwise.
+
+**Scope of this addendum:** repository discovery, evidence preservation and migration ordering only. No consumer application, production service, release metadata, Google Drive record or predecessor lifecycle state was changed by this follow-up.
