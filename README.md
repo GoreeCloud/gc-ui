@@ -1,9 +1,9 @@
 # GoreeCloud UI (GC UI)
 
-**Stable Foundations 1.0.0 is available:** [Official GitHub release](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0) with an Apache-2.0 npm-format tarball and SHA256SUMS. Download and verify the checksum before local tarball installation. This package's stable scope is semantic tokens, the color engine, and the browser theme controller; the complete development workspace remains `0.2.0-alpha.1` and experimental. Publication to the npmjs.org registry has **not** been verified. See [stable release details](docs/FOUNDATIONS_STABLE_RELEASE.md) and [the scoped release policy](docs/STABLE_RELEASE_SCOPE.md).
+**Stable Foundations 1.0.1 is available:** [Official GitHub release](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.1) with an Apache-2.0 npm-format tarball and SHA256SUMS. Download and verify the checksum before local tarball installation. This package's stable scope is semantic tokens, the color engine, and the browser theme controller; the complete development workspace remains `0.2.0-alpha.1` and experimental. Publication to the npmjs.org registry has **not** been verified. See [stable release details](docs/FOUNDATIONS_STABLE_RELEASE.md) and [the scoped release policy](docs/STABLE_RELEASE_SCOPE.md).
 
 
-**License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. A versioned Foundations 1.0.0 release has a separate, narrow supported export contract, verified independently.
+**License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. The versioned Foundations 1.0.1 release has a separate, narrow supported export contract, verified independently.
 
 **The original adaptive interface design language for GoreeCloud.**
 
