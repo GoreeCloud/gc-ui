@@ -2,6 +2,10 @@
 
 **Owner clarification:** 2026-10-17. **Applies to:** GoreeCloud/gc-ui design-system releases. **Priority:** This policy supersedes older roadmap/QA wording that describes the optional native research tracks below as *mandatory* stable-release blockers.
 
+## Verified Foundations publication checkpoint
+
+On October 17, 2026 (America/Chicago), owner-approved **Apache-2.0 Foundations 1.0.0** was [released publicly on GitHub](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0). Archive hash, exact source, checks and install evidence are in [Foundations stable release notes](FOUNDATIONS_STABLE_RELEASE.md). This is the scoped release permitted by this policy. npmjs.org distribution, the broader experimental component catalog, ecosystem migration and platform Anchor classification are separate matters; they remain unevaluated or outstanding as documented.
+
 ## Exclusive design authority and separate release maturity
 
 GoreeCloud UI is the owner-designated **permanent successor** to the predecessor design system. The [succession record](DESIGN_SYSTEM_SUCCESSION.md) separates this target authority from still-pending Drive governance supersession, consumer migrations and predecessor retirement. This policy governs the **scoped GC UI artifact only**; passing its release gates does not prove ecosystem-wide cutover or automatically grant the established Seal/Anchor classification.
