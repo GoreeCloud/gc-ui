@@ -8,6 +8,38 @@ const PATH=fileURLToPath(new URL('../registry/consumer-migration-reconciliation.
 const SHA=/^[a-f0-9]{40}$/;
 const REPO=/^GoreeCloud\/[A-Za-z0-9._-]+$/;
 const STATES=new Set(['repository-verified','source-path-verified','needs-product-confirmation','unresolved']);
+const AUDIT_STATES=new Set(['not-run','incomplete','legacy-dependency-evidence','manual-review-required','no-legacy-evidence-detected']);
+const NONNEGATIVE_SAFE_INTEGER=value=>Number.isSafeInteger(value)&&value>=0;
+function verifyStaticAudit(migration,cur,name,fail){
+ const status=migration.staticSourceAudit,evidence=migration.staticAuditEvidence;
+ if(!AUDIT_STATES.has(status)){fail('unknown static audit status '+name);return;}
+ if(status==='not-run'){
+  if(evidence!=null)fail('unrun source audit must have no evidence '+name);
+  return;
+ }
+ if(!evidence||typeof evidence!=='object'||Array.isArray(evidence)){
+  fail('audited source lacks evidence '+name);return;
+ }
+ if(cur.identityState!=='source-path-verified')fail('audit requires verified consumer source subtree '+name);
+ if(!SHA.test(evidence.auditorRevision||''))fail('audit lacks exact scanner revision '+name);
+ if(evidence.consumerRevision!==cur.headSha)fail('stale or mismatched consumer audit revision '+name);
+ if(evidence.sourcePath!==cur.sourcePath)fail('audit source path mismatch '+name);
+ if(!/^\d{4}-\d{2}-\d{2}$/.test(evidence.scannedAt||''))fail('audit date missing '+name);
+ if(!NONNEGATIVE_SAFE_INTEGER(evidence.filesScanned)||evidence.filesScanned===0||
+    !NONNEGATIVE_SAFE_INTEGER(evidence.bytesScanned))fail('audit file/byte count invalid '+name);
+ const totals=evidence.totals||{};
+ for(const key of ['active','review','informational','incomplete'])
+  if(!NONNEGATIVE_SAFE_INTEGER(totals[key]))fail('audit count invalid '+key+' '+name);
+ if(!Array.isArray(evidence.incompleteReasons)||
+    evidence.incompleteReasons.length!==totals.incomplete||
+    evidence.incompleteReasons.some(x=>!x||typeof x.reason!=='string'||!x.reason||
+      typeof x.path!=='string'||x.path.startsWith('/')||x.path.split('/').includes('..')))
+  fail('audit incomplete evidence invalid '+name);
+ const derived=totals.incomplete>0?'incomplete':totals.active>0?'legacy-dependency-evidence':
+   totals.review>0?'manual-review-required':'no-legacy-evidence-detected';
+ if(status!==derived)fail('static audit result contradicts findings '+name);
+}
+
 
 export function verifyConsumerReconciliation(data){
  const errors=[];
@@ -45,8 +77,9 @@ export function verifyConsumerReconciliation(data){
     (typeof cur.sourcePath!=='string'||cur.sourcePath==='.'||cur.sourcePath.startsWith('/')||cur.sourcePath.includes('..')))
     fail('source-path-verified must be a safe actual subdirectory '+name);
   if(typeof cur.sourceRemarks!=='string'||cur.sourceRemarks.length<15)fail('missing evidence caveat '+name);
-  if(migration.staticSourceAudit!=='not-run'||migration.actualGcUiAcceptance!=='not-evaluated'||migration.migrationComplete!==false)
+  if(migration.actualGcUiAcceptance!=='not-evaluated'||migration.migrationComplete!==false)
    fail('unsupported adoption/acceptance claims '+name);
+  verifyStaticAudit(migration,cur,name,fail);
   if(cur.repository==='GoreeCloud/android-app-defaults'&&
    ['Launcher','Keyboard','Gallery','Since'].some(label=>name.endsWith(' '+label)))
    fail('obsolete Android monorepo mapping reintroduced '+name);
@@ -62,6 +95,7 @@ export function verifyConsumerReconciliation(data){
   sourceSubtreesConfirmed:data.entries.filter(x=>x.current.identityState==='source-path-verified').length,
   productIdentityOpen:data.entries.filter(x=>x.current.identityState==='needs-product-confirmation').length,
   unresolved:data.entries.filter(x=>x.current.identityState==='unresolved').length,
+  sourceAuditsRecorded:data.entries.filter(x=>x.migration.staticSourceAudit!=='not-run').length,
   migrationsAccepted:0
  };
 }

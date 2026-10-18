@@ -6,7 +6,7 @@ const read=()=>JSON.parse(readFileSync(new URL('../registry/consumer-migration-r
 const cloned=()=>structuredClone(read());
 test('exact-head provider reconciliation is internally consistent and no adoption is invented',()=>{
  const count=verifyLedgerFile();
- assert.deepEqual(count,{entries:18,repositoriesConfirmed:14,sourceSubtreesConfirmed:4,productIdentityOpen:3,unresolved:1,migrationsAccepted:0});
+ assert.deepEqual(count,{entries:18,repositoriesConfirmed:14,sourceSubtreesConfirmed:4,productIdentityOpen:3,unresolved:1,sourceAuditsRecorded:2,migrationsAccepted:0});
 });
 test('different old and new canonical Android locations preserve history',()=>{
  const x=read().entries;
@@ -42,4 +42,29 @@ test('rejects traversal and fabricated verification for unresolved entries',()=>
  assert.throws(()=>verifyConsumerReconciliation(x),/safe actual subdirectory/);
  x=cloned();x.entries.find(e=>e.legacyProduct==='GoreeCloud Notes').current.headSha='0'.repeat(40);
  assert.throws(()=>verifyConsumerReconciliation(x),/unresolved entry pretends/);
+});
+
+test('preserves bounded exact-revision source audit evidence without claiming migration',()=>{
+ const entries=read().entries;
+ const memos=entries.find(x=>x.legacyProduct==='GoreeCloud Memos');
+ const website=entries.find(x=>x.legacyProduct==='GoreeCloud Website');
+ assert.equal(memos.migration.staticSourceAudit,'incomplete');
+ assert.deepEqual(memos.migration.staticAuditEvidence.incompleteReasons,[
+  {reason:'binary-content-in-text-file',path:'src/components/MemoContent/useSearchMatchHighlight.ts'}
+ ]);
+ assert.equal(website.migration.staticSourceAudit,'legacy-dependency-evidence');
+ assert.equal(website.migration.staticAuditEvidence.totals.active,356);
+ assert.equal(website.migration.staticAuditEvidence.totals.incomplete,0);
+ assert.equal(memos.migration.migrationComplete,false);
+ assert.equal(website.migration.actualGcUiAcceptance,'not-evaluated');
+});
+test('rejects invented, unproven or mismatched source audit evidence',()=>{
+ const mutate=fn=>{const x=cloned();const e=x.entries.find(v=>v.legacyProduct==='GoreeCloud Website');fn(e);return x;};
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticAuditEvidence=undefined;})),/lacks evidence/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticAuditEvidence.consumerRevision='0'.repeat(40);})),/mismatched consumer audit revision/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticAuditEvidence.sourcePath='../private';})),/audit source path mismatch/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticSourceAudit='no-legacy-evidence-detected';})),/contradicts findings/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticAuditEvidence.totals.active=-1;})),/audit count invalid/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.staticSourceAudit='not-run';})),/unrun source audit/);
+ assert.throws(()=>verifyConsumerReconciliation(mutate(e=>{e.migration.migrationComplete=true;})),/unsupported adoption/);
 });

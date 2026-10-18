@@ -76,9 +76,9 @@ Light GC UI screens use a softly colored **Canvas**, an off-white **Surface**, a
 
 See [Color and theme policy](docs/COLOR_THEMES.md) for the normative anti-whiteout principle. It is a design review guideline, not an inflexible percentage cap on white pixels.
 
-## First installable GC UI Foundations release candidate
+## Foundations release-candidate history
 
-The [Foundations v1 release candidate](docs/FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md) stages a strictly supported seven-export color/theme API with semantic token JSON/CSS and TypeScript types. The build produces a nine-file **offline-installable npm tarball**, runs a real consumer smoke test and can typecheck from that tarball; GitHub CI retains a candidate QA artifact. **No npm publication, license change, stable tag or native release** occurs. The root project remains private \`0.2.0-alpha.1\` and experimental component APIs stay outside the candidate contract.
+The [Foundations v1 release candidate](docs/FOUNDATIONS_RELEASE_CANDIDATE_2026_10_17.md) stages a strictly supported seven-export color/theme API with semantic token JSON/CSS and TypeScript types. The build produces a nine-file **offline-installable npm tarball**, runs a real consumer smoke test and can typecheck from that tarball; GitHub CI retains a candidate QA artifact. That recorded RC workflow did not publish to npm or ship native hosts. The subsequent **Apache-2.0 Foundations v1.0.0 stable GitHub release** supersedes the candidate; npm registry publication remains unverified. See [release notes](docs/FOUNDATIONS_STABLE_RELEASE.md). The root project remains private \`0.2.0-alpha.1\` and experimental component APIs stay outside the candidate contract.
 
 ## Stable release scope — owner-approved
 

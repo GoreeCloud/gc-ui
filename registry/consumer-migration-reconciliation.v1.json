@@ -88,9 +88,24 @@
         "verifiedAt": "2026-10-17"
       },
       "migration": {
-        "staticSourceAudit": "not-run",
+        "staticSourceAudit": "legacy-dependency-evidence",
         "actualGcUiAcceptance": "not-evaluated",
-        "migrationComplete": false
+        "migrationComplete": false,
+        "staticAuditEvidence": {
+          "auditorRevision": "ad730f63cb28e8337627a6b79372345deeb9556d",
+          "consumerRevision": "4746af244b8e59f4939fb327f923e3bbfff5e335",
+          "sourcePath": "sites/main",
+          "scannedAt": "2026-10-18",
+          "filesScanned": 122,
+          "bytesScanned": 853510,
+          "totals": {
+            "active": 356,
+            "review": 223,
+            "informational": 120,
+            "incomplete": 0
+          },
+          "incompleteReasons": []
+        }
       }
     },
     {
@@ -412,16 +427,37 @@
         "repository": "GoreeCloud/memos",
         "sourcePath": "web",
         "repoId": 1409419590,
-        "headSha": "538ef410ba8248ae83eb69dae9fba0ae0ed09cb3",
+        "headSha": "51d4a17384362e5d872d7f4a80906108c676ca99",
         "identityState": "source-path-verified",
-        "sourceRemarks": "Substantive web/src exists; prior Memos historical lineage remains separate",
-        "verifiedAt": "2026-10-17"
+        "sourceRemarks": "Verified Memos web source at current main revision; active legacy stylesheet/script imports, no GC UI acceptance",
+        "verifiedAt": "2026-10-18"
       },
       "migration": {
-        "staticSourceAudit": "not-run",
+        "staticSourceAudit": "incomplete",
         "actualGcUiAcceptance": "not-evaluated",
-        "migrationComplete": false
+        "migrationComplete": false,
+        "staticAuditEvidence": {
+          "auditorRevision": "ad730f63cb28e8337627a6b79372345deeb9556d",
+          "consumerRevision": "51d4a17384362e5d872d7f4a80906108c676ca99",
+          "sourcePath": "web",
+          "scannedAt": "2026-10-18",
+          "filesScanned": 754,
+          "bytesScanned": 6115164,
+          "totals": {
+            "active": 41,
+            "review": 36,
+            "informational": 0,
+            "incomplete": 1
+          },
+          "incompleteReasons": [
+            {
+              "reason": "binary-content-in-text-file",
+              "path": "src/components/MemoContent/useSearchMatchHighlight.ts"
+            }
+          ]
+        }
       }
     }
-  ]
+  ],
+  "migrationEvidenceUpdatedAt": "2026-10-18"
 }
