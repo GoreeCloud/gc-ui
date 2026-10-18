@@ -47,7 +47,7 @@ assert.equal(metadata.private,!stable,'Invalid release privacy for the selected 
 assert.equal(metadata.license,stable?'Apache-2.0':'UNLICENSED','Wrong release license');
 assert.equal(Object.keys(metadata.exports).length,3,'Unsupported entrypoint exposed');
 const provenance=JSON.parse(readFileSync(join(staging,'provenance.json'),'utf8'));
-assert.equal(provenance.releaseCandidate,metadata.version);
+assert.equal(stable?provenance.releaseVersion:provenance.releaseCandidate,metadata.version);
 assert.deepEqual(Object.keys(provenance.files).sort(),expected.filter(file=>file!=='provenance.json').sort());
 for(const [name,hash] of Object.entries(provenance.files)){
  const content=readFileSync(join(staging,name));
@@ -107,5 +107,5 @@ assert.equal(createHash('sha256').update(readFileSync(tarball)).digest('hex'),ar
  'Release artifact changed during verification');
 console.log('Foundations archive SHA-256: '+archiveSha256);
 console.log(result.trim());
-console.log('Foundations RC verified: offline tarball installation, '+packed.length+
+console.log('Foundations '+(stable?'stable':'RC')+' verified: offline tarball installation, '+packed.length+
  ' allowlisted files, restricted imports, SHA-256 provenance; '+pack[0].filename);
