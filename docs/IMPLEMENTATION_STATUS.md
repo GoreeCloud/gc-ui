@@ -1,4 +1,6 @@
 # GC UI — Implementation Status & Production Readiness
+
+**Current release distinction (2026-10-17):** [Foundations v1.0.0](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0) is officially stable for the published tokens/color/theme-controller scope under Apache-2.0. Source tag `foundations-v1.0.0` resolves to `1d8e25330a49cdab4412c1323e95baafd136b7b2` and the [exact-head CI](https://github.com/GoreeCloud/gc-ui/actions/runs/39098058411) passed. The archive checksum was verified through the publicly downloadable files. The larger GC UI workspace remains alpha and downstream migration/retirement is incomplete. Historical checkpoints below remain dated evidence, not current publication status.
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
 ## 2026-10-17 integrated Foundations and native-host stability checkpoint
