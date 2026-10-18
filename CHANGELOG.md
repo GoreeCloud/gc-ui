@@ -2,6 +2,13 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Theme ownership and native-client lifecycle stabilization (2026-10-17)
+- [PR #20](https://github.com/GoreeCloud/gc-ui/pull/20) restores pre-existing app-owned inline theme roles and CSS declaration priorities when custom accents are changed or the Foundations controller is destroyed, while protecting newer external changes.
+- [PR #21](https://github.com/GoreeCloud/gc-ui/pull/21) prevents native host response-ID collisions across multiple simultaneous clients and stale responses across client lifetimes.
+- [PR #22](https://github.com/GoreeCloud/gc-ui/pull/22) replaces stacked Android `onmessage` wrappers with a shared, independently disposable dispatcher; earlier callback and externally replaced handler ownership are preserved. The initially failing Android hosted job retried successfully after Maven Central returned HTTP 429 dependency-download responses.
+- [PR #23](https://github.com/GoreeCloud/gc-ui/pull/23) covers color restoration using the **real** browser CSSOM in Chromium and Firefox, supplementing direct Node contract tests.
+- All four are merged into `GoreeCloud/gc-ui`. **The root package is still private alpha `0.2.0-alpha.1`, the Foundations RC remains private `1.0.0-rc.1` and no consumer cutover or production release occurred.**
+
 ## Source and native stability verification (2026-10-17)
 - [PR #16](https://github.com/GoreeCloud/gc-ui/pull/16) prevented the exclusive-design-authority guard from mistaking regenerated, Git-ignored Android APK assets for first-party source. A regression test now reproduces the post-build condition without weakening checks on actual implementation files.
 - [PR #17](https://github.com/GoreeCloud/gc-ui/pull/17) extended the private Foundations candidate's offline consumer verification: the provenance manifest must cover all eight non-manifest package files, and every file must match its SHA-256 digest **after installation**, not only in staging.
