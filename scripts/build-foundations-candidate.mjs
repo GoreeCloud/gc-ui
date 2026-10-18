@@ -14,7 +14,7 @@ const contract=[
  ['src/gc-theme-runtime.mjs','src/gc-theme-runtime.mjs'],
  ['tokens/gc.v1.tokens.json','tokens/gc.v1.tokens.json'],
  ['styles/gc.v1.generated.css','styles/gc.v1.generated.css'],
- [stable?'release/foundations/README-STABLE.md':'release/foundations/README.md','README.md']
+ [stable?'release/foundations/STABLE.md':'release/foundations/README.md','README.md']
 ];
 const source=(name)=>readFileSync(join(root,name),'utf8');
 const check=process.argv.includes('--check');
