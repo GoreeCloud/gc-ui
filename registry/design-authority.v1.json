@@ -23,7 +23,9 @@
     "governanceDocumentsAmended": false,
     "allConsumerMigrationsVerified": false,
     "predecessorRepositoriesRetired": false,
-    "exclusiveCutoverCompleted": false
+    "exclusiveCutoverCompleted": false,
+    "foundationsStableSourceCommit": "1d8e25330a49cdab4412c1323e95baafd136b7b2",
+    "foundationsStableArchiveSha256": "8db29188f90da8936f5452a01b2414ffe8f295092320f1d67221c4a95bc28102"
   },
   "constraints": {
     "writableRepository": "GoreeCloud/gc-ui",
