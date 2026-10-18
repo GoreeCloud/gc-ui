@@ -20,8 +20,8 @@ test('single-design-authority owner decision is machine readable and release cla
  assert.equal(pkg.private,true);
  assert.equal(pkg.license,'Apache-2.0');
  assert.equal(contract.verified.foundationsPublishedStable,true);
- assert.equal(contract.verified.foundationsStableVersion,'1.0.0');
- assert.equal(contract.verified.foundationsStableReleaseTag,'foundations-v1.0.0');
+ assert.equal(contract.verified.foundationsStableVersion,'1.0.1');
+ assert.equal(contract.verified.foundationsStableReleaseTag,'foundations-v1.0.1');
  assert.equal(contract.verified.foundationsNpmRegistryPublished,false);
  assert.match(contract.verified.foundationsStableSourceCommit,/^[a-f0-9]{40}$/);
  assert.match(contract.verified.foundationsStableArchiveSha256,/^[a-f0-9]{64}$/);
