@@ -16,16 +16,16 @@
     "currentSourceMaturity": "alpha",
     "foundationsCandidate": "1.0.0-rc.1",
     "foundationsPublishedStable": true,
-    "foundationsStableVersion": "1.0.0",
-    "foundationsStableReleaseTag": "foundations-v1.0.0",
+    "foundationsStableVersion": "1.0.1",
+    "foundationsStableReleaseTag": "foundations-v1.0.1",
     "foundationsNpmRegistryPublished": false,
     "predecessorCodeImportedIntoCurrentGCUI": false,
     "governanceDocumentsAmended": false,
     "allConsumerMigrationsVerified": false,
     "predecessorRepositoriesRetired": false,
     "exclusiveCutoverCompleted": false,
-    "foundationsStableSourceCommit": "1d8e25330a49cdab4412c1323e95baafd136b7b2",
-    "foundationsStableArchiveSha256": "8db29188f90da8936f5452a01b2414ffe8f295092320f1d67221c4a95bc28102"
+    "foundationsStableSourceCommit": "7e0b61ee70af2edb87aa736cca483425f0aacaf4",
+    "foundationsStableArchiveSha256": "275d7e6dc9503b2e74b3190bcecf176d73d2345860e8a20fa5faa3b326cd2298"
   },
   "constraints": {
     "writableRepository": "GoreeCloud/gc-ui",

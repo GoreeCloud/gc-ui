@@ -2,6 +2,10 @@
 
 **Owner clarification:** 2026-10-17. **Applies to:** GoreeCloud/gc-ui design-system releases. **Priority:** This policy supersedes older roadmap/QA wording that describes the optional native research tracks below as *mandatory* stable-release blockers.
 
+## Verified Foundations 1.0.1 maintenance release (2026-10-18)
+
+[Foundations 1.0.1](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.1) is the latest stable Apache-2.0 package. Source `7e0b61ee70af2edb87aa736cca483425f0aacaf4` passed [exact-head CI](https://github.com/GoreeCloud/gc-ui/actions/runs/39139538419). The public tarball SHA-256 is `275d7e6dc9503b2e74b3190bcecf176d73d2345860e8a20fa5faa3b326cd2298`; independent public download passed SHA256SUMS verification. The previous 1.0.0 archive remains immutable. Only Foundations is stable; the development workspace and downstream consumers retain separate acceptance gates.
+
 ## Verified Foundations stable release (2026-10-17)
 
 [Foundations 1.0.0](https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.0) is publicly released under Apache-2.0. The archive, checksum, and exact-head CI are verified. The source workspace remains alpha and the npm registry distribution and application migrations remain unverified. Earlier sections preserve historical planning facts.
