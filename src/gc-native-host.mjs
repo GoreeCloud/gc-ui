@@ -35,7 +35,10 @@ export function createNativeTransport(scope=globalThis){
   if(android&&typeof android.postMessage==='function'){
    return {platform:'android',postMessage:text=>android.postMessage(text),subscribe:fn=>{
     const previous=android.onmessage;
-    const listener=event=>{previous?.(event);fn(event)};
+    const listener=event=>{
+      try{if(typeof previous==='function')previous.call(android,event)}catch{/* An unrelated listener must not block current host responses. */}
+      fn(event);
+    };
     android.onmessage=listener;
     return ()=>{if(android.onmessage===listener)android.onmessage=previous};
    }};

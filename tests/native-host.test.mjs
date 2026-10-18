@@ -68,6 +68,31 @@ test('desktop and android transports expose only postMessage and subscription',(
  unsubscribe();assert.equal(android.onmessage,null);
 });
 
+test('Android transport delivers host replies even when an earlier message callback fails',async()=>{
+ let previousReceiver;
+ const earlier=function(){previousReceiver=this;throw new Error('unrelated listener failed')};
+ const android={postMessage(){},onmessage:earlier};
+ const client=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:android}),timeoutMs:250});
+ const response=client.request('getCapabilities');
+ android.onmessage({data:JSON.stringify({
+  v:1,type:'gc-host/response',id:'gc1',ok:true,result:{host:'android'}
+ })});
+ assert.deepEqual(await response,{host:'android'});
+ assert.equal(previousReceiver,android,'previous callback retains the original receiver');
+ client.destroy();
+ assert.equal(android.onmessage,earlier,'teardown restores the preexisting callback');
+
+ const invalid={postMessage(){},onmessage:'not-a-function'};
+ const next=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:invalid}),timeoutMs:250});
+ const pending=next.request('selectionFeedback');
+ invalid.onmessage({data:JSON.stringify({
+  v:1,type:'gc-host/response',id:'gc1',ok:true,result:{performed:true}
+ })});
+ assert.deepEqual(await pending,{performed:true});
+ next.destroy();
+ assert.equal(invalid.onmessage,'not-a-function');
+});
+
 test('malformed native host capability types and inconsistent platform identities fail closed',()=>{
  const root={dataset:{}};
  const valid={protocol:1,platform:'phone',host:'android',nativeAdapterInstalled:true};
