@@ -43,7 +43,7 @@
     "migration:audit": "node scripts/audit-legacy-consumer.mjs",
     "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs"
   },
-  "license": "UNLICENSED",
+  "license": "Apache-2.0",
   "types": "./types/index.d.ts",
   "exports": {
     ".": {
