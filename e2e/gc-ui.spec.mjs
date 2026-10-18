@@ -335,3 +335,24 @@ test('real CSSOM restores existing color overrides and leaves newer app changes 
   external:'#334455',externalPriority:'important',generatedRemoved:true
  });
 });
+
+test('real CSSOM keeps an externally added important declaration',async({page})=>{
+ await page.goto('/lab/components.html');
+ const observed=await page.evaluate(async()=>{
+  const {createThemeController}=await import('/src/gc-theme-runtime.mjs');
+  const root=document.createElement('section');
+  document.body.append(root);
+  const property='--gc-v1-color-primary';
+  const controller=createThemeController({root,storage:null,media:()=>null});
+  controller.set({accent:'custom',seed:'#2A78B9'});
+  const value=root.style.getPropertyValue(property);
+  root.style.setProperty(property,value,'important');
+  controller.destroy();
+  const result={value:root.style.getPropertyValue(property),
+   priority:root.style.getPropertyPriority(property)};
+  root.remove();
+  return result;
+ });
+ expect(observed.priority).toBe('important');
+ expect(observed.value).toMatch(/^#[0-9a-fA-F]{6}$/);
+});
