@@ -38,12 +38,13 @@ const expected=[
  'src/gc-color-engine.mjs','src/gc-theme-runtime.mjs','src/index.mjs',
  'styles/gc.v1.generated.css','tokens/gc.v1.tokens.json','types/index.d.ts'
 ];
+if(stable)expected.push('LICENSE');
 const packed=pack[0].files.map(file=>file.path).sort();
 assert.deepEqual(packed,expected.slice().sort(),'Candidate includes extraneous/missing files');
 const metadata=JSON.parse(readFileSync(join(staging,'package.json'),'utf8'));
-assert.equal(metadata.version,'1.0.0-rc.1');
-assert.equal(metadata.private,true,'Candidate must not be publishable without approval');
-assert.equal(metadata.license,'UNLICENSED','Cannot invent a license');
+assert.equal(metadata.version,releaseVersion);
+assert.equal(metadata.private,!stable,'Invalid release privacy for the selected mode');
+assert.equal(metadata.license,stable?'Apache-2.0':'UNLICENSED','Wrong release license');
 assert.equal(Object.keys(metadata.exports).length,3,'Unsupported entrypoint exposed');
 const provenance=JSON.parse(readFileSync(join(staging,'provenance.json'),'utf8'));
 assert.equal(provenance.releaseCandidate,metadata.version);
