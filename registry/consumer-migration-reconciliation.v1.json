@@ -1,0 +1,427 @@
+{
+  "schema": "gc-ui-consumer-reconciliation.v1",
+  "auditDate": "2026-10-17",
+  "authority": "read-only evidence; not a consumer certification or live dependency census",
+  "inputSources": {
+    "legacyRegistry": {
+      "repository": "GoreeCloud/glaze",
+      "commit": "08ad5a45865338011019fb56e07625f011c159bf",
+      "path": "consumers/registry.json",
+      "auditedAt": "2026-10-07"
+    },
+    "driveIndex": {
+      "document": "GoreeCloud/Sources/GitHub-Repository-Index.xlsx",
+      "lastVerified": "2026-10-12",
+      "url": "https://docs.google.com/spreadsheets/d/1DXaEn3BDL18F1UrQpHUdkmGhLyAdiY0a/edit"
+    },
+    "liveProvider": {
+      "account": "GoreeCloud",
+      "verificationDate": "2026-10-17",
+      "method": "GitHub repository metadata, branches/main and selected contents API read-only"
+    }
+  },
+  "ownerDecision": "GoreeCloud UI permanently replaces Glaze; do not maintain parallel design authorities",
+  "conditions": {
+    "drivePoliciesSuperseded": false,
+    "legacyConsumersMigrated": false,
+    "releasePromotedStable": false
+  },
+  "entries": [
+    {
+      "legacyProduct": "GoreeCloud Care",
+      "legacy": {
+        "repository": "GoreeCloud/goreecloud-zorin-os",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/zorin-os",
+        "sourcePath": null,
+        "repoId": 1357236217,
+        "headSha": "4562f2fd1a2c389c51b05de08111f54efe52d109",
+        "identityState": "needs-product-confirmation",
+        "sourceRemarks": "No evidence that the Zorin OS customization repository represents the legacy Care application",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Manager",
+      "legacy": {
+        "repository": "GoreeCloud/goreecloud-manager",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/manager",
+        "sourcePath": ".",
+        "repoId": 1330611146,
+        "headSha": "ebf5ea526c14a198ebaabf76fe923e82bddd2ad6",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Live repository description names GoreeCloud Manager; UI source subtree not yet audited",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Website",
+      "legacy": {
+        "repository": "GoreeCloud/static-websites",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/static-websites",
+        "sourcePath": "sites/main",
+        "repoId": 1358646162,
+        "headSha": "4746af244b8e59f4939fb327f923e3bbfff5e335",
+        "identityState": "source-path-verified",
+        "sourceRemarks": "Live sites/main directory; no runtime GC UI adoption claim",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Tasks",
+      "legacy": {
+        "repository": "GoreeCloud/goreecloud-tasks",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/tasks",
+        "sourcePath": ".",
+        "repoId": 1413525924,
+        "headSha": "316e7d5c87da1a51cc20e3b47d73d1880a82167f",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Repository root is README-only at this revision",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Launcher",
+      "legacy": {
+        "repository": "GoreeCloud/android-app-defaults",
+        "sourcePath": "apps/launcher",
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/launcher",
+        "sourcePath": ".",
+        "repoId": 1414991440,
+        "headSha": "23f27b60e2b98aec00fa3e4a0ed17938000c2026",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Standalone repo root README-only; former monorepo now has camera and clock only",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Keyboard",
+      "legacy": {
+        "repository": "GoreeCloud/android-app-defaults",
+        "sourcePath": "apps/keyboard",
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/keyboard",
+        "sourcePath": ".",
+        "repoId": 1410079440,
+        "headSha": "264dac81dabfdaf028851cf4dff09912c351f23b",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Standalone repo contains README, planning and docs; no compiled UI evidence",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Notes",
+      "legacy": {
+        "repository": "GoreeCloud/goreecloud-notes",
+        "sourcePath": null,
+        "registryStatus": "unverified"
+      },
+      "current": {
+        "repository": null,
+        "sourcePath": null,
+        "repoId": null,
+        "headSha": null,
+        "identityState": "unresolved",
+        "sourceRemarks": "Both GoreeCloud/goreecloud-notes and GoreeCloud/notes return not found; do not infer a replacement",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Monitor",
+      "legacy": {
+        "repository": "GoreeCloud/monitor",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/monitor",
+        "sourcePath": ".",
+        "repoId": 1336209445,
+        "headSha": "46897de12f514a43da3a668e3e9c952e63e9dea6",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Exact source/UI mapping has not been inspected",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Browser",
+      "legacy": {
+        "repository": "GoreeCloud/browser",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/browser",
+        "sourcePath": ".",
+        "repoId": 1417956029,
+        "headSha": "32863174b623ff516ef885eb300c91564943637d",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Current provider repository identity differs from the October 12 index ID",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Advanced Tab Manager",
+      "legacy": {
+        "repository": "GoreeCloud/firefox-addons",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/firefox-addons",
+        "sourcePath": null,
+        "repoId": 1341782080,
+        "headSha": "cf4aef5bb5f1108f5964b39f57ba768ea3733236",
+        "identityState": "needs-product-confirmation",
+        "sourceRemarks": "Live Firefox add-ons monorepo verified; specific add-on subtree unverified",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Security Center",
+      "legacy": {
+        "repository": "GoreeCloud/wardveil",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/security-center",
+        "sourcePath": ".",
+        "repoId": 1366671077,
+        "headSha": "ba4b53ac8db03450fdbb2163cffa9bb60550ef35",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Dedicated Security Center repo exists but is a README-only scaffold; Wardveil remains separate",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Privacy Center",
+      "legacy": {
+        "repository": "GoreeCloud/privacy-shield",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/privacy-shield",
+        "sourcePath": null,
+        "repoId": 1338871147,
+        "headSha": "8be5fee633f1da19b2d195dc6ae235c2f94d16d6",
+        "identityState": "needs-product-confirmation",
+        "sourceRemarks": "Privacy Shield is an active subsystem, not verified as standalone Privacy Center UI",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Reader",
+      "legacy": {
+        "repository": "GoreeCloud/goreecloud-reader",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/reader",
+        "sourcePath": "apps",
+        "repoId": 1363506725,
+        "headSha": "402deebb7bfc2865f42d871d6e1dc9a8d20b40a8",
+        "identityState": "source-path-verified",
+        "sourceRemarks": "Live apps/android and apps/web subtrees verified",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Gallery",
+      "legacy": {
+        "repository": "GoreeCloud/android-app-defaults",
+        "sourcePath": "apps/gallery",
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/gallery",
+        "sourcePath": ".",
+        "repoId": 1415073297,
+        "headSha": "99ba2db393f89c01558e89336140a802e5ef1a10",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Standalone Gallery repo contains README and docs only",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Notify",
+      "legacy": {
+        "repository": "GoreeCloud/notify",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/notify",
+        "sourcePath": ".",
+        "repoId": 1333641035,
+        "headSha": "1e713ceee14fb2549e254f6532dbe38a64a8de22",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Live service repository verified; user-facing UI presence not established",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Since",
+      "legacy": {
+        "repository": "GoreeCloud/android-app-defaults",
+        "sourcePath": "apps/since",
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/since",
+        "sourcePath": "app",
+        "repoId": 1410129274,
+        "headSha": "8a4a90208e868fae11ab4dc5a3f32f7eb9901f55",
+        "identityState": "source-path-verified",
+        "sourceRemarks": "Live standalone Android app source subtree verified",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud News & Weather",
+      "legacy": {
+        "repository": "GoreeCloud/news-weather",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/news-weather",
+        "sourcePath": ".",
+        "repoId": 1394676455,
+        "headSha": "c2aa6df47dae3629e83d9ba3ce9f727cb68fae0a",
+        "identityState": "repository-verified",
+        "sourceRemarks": "Repository exists; source/UI subtrees not inspected",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    },
+    {
+      "legacyProduct": "GoreeCloud Memos",
+      "legacy": {
+        "repository": "GoreeCloud/memos",
+        "sourcePath": null,
+        "registryStatus": "adoption-required"
+      },
+      "current": {
+        "repository": "GoreeCloud/memos",
+        "sourcePath": "web",
+        "repoId": 1409419590,
+        "headSha": "538ef410ba8248ae83eb69dae9fba0ae0ed09cb3",
+        "identityState": "source-path-verified",
+        "sourceRemarks": "Substantive web/src exists; prior Memos historical lineage remains separate",
+        "verifiedAt": "2026-10-17"
+      },
+      "migration": {
+        "staticSourceAudit": "not-run",
+        "actualGcUiAcceptance": "not-evaluated",
+        "migrationComplete": false
+      }
+    }
+  ]
+}

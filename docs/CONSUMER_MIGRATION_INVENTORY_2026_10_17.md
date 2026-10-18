@@ -4,6 +4,8 @@
 
 This is the owner-authorized **permanent succession** from the prior design language to GC UI, **not** a claim that any of these repositories is currently deployed, currently uses the legacy UI, or has already adopted GC UI. The snapshot's status describes **the previous design-system registry's own baseline** (`1.7.0`), not GC UI acceptance. The list may be incomplete, stale or use historical repository paths, especially for products whose development has moved since October 7.
 
+**Current correction:** The [October 17 live GitHub reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) supersedes the repository-location guesses below. This remains the immutable historical record of the prior Glaze registry, not a destination list.
+
 ## Source counts
 
 - **18** product records, **15** distinct repository names in the dated Glaze registry.

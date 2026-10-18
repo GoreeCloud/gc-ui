@@ -56,6 +56,7 @@ jobs:
           node --check scripts/audit-colors.mjs
           node --check scripts/check-pack-manifest.mjs
           node --check scripts/audit-legacy-consumer.mjs
+          node --check scripts/check-consumer-reconciliation.mjs
           node --check scripts/build-foundations-candidate.mjs
           node --check scripts/verify-foundations-candidate.mjs
           node --check scripts/qa-real-browser-zoom.mjs

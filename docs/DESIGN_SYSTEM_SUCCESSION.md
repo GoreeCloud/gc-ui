@@ -37,6 +37,10 @@ The eventual exclusive authority is **GC UI**, but it is not truthful to say Gla
 
 [Consumer migration audit](CONSUMER_MIGRATION_AUDIT.md) and [dated consumer discovery snapshot](CONSUMER_MIGRATION_INVENTORY_2026_10_17.md) now provide an explicit-root, fail-closed static inventory for consumer legacy imports, tokens, assets and documentation. **It changes no consumer source** and does not count a source-clean finding as migration acceptance; governance and all production consumers remain unverified.
 
+### Current product source identities
+
+The [live provider-verified consumer reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) resolves 14 historical products to verifiable repository identities, leaves three product mappings pending and one unresolved. Exact revisions are pinned in the [read-only ledger](../registry/consumer-migration-reconciliation.v1.json). These are *not* successful consumer migrations.
+
 ## 4. Official authority and migration language
 
 **Preferred:** “GoreeCloud UI is GoreeCloud's successor design and interaction language. The prior Glaze system is being permanently retired through a verified migration.”

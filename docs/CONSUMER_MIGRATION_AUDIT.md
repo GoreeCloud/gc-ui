@@ -26,6 +26,10 @@ No root path is inferred. The auditor **does not execute files, change imports, 
 
 Historical prose in `.md` and `.txt` is nonblocking by default. Documentation containing an import or old token instruction is marked for review. Code mentions outside recognized imports are likewise review-required. Names of legacy binary assets are detected without opening their bytes. Case-specific findings can include false positives; review each before taking action.
 
+## Current live source destinations
+
+Use the [October 17 provider-verified reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) and [machine-readable ledger](../registry/consumer-migration-reconciliation.v1.json) before selecting consumer source. Check integrity with \`npm run migration:reconcile:check\`. Do not use the old source paths in the legacy registry as current destinations.
+
 ## Dated starting inventory, not current deployment proof
 
 The predecessor's [October 7 registry snapshot](CONSUMER_MIGRATION_INVENTORY_2026_10_17.md) lists 18 historical product entries across 15 repos, but cannot establish present source locations or GC UI adoption. Verify each current canonical repo before auditing or changing it.

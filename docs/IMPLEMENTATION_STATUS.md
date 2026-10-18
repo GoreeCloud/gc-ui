@@ -1,6 +1,10 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Live GitHub consumer identity reconciliation
+- [Current reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) verifies 14 current product repository identities across the dated 18-entry legacy inventory, with four application source subtrees. Three mappings still need product confirmation and Notes remains unresolved. [Ledger](../registry/consumer-migration-reconciliation.v1.json) pins exact GitHub revisions and records **zero GC UI consumer migrations**.
+- The former Android app-defaults Launcher/Keyboard/Gallery/Since paths are obsolete; do not treat their scaffold standalone repositories as working or accepted GC UI consumers.
+
 ## 2026-10-17 Read-only legacy consumer audit checkpoint
 - The [consumer migration auditor](CONSUMER_MIGRATION_AUDIT.md) and [dated historical consumer snapshot](CONSUMER_MIGRATION_INVENTORY_2026_10_17.md) identify old packages, imports, tokens, assets and historical documentation in an explicitly chosen authorized checkout. Read-only bounded scans generate no source excerpts, reject symlinks/incomplete evidence, and support strict CI exit codes.
 - **No downstream app has been migrated, no Google Drive authority changed, and no ecosystem-wide Glaze retirement is claimed** from this tool; consumer acceptance remains separately required.

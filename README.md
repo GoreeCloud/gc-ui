@@ -6,6 +6,10 @@
 
 GC UI is GoreeCloud's **designated permanent successor** to the earlier Glaze design system, developed independently rather than derived from predecessor code or assets. Its foundation combines expressive personal color, focused depth, and consistent cross-device interaction. Apple Liquid Glass and Google Material You provide *reference principles*, not source code, branding, or component implementations.
 
+## Current source of GC UI adoption work
+
+The [live consumer repository reconciliation](docs/CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) corrects the predecessor's stale paths with exact-head GitHub evidence, and [its guarded JSON ledger](registry/consumer-migration-reconciliation.v1.json) distinguishes verified repositories from scaffold-only sources, tentative mappings and unresolved products. All consumer migration acceptance remains **not evaluated**. Run \`npm run migration:reconcile:check\` before planning any downstream adoption.
+
 ## Read-only migration evidence for consumer applications
 
 The [consumer migration audit](docs/CONSUMER_MIGRATION_AUDIT.md) adds an explicit-root, bounded, non-mutating scanner for legacy design-system packages, imports, tokens, components and assets. Run \`npm run migration:audit -- --root /authorized/absolute/checkout --json --strict\` to produce a privacy-conscious report without copied source content. It **does not change other repositories, declare a consumer migrated, or override existing Drive governance**. An incomplete source scan fails closed.

@@ -2,6 +2,10 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Live consumer source reconciliation (2026-10-17)
+- Cross-checked the canonical October 12 GoreeCloud Drive repository index with live GitHub repository IDs, exact commits and source trees for the 18 historical Glaze consumer entries. Identified 14 verified product repositories, 4 known app subtrees, 3 tentative product mappings and 1 unresolved product; **zero downstream migrations claimed**.
+- Replaced stale Android monorepo target assumptions with verified standalone Launcher, Keyboard, Gallery and Since repositories; marked scaffold and docs-only source appropriately. Added integrity checks prohibiting invented GC UI acceptance, fabricated evidence or reintroduction of obsolete ownership paths.
+
 ## Read-only design-system consumer audit (2026-10-17)
 - Added a bounded, explicit-root migration-inventory CLI for old package/import/token/component/asset references, with strict inconclusive-scan semantics and privacy-conscious path/line evidence only. No automatic replacement or consumer writes.
 - Documented conceptual Canvas/Surface/Lens crosswalk, per-consumer evidence requirements and the still-active predecessor governance sources; no downstream migration or release promotion claimed.

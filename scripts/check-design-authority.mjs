@@ -57,7 +57,10 @@ export function checkDesignAuthority(){
  ];
  const violations=[];
  for(const file of paths){
-  if(relative(root,file)==='registry/design-authority.v1.json')continue;
+  // This read-only provenance ledger must preserve the historic name and prior repo
+  // paths. It is not a compiled GC UI token, asset, runtime or public API.
+  if(['registry/design-authority.v1.json','registry/consumer-migration-reconciliation.v1.json']
+    .includes(relative(root,file)))continue;
   const value=readFileSync(file,'utf8');
   if(findPredecessorReference(value))violations.push(relative(root,file));
  }

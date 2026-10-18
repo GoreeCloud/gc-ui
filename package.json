@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "python3 -m http.server 4173",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm run authority:check && npm run tokens:check && npm test && npm run audit:colors && npm run audit:composited && node tests/check-lab-references.mjs && npm run pack:check",
+    "check": "npm run authority:check && npm run migration:reconcile:check && npm run tokens:check && npm test && npm run audit:colors && npm run audit:composited && node tests/check-lab-references.mjs && npm run pack:check",
     "tokens:build": "node scripts/build-v1-tokens.mjs",
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
@@ -40,7 +40,8 @@
     "release:foundations:verify": "node scripts/verify-foundations-candidate.mjs",
     "release:foundations:types": "npm exec --yes --package typescript@5.9.3 -- tsc --project dist/foundations-verify/consumer/tsconfig.json",
     "authority:check": "node scripts/check-design-authority.mjs",
-    "migration:audit": "node scripts/audit-legacy-consumer.mjs"
+    "migration:audit": "node scripts/audit-legacy-consumer.mjs",
+    "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",
