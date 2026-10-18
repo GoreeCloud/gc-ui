@@ -76,3 +76,41 @@ test('OS high-contrast remains authoritative even with saved standard preference
  assert.equal(resolved.contrast,'high');
  assert.equal(resolved.material,'solid');
 });
+
+test('theme controller restores preexisting inline roles and their priority on teardown',()=>{
+ const properties=new Map([['--gc-v1-color-primary',{value:'#13579B',priority:'important'}]]);
+ const style={
+  getPropertyValue:name=>properties.get(name)?.value||'',
+  getPropertyPriority:name=>properties.get(name)?.priority||'',
+  setProperty(name,value,priority=''){properties.set(name,{value,priority})},
+  removeProperty:name=>properties.delete(name)
+ };
+ const root={dataset:{},style,dispatchEvent(){}};
+ const controller=createThemeController({root,media:()=>null,storage:null});
+ controller.set({accent:'custom',seed:'#CC3265'});
+ assert.notEqual(properties.get('--gc-v1-color-primary').value,'#13579B');
+ controller.set({accent:'iris'});
+ assert.deepEqual(properties.get('--gc-v1-color-primary'),{value:'#13579B',priority:'important'});
+ assert.equal(properties.size,1,'unowned generated roles are cleared');
+ controller.set({accent:'custom',seed:'#2A78B9'});
+ assert.notEqual(properties.get('--gc-v1-color-primary').value,'#13579B');
+ controller.destroy();
+ assert.deepEqual(properties.get('--gc-v1-color-primary'),{value:'#13579B',priority:'important'});
+ assert.equal(properties.size,1);
+});
+
+test('theme teardown does not overwrite a consuming app newer inline change',()=>{
+ const properties=new Map();
+ const style={
+  getPropertyValue:name=>properties.get(name)||'',
+  getPropertyPriority:()=>'',setProperty:(name,value)=>properties.set(name,value),
+  removeProperty:name=>properties.delete(name)
+ };
+ const root={dataset:{},style,dispatchEvent(){}};
+ const controller=createThemeController({root,media:()=>null,storage:null});
+ controller.set({accent:'custom',seed:'#CC3265'});
+ properties.set('--gc-v1-color-primary','#112233');
+ controller.destroy();
+ assert.equal(properties.get('--gc-v1-color-primary'),'#112233');
+ assert.equal(properties.has('--gc-v1-color-on-primary'),false);
+});
