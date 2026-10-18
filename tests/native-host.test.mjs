@@ -124,6 +124,20 @@ test('Android host subscriptions can retire in reverse or original order',()=>{
  assert.equal(android.onmessage,original,'reverse teardown also restores original callback');
 });
 
+test('external Android callback replacement is preserved and later clients fail closed',async()=>{
+ const android={postMessage(){},onmessage:null};
+ const transport=createNativeTransport({GCAndroidHost:android});
+ const first=createNativeHostClient({transport});
+ assert.equal(first.available,true);
+ const external=()=>{};
+ android.onmessage=external;
+ const second=createNativeHostClient({transport:createNativeTransport({GCAndroidHost:android})});
+ assert.equal(second.available,false,'an overwritten dispatcher is not a working bridge');
+ await assert.rejects(second.request('getCapabilities'),/subscription unavailable/);
+ first.destroy();
+ assert.equal(android.onmessage,external,'teardown must never replace an external callback');
+});
+
 test('a failing Android subscriber cannot prevent another client from receiving an event',()=>{
  let received=0;
  const android={postMessage(){},onmessage:null};
