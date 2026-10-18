@@ -107,3 +107,7 @@ Run `npm run qa:native-zoom:chromium` and `npm run qa:native-zoom:firefox` on Li
 Firefox's Playwright-generated pointer `locator.click()` can misplace the click at 400% *native* zoom; an actual X11 mouse event reached the bottom-nav element and triggered a real DOM pointerdown, pointerup and click. Therefore the Firefox native QA uses XTest pointer input for that link and keyboard Enter for other control activations; Chromium uses Playwright clicks. This isolates the test automation coordinate problem from the product CSS.
 
 These suites do **not** prove Safari support, macOS/Windows zoom fidelity, OS text scaling, screen-reader speech quality, high-magnification visual quality, or WCAG conformance. Obtain human review for those open gates. [QA record](QA_REAL_BROWSER_ZOOM_2026-10-16.md).
+
+## Legacy consumer migration evidence guard
+
+\`node --test tests/legacy-consumer-audit.test.mjs\` verifies read-only auditing, explicit-root enforcement, symlink/oversize fail-closed behavior, historical documentation classification, accurate package/import/token findings and strict return codes. The [audit guide](CONSUMER_MIGRATION_AUDIT.md) describes how to inspect **only authorized checkouts**; static clean scans are not GC UI adoption certificates.

@@ -1,6 +1,10 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 Read-only legacy consumer audit checkpoint
+- The [consumer migration auditor](CONSUMER_MIGRATION_AUDIT.md) and [dated historical consumer snapshot](CONSUMER_MIGRATION_INVENTORY_2026_10_17.md) identify old packages, imports, tokens, assets and historical documentation in an explicitly chosen authorized checkout. Read-only bounded scans generate no source excerpts, reject symlinks/incomplete evidence, and support strict CI exit codes.
+- **No downstream app has been migrated, no Google Drive authority changed, and no ecosystem-wide Glaze retirement is claimed** from this tool; consumer acceptance remains separately required.
+
 ## 2026-10-17 owner decision — exclusive GoreeCloud UI succession
 
 The owner has directed that **GoreeCloud UI permanently replaces Glaze**, not that both coexist. [Succession plan and authority registry](DESIGN_SYSTEM_SUCCESSION.md) define source isolation, platform governance update, consumer migration and retirement verification; current package/source remains alpha, and Drive policies naming the prior authority remain unchanged under this project's read-only access. **No ecosystem-wide completion claim** is authorized yet.

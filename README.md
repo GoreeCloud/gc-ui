@@ -6,6 +6,10 @@
 
 GC UI is GoreeCloud's **designated permanent successor** to the earlier Glaze design system, developed independently rather than derived from predecessor code or assets. Its foundation combines expressive personal color, focused depth, and consistent cross-device interaction. Apple Liquid Glass and Google Material You provide *reference principles*, not source code, branding, or component implementations.
 
+## Read-only migration evidence for consumer applications
+
+The [consumer migration audit](docs/CONSUMER_MIGRATION_AUDIT.md) adds an explicit-root, bounded, non-mutating scanner for legacy design-system packages, imports, tokens, components and assets. Run \`npm run migration:audit -- --root /authorized/absolute/checkout --json --strict\` to produce a privacy-conscious report without copied source content. It **does not change other repositories, declare a consumer migrated, or override existing Drive governance**. An incomplete source scan fails closed.
+
 ## Exclusive design-system succession
 
 **Owner direction (2026-10-17):** GoreeCloud UI replaces the old Glaze design system as GoreeCloud's intended **single future design authority**. See [exclusive succession, migration proof gates and scope limitations](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). No GC UI source, assets or runtime imports from the predecessor are permitted. Prior Google Drive Standards/Policies and consuming repositories have **not yet been amended or migrated**; this repo is not claiming the cutover complete. Release stage and licensing remain separately governed.

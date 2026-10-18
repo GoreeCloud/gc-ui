@@ -39,7 +39,8 @@
     "release:foundations:build": "node scripts/build-foundations-candidate.mjs",
     "release:foundations:verify": "node scripts/verify-foundations-candidate.mjs",
     "release:foundations:types": "npm exec --yes --package typescript@5.9.3 -- tsc --project dist/foundations-verify/consumer/tsconfig.json",
-    "authority:check": "node scripts/check-design-authority.mjs"
+    "authority:check": "node scripts/check-design-authority.mjs",
+    "migration:audit": "node scripts/audit-legacy-consumer.mjs"
   },
   "license": "UNLICENSED",
   "types": "./types/index.d.ts",

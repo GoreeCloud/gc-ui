@@ -33,6 +33,10 @@ The eventual exclusive authority is **GC UI**, but it is not truthful to say Gla
 
 **Permanent** means the intended end state is no active Glaze design authority or runtime/design dependency. It does **not** mean destructive erasure of legally required notices, release provenance, backups or historic decisions. The removal procedure must avoid breaking supported products.
 
+### Read-only consumer preflight available
+
+[Consumer migration audit](CONSUMER_MIGRATION_AUDIT.md) and [dated consumer discovery snapshot](CONSUMER_MIGRATION_INVENTORY_2026_10_17.md) now provide an explicit-root, fail-closed static inventory for consumer legacy imports, tokens, assets and documentation. **It changes no consumer source** and does not count a source-clean finding as migration acceptance; governance and all production consumers remain unverified.
+
 ## 4. Official authority and migration language
 
 **Preferred:** “GoreeCloud UI is GoreeCloud's successor design and interaction language. The prior Glaze system is being permanently retired through a verified migration.”

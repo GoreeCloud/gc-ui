@@ -2,6 +2,10 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Read-only design-system consumer audit (2026-10-17)
+- Added a bounded, explicit-root migration-inventory CLI for old package/import/token/component/asset references, with strict inconclusive-scan semantics and privacy-conscious path/line evidence only. No automatic replacement or consumer writes.
+- Documented conceptual Canvas/Surface/Lens crosswalk, per-consumer evidence requirements and the still-active predecessor governance sources; no downstream migration or release promotion claimed.
+
 ## Owner decision — exclusive GoreeCloud UI design succession (2026-10-17)
 - The owner has designated **GoreeCloud UI** the **permanent exclusive replacement** for Glaze. No dual long-term design authority or predecessor-code/asset relabeling is supported.
 - Recorded a [succession plan](docs/DESIGN_SYSTEM_SUCCESSION.md), machine-readable authority status and fail-fast guard blocking predecessor namespaced content in active implementation files. Ecosystem policy supersession and downstream adoption are **still pending**; history and actual governance statuses are preserved.
