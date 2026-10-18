@@ -29,6 +29,8 @@ const pack=JSON.parse(run(npm,['pack','--json','--ignore-scripts','--pack-destin
 assert.equal(pack.length,1);
 const tarball=join(destination,pack[0].filename);
 assert.ok(existsSync(tarball),'Actual npm tarball was not produced');
+const archiveSha256=createHash('sha256').update(readFileSync(tarball)).digest('hex');
+writeFileSync(join(destination,'SHA256SUMS'),archiveSha256+'  '+pack[0].filename+'\n');
 const expected=[
  'README.md','package.json','provenance.json',
  'src/gc-color-engine.mjs','src/gc-theme-runtime.mjs','src/index.mjs',
