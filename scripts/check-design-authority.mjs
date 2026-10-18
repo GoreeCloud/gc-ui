@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 /** Prevent old design-authority source and assets from entering GC UI. */
 import {readFileSync,readdirSync} from 'node:fs';
-import {resolve,join,relative,extname} from 'node:path';
+import {resolve,join,relative,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {pathToFileURL} from 'node:url';
 
@@ -12,6 +12,7 @@ const sourceDirectories=[
 const sourceFiles=['index.html','package.json'];
 const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.css','.html','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
 const ignoredDirectories=new Set(['node_modules','.git','dist','build','.gradle','.idea','.venv','out','test-results']);
+const generatedAssetsPath='native/android/app/src/main/assets';
 
 // Deliberately restrict this check to source/runtime/package surfaces. Archived
 // governance references, historical changelogs, and migration documentation may
@@ -25,7 +26,7 @@ function collect(folder){
  for(const entry of entries){
   const file=join(folder,entry.name);
   if(entry.isDirectory()){
-   if(!ignoredDirectories.has(entry.name))result.push(...collect(file));
+   if(!ignoredDirectories.has(entry.name) && relative(root,file).split(sep).join('/')!==generatedAssetsPath)result.push(...collect(file));
   }else if(entry.isFile() && textExtensions.has(extname(entry.name).toLowerCase())){
    result.push(file);
   }

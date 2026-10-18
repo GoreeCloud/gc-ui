@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
+import {fileURLToPath} from 'node:url';
 import {checkDesignAuthority,findPredecessorReference} from '../scripts/check-design-authority.mjs';
 
 const read=name=>readFileSync(new URL('../'+name,import.meta.url),'utf8');
@@ -29,6 +30,20 @@ test('active implementation rejects predecessor namespaced assets, imports and d
  for(const safe of ['const brand="GoreeCloud UI";','--gc-v1-color-primary','#gc-mock-app'])
   assert.equal(findPredecessorReference(safe),false,safe);
  assert.ok(checkDesignAuthority()>40);
+});
+test('Android build output cannot make source-only authority checks depend on build history',()=>{
+ // Gradle copies historical documentation into an ignored APK asset directory.
+ // Even when the copy contains old design-system terminology, the real source
+ // scan must continue to check first-party implementation files instead.
+ const folder=new URL('../native/android/app/src/main/assets/',import.meta.url);
+ const artifact=new URL('__gc_authority_build_fixture_'+process.pid+'.txt',folder);
+ mkdirSync(fileURLToPath(folder),{recursive:true});
+ try{
+  writeFileSync(artifact,'Historical Glaze release notes copied into build output.','utf8');
+  assert.ok(checkDesignAuthority()>40);
+ }finally{
+  rmSync(fileURLToPath(artifact),{force:true});
+ }
 });
 test('current GC UI guidance names exclusive successor and discloses governance gap',()=>{
  const doc=read('docs/DESIGN_SYSTEM_SUCCESSION.md');
