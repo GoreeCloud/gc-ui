@@ -4,6 +4,7 @@ export const GC_NATIVE_PROTOCOL_VERSION=1;
 export const GC_NATIVE_ACTIONS=Object.freeze(['getCapabilities','setAppearance','selectionFeedback']);
 const LIMIT=2048;
 const IDs=/^[A-Za-z0-9_-]{1,64}$/;
+let requestCounter=0;
 function normalizeAction(action,payload){
  if(!GC_NATIVE_ACTIONS.includes(action))throw new RangeError('Unsupported native action');
  if(action==='setAppearance'){
@@ -53,7 +54,7 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
  if(!transport)return unavailableNativeHost();
  if(typeof transport.postMessage!=='function'||typeof transport.subscribe!=='function')throw new TypeError('Invalid host transport');
  const pending=new Map();
- let closed=false,seq=0;
+ let closed=false;
  const onResponse=event=>{
   const text=typeof event==='string'?event:event?.data;
   if(typeof text!=='string'||text.length>4096)return;
@@ -77,7 +78,7 @@ export function createNativeHostClient({transport=createNativeTransport(),timeou
   let safe;
   try{safe=normalizeAction(action,payload)}catch(err){return Promise.reject(err)}
   if(pending.size>=24)return Promise.reject(new Error('Too many pending native requests'));
-  const id='gc'+(++seq);
+  const id='gc'+(++requestCounter).toString(36);
   const message=JSON.stringify({v:1,type:'gc-host/request',id,action,payload:safe});
   if(message.length>LIMIT)return Promise.reject(new Error('Native request too large'));
   return new Promise((resolve,reject)=>{
