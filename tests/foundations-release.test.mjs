@@ -22,6 +22,6 @@ test('candidate exports limited foundations, not experimental components/native 
 });
 test('release verification installs real tarball and protects provenance',()=>{
  const verify=read('scripts/verify-foundations-candidate.mjs');
- for(const evidence of ['--offline','--ignore-scripts','sha256','ERR_PACKAGE_PATH_NOT_EXPORTED','test-consumer.mjs'])
+ for(const evidence of ['--offline','--ignore-scripts','sha256','SHA256SUMS','ERR_PACKAGE_PATH_NOT_EXPORTED','test-consumer.mjs'])
   assert.ok(verify.includes(evidence),'Missing packaging proof '+evidence);
 });
