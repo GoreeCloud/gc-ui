@@ -2,6 +2,12 @@
 
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
+## Source and native stability verification (2026-10-17)
+- [PR #16](https://github.com/GoreeCloud/gc-ui/pull/16) prevented the exclusive-design-authority guard from mistaking regenerated, Git-ignored Android APK assets for first-party source. A regression test now reproduces the post-build condition without weakening checks on actual implementation files.
+- [PR #17](https://github.com/GoreeCloud/gc-ui/pull/17) extended the private Foundations candidate's offline consumer verification: the provenance manifest must cover all eight non-manifest package files, and every file must match its SHA-256 digest **after installation**, not only in staging.
+- [PR #18](https://github.com/GoreeCloud/gc-ui/pull/18) isolated failures in a previously registered Android message callback so GC UI native replies still reach the versioned client. Tests also verify receiver binding, malformed prior handlers, and unsubscribe cleanup.
+- These changes add **no public package**, stable tag, migrated consuming app, native production installer, or broad accessibility certification. The source remains `0.2.0-alpha.1` and Foundations remains a private `1.0.0-rc.1` candidate.
+
 ## Read-only Website legacy evidence classifier (2026-10-17)
 - Improved historical provenance classification: prior acceptance/evidence Markdown/JSON/YAML is informational rather than an active runtime dependency; executable scripts remain subject to strict legacy detection. Added tests preserving active source visibility.
 - Audited an **older Website feature checkout read-only** (not main): 125 text files, 358 active source matches, 226 review items, 122 historical records; no source changes or GC UI migration claim.

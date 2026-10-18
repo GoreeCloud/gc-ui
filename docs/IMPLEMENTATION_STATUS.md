@@ -1,6 +1,14 @@
 # GC UI — Implementation Status & Production Readiness
 **Recorded:** 2026-10-16. **Status:** Specification candidate / runnable web lab / production release NOT approved.
 
+## 2026-10-17 latest source-stability checkpoint
+
+- [PR #16](https://github.com/GoreeCloud/gc-ui/pull/16) corrects the source-authority guard's handling of Git-ignored Android generated assets after local Gradle builds; first-party source remains guarded.
+- [PR #17](https://github.com/GoreeCloud/gc-ui/pull/17) checks complete SHA-256 provenance against the files actually installed from the private Foundations candidate tarball, not only staging.
+- [PR #18](https://github.com/GoreeCloud/gc-ui/pull/18) prevents existing Android `onmessage` callbacks from blocking native bridge responses when they throw or are invalid; receiver and unsubscribe behavior have tests.
+- **Exact integrated source:** `dfdea3f6fcdf4fc0e3b4eff81accf21f048327db`. The [core quality gates](https://github.com/GoreeCloud/gc-ui/actions/runs/39090043620) and [native host quality gates](https://github.com/GoreeCloud/gc-ui/actions/runs/39090043583) both completed successfully on that same main commit.
+- **No status promotion:** root remains `0.2.0-alpha.1`, Foundations remains private `1.0.0-rc.1` / `UNLICENSED`, and no native installer or public package was released. Actual GC UI adoption is still unevaluated for the 18 legacy inventory entries. Firefox/Orca post-remediation acceptance in issues [#5](https://github.com/GoreeCloud/gc-ui/issues/5) and [#6](https://github.com/GoreeCloud/gc-ui/issues/6) remains pending; its optional broader platform coverage is governed by [Stable Release Scope](STABLE_RELEASE_SCOPE.md), not assumed passed.
+
 ## 2026-10-17 Website legacy source probe (feature checkout only)
 - [Read-only Website probe](QA_WEBSITE_LEGACY_PROBE_2026_10_17.md): scanned 125 files from a clean local feature checkout; found 358 active-reference line matches, 226 review-only matches and 122 historical/informational references. This is **not** the Website current main SHA and does not establish loaded runtime dependencies or GC UI consumer acceptance.
 - Improved the legacy consumer auditor so non-executable historical acceptance/evidence records are classified informational without hiding executable old scripts or active CSS.
