@@ -107,5 +107,5 @@ assert.equal(createHash('sha256').update(readFileSync(tarball)).digest('hex'),ar
  'Release artifact changed during verification');
 console.log('Foundations archive SHA-256: '+archiveSha256);
 console.log(result.trim());
-console.log('Foundations RC verified: offline tarball installation, '+packed.length+
+console.log('Foundations '+(stable?'stable':'RC')+' verified: offline tarball installation, '+packed.length+
  ' allowlisted files, restricted imports, SHA-256 provenance; '+pack[0].filename);
