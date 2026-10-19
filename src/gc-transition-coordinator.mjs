@@ -2,8 +2,15 @@
 import {getMotionPreset,motionAllowed} from './gc-motion-presets.mjs';
 export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globalThis),
  root=globalThis.document?.documentElement}={}){
- const active=new Map();
+ const active=new Map(),listeners=[];
  let destroyed=false;
+ const permitted=()=>{
+  if(!motionAllowed({media,root}))return false;
+  try{return !media?.('(prefers-contrast: more)')?.matches}catch{return true}
+ };
+ function cancelAll(){
+  for(const element of [...active.keys()])cancel(element);
+ }
  function cancel(element){
   const animation=active.get(element);
   if(!animation)return false;
@@ -15,7 +22,7 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
   if(destroyed)throw new Error('Motion coordinator was destroyed');
   if(!element)throw new TypeError('An element is required');
   cancel(element);
-  if(reducedMotion||!motionAllowed({media,root})||typeof element.animate!=='function')return null;
+  if(reducedMotion||!permitted()||typeof element.animate!=='function')return null;
   const {frames,timing}=getMotionPreset(name,{direction});
   const animation=element.animate(frames,timing);
   active.set(element,animation);
@@ -31,14 +38,25 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
   },{once:true});
   return animation;
  }
+ // Accessibility changes must interrupt already-running transitions, not
+ // merely prevent *new* ones. This matches the group choreography contract.
+ const onPreferenceChange=()=>{if(!permitted())cancelAll()};
+ for(const query of ['(prefers-reduced-motion: reduce)','(forced-colors: active)','(prefers-contrast: more)']){
+  let mq;
+  try{mq=media?.(query)}catch{}
+  if(!mq?.addEventListener)continue;
+  mq.addEventListener('change',onPreferenceChange);
+  listeners.push(mq);
+ }
+ root?.addEventListener?.('gc-theme-change',onPreferenceChange);
  return {
-  play,cancel,cancelAll(){
-   for(const element of [...active.keys()])cancel(element);
-  },activeCount:()=>active.size,
+  play,cancel,cancelAll,activeCount:()=>active.size,
   destroy(){
    if(destroyed)return;
    destroyed=true;
-   for(const element of [...active.keys()])cancel(element);
+   cancelAll();
+   for(const mq of listeners)mq.removeEventListener?.('change',onPreferenceChange);
+   root?.removeEventListener?.('gc-theme-change',onPreferenceChange);
   }
  };
 }

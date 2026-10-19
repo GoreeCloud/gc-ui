@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Accessibility motion interruption (2026-10-18)
+- Cancel already-running single-element animations immediately when reduced-motion, forced-colors, high-contrast theme or increased-contrast preferences activate.
+- Unsubscribe media/theme listeners on controller disposal and retain the original native Web Animations fallback.
+- Add deliberately failing-before-fix Node regression coverage and real Chromium reduced-motion/high-contrast switch tests; alpha APIs and stable Foundations packaging unchanged.
+
 ## Form ownership and source guard stabilization (2026-10-18)
 - Fixed experimental password reveal teardown to preserve nested host-owned icons and explicitly marked text labels, restore pre-existing ARIA/text only when still controller-owned, and always re-mask the input on dispose (issue #41).
 - Restored number-stepper button disabled states on teardown without clobbering later host changes.

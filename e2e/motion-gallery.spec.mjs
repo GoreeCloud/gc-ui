@@ -60,3 +60,23 @@ test('new bounded motion presets are selectable and reduced-motion safe',async({
  await page.locator('#play').click();
  await expect(page.locator('#motion-status')).toContainText('skipped');
 });
+
+test('active native animation stops when reduced motion or high contrast switches on mid-flight',async({page})=>{
+ await page.goto('/lab/motion-gallery.html');
+ const play=page.getByRole('button',{name:'Play transition'});
+ const sample=page.locator('#sample');
+ await play.click();
+ await expect(page.locator('#motion-status')).toContainText('reveal played');
+ expect(await sample.evaluate(el=>el.getAnimations().length)).toBeGreaterThan(0);
+ await page.emulateMedia({reducedMotion:'reduce'});
+ await expect.poll(()=>sample.evaluate(el=>el.getAnimations().length)).toBe(0);
+ await page.emulateMedia({reducedMotion:'no-preference'});
+ await play.click();
+ expect(await sample.evaluate(el=>el.getAnimations().length)).toBeGreaterThan(0);
+ await page.evaluate(()=>{
+  document.documentElement.dataset.gcContrast='high';
+  document.documentElement.dispatchEvent(new CustomEvent('gc-theme-change'));
+ });
+ await expect.poll(()=>sample.evaluate(el=>el.getAnimations().length)).toBe(0);
+ await expect(sample.getByRole('heading',{name:'An anchored transition.'})).toBeVisible();
+});
