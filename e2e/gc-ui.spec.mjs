@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {contrastRatio} from '../src/gc-color-engine.mjs';
 
 test('component lab renders navigation and native controls',async({page})=>{
   await page.goto('/lab/components.html');
@@ -483,4 +484,25 @@ test('tab teardown retains newer consumer DOM changes and drops GC-only attribut
   return observed;
  });
  expect(result).toEqual({aria:['app-controlled',null],tabStop:[false,5],secondVisible:true});
+});
+
+test('foundation secondary actions remain readable throughout light and dark palette switches',async({page})=>{
+ await page.goto('/lab/v1.html');
+ await page.locator('[data-mode="light"]').click();
+ const hex=rgb=>{
+  const channels=/^rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/.exec(rgb);
+  if(!channels)throw new Error('Unexpected opaque RGB computed color: '+rgb);
+  return '#'+channels.slice(1).map(x=>Number(x).toString(16).padStart(2,'0')).join('');
+ };
+ for(const mode of ['dark','light']){
+  await page.locator('[data-mode="'+mode+'"]').click();
+  const samples=await page.evaluate(()=>
+   ['#reset','.secondary.button[href$="#tokens"]'].map(selector=>{
+    const s=getComputedStyle(document.querySelector(selector));
+    return {selector,foreground:s.color,background:s.backgroundColor};
+   })
+  );
+  for(const {selector,foreground,background} of samples)
+   expect(contrastRatio(hex(foreground),hex(background)),mode+' '+selector).toBeGreaterThanOrEqual(4.5);
+ }
 });
