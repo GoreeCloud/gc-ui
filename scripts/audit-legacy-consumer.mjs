@@ -13,7 +13,7 @@ import {pathToFileURL} from 'node:url';
 
 const TEXT_EXTENSIONS=new Set([
  '.css','.scss','.sass','.less','.js','.jsx','.mjs','.cjs','.ts','.tsx','.mts','.cts',
- '.vue','.svelte','.html','.htm','.json','.jsonc','.yaml','.yml','.toml',
+ '.vue','.svelte','.astro','.html','.htm','.svg','.json','.jsonc','.yaml','.yml','.toml',
  '.gradle','.kt','.kts','.java','.swift','.xml','.plist','.properties',
  '.dart','.py','.rs','.go','.sh','.md','.mdx','.txt'
 ]);

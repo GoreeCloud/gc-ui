@@ -10,7 +10,7 @@ const sourceDirectories=[
  'src','styles','tokens','assets','lab','native','integrations','registry','release','types'
 ];
 const sourceFiles=['index.html','package.json'];
-const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.mts','.cts','.css','.html','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
+const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.mts','.cts','.css','.html','.astro','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
 const ignoredDirectories=new Set(['node_modules','.git','dist','build','.gradle','.idea','.venv','out','test-results']);
 const generatedAssetsPath='native/android/app/src/main/assets';
 
@@ -18,7 +18,7 @@ const generatedAssetsPath='native/android/app/src/main/assets';
 // governance references, historical changelogs, and migration documentation may
 // name the predecessor accurately. Do not erase origin or licensing evidence.
 export function findPredecessorReference(value){
- return /(?:\bglaze(?:[\s_-]+ui)?\b|\bglz[A-Z][a-zA-Z]*\b|--glz[-\w]*\b)/i.test(value);
+ return /(?:\bglaze(?:[\s_-]+ui)?\b|\bglz[A-Z][a-zA-Z]*\b|\bglz[-_][A-Za-z0-9][-\w]*\b|--glz[-\w]*\b)/i.test(value);
 }
 function collect(folder){
  const entries=readdirSync(folder,{withFileTypes:true});
