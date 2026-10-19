@@ -2,7 +2,7 @@
   "name": "@goreecloud/gc-ui",
   "version": "0.2.0-alpha.1",
   "private": true,
-  "description": "GoreeCloud UI (GC UI) \u2014 GoreeCloud's original adaptive interface design language",
+  "description": "GoreeCloud UI (GC UI) — GoreeCloud's original adaptive interface design language",
   "type": "module",
   "scripts": {
     "dev": "python3 -m http.server 4173",
@@ -48,7 +48,8 @@
     "release:foundations:stable:verify": "node scripts/verify-foundations-candidate.mjs --stable",
     "authority:check": "node scripts/check-design-authority.mjs",
     "migration:audit": "node scripts/audit-legacy-consumer.mjs",
-    "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs"
+    "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs",
+    "release:foundations:handoff:verify": "node scripts/verify-foundations-handoff.mjs"
   },
   "license": "Apache-2.0",
   "types": "./types/index.d.ts",
