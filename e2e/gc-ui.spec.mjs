@@ -506,3 +506,45 @@ test('foundation secondary actions remain readable throughout light and dark pal
    expect(contrastRatio(hex(foreground),hex(background)),mode+' '+selector).toBeGreaterThanOrEqual(4.5);
  }
 });
+
+test('borrowed toast live-region semantics survive overlapping controllers and host changes',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {createToast,runAsyncAction}=await import('/src/gc-interactions.mjs');
+  const region=document.createElement('section');
+  region.setAttribute('role','alert');
+  region.setAttribute('aria-live','assertive');
+  region.setAttribute('aria-atomic','false');
+  document.body.append(region);
+  const old=createToast(region),newer=createToast(region);
+  old.destroy();
+  const shared={role:region.getAttribute('role'),live:region.getAttribute('aria-live')};
+  newer.destroy();
+  const restored={role:region.getAttribute('role'),live:region.getAttribute('aria-live'),
+   atomic:region.getAttribute('aria-atomic')};
+  const external=createToast(region);
+  region.setAttribute('aria-live','off');
+  external.destroy();
+  const preserved=region.getAttribute('aria-live');
+  region.remove();
+
+  const button=document.createElement('button');
+  button.setAttribute('aria-busy','false');
+  document.body.append(button);
+  await runAsyncAction(button,async()=>{});
+  const afterAction=button.getAttribute('aria-busy');
+  let done;
+  const running=runAsyncAction(button,()=>new Promise(resolve=>done=resolve));
+  button.setAttribute('aria-busy','host-managed');
+  done();
+  await running;
+  const afterHostChange=button.getAttribute('aria-busy');
+  button.remove();
+  return {shared,restored,preserved,afterAction,afterHostChange};
+ });
+ expect(result).toEqual({
+  shared:{role:'status',live:'polite'},
+  restored:{role:'alert',live:'assertive',atomic:'false'},
+  preserved:'off',afterAction:'false',afterHostChange:'host-managed'
+ });
+});

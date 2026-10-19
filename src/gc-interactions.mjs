@@ -115,9 +115,20 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
   }
  };
 }
+// Multiple controllers may temporarily share the same host-owned live region.
+// Restore its prior semantics only after the last controller has detached.
+const toastRegionOwners=new WeakMap();
 export function createToast(region){
- if(!region)throw new TypeError('Toast region required');
- region.setAttribute('role','status');region.setAttribute('aria-live','polite');region.setAttribute('aria-atomic','true');
+ if(!region?.setAttribute)throw new TypeError('Toast region required');
+ let ownership=toastRegionOwners.get(region);
+ if(!ownership){
+  const semantics={'role':'status','aria-live':'polite','aria-atomic':'true'};
+  const prior=new Map(Object.keys(semantics).map(name=>[name,region.getAttribute?.(name)??null]));
+  ownership={users:0,prior,semantics};
+  for(const [name,value] of Object.entries(semantics))region.setAttribute(name,value);
+  toastRegionOwners.set(region,ownership);
+ }
+ ownership.users++;
  let timer=null,active=null,destroyed=false,returnFocus=null;
  const dismiss=()=>{
   if(timer!==null)clearTimeout(timer);
@@ -170,11 +181,28 @@ export function createToast(region){
   if(destroyed)return;
   destroyed=true;
   dismiss();
+  if(--ownership.users===0){
+   toastRegionOwners.delete(region);
+   for(const [name,value] of Object.entries(ownership.semantics)){
+    // A host change after mount is not ours to undo.
+    if(region.getAttribute?.(name)!==value)continue;
+    const previous=ownership.prior.get(name);
+    if(previous===null)region.removeAttribute?.(name);
+    else region.setAttribute(name,previous);
+   }
+  }
  }};
 }
 export async function runAsyncAction(button,operation){
  if(button.getAttribute('aria-busy')==='true'||button.disabled)return null;
+ const previousBusy=button.getAttribute('aria-busy');
  button.setAttribute('aria-busy','true');button.disabled=true;
  try{return await operation()}
- finally{button.disabled=false;button.removeAttribute('aria-busy')}
+ finally{
+  button.disabled=false;
+  if(button.getAttribute('aria-busy')==='true'){
+   if(previousBusy===null)button.removeAttribute('aria-busy');
+   else button.setAttribute('aria-busy',previousBusy);
+  }
+ }
 }
