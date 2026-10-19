@@ -22,6 +22,7 @@ function tabsFixture({duplicate=false}={}){
    if(k==='aria-disabled')return this.ariaDisabled?'true':null;
    return null},
   setAttribute(k,v){if(k==='aria-selected')this.selected=String(v)},
+  removeAttribute(){},
   focus(){this.focused=true},
   closest(){return this}
  }));

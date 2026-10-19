@@ -21,12 +21,26 @@ export function initTabs(tablist,{rtl=false}={}){
  if(new Set(panels).size!==panels.length)throw new Error('Each tab requires a unique tabpanel');
  const enabled=()=>tabs.filter(tab=>!tab.disabled&&tab.getAttribute('aria-disabled')!=='true');
  if(!enabled().length)throw new Error('No enabled tab');
+ // A tablist borrows attributes and panel visibility from its host app.
+ // Restore only values that are still the controller's last writes.
+ const priorTabs=new Map(tabs.map(tab=>[tab,{
+  selected:tab.getAttribute('aria-selected'),
+  tabIndexAttr:tab.getAttribute('tabindex'),tabIndex:tab.tabIndex
+ }]));
+ const priorPanels=new Map(panels.map(panel=>[panel,panel.hidden]));
+ const writtenTabs=new Map(),writtenPanels=new Map();
+ let destroyed=false;
  function activate(tab,{focus=false}={}){
+  if(destroyed)throw new Error('Tab controller was destroyed');
   if(!tabs.includes(tab))throw new RangeError('Tab does not belong to the tablist');
   if(!enabled().includes(tab))return;
   tabs.forEach((item,index)=>{
-   const selected=item===tab;
-   item.setAttribute('aria-selected',String(selected));item.tabIndex=selected?0:-1;panels[index].hidden=!selected;
+   const selected=item===tab,aria=String(selected),indexValue=selected?0:-1,hidden=!selected;
+   item.setAttribute('aria-selected',aria);
+   item.tabIndex=indexValue;
+   panels[index].hidden=hidden;
+   writtenTabs.set(item,{selected:aria,tabIndex:indexValue});
+   writtenPanels.set(panels[index],hidden);
   });
   if(focus)tab.focus();
  }
@@ -47,7 +61,28 @@ export function initTabs(tablist,{rtl=false}={}){
   e.preventDefault();activate(candidates[next],{focus:true});
  };
  tablist.addEventListener('click',click);tablist.addEventListener('keydown',keydown);
- return {select:activate,destroy(){tablist.removeEventListener('click',click);tablist.removeEventListener('keydown',keydown)}};
+ return {select:activate,destroy(){
+  if(destroyed)return;
+  destroyed=true;
+  tablist.removeEventListener('click',click);
+  tablist.removeEventListener('keydown',keydown);
+  for(const tab of tabs){
+   const prior=priorTabs.get(tab),written=writtenTabs.get(tab);
+   if(tab.getAttribute('aria-selected')===written?.selected){
+    if(prior.selected===null)tab.removeAttribute('aria-selected');
+    else tab.setAttribute('aria-selected',prior.selected);
+   }
+   if(tab.tabIndex===written?.tabIndex){
+    if(prior.tabIndexAttr===null){
+     tab.removeAttribute('tabindex');
+    }else tab.setAttribute('tabindex',prior.tabIndexAttr);
+   }
+  }
+  for(const panel of panels)
+   if(panel.hidden===writtenPanels.get(panel))panel.hidden=priorPanels.get(panel);
+  writtenTabs.clear();
+  writtenPanels.clear();
+ }};
 }
 export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
  if(dialog?.localName!=='dialog')throw new TypeError('Expected native dialog');

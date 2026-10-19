@@ -421,3 +421,66 @@ test('host-hide menu focusout preserves host visibility during teardown',async({
  });
  expect(observed).toEqual({dismissed:true,hidden:true,expanded:null});
 });
+
+test('tab controller teardown restores actual host ARIA, tab stops, and panel visibility',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initTabs}=await import('/src/gc-interactions.mjs');
+  const host=document.createElement('section');
+  const list=document.createElement('div');list.setAttribute('role','tablist');
+  const one=document.createElement('button'),two=document.createElement('button');
+  for(const [tab,id] of [[one,'tab-probe-one'],[two,'tab-probe-two']]){
+   tab.type='button';tab.setAttribute('role','tab');tab.setAttribute('aria-controls',id);list.append(tab);
+  }
+  one.setAttribute('aria-selected','false');one.setAttribute('tabindex','4');
+  two.setAttribute('aria-selected','true');two.setAttribute('tabindex','2');
+  const first=document.createElement('section'),second=document.createElement('section');
+  for(const [panel,id] of [[first,'tab-probe-one'],[second,'tab-probe-two']]){
+   panel.id=id;panel.setAttribute('role','tabpanel');host.append(panel);
+  }
+  first.hidden=true;second.hidden=false;
+  host.prepend(list);document.body.append(host);
+  const ctl=initTabs(list);
+  ctl.select(one,{focus:true});
+  const changed=first.hidden===false&&second.hidden===true&&document.activeElement===one;
+  ctl.destroy();
+  const restored={
+   changed,selected:[one.getAttribute('aria-selected'),two.getAttribute('aria-selected')],
+   tabStop:[one.getAttribute('tabindex'),two.getAttribute('tabindex')],
+   panels:[first.hidden,second.hidden]
+  };
+  ctl.destroy();host.remove();
+  return restored;
+ });
+ expect(result).toEqual({changed:true,selected:['false','true'],tabStop:['4','2'],panels:[true,false]});
+});
+
+test('tab teardown retains newer consumer DOM changes and drops GC-only attributes',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initTabs}=await import('/src/gc-interactions.mjs');
+  const list=document.createElement('div');list.setAttribute('role','tablist');
+  const tabs=[0,1].map(i=>{
+   const el=document.createElement('button');el.type='button';el.setAttribute('role','tab');
+   el.setAttribute('aria-controls','gc-tabs-own-'+i);list.append(el);return el;
+  });
+  const panels=tabs.map((_,i)=>{
+   const el=document.createElement('section');el.id='gc-tabs-own-'+i;el.setAttribute('role','tabpanel');document.body.append(el);return el;
+  });
+  document.body.append(list);
+  panels[1].hidden=true;
+  const ctl=initTabs(list);
+  tabs[0].setAttribute('aria-selected','app-controlled');
+  tabs[1].tabIndex=5;
+  panels[1].hidden=false;
+  ctl.destroy();
+  const observed={
+   aria:[tabs[0].getAttribute('aria-selected'),tabs[1].getAttribute('aria-selected')],
+   tabStop:[tabs[0].hasAttribute('tabindex'),tabs[1].tabIndex],
+   secondVisible:!panels[1].hidden
+  };
+  list.remove();for(const panel of panels)panel.remove();
+  return observed;
+ });
+ expect(result).toEqual({aria:['app-controlled',null],tabStop:[false,5],secondVisible:true});
+});
