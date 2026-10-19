@@ -23,10 +23,39 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   const items=Array.from(menu.querySelectorAll(ITEM));
   if(!items.length)throw new Error('Menu must contain at least one menu item');
   let open=false,destroyed=false;
-  trigger.setAttribute('aria-haspopup','menu');
-  trigger.setAttribute('aria-controls',menu.id);
-  trigger.setAttribute('aria-expanded','false');
-  menu.hidden=true;
+  // Controller state is borrowed from the host application, not owned forever.
+  const attrs=['aria-haspopup','aria-controls','aria-expanded'];
+  const priorAttrs=new Map(attrs.map(name=>[name,trigger.getAttribute(name)]));
+  const writtenAttrs=new Map();
+  const setTriggerAttr=(name,value)=>{
+    trigger.setAttribute(name,value);
+    writtenAttrs.set(name,value);
+  };
+  const priorHidden=menu.hidden;
+  let writtenHidden;
+  const setHidden=value=>{menu.hidden=value;writtenHidden=value};
+  const priorItems=items.map(item=>({
+    item,tabIndex:item.tabIndex,attribute:item.getAttribute('tabindex')
+  }));
+  function restore(){
+    for(const name of attrs){
+      if(trigger.getAttribute(name)!==writtenAttrs.get(name))continue;
+      const prior=priorAttrs.get(name);
+      if(prior===null)trigger.removeAttribute(name);
+      else trigger.setAttribute(name,prior);
+    }
+    if(menu.hidden===writtenHidden)menu.hidden=priorHidden;
+    for(const {item,tabIndex,attribute} of priorItems){
+      if(item.tabIndex!==-1)continue;
+      item.tabIndex=tabIndex;
+      if(attribute===null)item.removeAttribute('tabindex');
+      else item.setAttribute('tabindex',attribute);
+    }
+  }
+  setTriggerAttr('aria-haspopup','menu');
+  setTriggerAttr('aria-controls',menu.id);
+  setTriggerAttr('aria-expanded','false');
+  setHidden(true);
   items.forEach(item=>{item.tabIndex=-1});
   const enabled=()=>items.filter(item=>!item.disabled&&item.getAttribute('aria-disabled')!=='true');
   function focusItem(index){
@@ -37,16 +66,16 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     if(destroyed||trigger.disabled)return false;
     if(!enabled().length)return false;
     open=true;
-    menu.hidden=false;
-    trigger.setAttribute('aria-expanded','true');
+    setHidden(false);
+    setTriggerAttr('aria-expanded','true');
     focusItem(position==='last'?enabled().length-1:0);
     return true;
   }
   function hide({returnFocus=true}={}){
     if(!open)return;
     open=false;
-    menu.hidden=true;
-    trigger.setAttribute('aria-expanded','false');
+    setHidden(true);
+    setTriggerAttr('aria-expanded','false');
     if(returnFocus&&trigger.isConnected)trigger.focus();
   }
   const triggerClick=()=>{open?hide():show()};
@@ -94,14 +123,20 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     open:show,close:hide,isOpen:()=>open,
     destroy(){
       if(destroyed)return;
-      hide({returnFocus:false});
+      // Remove callbacks before moving focus; a teardown focusout must not rewrite DOM.
+      destroyed=true;
+      open=false;
       trigger.removeEventListener('click',triggerClick);
       trigger.removeEventListener('keydown',triggerKeys);
       menu.removeEventListener('keydown',menuKeys);
       menu.removeEventListener('click',menuClick);
       menu.removeEventListener('focusout',focusout);
       document.removeEventListener('pointerdown',outside);
-      destroyed=true;
+      // Hiding the menu can synchronously move focus to the body in real browsers.
+      // Capture focus ownership before restore() changes its visibility.
+      const heldMenuFocus=menu.contains(document.activeElement);
+      restore();
+      if(heldMenuFocus&&menu.hidden&&trigger.isConnected)trigger.focus();
     }
   };
 }
