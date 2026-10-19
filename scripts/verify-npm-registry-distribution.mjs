@@ -12,6 +12,42 @@ const META='https://registry.npmjs.org/%40goreecloud%2Fgc-ui/1.0.1';
 const TARBALL='https://registry.npmjs.org/@goreecloud/gc-ui/-/gc-ui-1.0.1.tgz';
 const sha512=bytes=>createHash('sha512').update(bytes).digest('base64');
 const sha1=bytes=>createHash('sha1').update(bytes).digest('hex');
+// The immutable GitHub artifact is 16,043 bytes. A 128-KiB cap gives
+// ordinary registry responses room without accepting unbounded downloads.
+export const MAX_REGISTRY_RESPONSE_BYTES=128*1024;
+export async function readBoundedResponse(response,label,{limit=MAX_REGISTRY_RESPONSE_BYTES}={}){
+ const declared=response.headers?.get?.('content-length');
+ if(declared!==null&&declared!==undefined){
+  if(!/^(0|[1-9][0-9]*)$/.test(declared))throw new Error('Invalid '+label+' content-length');
+  if(Number(declared)>limit)throw new Error(label+' exceeds '+limit+'-byte limit');
+ }
+ if(response.body?.getReader){
+  const reader=response.body.getReader();
+  const chunks=[];
+  let total=0;
+  try{
+   while(true){
+    const {done,value}=await reader.read();
+    if(done)break;
+    if(!(value instanceof Uint8Array))throw new TypeError(label+' returned a non-byte chunk');
+    total+=value.byteLength;
+    if(total>limit)throw new Error(label+' exceeds '+limit+'-byte limit');
+    chunks.push(value);
+   }
+   return Buffer.concat(chunks,total);
+  }catch(error){
+   await reader.cancel?.().catch(()=>{});
+   throw error;
+  }finally{reader.releaseLock?.()}
+ }
+ // Only non-streaming test/injected clients use the fallback; Node's actual
+ // fetch has a streaming body, so the real network path never uses it.
+ if(!response.arrayBuffer)throw new Error(label+' has no readable response body');
+ const bytes=Buffer.from(await response.arrayBuffer());
+ if(bytes.length>limit)throw new Error(label+' exceeds '+limit+'-byte limit');
+ return bytes;
+}
+
 
 export function validateRegistryVersion(metadata){
  if(!metadata||typeof metadata!=='object'||Array.isArray(metadata))
@@ -58,11 +94,11 @@ export async function verifyPublicRegistry({fetchImpl=globalThis.fetch}={}){
   scopeOwnershipVerified:false,npmPublishingIdentityVerified:false
  });
  if(response.status!==200)throw new Error('Unexpected registry HTTP status '+response.status);
- const metadata=await response.json();
+ const metadata=JSON.parse((await readBoundedResponse(response,'npm metadata')).toString('utf8'));
  validateRegistryVersion(metadata); // validates origin before download
  const archiveResponse=await get(fetchImpl,TARBALL);
  if(archiveResponse.status!==200)throw new Error('Registry tarball HTTP status '+archiveResponse.status);
- const bytes=Buffer.from(await archiveResponse.arrayBuffer());
+ const bytes=await readBoundedResponse(archiveResponse,'npm tarball');
  verifyRegistryIntegrity(bytes,metadata);
  const sha256=assertArchiveDigest(bytes); // exact, release-authority-pinned bytes, not just npm metadata
  return Object.freeze({

@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Bounded public npm registry readback (2026-10-19)
+- Cap read-only npm metadata and tarball responses at 128 KiB, with early declared-length rejection, incremental streaming limits, and stream cancellation on error.
+- Added fail-before-fix rejection tests for oversized tarballs and metadata, malformed lengths, and segmented-stream success; no npm credentials, publishing actions or registry state modified.
+
 ## Exception-safe experimental stepper mount (2026-10-19)
 - A rejected initial host `onChange` callback no longer leaves active click/change listeners, changed input contents or leaked button disabled states. Initialization precedes event registration, with ownership-respecting rollback on failure.
 - Added negative-before-fix Node tests and real DOM rerender/remount regression; no stable Foundations contract change.
