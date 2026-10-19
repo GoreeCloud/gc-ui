@@ -52,6 +52,17 @@ export function checkDesignAuthority(){
       .every(surface=>manifest.authority.requiredDesignSurfaces.includes(surface))){
   throw new Error('GC UI authority registry is inconsistent with owner decision or package');
  }
+ const platform=manifest.integralPlatformSystem;
+ if(!platform||
+    platform.name!=='GoreeCloud UI'||
+    platform.classification!=='Integral Platform System'||
+    platform.ordinal!==5||
+    platform.totalSystems!==9||
+    platform.scope!=='design-user-experience-and-visual-consistency'||
+    platform.effectiveDate!=='2026-10-19'||
+    JSON.stringify(platform.supersedes)!==JSON.stringify(['Glaze','Glaze UI'])){
+  throw new Error('GC UI must be Integral Platform System 5 of nine, replacing predecessor experience authorities');
+ }
  if(manifest.verified.exclusiveCutoverCompleted &&
     (!manifest.verified.governanceDocumentsAmended||
      !manifest.verified.allConsumerMigrationsVerified||
