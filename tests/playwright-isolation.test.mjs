@@ -2,9 +2,10 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {readFileSync} from 'node:fs';
 
 const cwd=fileURLToPath(new URL('../',import.meta.url));
-const script="import c from './playwright.config.mjs'; console.log(JSON.stringify({outputDir:c.outputDir,baseURL:c.use.baseURL}))";
+const script="import {resolvePlaywrightIsolation} from './scripts/playwright-isolation-config.mjs'; const c=resolvePlaywrightIsolation(); console.log(JSON.stringify({outputDir:c.outputDir,baseURL:'http://127.0.0.1:'+c.port}))";
 function evaluate(env){
  return spawnSync(process.execPath,['--input-type=module','-e',script],{
   cwd,encoding:'utf8',env:{...process.env,...env}
@@ -38,4 +39,10 @@ test('legacy single-suite Playwright behavior remains unchanged without opt-in r
  const conf=JSON.parse(result.stdout);
  assert.equal(conf.outputDir,'./test-results');
  assert.equal(conf.baseURL,'http://127.0.0.1:4173');
+});
+
+test('Playwright config consumes the dependency-free validated settings',()=>{
+ const config=readFileSync(new URL('../playwright.config.mjs',import.meta.url),'utf8');
+ assert.match(config,/resolvePlaywrightIsolation\(process\.env\)/);
+ assert.match(config,/outputDir,/);
 });
