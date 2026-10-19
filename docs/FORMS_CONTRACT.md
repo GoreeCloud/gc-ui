@@ -65,4 +65,11 @@ The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the C
 The shared `.gc-skip-link` stays at an absolute negative block position while idle and becomes a fixed positive-position link only on keyboard focus. This avoids misleading full-page screenshot artifacts after page scroll while retaining visible keyboard skip navigation.
 
 ## Extracted experimental controller layer
-F12 and F21 now use `initPasswordReveal` and `initNumberStepper` from `src/gc-form-controls.mjs`, exported through `src/index.mjs` with declarations in `types/index.d.ts`. The password controller demands a stable accessible name, preserves the value when toggling, and re-masks it on teardown. The bounded integer stepper rejects invalid range contracts, clamps typed values on change, updates disabled endpoints, and unsubscribes on teardown. Source and browser regressions cover the specimen and direct lifecycle. Form validation, search suggestions, native select status, and simulated retry remain lab-only behavior. See [Web API alpha](WEB_API_ALPHA.md).
+F12 and F21 now use `initPasswordReveal` and `initNumberStepper` from `src/gc-form-controls.mjs`, exported through `src/index.mjs` with declarations in `types/index.d.ts`. The password controller demands a stable accessible name, preserves the value when toggling, and re-masks it on teardown. The bounded integer stepper rejects invalid range contracts, clamps typed values on change, updates disabled endpoints, and unsubscribes on teardown. On view disposal, the password controller always re-masks the input and restores host-owned
+`aria-pressed` and any original plain-text label only when the controller's last value is still
+present. A button with nested icons is **never** replaced through `textContent`; to display
+Show/Hide alongside an icon, put the mutable **text-only** label in a descendant marked
+`data-gc-password-reveal-label`. Unmarked child markup remains untouched. Steppers restore
+pre-init disabled flags only for buttons still holding their controller-written states.
+A new nested-SVG browser regression verifies actual DOM ownership and focus behavior;
+the root GC UI workspace remains experimental and not certified for credential handling. Source and browser regressions cover the specimen and direct lifecycle. Form validation, search suggestions, native select status, and simulated retry remain lab-only behavior. See [Web API alpha](WEB_API_ALPHA.md).

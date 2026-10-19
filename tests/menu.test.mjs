@@ -168,3 +168,19 @@ test('menu teardown restores initially visible markup and removes new ARIA state
   assert.equal(trigger.getAttribute(name),null);
  assert.equal(item.tabIndex,0);
 });
+
+test('host hide followed by focusout never converts external visibility into menu ownership',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'host-visibility',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.hidden=false;
+ menu.querySelectorAll=()=>[item];
+ menu.contains=el=>el===menu||el===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ menu.hidden=true; // application ownership transition, after controller wrote false
+ menu.fire('focusout',{relatedTarget:trigger});
+ api.destroy();
+ assert.equal(menu.hidden,true,'host hide must survive focusout then destroy');
+ assert.equal(trigger.getAttribute('aria-expanded'),null);
+});

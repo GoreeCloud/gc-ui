@@ -107,11 +107,22 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     const item=event.target.closest?.(ITEM);
     if(item&&menu.contains(item))select(item,event);
   };
+  function dismissOnFocusLeaving(){
+    if(!open)return;
+    // A host can hide its own menu before the browser dispatches focusout.
+    // Do not claim that external hidden=true as a controller write.
+    if(menu.hidden){
+      open=false;
+      if(trigger.getAttribute('aria-expanded')===writtenAttrs.get('aria-expanded'))
+       setTriggerAttr('aria-expanded','false');
+    }else hide({returnFocus:false});
+  }
   const outside=event=>{
-    if(open&&!menu.contains(event.target)&&!trigger.contains(event.target))hide({returnFocus:false});
+    if(open&&!menu.contains(event.target)&&!trigger.contains(event.target))
+      dismissOnFocusLeaving();
   };
   const focusout=event=>{
-    if(open&&!menu.contains(event.relatedTarget))hide({returnFocus:false});
+    if(open&&!menu.contains(event.relatedTarget))dismissOnFocusLeaving();
   };
   trigger.addEventListener('click',triggerClick);
   trigger.addEventListener('keydown',triggerKeys);

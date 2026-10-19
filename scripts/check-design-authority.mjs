@@ -10,7 +10,7 @@ const sourceDirectories=[
  'src','styles','tokens','assets','lab','native','integrations','registry','release','types'
 ];
 const sourceFiles=['index.html','package.json'];
-const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.css','.html','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
+const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.mts','.cts','.css','.html','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
 const ignoredDirectories=new Set(['node_modules','.git','dist','build','.gradle','.idea','.venv','out','test-results']);
 const generatedAssetsPath='native/android/app/src/main/assets';
 

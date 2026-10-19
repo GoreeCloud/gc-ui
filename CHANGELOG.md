@@ -1,5 +1,12 @@
 # GC UI Changelog
 
+## Form ownership and source guard stabilization (2026-10-18)
+- Fixed experimental password reveal teardown to preserve nested host-owned icons and explicitly marked text labels, restore pre-existing ARIA/text only when still controller-owned, and always re-mask the input on dispose (issue #41).
+- Restored number-stepper button disabled states on teardown without clobbering later host changes.
+- Prevented externally hidden action menus from treating a resulting focusout as controller-owned visibility.
+- Expanded the legacy-design source guard to inspect `.mts` and `.cts` modules, closing a verifiable first-party source scanning gap.
+- Added negative-path Node and real-DOM Chromium regressions; **no broader alpha-to-stable promotion or downstream consumer migration is claimed**.
+
 ## Opt-in licensed glyphs and native pattern expansion (2026-10-18)
 - Added **18** upstream SVG glyphs from already-pinned Lucide, Tabler and Heroicons sources, increasing the offline optional atlas from 33 to 51; full source/commit/license provenance remains in the registry and local directories.
 - Introduced deterministic, allowlisted SVG sprite assembly and drift detection; no third-party runtime or remote CDN required.
