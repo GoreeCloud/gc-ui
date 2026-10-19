@@ -132,9 +132,11 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       menu.removeEventListener('click',menuClick);
       menu.removeEventListener('focusout',focusout);
       document.removeEventListener('pointerdown',outside);
+      // Hiding the menu can synchronously move focus to the body in real browsers.
+      // Capture focus ownership before restore() changes its visibility.
+      const heldMenuFocus=menu.contains(document.activeElement);
       restore();
-      // Do not strand focus inside an element hidden again by teardown.
-      if(menu.hidden&&menu.contains(document.activeElement)&&trigger.isConnected)trigger.focus();
+      if(heldMenuFocus&&menu.hidden&&trigger.isConnected)trigger.focus();
     }
   };
 }
