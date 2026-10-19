@@ -24,11 +24,11 @@ const IGNORED_DIRS=new Set([
  'venv','vendor','target','__pycache__','.cache'
 ]);
 const MAX_FILES=10000, MAX_SIZE=1024*1024, MAX_BYTES=24*1024*1024, MAX_DEPTH=24;
-const PREDECESSOR=/\bglaze(?:[\s_-]*ui)?\b|\bglz[A-Z][A-Za-z0-9]*\b|--(?:glz|glaze)[-\w]*\b/i;
+const PREDECESSOR=/\bglaze(?:[\s_-]*ui)?\b|\bglz[A-Z][A-Za-z0-9]*\b|\bglz[-_][A-Za-z0-9][-\w]*\b|--(?:glz|glaze)[-\w]*\b/i;
 const DEPENDENCY=/(?:^|[^\w])@goreecloud\/glaze(?:-ui)?\b|\b(?:com\.)?goreecloud\.glaze\b|\bglaze-ui\b/i;
 const IMPORT=/(?:\b(?:import|export|from|require|load|include)\b|@import\b|@use\b).{0,220}\bglaze\b/i;
 const TOKEN=/--(?:glaze|glz)[-\w]+\b|\$glaze[-_\w]+|\bGlz[A-Z]\w*(?:Color|Token|Theme)?\b/i;
-const COMPONENT=/<\/?(?:glaze[-:]|glz[A-Z])|(?:^|[\s"'./])(?:glaze|glz)-(?:button|field|card|dialog|component|surface|lens|badge|icon|nav|menu)[-\w]*/i;
+const COMPONENT=/<\/?(?:glaze[-:]|glz[-:]|glz[A-Z])|(?:^|[\s"'./])(?:glaze|glz)-(?:button|field|card|dialog|component|surface|lens|badge|icon|nav|menu)[-\w]*/i;
 const ASSET=/(?:url\s*\(|\b(?:src|href|assets?|icons?|stylesheet|styles?)\s*[:=(])[^;\n]{0,200}\bglaze\b/i;
 const DOCUMENTATION=/\.(?:md|mdx|txt)$/i;
 // Dated acceptance/evidence records preserve provenance. Only non-executable
@@ -94,7 +94,11 @@ export function auditConsumer(root,{maxFiles=MAX_FILES,maxSize=MAX_SIZE,maxBytes
    if(size>maxSize){incomplete.push({reason:'oversized-text-file',path});continue;}
    if(counts.bytes+size>maxBytes){incomplete.push({reason:'max-total-bytes',path});stop=true;break;}
    counts.files++;counts.bytes+=size;
-   const text=readFileSync(file,'utf8');
+   // Invalid UTF-8 is uninspected, never a false-clean decoded replacement.
+   const raw=readFileSync(file);
+   let text;
+   try{text=new TextDecoder('utf-8',{fatal:true}).decode(raw)}
+   catch{incomplete.push({reason:'invalid-utf8-text-file',path});continue}
    // Treat embedded binary/NUL as unknown rather than claiming it was cleared.
    if(text.includes('\0')){incomplete.push({reason:'binary-content-in-text-file',path});continue;}
    const lines=text.split(/\r?\n/);

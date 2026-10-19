@@ -185,3 +185,35 @@ test('strict CLI rejects predecessor usage in .mts even without other checked so
   assert.equal(report.totals.active,1);
  });
 });
+
+test('abbreviated glz- component namespace and legacy asset filenames cannot scan clean',()=>{
+ fixture(root=>{
+  make(root,'src/panel.html','<glz-button type="button">Continue</glz-button>');
+  make(root,'src/panel.css','.glz-card {display:block}');
+  make(root,'assets/glz-icon.svg','<svg xmlns="http://www.w3.org/2000/svg"/>');
+  const report=auditConsumer(root);
+  assert.equal(report.status,'legacy-dependency-evidence');
+  assert.ok(report.findings.some(x=>x.path==='src/panel.html'&&x.type==='legacy-component'&&x.severity==='active'));
+  assert.ok(report.findings.some(x=>x.path==='src/panel.css'&&x.type==='legacy-component'&&x.severity==='active'));
+  assert.ok(report.findings.some(x=>x.path==='assets/glz-icon.svg'&&x.type==='legacy-filename'&&x.severity==='active'));
+  const cli=new URL('../scripts/audit-legacy-consumer.mjs',import.meta.url).pathname;
+  const result=spawnSync(process.execPath,[cli,'--root',root,'--json','--strict'],{encoding:'utf8'});
+  assert.equal(result.status,2,result.stderr);
+  assert.equal(JSON.parse(result.stdout).totals.active,report.totals.active);
+ });
+});
+
+test('undecodable UTF-8 source must be incomplete, not no-legacy-evidence-detected',()=>{
+ fixture(root=>{
+  mkdirSync(join(root,'src'));
+  writeFileSync(join(root,'src','corrupted.ts'),Buffer.from([0xff,0xfe,0xfd]));
+  const report=auditConsumer(root);
+  assert.equal(report.status,'incomplete');
+  assert.ok(report.incomplete.some(x=>x.path==='src/corrupted.ts'&&x.reason==='invalid-utf8-text-file'));
+  assert.equal(report.migrationComplete,false);
+  const cli=new URL('../scripts/audit-legacy-consumer.mjs',import.meta.url).pathname;
+  const result=spawnSync(process.execPath,[cli,'--root',root,'--json','--strict'],{encoding:'utf8'});
+  assert.equal(result.status,3,result.stderr);
+  assert.ok(JSON.parse(result.stdout).incomplete.some(x=>x.reason==='invalid-utf8-text-file'));
+ });
+});
