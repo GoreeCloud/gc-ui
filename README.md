@@ -21,7 +21,7 @@ The [consumer migration audit](docs/CONSUMER_MIGRATION_AUDIT.md) adds an explici
 
 ## Exclusive design-system succession
 
-**Owner direction (2026-10-17):** GoreeCloud UI replaces the old Glaze design system as GoreeCloud's intended **single future design authority**. See [exclusive succession, migration proof gates and scope limitations](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). No GC UI source, assets or runtime imports from the predecessor are permitted. Prior Google Drive Standards/Policies and consuming repositories have **not yet been amended or migrated**; this repo is not claiming the cutover complete. Release stage and licensing remain separately governed.
+**Mandatory GoreeCloud-wide directive (2026-10-19):** All GoreeCloud applications, websites, icons, operating systems, interfaces and other designed products **must be built and designed based on `GoreeCloud/gc-ui`**. **Glaze and Glaze UI are permanently banned as active GoreeCloud design or development authorities**, including for new work. Remaining predecessor-based products are noncompliant and must migrate through verified, controlled updates. See the [governing GC UI succession and enforcement record](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). This decision is effective now; previous Google Drive requirements and deployed consumers have **not all been amended or migrated**, and this repository makes no false implementation-completion claim. Release stage and licensing remain separately governed.
 
 ## Version
 
