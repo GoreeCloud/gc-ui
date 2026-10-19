@@ -1,8 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {spawnSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 
-const cwd=new URL('../',import.meta.url).pathname;
+const cwd=fileURLToPath(new URL('../',import.meta.url));
 const script="import c from './playwright.config.mjs'; console.log(JSON.stringify({outputDir:c.outputDir,baseURL:c.use.baseURL}))";
 function evaluate(env){
  return spawnSync(process.execPath,['--input-type=module','-e',script],{
