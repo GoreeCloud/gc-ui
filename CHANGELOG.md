@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Verified Foundations v1.0.1 npm handoff preflight (2026-10-18)
+- Added a strictly read-only exact-archive preflight pinned to the v1.0.1 authority digest, asserting ten allowlisted regular tar members, release/source provenance hashes, scoped public exports, Apache-2.0 license, and no package install scripts or dependencies.
+- Independently downloaded and SHA-256-checked the actual GitHub release archive, then installed and exercised its ESM, JSON, CSS and color contract in an offline throwaway consumer.
+- npm registry identity remains **unauthenticated** (ENEEDAUTH); registry metadata returns 404, which does not prove ownership. No npm publication, new release/tag, root alpha package promotion or consumer migration occurred.
+
 ## Native tabs teardown ownership (2026-10-18)
 - Experimental tab controllers now restore original tab ARIA, tab stop attributes and panel `hidden` states on disposal only when still controller-owned; preserve later application edits and prohibit use after destroy.
 - Added negative-before-positive Node tests and real DOM Chromium/Firefox teardown regressions without expanding stable Foundations exports or changing consumer applications.

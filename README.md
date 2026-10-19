@@ -243,3 +243,7 @@ The [toast controller teardown QA record](docs/QA_TOAST_TEARDOWN_2026-10-16.md) 
 
 ### Genuine browser zoom acceptance (Linux X11)
 `npm run qa:native-zoom:chromium` and `npm run qa:native-zoom:firefox` open full browsers on **isolated Xvfb displays**, send native browser-window zoom shortcuts and verify device-pixel ratio/actual viewport changes. Both commands exercise all five labs at **200% and 400%** in LTR and RTL, capture screenshots, and check 400% navigation, dialogs, footer links, and form focus. They complement—not replace—the existing effective-viewport simulation, and require Linux/Xvfb/X11/XTest/Python. See [real-zoom and assistive technology QA](docs/QA_REAL_BROWSER_ZOOM_2026-10-16.md). Manual assistive technology speech and Safari browser zoom still require human signoff.
+
+## Release and cutover gates
+
+Foundations v1.0.1 GitHub archive exact-byte verification and npm authorization requirements: [npm handoff](docs/FOUNDATIONS_NPM_HANDOFF.md). Consumer successor acceptance is independently tracked in [cutover readiness](docs/CUTOVER_READINESS_GATE.md); no automatic migration or npm publication is implied.
