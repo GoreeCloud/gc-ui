@@ -8,7 +8,7 @@
       "repo": "https://github.com/lucide-icons/lucide",
       "license": "ISC + Feather-derived MIT",
       "licenseFile": "assets/third-party/lucide/LICENSE",
-      "bundledIcons": 3,
+      "bundledIcons": 9,
       "mode": "local/opt-in",
       "revision": "1ef60af944de207e0d5176905a0759ba12e6ee8d"
     },
@@ -18,7 +18,7 @@
       "repo": "https://github.com/tabler/tabler-icons",
       "license": "MIT",
       "licenseFile": "assets/third-party/tabler/LICENSE",
-      "bundledIcons": 3,
+      "bundledIcons": 9,
       "mode": "local/opt-in",
       "revision": "a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d"
     },
@@ -28,7 +28,7 @@
       "repo": "https://github.com/tailwindlabs/heroicons",
       "license": "MIT",
       "licenseFile": "assets/third-party/heroicons/LICENSE",
-      "bundledIcons": 3,
+      "bundledIcons": 9,
       "mode": "local/opt-in",
       "revision": "616b7a4dbbf3d011760af8066262cd5c6b3868f3"
     },
@@ -356,6 +356,150 @@
       "name": "flash",
       "source": "https://github.com/microsoft/fluentui-system-icons/blob/a347af95478f989038cccbf085978865264c048a/assets/Flash/SVG/ic_fluent_flash_24_regular.svg",
       "svg": "assets/third-party/fluent/flash.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-search",
+      "provider": "lucide",
+      "name": "search",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/search.svg",
+      "svg": "assets/third-party/lucide/search.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-bell",
+      "provider": "lucide",
+      "name": "bell",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/bell.svg",
+      "svg": "assets/third-party/lucide/bell.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-shield-check",
+      "provider": "lucide",
+      "name": "shield-check",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/shield-check.svg",
+      "svg": "assets/third-party/lucide/shield-check.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-calendar",
+      "provider": "lucide",
+      "name": "calendar",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/calendar.svg",
+      "svg": "assets/third-party/lucide/calendar.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-check",
+      "provider": "lucide",
+      "name": "check",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/check.svg",
+      "svg": "assets/third-party/lucide/check.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-lucide-chevron-right",
+      "provider": "lucide",
+      "name": "chevron-right",
+      "source": "https://github.com/lucide-icons/lucide/blob/1ef60af944de207e0d5176905a0759ba12e6ee8d/icons/chevron-right.svg",
+      "svg": "assets/third-party/lucide/chevron-right.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-search",
+      "provider": "tabler",
+      "name": "search",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/search.svg",
+      "svg": "assets/third-party/tabler/search.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-bell",
+      "provider": "tabler",
+      "name": "bell",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/bell.svg",
+      "svg": "assets/third-party/tabler/bell.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-layout-dashboard",
+      "provider": "tabler",
+      "name": "layout-dashboard",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/layout-dashboard.svg",
+      "svg": "assets/third-party/tabler/layout-dashboard.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-device-desktop",
+      "provider": "tabler",
+      "name": "device-desktop",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/device-desktop.svg",
+      "svg": "assets/third-party/tabler/device-desktop.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-device-mobile",
+      "provider": "tabler",
+      "name": "device-mobile",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/device-mobile.svg",
+      "svg": "assets/third-party/tabler/device-mobile.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-tabler-filter",
+      "provider": "tabler",
+      "name": "filter",
+      "source": "https://github.com/tabler/tabler-icons/blob/a4ce1404bc6d24d3c365afe7b258d6bf6f48d62d/icons/outline/filter.svg",
+      "svg": "assets/third-party/tabler/filter.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-magnifying-glass",
+      "provider": "heroicons",
+      "name": "magnifying-glass",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/magnifying-glass.svg",
+      "svg": "assets/third-party/heroicons/magnifying-glass.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-bell",
+      "provider": "heroicons",
+      "name": "bell",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/bell.svg",
+      "svg": "assets/third-party/heroicons/bell.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-arrow-path",
+      "provider": "heroicons",
+      "name": "arrow-path",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/arrow-path.svg",
+      "svg": "assets/third-party/heroicons/arrow-path.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-squares-2x2",
+      "provider": "heroicons",
+      "name": "squares-2x2",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/squares-2x2.svg",
+      "svg": "assets/third-party/heroicons/squares-2x2.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-shield-check",
+      "provider": "heroicons",
+      "name": "shield-check",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/shield-check.svg",
+      "svg": "assets/third-party/heroicons/shield-check.svg",
+      "viewBox": "0 0 24 24"
+    },
+    {
+      "id": "gc-ext-heroicons-chevron-right",
+      "provider": "heroicons",
+      "name": "chevron-right",
+      "source": "https://github.com/tailwindlabs/heroicons/blob/616b7a4dbbf3d011760af8066262cd5c6b3868f3/optimized/24/outline/chevron-right.svg",
+      "svg": "assets/third-party/heroicons/chevron-right.svg",
       "viewBox": "0 0 24 24"
     }
   ],

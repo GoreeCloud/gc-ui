@@ -62,6 +62,12 @@ Record start latency (target <50ms for local state reaction), movement smoothnes
 GC UI's default motion presets use the native Web Animations API and preserve reduced-motion semantics. The optional [Motion, FormKit AutoAnimate and Lottie Web adapters](../integrations/optional-motion.mjs) are **not** automatic dependencies. Motion data/art, including downloaded Lottie files, must be reviewed for licensing, flashing, motion reduction and network use independently. See [third-party asset policy](THIRD_PARTY_ASSETS.md). These adapters are experimental, not a stable platform binding.
 
 ## 11. Managed transition lifecycle (experimental)
+The experimental motion vocabulary also offers `surfaceEnter` (260ms), `surfaceExit`
+(160ms), `press` (180ms), and RTL-aware `nudgeInline` (180ms).
+They use native Web Animations, preserve real DOM state on cancellation, and
+are suppressed by reduced-motion, forced-colors, or high-contrast preferences.
+No external runtime or automatically animated component is introduced.
+
 The new [motion coordinator](../src/gc-transition-coordinator.mjs) cancels an earlier animation on the same element before starting the next preset, removes completed fill layers, exposes cancel/cancelAll and destroy, and skips playback when WAAPI or user/system motion permission is absent. This prevents stale transitions from surviving route or state changes. The [interactive Motion Gallery](../lab/motion-gallery.html) demonstrates cancellation, RTL inline movement, and a reduced-motion preview.
 
 ## 12. Staggered choreography (experimental)

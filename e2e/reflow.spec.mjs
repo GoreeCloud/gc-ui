@@ -4,7 +4,7 @@ import {test,expect} from '@playwright/test';
  * CSS widths 320 and 375 represent the narrow display/reflow contracts.
  * It does not replace manual zoom, translation, or native browser font scaling.
  */
-for(const lab of ['v1','components','catalog','adaptive','forms','environment','icon-atlas','motion-gallery','experience-studio']){
+for(const lab of ['v1','components','catalog','adaptive','forms','environment','icon-atlas','pattern-workbench','motion-gallery','experience-studio']){
  test('reflow with larger text and RTL — '+lab,async({page})=>{
   for(const width of [320,375,600,768]){
    await page.setViewportSize({width,height:700});
