@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {readFileSync,writeFileSync,mkdirSync,rmSync} from 'node:fs';
+import {readFileSync,writeFileSync,mkdirSync,rmSync,symlinkSync} from 'node:fs';
 import {fileURLToPath} from 'node:url';
 import {checkDesignAuthority,findPredecessorReference} from '../scripts/check-design-authority.mjs';
 
@@ -109,4 +109,32 @@ test('active abbreviated legacy tags and Astro template imports are forbidden',(
    rmSync(fileURLToPath(fixture),{force:true});
   }
  }
+});
+
+
+test('authority guard rejects symlinked active files and source directories instead of skipping them',()=>{
+ const file=new URL('../src/__gc_authority_symlink_file_'+process.pid+'.mjs',import.meta.url);
+ const dir=new URL('../src/__gc_authority_symlink_dir_'+process.pid,import.meta.url);
+ const source=new URL('../tests/design-authority.test.mjs',import.meta.url);
+ const sourceDir=new URL('../tests/',import.meta.url);
+ try{
+  symlinkSync(fileURLToPath(source),fileURLToPath(file));
+  assert.throws(()=>checkDesignAuthority(),/symlink.*__gc_authority_symlink_file/i);
+ }finally{rmSync(fileURLToPath(file),{force:true})}
+ try{
+  symlinkSync(fileURLToPath(sourceDir),fileURLToPath(dir),'dir');
+  assert.throws(()=>checkDesignAuthority(),/symlink.*__gc_authority_symlink_dir/i);
+ }finally{rmSync(fileURLToPath(dir),{force:true})}
+ assert.ok(checkDesignAuthority()>40);
+});
+
+test('authority guard rejects undecodable or NUL-containing active text instead of false-clean scanning',()=>{
+ const file=new URL('../src/__gc_authority_malformed_'+process.pid+'.mjs',import.meta.url);
+ try{
+  writeFileSync(fileURLToPath(file),Buffer.from([0xff,0xfe,0xfd]));
+  assert.throws(()=>checkDesignAuthority(),/invalid UTF-8.*__gc_authority_malformed/i);
+  writeFileSync(fileURLToPath(file),Buffer.from('export const clean = true;\0'));
+  assert.throws(()=>checkDesignAuthority(),/NUL.*__gc_authority_malformed/i);
+ }finally{rmSync(fileURLToPath(file),{force:true})}
+ assert.ok(checkDesignAuthority()>40);
 });
