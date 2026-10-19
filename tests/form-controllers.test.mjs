@@ -179,3 +179,32 @@ test('number stepper restores originally enabled controls regardless of terminal
  assert.equal(dec.disabled,false);
  assert.equal(inc.disabled,false);
 });
+
+test('failed stepper initial callback leaves no listeners, borrowed DOM writes or normalized input behind',()=>{
+ const field=number({value:'3.7',min:'1',max:'11',step:'2'});
+ const dec=btn(),inc=btn();
+ dec.disabled=true;inc.disabled=true;
+ assert.throws(()=>initNumberStepper(field,dec,inc,{onChange(){throw Error('Host initialization rejected')}}),/Host initialization rejected/);
+ assert.equal(field.value,'3.7','failed initialization must not replace host-entered value');
+ assert.equal(dec.disabled,true);
+ assert.equal(inc.disabled,true);
+ assert.equal(field.listenerCount('change'),0);
+ assert.equal(dec.listenerCount('click'),0);
+ assert.equal(inc.listenerCount('click'),0);
+ field.dispatch('change');inc.dispatch('click');
+ assert.equal(field.value,'3.7','stale listeners must never mutate failed mount');
+});
+
+test('stepper may be safely retried after an initialization callback throws',()=>{
+ const field=number({value:'4',min:'1',max:'11',step:'2'}),dec=btn(),inc=btn();
+ assert.throws(()=>initNumberStepper(field,dec,inc,{onChange(){throw Error('temporary')}}),/temporary/);
+ const changes=[];
+ const active=initNumberStepper(field,dec,inc,{onChange:n=>changes.push(n)});
+ assert.deepEqual(changes,[5]);
+ assert.equal(field.listenerCount('change'),1);
+ inc.dispatch('click');
+ assert.equal(field.value,'7');
+ assert.deepEqual(changes,[5,7]);
+ active.destroy();
+ assert.equal(field.listenerCount('change'),0);
+});

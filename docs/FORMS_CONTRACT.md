@@ -19,6 +19,16 @@
 
 All examples run entirely in the browser. They do not fetch or store workspace content.
 
+## Progressive controller mounting
+
+The experimental number stepper's initial normalization invokes the host
+`onChange` callback before any click/change listeners are installed. If
+that callback throws, the mount fails **without ghost event handlers** and
+restores the pre-mount numeric input value and borrowed button disabled
+states unless the host changed those values afterward. A later mount can
+safely retry. Established controllers retain the existing native semantics.
+This does not imply stable component API status.
+
 ## Field validation contract
 
 - Visible labels are persistent and associated with native inputs through `for` / `id`.

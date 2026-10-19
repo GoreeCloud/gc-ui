@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Exception-safe experimental stepper mount (2026-10-19)
+- A rejected initial host `onChange` callback no longer leaves active click/change listeners, changed input contents or leaked button disabled states. Initialization precedes event registration, with ownership-respecting rollback on failure.
+- Added negative-before-fix Node tests and real DOM rerender/remount regression; no stable Foundations contract change.
+
 ## Public registry distribution attestation preflight (2026-10-19)
 - Added an unauthenticated read-only `@goreecloud/gc-ui@1.0.1` npm registry readback with strict package identity/origin, dist integrity and exact GitHub release SHA-256 verification.
 - Distinguishes unavailable public metadata (blocked, no scope-ownership claim) from integrity/network failures (hard error) and verified immutable distribution, with strict readiness exit status and positive/negative injected-network tests. Does not publish or authenticate.
