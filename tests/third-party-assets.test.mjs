@@ -7,8 +7,8 @@ const manifest=JSON.parse(readFileSync(new URL('registry/third-party-assets.v1.j
 const read=path=>readFileSync(new URL(path,root),'utf8');
 test('opt-in third-party asset registry is pinned, attributed and locally complete',()=>{
  assert.equal(manifest.providers.length,9);
- assert.equal(manifest.icons.length,33);
- assert.equal(new Set(manifest.icons.map(i=>i.id)).size,33);
+ assert.equal(manifest.icons.length,51);
+ assert.equal(new Set(manifest.icons.map(i=>i.id)).size,51);
  for(const p of manifest.providers){
   assert.match(p.revision,/^[a-f0-9]{40}$/,p.id);
   assert.ok(p.bundledIcons>=3);
@@ -25,10 +25,10 @@ test('opt-in third-party asset registry is pinned, attributed and locally comple
   }
  }
 });
-test('derived icon sprite contains 33 safe namespaced symbols',()=>{
+test('derived icon sprite contains 51 safe namespaced symbols',()=>{
  const sprite=read('assets/third-party/gc-third-party-glyphs.svg');
  for(const icon of manifest.icons)assert.ok(sprite.includes('id="'+icon.id+'"'),icon.id);
- assert.equal((sprite.match(/<symbol\b/g)||[]).length,33);
+ assert.equal((sprite.match(/<symbol\b/g)||[]).length,51);
  assert.doesNotMatch(sprite,/<script|<foreignObject|<image\b|href="https?:|url\(https?:/i);
  assert.equal(manifest.optionalEngines.length,3);
  assert.ok(manifest.optionalEngines.every(i=>i.bundled===false));

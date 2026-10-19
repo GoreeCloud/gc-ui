@@ -47,3 +47,16 @@ test('system reduced motion and high contrast suppress motion without hiding con
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
  expect(overflow).toBeLessThanOrEqual(1);
 });
+
+test('new bounded motion presets are selectable and reduced-motion safe',async({page})=>{
+ await page.goto('/lab/motion-gallery.html');
+ for(const name of ['surfaceEnter','surfaceExit','press','nudgeInline']){
+  await page.locator('[data-preset="'+name+'"]').click();
+  await expect(page.locator('[data-preset="'+name+'"]')).toHaveAttribute('aria-pressed','true');
+  await page.locator('#play').click();
+  await expect(page.locator('#motion-status')).toContainText(name+' played');
+ }
+ await page.locator('#demo-reduced').check();
+ await page.locator('#play').click();
+ await expect(page.locator('#motion-status')).toContainText('skipped');
+});

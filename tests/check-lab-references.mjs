@@ -4,7 +4,7 @@ import {fileURLToPath} from 'node:url';
 
 const root=resolve(dirname(fileURLToPath(import.meta.url)),'..');
 const insideRoot=path=>path.startsWith(root+sep);
-for(const page of ['lab/v1.html','lab/components.html','lab/catalog.html','lab/adaptive.html','lab/forms.html','lab/environment.html','lab/icon-atlas.html','lab/motion-gallery.html','lab/experience-studio.html']){
+for(const page of ['lab/v1.html','lab/components.html','lab/catalog.html','lab/adaptive.html','lab/forms.html','lab/environment.html','lab/icon-atlas.html','lab/pattern-workbench.html','lab/motion-gallery.html','lab/experience-studio.html']){
  const documentPath=resolve(root,page);
  const html=readFileSync(documentPath,'utf8');
  const refs=[...html.matchAll(/(?:href|src)="([^"]+)"/g)].map(match=>match[1]);

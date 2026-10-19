@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Accessible optional GC UI chips, disclosures, status elements, and motion">
+<title>GoreeCloud UI · Pattern Workbench</title>
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.materials.css">
+<link rel="stylesheet" href="../styles/gc.v1.patterns.css">
+<script type="module" src="./pattern-workbench.mjs"></script>
+</head>
+<body>
+<a class="gc-pattern-skip" href="#main">Skip to patterns</a>
+<div class="gc-pattern-page gc-environment">
+<header class="gc-pattern-top">
+<a class="gc-pattern-brand" href="./v1.html"><img src="../assets/gc-mark.svg" width="40" height="40" alt=""><span><strong>GC UI</strong><small>Pattern Workbench</small></span></a>
+<nav aria-label="Other UI labs"><a href="./components.html">Components</a><a href="./icon-atlas.html">Icon atlas</a><a href="./motion-gallery.html">Motion</a></nav>
+</header>
+<main id="main">
+<div class="gc-pattern-hero">
+<p class="gc-pattern-eyebrow">OPT-IN · EXPERIMENTAL PATTERNS</p>
+<h1>Clear by default. Expressive by choice.</h1>
+<p>Native controls, original GC surfaces, and locally licensed utility glyphs. All examples work without animation or remote services.</p>
+</div>
+<nav class="gc-pattern-crumbs" aria-label="Workbench path"><a href="./v1.html">Foundations</a><span aria-hidden="true">›</span><span aria-current="page">Pattern Workbench</span></nav>
+
+<section class="gc-pattern-section" aria-labelledby="filter-heading">
+<div class="gc-pattern-section-head"><div><p class="gc-pattern-eyebrow">01 / CHOICE CHIPS</p><h2 id="filter-heading">Find the right surface</h2></div><span class="gc-pattern-tag">Native buttons</span></div>
+<p class="gc-pattern-muted">One filter is selected. Use Tab then Enter or Space to change it; results stay in the page.</p>
+<div id="pattern-chips" class="gc-pattern-chips" role="group" aria-label="Filter example surfaces">
+<button type="button" data-gc-choice="all" aria-pressed="true">All surfaces</button>
+<button type="button" data-gc-choice="workspace" aria-pressed="false">Workspace</button>
+<button type="button" data-gc-choice="system" aria-pressed="false">System</button>
+</div>
+<p id="pattern-results" role="status" aria-live="polite" class="gc-pattern-count">4 example surfaces shown.</p>
+<div class="gc-pattern-grid" id="pattern-card-grid">
+<article class="gc-pattern-tile" data-kind="workspace"><div class="gc-pattern-tile-head"><svg aria-hidden="true"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-tabler-layout-dashboard"></use></svg><span class="gc-pattern-tag">Workspace</span></div><h3>Overview</h3><p>Key activities, organized and readable at every size.</p></article>
+<article class="gc-pattern-tile" data-kind="workspace"><div class="gc-pattern-tile-head"><svg aria-hidden="true"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-heroicons-squares-2x2"></use></svg><span class="gc-pattern-tag">Workspace</span></div><h3>Collections</h3><p>A predictable layout for grouped content.</p></article>
+<article class="gc-pattern-tile" data-kind="system"><div class="gc-pattern-tile-head"><svg aria-hidden="true"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-shield-check"></use></svg><span class="gc-pattern-tag">System</span></div><h3>Security</h3><p>Clear permission and protection language.</p></article>
+<article class="gc-pattern-tile" data-kind="system"><div class="gc-pattern-tile-head"><svg aria-hidden="true"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-heroicons-bell"></use></svg><span class="gc-pattern-tag">System</span></div><h3>Notifications</h3><p>Readable updates with accessible states.</p></article>
+</div>
+</section>
+
+<section class="gc-pattern-section" aria-labelledby="disclosure-heading">
+<div class="gc-pattern-section-head"><div><p class="gc-pattern-eyebrow">02 / DISCLOSURES</p><h2 id="disclosure-heading">Details without a custom trap</h2></div><span class="gc-pattern-tag">Native HTML</span></div>
+<p class="gc-pattern-muted">The browser handles summary keyboard input and content semantics. Opening one answer collapses the other.</p>
+<div id="pattern-disclosures" class="gc-pattern-disclosures">
+<details open><summary>What happens when motion is disabled?</summary><p>The information stays available; movement is decoration, never a prerequisite.</p></details>
+<details><summary>Are third-party glyphs required?</summary><p>No. The original GC symbols remain the default. These independently licensed sources are optional.</p></details>
+<details><summary>Does the preview send information?</summary><p>No. These controls change only local, in-page sample state.</p></details>
+</div>
+</section>
+
+<section class="gc-pattern-section" aria-labelledby="feedback-heading">
+<div class="gc-pattern-section-head"><div><p class="gc-pattern-eyebrow">03 / FEEDBACK ELEMENTS</p><h2 id="feedback-heading">Status and progress with purpose</h2></div><span class="gc-pattern-tag">Native progress</span></div>
+<div class="gc-pattern-feedback">
+<div class="gc-pattern-alert" role="note"><svg aria-hidden="true"><use href="../assets/third-party/gc-third-party-glyphs.svg#gc-ext-lucide-check"></use></svg><div><strong>Preview only</strong><p>Progress is local to this demonstration. No upload or synchronization occurs.</p></div></div>
+<div class="gc-pattern-progress">
+<label for="pattern-progress">Example setup progress</label>
+<progress id="pattern-progress" value="25" max="100">25%</progress>
+<div class="gc-pattern-progress-bottom"><output id="pattern-progress-value" for="pattern-progress" aria-live="polite">25% complete</output><button id="pattern-advance" type="button">Advance progress</button></div>
+</div>
+</div>
+</section>
+<p class="gc-pattern-footnote">Experimental GC UI examples · <a href="../docs/THIRD_PARTY_ASSETS.md">Source attribution</a> · <a href="../docs/MOTION_INPUT.md">Motion rules</a></p>
+</main>
+<footer class="gc-pattern-footer">Built from semantic HTML, GC design tokens, and optional licensed SVGs.</footer>
+</div></body></html>

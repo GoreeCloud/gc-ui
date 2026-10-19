@@ -4,7 +4,7 @@ import {GC_MOTION_PRESETS,getMotionPreset,motionAllowed,playMotionPreset} from '
 import {playWithMotion,enableAutoAnimate,mountLottie} from '../integrations/optional-motion.mjs';
 
 test('motion presets are short and directional without mutating shared definitions',()=>{
- assert.equal(Object.keys(GC_MOTION_PRESETS).length,5);
+ assert.equal(Object.keys(GC_MOTION_PRESETS).length,9);
  for(const name of Object.keys(GC_MOTION_PRESETS)){
   const preset=getMotionPreset(name);
   assert.ok(preset.timing.duration<=440,name);
@@ -13,6 +13,9 @@ test('motion presets are short and directional without mutating shared definitio
  const rtl=getMotionPreset('slideInline',{direction:'rtl'});
  assert.equal(rtl.frames[0].transform,'translateX(-8px)');
  assert.equal(getMotionPreset('slideInline').frames[0].transform,'translateX(8px)');
+ assert.equal(getMotionPreset('nudgeInline',{direction:'rtl'}).frames[1].transform,'translateX(-4px)');
+ assert.equal(getMotionPreset('nudgeInline').frames[1].transform,'translateX(4px)');
+ assert.equal(getMotionPreset('press').frames.length,3);
  assert.throws(()=>getMotionPreset('bounceForever'));
 });
 test('reduced motion never invokes native animate',()=>{

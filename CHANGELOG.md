@@ -1,5 +1,12 @@
 # GC UI Changelog
 
+## Opt-in licensed glyphs and native pattern expansion (2026-10-18)
+- Added **18** upstream SVG glyphs from already-pinned Lucide, Tabler and Heroicons sources, increasing the offline optional atlas from 33 to 51; full source/commit/license provenance remains in the registry and local directories.
+- Introduced deterministic, allowlisted SVG sprite assembly and drift detection; no third-party runtime or remote CDN required.
+- Built experimental original-GC choice chips and native disclosure controllers, optional pattern CSS, and a working Pattern Workbench featuring chips, status, progress, and attributed glyphs.
+- Added four bounded native motion presets (surface enter/exit, pressed feedback, RTL-aware nudge), along with unit and browser accessibility/reflow coverage.
+- The workspace remains alpha; this does not add stable Foundations exports, expand the supported 63-pattern registry or change downstream consumer readiness.
+
 ## Accessible menu controller teardown isolation (2026-10-18)
 - Restored the consuming application's pre-existing menu trigger ARIA state, menu visibility, and menu item tab order when an experimental action-menu controller is destroyed.
 - Only restore values still owned by the controller; keep newer host-app changes intact and move focus to the live trigger if teardown hides the currently focused menu.

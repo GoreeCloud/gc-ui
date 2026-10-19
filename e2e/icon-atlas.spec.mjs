@@ -1,8 +1,8 @@
 import {test,expect} from '@playwright/test';
 test('local icon atlas provides searchable attributed glyphs with semantic controls',async({page})=>{
  await page.goto('/lab/icon-atlas.html');
- await expect(page.locator('.icon-card')).toHaveCount(33);
- await expect(page.locator('#result-count')).toContainText('33 of 33');
+ await expect(page.locator('.icon-card')).toHaveCount(51);
+ await expect(page.locator('#result-count')).toContainText('51 of 51');
  await page.locator('#family').selectOption('fluent');
  await expect(page.locator('.icon-card')).toHaveCount(6);
  await page.locator('#icon-search').fill('weather');
@@ -35,4 +35,16 @@ test('clipboard write rejection preserves copy button focus and exposes the symb
  await expect(page.locator('#empty')).toBeHidden();
  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
  expect(overflow).toBeLessThanOrEqual(1);
+});
+
+test('new opt-in glyphs are searchable within their licensed families',async({page})=>{
+ await page.goto('/lab/icon-atlas.html');
+ await page.locator('#family').selectOption('lucide');
+ await expect(page.locator('.icon-card')).toHaveCount(9);
+ await page.locator('#icon-search').fill('shield-check');
+ await expect(page.locator('.icon-card')).toHaveCount(1);
+ await expect(page.locator('.icon-card use')).toHaveAttribute('href',/gc-ext-lucide-shield-check$/);
+ await page.locator('#icon-search').fill('');
+ await page.locator('#family').selectOption('heroicons');
+ await expect(page.locator('.icon-card')).toHaveCount(9);
 });

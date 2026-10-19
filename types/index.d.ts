@@ -144,7 +144,7 @@ export declare function normalizeSurfaceConfig(input?:Partial<GCSurfaceConfigura
 export declare function resolveSurfaceEnvironment(config?:Partial<GCSurfaceConfiguration>,system?:GCSurfaceSystem):GCResolvedEnvironment;
 export declare function createSurfaceController(options?:GCSurfaceControllerOptions):GCSurfaceController;
 
-export type GCMotionPreset='reveal'|'soften'|'settle'|'slideInline'|'dismiss';
+export type GCMotionPreset='reveal'|'soften'|'settle'|'slideInline'|'dismiss'|'surfaceEnter'|'surfaceExit'|'press'|'nudgeInline';
 export declare const GC_MOTION_PRESETS:Readonly<Record<GCMotionPreset,Readonly<Keyframe[]>>>;
 export interface GCMotionOptions {
  direction?:'ltr'|'rtl';
@@ -273,3 +273,21 @@ export declare function resolveEffectiveNativePreferences(
  browser?:GCPlatformSystem&{forcedColors?:boolean},
  native?:GCNativeCapabilities|null
 ):Readonly<Required<GCPlatformSystem>&{forcedColors:boolean}>;
+
+/** Experimental opt-in native HTML pattern controllers. */
+export interface GCChoiceChipsController {
+ get():string;
+ select(value:string,options?:{focus?:boolean}):boolean;
+ destroy():void;
+}
+export declare function initChoiceChips(group:HTMLElement,options?:{
+ onChange?:(value:string)=>void;
+}):GCChoiceChipsController;
+export interface GCDisclosureGroupController {
+ expand(detail:HTMLDetailsElement):HTMLDetailsElement;
+ getOpen():HTMLDetailsElement[];
+ destroy():void;
+}
+export declare function initDisclosureGroup(group:HTMLElement,options?:{
+ multiple?:boolean;
+}):GCDisclosureGroupController;

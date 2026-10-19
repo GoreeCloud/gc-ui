@@ -4,13 +4,13 @@
 
 ## Bundled assets
 
-The [machine-readable asset manifest](../registry/third-party-assets.v1.json) tracks **33 locally copied source SVG files** from **nine free icon libraries**, their upstream source paths and commit revisions, plus a derived namespaced sprite. Every upstream library's license text is kept beside its source SVGs under assets/third-party. No external CDN is required to display these icons.
+The [machine-readable asset manifest](../registry/third-party-assets.v1.json) tracks **51 locally copied source SVG files** from **nine free icon libraries**, their upstream source paths and commit revisions, plus a derived namespaced sprite. Every upstream library's license text is kept beside its source SVGs under assets/third-party. No external CDN is required to display these icons.
 
 | Library | Governing license | Included icons | Notes |
 |---|---|---:|---|
-| [Lucide](https://github.com/lucide-icons/lucide) | ISC; MIT for Feather derivatives | 3 | rounded outline |
-| [Tabler Icons](https://github.com/tabler/tabler-icons) | MIT | 3 | utility outlines |
-| [Heroicons](https://github.com/tailwindlabs/heroicons) | MIT | 3 | utility outlines |
+| [Lucide](https://github.com/lucide-icons/lucide) | ISC; MIT for Feather derivatives | 9 | rounded outline; 6 new utility glyphs |
+| [Tabler Icons](https://github.com/tabler/tabler-icons) | MIT | 9 | utility outlines |
+| [Heroicons](https://github.com/tailwindlabs/heroicons) | MIT | 9 | utility outlines |
 | [Bootstrap Icons](https://github.com/twbs/icons) | MIT | 3 | compact filled shapes |
 | [Feather](https://github.com/feathericons/feather) | MIT | 3 | minimal outlines |
 | [Iconoir](https://github.com/iconoir-icons/iconoir) | MIT | 3 | geometric outlines |
@@ -71,5 +71,26 @@ Test contrast and accessible names for each essential glyph; test screen-reader,
 See [GC original glyph library](ICONS_LIBRARY.md), [motion](MOTION_INPUT.md) and [contextual materials](SURFACES_ENVIRONMENT.md).
 
 ## Searchable extension atlas
+
+### October 2026 curated expansion
+
+Added 18 offline, original upstream SVGs at the **existing pinned commit revisions**:
+Lucide (search, bell, shield-check, calendar, check, chevron-right), Tabler
+(search, bell, layout-dashboard, device-desktop, device-mobile, filter), and
+Heroicons (magnifying-glass, bell, arrow-path, squares-2x2, shield-check,
+chevron-right). None are GC-original assets or proprietary platform glyphs.
+All source SVGs remain separately bundled beside their existing complete
+license notices. See their precise source files and commits in the manifest.
+
+Run `npm run icons:build` to produce the optional sprite from the original local SVG
+geometry using a safe tag/attribute allowlist; `npm run icons:check` verifies the
+committed sprite reproducibly, without downloading code or trusting external CDN
+content. Host applications must not assume the sprite is bundled with the
+**separate stable Foundations** archive.
+
+The opt-in [Pattern Workbench](../lab/pattern-workbench.html) demonstrates three
+GC-original UI pattern treatments (choice chips, native disclosure, status/progress)
+using these third-party shapes. The implementation logic and styling are original
+GC UI source; no third-party component toolkit is bundled.
 
 The standalone [Licensed Icon Atlas](../lab/icon-atlas.html) browses the local manifest with family and text filters. Search results are built with safe DOM APIs rather than injecting upstream markup; SVG shapes resolve through the locally bundled sprite. The atlas is a discoverability aid for optional icons, not a claim that all nine families visually harmonize without per-screen review.
