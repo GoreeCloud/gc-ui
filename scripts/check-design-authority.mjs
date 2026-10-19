@@ -43,7 +43,13 @@ export function checkDesignAuthority(){
     manifest.verified.currentSourceVersion!==pkg.version||
     manifest.authority.outcome!=='exclusive-permanent-replacement'||
     manifest.authority.newPredecessorDependenciesAllowed!==false||
-    manifest.authority.legacyNameAsNewBrandAllowed!==false){
+    manifest.authority.legacyNameAsNewBrandAllowed!==false||
+    manifest.ownerMandateEffectiveDate!=='2026-10-19'||
+    manifest.authority.designMandateEffectiveImmediately!==true||
+    manifest.authority.glazeAndGlazeUIBanned!==true||
+    !Array.isArray(manifest.authority.requiredDesignSurfaces)||
+    !['applications','websites','icons','operating-systems','all-other-goreecloud-controlled-designed-surfaces']
+      .every(surface=>manifest.authority.requiredDesignSurfaces.includes(surface))){
   throw new Error('GC UI authority registry is inconsistent with owner decision or package');
  }
  if(manifest.verified.exclusiveCutoverCompleted &&

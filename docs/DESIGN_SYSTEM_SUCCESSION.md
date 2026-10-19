@@ -1,6 +1,6 @@
 # GoreeCloud UI — Exclusive design-system succession
 
-**Owner direction:** 2026-10-17, reaffirmed and strengthened 2026-10-19. **Design authority:** [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui). **Decision status:** effective immediately and permanent. **Implementation status:** ecosystem migration and verification are not yet complete.
+**Owner direction:** 2026-10-17, reaffirmed and strengthened 2026-10-19. **Design authority:** [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui). **Decision status:** effective immediately and permanent. **Decision:** permanent replacement of Glaze. **Implementation status:** ecosystem cutover **not yet complete**; migration and verification remain outstanding.
 
 ## 0. Mandatory GoreeCloud-wide design mandate — effective 2026-10-19
 
