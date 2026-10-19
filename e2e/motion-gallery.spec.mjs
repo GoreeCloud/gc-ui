@@ -80,3 +80,32 @@ test('active native animation stops when reduced motion or high contrast switche
  await expect.poll(()=>sample.evaluate(el=>el.getAnimations().length)).toBe(0);
  await expect(sample.getByRole('heading',{name:'An anchored transition.'})).toBeVisible();
 });
+
+test('direct WAAPI preset honors increased contrast and remains usable when media queries are unsupported',async({page})=>{
+ await page.goto('/lab/motion-gallery.html');
+ const result=await page.evaluate(async()=>{
+  const {playMotionPreset,motionAllowed}=await import('/src/gc-motion-presets.mjs');
+  const element=document.createElement('div');
+  element.textContent='Contrast-safe transition sample';
+  element.style.cssText='width:120px;height:50px;display:block';
+  document.body.append(element);
+  const media=q=>({matches:q==='(prefers-contrast: more)'});
+  const disabled=motionAllowed({media,root:document.documentElement})===false;
+  const skipped=playMotionPreset(element,'surfaceEnter',{media,root:document.documentElement})===null;
+  const activeAfterSkip=element.getAnimations().length;
+  const unsupported=q=>{if(q.includes('forced-colors'))throw Error('unknown query');return media(q)};
+  const unsupportedStillSafe=motionAllowed({media:unsupported,root:document.documentElement})===false;
+  const allowed=playMotionPreset(element,'surfaceEnter',{
+   media:()=>({matches:false}),root:document.documentElement
+  });
+  const played=allowed!==null&&element.getAnimations().length===1;
+  allowed?.cancel();
+  const empty=element.getAnimations().length===0;
+  element.remove();
+  return {disabled,skipped,activeAfterSkip,unsupportedStillSafe,played,empty};
+ });
+ expect(result).toEqual({
+  disabled:true,skipped:true,activeAfterSkip:0,unsupportedStillSafe:true,
+  played:true,empty:true
+ });
+});

@@ -65,7 +65,7 @@ GC UI's default motion presets use the native Web Animations API and preserve re
 The experimental motion vocabulary also offers `surfaceEnter` (260ms), `surfaceExit`
 (160ms), `press` (180ms), and RTL-aware `nudgeInline` (180ms).
 They use native Web Animations, preserve real DOM state on cancellation, and
-are suppressed by reduced-motion, forced-colors, or high-contrast preferences.
+are suppressed by reduced-motion, forced-colors, or high-contrast preferences. The shared `motionAllowed()` rule also checks the OS `prefers-contrast: more` preference; direct `playMotionPreset()`, optional injected adapters and managed coordinators all apply the same gate. Unsupported individual media queries do not hide other positive accessibility preferences.
 No external runtime or automatically animated component is introduced.
 
 The new [motion coordinator](../src/gc-transition-coordinator.mjs) cancels an earlier animation on the same element before starting the next preset, removes completed fill layers, exposes cancel/cancelAll and destroy, and skips playback when WAAPI or user/system motion permission is absent. This prevents stale transitions from surviving route or state changes. The [interactive Motion Gallery](../lab/motion-gallery.html) demonstrates cancellation, RTL inline movement, and a reduced-motion preview. Both the single-element motion coordinator and bounded choreography now cancel **active** transitions as soon as OS reduced-motion, forced-colors or increased-contrast events fire, or the GC theme switches into high contrast; listeners detach on destruction. The DOM remains authoritative without waiting for animation completion.

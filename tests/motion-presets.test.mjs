@@ -44,3 +44,24 @@ test('optional adapters are injected and do not require peer packages',()=>{
  assert.equal(params.frame,0);
  assert.throws(()=>mountLottie({},element,{}));
 });
+
+test('increased-contrast system preference skips direct presets and optional motion adapters',()=>{
+ const observed=[];
+ const media=query=>({matches:query==='(prefers-contrast: more)'});
+ const root={dataset:{}};
+ const el={animate(...args){observed.push(args);return {}}};
+ assert.equal(motionAllowed({media,root}),false,'shared permission should include increased contrast');
+ assert.equal(playMotionPreset(el,'surfaceEnter',{media,root}),null);
+ assert.equal(playWithMotion(()=>{throw new Error('Optional motion should not run')},el,'press',{media,root}),null);
+ assert.equal(observed.length,0);
+ assert.equal(motionAllowed({media:()=>({matches:false}),root}),true);
+});
+
+test('a broken single preference query fails safely while others are considered',()=>{
+ const root={dataset:{}};
+ const media=query=>{
+  if(query.includes('forced-colors'))throw new Error('unsupported media');
+  return {matches:query==='(prefers-contrast: more)'};
+ };
+ assert.equal(motionAllowed({media,root}),false);
+});
