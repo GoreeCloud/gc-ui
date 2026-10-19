@@ -217,3 +217,28 @@ test('undecodable UTF-8 source must be incomplete, not no-legacy-evidence-detect
   assert.ok(JSON.parse(result.stdout).incomplete.some(x=>x.reason==='invalid-utf8-text-file'));
  });
 });
+
+test('SVG symbol content and Astro component templates cannot bypass legacy source audit',()=>{
+ fixture(root=>{
+  make(root,'assets/icons.svg','<svg xmlns="http://www.w3.org/2000/svg"><symbol id="glz-icon-menu"><path d="M0 0"/></symbol></svg>');
+  make(root,'src/dashboard.astro','---\nconst title = "Dashboard";\n---\n<glz-button>{title}</glz-button>');
+  const report=auditConsumer(root);
+  assert.equal(report.status,'legacy-dependency-evidence');
+  assert.equal(report.scan.filesScanned,2,'both text asset and component source must be scanned');
+  assert.ok(report.findings.some(x=>x.path==='assets/icons.svg'&&x.severity==='active'));
+  assert.ok(report.findings.some(x=>x.path==='src/dashboard.astro'&&x.type==='legacy-component'&&x.severity==='active'));
+  const cli=new URL('../scripts/audit-legacy-consumer.mjs',import.meta.url).pathname;
+  const result=spawnSync(process.execPath,[cli,'--root',root,'--json','--strict'],{encoding:'utf8'});
+  assert.equal(result.status,2,result.stderr);
+  assert.equal(JSON.parse(result.stdout).scan.filesScanned,2);
+ });
+});
+
+test('an oversized SVG source cannot be misrepresented as a clean audit',()=>{
+ fixture(root=>{
+  make(root,'assets/icons.svg','<svg>'+'z'.repeat(100)+'</svg>');
+  const report=auditConsumer(root,{maxSize:40});
+  assert.equal(report.status,'incomplete');
+  assert.ok(report.incomplete.some(x=>x.reason==='oversized-text-file'&&x.path==='assets/icons.svg'));
+ });
+});

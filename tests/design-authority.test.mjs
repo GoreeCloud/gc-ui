@@ -96,3 +96,17 @@ test('source authority scan rejects predecessor design imports in TypeScript mod
  }
  assert.ok(checkDesignAuthority()>40);
 });
+
+test('active abbreviated legacy tags and Astro template imports are forbidden',()=>{
+ for(const malicious of ['<glz-button>Save</glz-button>','.glz-card {display:block}','<svg><symbol id="glz-icon-home"></symbol></svg>'])
+  assert.equal(findPredecessorReference(malicious),true,malicious);
+ for(const extension of ['.astro','.html','.svg']){
+  const fixture=new URL('../src/__gc_authority_template_probe_'+process.pid+extension,import.meta.url);
+  try{
+   writeFileSync(fixture,'<glz-button>Legacy component</glz-button>','utf8');
+   assert.throws(()=>checkDesignAuthority(),/Legacy design authority.*__gc_authority_template_probe/);
+  }finally{
+   rmSync(fileURLToPath(fixture),{force:true});
+  }
+ }
+});
