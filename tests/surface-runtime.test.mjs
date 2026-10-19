@@ -55,3 +55,29 @@ test('lighting direction is validated and reflected into the environment',()=>{
  assert.equal(root.dataset.gcLightDirection,'trailing');
  controller.destroy();
 });
+
+test('surface teardown restores existing app attributes and clears only controller-added state',()=>{
+ const original={gcSurfaceContext:'consumer-context',gcSurfaceLens:'consumer-lens',unrelated:'preserve'};
+ const root={dataset:{...original}};
+ const controller=createSurfaceController({root,media:()=>null,storage:null});
+ assert.equal(root.dataset.gcSurfaceContext,'workspace');
+ assert.equal(root.dataset.gcSurfaceLens,'auto');
+ controller.set({context:'reading',lightDirection:'trailing'});
+ controller.destroy();
+ assert.deepEqual(root.dataset,original);
+ controller.destroy();
+ assert.deepEqual(root.dataset,original,'teardown remains idempotent');
+});
+
+test('surface teardown preserves newer consumer writes rather than resurrecting stale state',()=>{
+ const root={dataset:{gcSurfaceContext:'original'}};
+ const controller=createSurfaceController({root,media:()=>null,storage:null});
+ controller.set({context:'media',intensity:'expressive'});
+ root.dataset.gcSurfaceContext='external-context';
+ root.dataset.gcSurfaceIntensity='external-intensity';
+ controller.destroy();
+ assert.deepEqual(root.dataset,{
+  gcSurfaceContext:'external-context',
+  gcSurfaceIntensity:'external-intensity'
+ });
+});
