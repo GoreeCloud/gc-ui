@@ -12,6 +12,12 @@ test('single-design-authority owner decision is machine readable and release cla
  assert.equal(contract.authority.successor,'GoreeCloud UI');
  assert.equal(contract.authority.successorRepository,'GoreeCloud/gc-ui');
  assert.equal(contract.authority.outcome,'exclusive-permanent-replacement');
+ assert.equal(contract.ownerMandateEffectiveDate,'2026-10-19');
+ assert.equal(contract.authority.designMandateEffectiveImmediately,true);
+ assert.equal(contract.authority.glazeAndGlazeUIBanned,true);
+ assert.deepEqual(contract.authority.requiredDesignSurfaces,[
+  'applications','websites','icons','operating-systems','all-other-goreecloud-controlled-designed-surfaces'
+ ]);
  assert.equal(contract.authority.newPredecessorDependenciesAllowed,false);
  assert.equal(contract.verified.currentSourceVersion,pkg.version);
  for(const gate of ['governanceDocumentsAmended','allConsumerMigrationsVerified','predecessorRepositoriesRetired','exclusiveCutoverCompleted']){
@@ -54,6 +60,9 @@ test('Android build output cannot make source-only authority checks depend on bu
 test('current GC UI guidance names exclusive successor and discloses governance gap',()=>{
  const doc=read('docs/DESIGN_SYSTEM_SUCCESSION.md');
  assert.match(doc,/permanent replacement of Glaze/);
+ assert.match(doc,/Mandatory GoreeCloud-wide design mandate/);
+ assert.match(doc,/2026-10-19/);
+ assert.match(doc,/Glaze and Glaze UI are permanently removed/);
  assert.match(doc,/ecosystem cutover \*\*not yet complete\*\*/);
  assert.match(doc,/read-only/);
  assert.match(doc,/AGPL-3\.0-or-later/);
