@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Prevent old design-authority source and assets from entering GC UI. */
-import {readFileSync,readdirSync} from 'node:fs';
+import {readFileSync,readdirSync,lstatSync} from 'node:fs';
 import {resolve,join,relative,extname,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {pathToFileURL} from 'node:url';
@@ -13,6 +13,17 @@ const sourceFiles=['index.html','package.json'];
 const textExtensions=new Set(['.js','.mjs','.cjs','.ts','.mts','.cts','.css','.html','.astro','.svg','.json','.md','.kt','.xml','.gradle','.txt','.yml','.yaml']);
 const ignoredDirectories=new Set(['node_modules','.git','dist','build','.gradle','.idea','.venv','out','test-results']);
 const generatedAssetsPath='native/android/app/src/main/assets';
+const utf8=new TextDecoder('utf-8',{fatal:true});
+function readSourceText(file){
+ const path=relative(root,file);
+ if(lstatSync(file).isSymbolicLink())throw new Error('Uninspectable symlink in active GC UI source: '+path);
+ const bytes=readFileSync(file);
+ let value;
+ try{value=utf8.decode(bytes)}
+ catch{throw new Error('Invalid UTF-8 in GC UI source: '+path)}
+ if(value.includes('\0'))throw new Error('NUL byte in GC UI source: '+path);
+ return value;
+}
 
 // Deliberately restrict this check to source/runtime/package surfaces. Archived
 // governance references, historical changelogs, and migration documentation may
@@ -21,10 +32,12 @@ export function findPredecessorReference(value){
  return /(?:\bglaze(?:[\s_-]+ui)?\b|\bglz[A-Z][a-zA-Z]*\b|\bglz[-_][A-Za-z0-9][-\w]*\b|--glz[-\w]*\b)/i.test(value);
 }
 function collect(folder){
+ if(lstatSync(folder).isSymbolicLink())throw new Error('Uninspectable symlink in active GC UI source: '+relative(root,folder));
  const entries=readdirSync(folder,{withFileTypes:true});
  const result=[];
  for(const entry of entries){
   const file=join(folder,entry.name);
+  if(entry.isSymbolicLink())throw new Error('Uninspectable symlink in active GC UI source: '+relative(root,file));
   if(entry.isDirectory()){
    if(!ignoredDirectories.has(entry.name) && relative(root,file).split(sep).join('/')!==generatedAssetsPath)result.push(...collect(file));
   }else if(entry.isFile() && textExtensions.has(extname(entry.name).toLowerCase())){
@@ -34,8 +47,8 @@ function collect(folder){
  return result;
 }
 export function checkDesignAuthority(){
- const manifest=JSON.parse(readFileSync(join(root,'registry/design-authority.v1.json'),'utf8'));
- const pkg=JSON.parse(readFileSync(join(root,'package.json'),'utf8'));
+ const manifest=JSON.parse(readSourceText(join(root,'registry/design-authority.v1.json')));
+ const pkg=JSON.parse(readSourceText(join(root,'package.json')));
  if(manifest.schema!=='gc-ui-design-succession.v1'||
     manifest.authority.successor!=='GoreeCloud UI'||
     manifest.authority.successorRepository!=='GoreeCloud/gc-ui'||
@@ -77,9 +90,11 @@ export function checkDesignAuthority(){
  for(const file of paths){
   // This read-only provenance ledger must preserve the historic name and prior repo
   // paths. It is not a compiled GC UI token, asset, runtime or public API.
+  const value=readSourceText(file);
+  // These verified historical ledgers retain predecessor names intentionally,
+  // but their source bytes must still be inspected for corruption.
   if(['registry/design-authority.v1.json','registry/consumer-migration-reconciliation.v1.json']
     .includes(relative(root,file)))continue;
-  const value=readFileSync(file,'utf8');
   if(findPredecessorReference(value))violations.push(relative(root,file));
  }
  if(violations.length)
