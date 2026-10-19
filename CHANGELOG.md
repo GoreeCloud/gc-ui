@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Accessible menu controller teardown isolation (2026-10-18)
+- Restored the consuming application's pre-existing menu trigger ARIA state, menu visibility, and menu item tab order when an experimental action-menu controller is destroyed.
+- Only restore values still owned by the controller; keep newer host-app changes intact and move focus to the live trigger if teardown hides the currently focused menu.
+- Added Node lifecycle regressions and a real-DOM browser test. This is a narrowly scoped alpha controller stability fix; no stable Foundations artifact or downstream app is changed.
+
 GC UI is an original independent design system. This changelog tracks implementations, not just specification intent.
 
 ## Theme ownership and native-client lifecycle stabilization (2026-10-17)
