@@ -323,3 +323,49 @@ test('tabs teardown respects new application-owned states and removes only still
  assert.equal(tab2.getAttribute('tabindex'),'7','newer tab order preserved');
  assert.equal(p2.hidden,false,'newer host visibility preserved');
 });
+
+test('toast region ARIA is borrowed, restored on final destroy and respects newer app ownership',async()=>{
+ const {createToast}=await import('../src/gc-interactions.mjs');
+ const attrs=new Map([['role','alert'],['aria-live','assertive'],['aria-atomic','false']]);
+ const region={
+  ownerDocument:{},
+  getAttribute:name=>attrs.get(name)??null,
+  setAttribute(name,value){attrs.set(name,String(value))},
+  removeAttribute(name){attrs.delete(name)}
+ };
+ const first=createToast(region),second=createToast(region);
+ assert.equal(region.getAttribute('role'),'status');
+ assert.equal(region.getAttribute('aria-live'),'polite');
+ first.destroy();
+ assert.equal(region.getAttribute('role'),'status','an overlapping controller still uses this region');
+ second.destroy();
+ assert.equal(region.getAttribute('role'),'alert');
+ assert.equal(region.getAttribute('aria-live'),'assertive');
+ assert.equal(region.getAttribute('aria-atomic'),'false');
+
+ const third=createToast(region);
+ region.setAttribute('aria-live','off'); // consumer made a newer change
+ third.destroy();
+ assert.equal(region.getAttribute('aria-live'),'off');
+ assert.equal(region.getAttribute('role'),'alert');
+ assert.equal(region.getAttribute('aria-atomic'),'false');
+});
+
+test('async action preserves borrowed ARIA and does not overwrite newer application states',async()=>{
+ const attrs=new Map([['aria-busy','false']]);
+ const button={disabled:false,
+  getAttribute:name=>attrs.get(name)??null,
+  setAttribute(name,value){attrs.set(name,String(value))},
+  removeAttribute(name){attrs.delete(name)}
+ };
+ assert.equal(await runAsyncAction(button,async()=> 'saved'),'saved');
+ assert.equal(button.getAttribute('aria-busy'),'false','pre-existing aria-busy=false is not controller-owned');
+
+ let resolve;
+ const pending=runAsyncAction(button,()=>new Promise(done=>{resolve=done}));
+ button.setAttribute('aria-busy','host-managed');
+ resolve('complete');
+ assert.equal(await pending,'complete');
+ assert.equal(button.getAttribute('aria-busy'),'host-managed','newer host value must not be removed');
+ assert.equal(button.disabled,false);
+});
