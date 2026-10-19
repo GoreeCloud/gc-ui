@@ -356,3 +356,43 @@ test('real CSSOM keeps an externally added important declaration',async({page})=
  expect(observed.priority).toBe('important');
  expect(observed.value).toMatch(/^#[0-9a-fA-F]{6}$/);
 });
+
+test('real DOM menu disposal restores original ARIA, hidden state, and keyboard focus',async({page})=>{
+ await page.goto('/lab/components.html');
+ const observed=await page.evaluate(async()=>{
+  const {initMenu}=await import('/src/gc-menu.mjs');
+  const trigger=document.createElement('button');
+  trigger.textContent='Open separate menu';
+  trigger.setAttribute('aria-haspopup','dialog');
+  const menu=document.createElement('div');
+  menu.id='gc-menu-lifecycle-probe';
+  menu.setAttribute('role','menu');
+  menu.hidden=true;
+  const item=document.createElement('button');
+  item.setAttribute('role','menuitem');
+  item.textContent='Action';
+  item.tabIndex=3;
+  menu.append(item);
+  document.body.append(trigger,menu);
+  const api=initMenu(trigger,menu);
+  api.open();
+  const focusedWhileOpen=document.activeElement===item;
+  api.destroy();
+  const result={
+   focusedWhileOpen,
+   focusReturned:document.activeElement===trigger,
+   hidden:menu.hidden,
+   haspopup:trigger.getAttribute('aria-haspopup'),
+   controls:trigger.getAttribute('aria-controls'),
+   expanded:trigger.getAttribute('aria-expanded'),
+   tabindex:item.getAttribute('tabindex'),
+   canReopen:api.open()
+  };
+  menu.remove();trigger.remove();
+  return result;
+ });
+ expect(observed).toEqual({
+  focusedWhileOpen:true,focusReturned:true,hidden:true,
+  haspopup:'dialog',controls:null,expanded:null,tabindex:'3',canReopen:false
+ });
+});
