@@ -50,7 +50,8 @@
     "migration:audit": "node scripts/audit-legacy-consumer.mjs",
     "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs",
     "release:foundations:handoff:verify": "node scripts/verify-foundations-handoff.mjs",
-    "migration:cutover:readiness": "node scripts/check-cutover-readiness.mjs"
+    "migration:cutover:readiness": "node scripts/check-cutover-readiness.mjs",
+    "release:foundations:registry:readback": "node scripts/verify-npm-registry-distribution.mjs"
   },
   "license": "Apache-2.0",
   "types": "./types/index.d.ts",

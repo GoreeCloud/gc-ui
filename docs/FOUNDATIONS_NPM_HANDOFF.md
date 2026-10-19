@@ -57,3 +57,31 @@ distribution identity and rollback steps in #28 before updating
 
 **No npm publish was attempted here**. Foundations GitHub stability and the
 separate experimental GC UI maturity remain unchanged.
+
+## Repeatable, unauthenticated post-publication registry proof
+
+From this repository, run:
+
+```sh
+npm run release:foundations:registry:readback -- --json --check
+npm run release:foundations:registry:readback -- --strict
+```
+
+This read-only check uses only canonical public `registry.npmjs.org` endpoints
+for the **exact version** `@goreecloud/gc-ui@1.0.1`. It never reads npm
+credentials, uses third-party tarball URLs, publishes, logs in, changes tags,
+or changes repository acceptance flags. It validates package identity, Apache-2.0
+license, URL origin/path, npm SHA-512 integrity (and SHA-1 shasum when supplied),
+and the tarball's **actual bytes against the pinned GitHub release SHA-256**.
+
+A 403 or 404 means *public metadata unavailable to this unauthenticated probe*,
+not that the scope is available or owned by GoreeCloud. `--check` exits zero
+for this accurately blocked state and prints `verified:false`; `--strict`
+exits **2** until all public artifact proofs pass. Unexpected HTTP, network,
+malformed metadata, redirected/untrusted tarball URLs and checksum mismatches
+fail closed with exit **3**, not a false unpublished claim.
+
+An exact-byte registry proof is necessary but does not establish the actual
+publishing identity, organizational authorization, SLSA/signed provenance,
+consumer TypeScript/browser adoption, owner release approval or rollback.
+Preserve those separate checks and issue #28 until independently accepted.
