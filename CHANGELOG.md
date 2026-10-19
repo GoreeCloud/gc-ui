@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Public registry distribution attestation preflight (2026-10-19)
+- Added an unauthenticated read-only `@goreecloud/gc-ui@1.0.1` npm registry readback with strict package identity/origin, dist integrity and exact GitHub release SHA-256 verification.
+- Distinguishes unavailable public metadata (blocked, no scope-ownership claim) from integrity/network failures (hard error) and verified immutable distribution, with strict readiness exit status and positive/negative injected-network tests. Does not publish or authenticate.
+
 ## Consistent high-contrast motion permission (2026-10-19)
 - The shared motion predicate now suppresses direct WAAPI presets and optional injected motion adapters when `prefers-contrast: more` is active; individual unavailable media queries no longer mask a valid accessibility preference.
 - Single-element and group animation managers use the same shared predicate without duplicate contrast tests. Negative-path Node regression and real-DOM browser checks added; no Foundations stable contract or third-party dependency changed.
