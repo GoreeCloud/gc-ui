@@ -14,6 +14,7 @@
     "tokens:check": "node scripts/build-v1-tokens.mjs --check",
     "audit:colors": "node scripts/audit-colors.mjs",
     "audit:composited": "node scripts/audit-composited-contrast.mjs",
+    "test:e2e:isolated": "node scripts/run-e2e-isolated.mjs",
     "test:e2e": "npm run test:e2e:interaction && npm run test:e2e:reflow && npm run test:e2e:effective-zoom && npm run test:e2e:accessibility && npm run test:e2e:visual",
     "pretest:e2e:interaction": "npm run release:foundations:verify",
     "test:e2e:interaction": "playwright test e2e/foundations-packaged.spec.mjs e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/composited-contrast.spec.mjs e2e/icon-atlas.spec.mjs e2e/pattern-workbench.spec.mjs e2e/motion-gallery.spec.mjs e2e/experience-studio.spec.mjs e2e/native-host.spec.mjs",

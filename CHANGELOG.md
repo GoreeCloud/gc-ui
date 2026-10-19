@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Isolated concurrent Playwright runner (2026-10-18)
+- Introduced opt-in `test:e2e:isolated` to allocate distinct loopback ports and artifact directories for overlapping browser runs, preventing test trace deletion and stale-server reuse.
+- Validates output IDs against path traversal while preserving the standard local and CI test commands unchanged; adds config and real-run verification.
+- No runtime UI bundle, native host, npm release or consumer source modified.
+
 ## Accessibility motion interruption (2026-10-18)
 - Cancel already-running single-element animations immediately when reduced-motion, forced-colors, high-contrast theme or increased-contrast preferences activate.
 - Unsubscribe media/theme listeners on controller disposal and retain the original native Web Animations fallback.

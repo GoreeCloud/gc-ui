@@ -111,3 +111,22 @@ These suites do **not** prove Safari support, macOS/Windows zoom fidelity, OS te
 ## Legacy consumer migration evidence guard
 
 \`node --test tests/legacy-consumer-audit.test.mjs\` verifies read-only auditing, explicit-root enforcement, symlink/oversize fail-closed behavior, historical documentation classification, accurate package/import/token findings and strict return codes. The [audit guide](CONSUMER_MIGRATION_AUDIT.md) describes how to inspect **only authorized checkouts**; static clean scans are not GC UI adoption certificates.
+
+## Concurrent Playwright suites (isolated)
+
+To test two engines or independent QA suites simultaneously **from the same checkout**,
+use the opt-in `npm run test:e2e:isolated -- <Playwright arguments>` runner for **each** process.
+It reserves a distinct loopback server port and assigns a separate ignored
+`test-results/isolated/run-<UUID>/` artifacts directory. For example:
+
+```sh
+npm run test:e2e:isolated -- e2e/forms.spec.mjs --browser chromium --workers=1 &
+npm run test:e2e:isolated -- e2e/icon-atlas.spec.mjs --browser firefox --workers=1 &
+wait
+```
+
+Normal `npm run test:e2e:interaction` and CI commands retain their previous
+server/artifact paths. `GC_PLAYWRIGHT_RUN_ID` is validated as a short, safe
+path component; arbitrary output directories are intentionally prohibited because
+Playwright clears test output at launch. The runner only manages server and
+artifact isolation; it does **not** install browsers or certify UI behavior.

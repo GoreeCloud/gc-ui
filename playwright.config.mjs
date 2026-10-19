@@ -3,9 +3,13 @@ import {defineConfig,devices} from '@playwright/test';
 const port=Number(process.env.GC_PLAYWRIGHT_PORT??4173);
 if(!Number.isInteger(port)||port<1024||port>65535)
  throw new TypeError('GC_PLAYWRIGHT_PORT must be a port between 1024 and 65535');
+const runId=process.env.GC_PLAYWRIGHT_RUN_ID;
+if(runId!==undefined && !/^[a-zA-Z0-9][a-zA-Z0-9_-]{0,63}$/.test(runId))
+ throw new TypeError('GC_PLAYWRIGHT_RUN_ID must be a safe short directory name');
 const local='http://127.0.0.1:'+port;
 export default defineConfig({
   testDir:'./e2e',
+  outputDir:runId?'./test-results/isolated/'+runId:'./test-results',
   timeout:30000,
   retries:process.env.CI?1:0,
   workers:process.env.CI?2:undefined,
