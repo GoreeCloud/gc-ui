@@ -9,7 +9,16 @@
     "predecessor": "Glaze",
     "outcome": "exclusive-permanent-replacement",
     "newPredecessorDependenciesAllowed": false,
-    "legacyNameAsNewBrandAllowed": false
+    "legacyNameAsNewBrandAllowed": false,
+    "designMandateEffectiveImmediately": true,
+    "glazeAndGlazeUIBanned": true,
+    "requiredDesignSurfaces": [
+      "applications",
+      "websites",
+      "icons",
+      "operating-systems",
+      "all-other-goreecloud-controlled-designed-surfaces"
+    ]
   },
   "verified": {
     "currentSourceVersion": "0.2.0-alpha.1",
@@ -33,5 +42,6 @@
     "thirdPartyRightsAndHistoryPreserved": true,
     "applicableAccessibilitySecurityReleaseGatesRemain": true
   },
-  "relatedSpecification": "docs/DESIGN_SYSTEM_SUCCESSION.md"
+  "relatedSpecification": "docs/DESIGN_SYSTEM_SUCCESSION.md",
+  "ownerMandateEffectiveDate": "2026-10-19"
 }
