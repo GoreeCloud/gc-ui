@@ -9,6 +9,7 @@ function control(localName,type,options={}){
   step:options.step||'',disabled:false,textContent:options.textContent||'',focusCount:0,
   getAttribute:name=>attributes.get(name)||null,
   setAttribute(name,value){attributes.set(name,String(value))},
+  removeAttribute(name){attributes.delete(name)},
   addEventListener(name,fn){if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(fn)},
   removeEventListener(name,fn){listeners.get(name)?.delete(fn)},
   dispatch(name){for(const fn of [...(listeners.get(name)||[])])fn({type:name})},
@@ -108,4 +109,73 @@ test('stepper rejects ambiguous or malformed native range contracts',()=>{
  }
  assert.throws(()=>initNumberStepper(number(),btn(),btn(),{onChange:true}),/function/);
  assert.throws(()=>initNumberStepper(number(),btn(),control('button','submit')),/type=button/);
+});
+
+test('password reveal preserves nested SVG markup and only changes marked visible label text',()=>{
+ const field=pass(),button=reveal(),label={textContent:'View'};
+ const icon={localName:'svg'};
+ button.childElementCount=2;
+ button.querySelector=selector=>selector==='[data-gc-password-reveal-label]'?label:null;
+ button.children=[icon,label];
+ button.setAttribute('aria-pressed','mixed');
+ const api=initPasswordReveal(field,button);
+ button.dispatch('click');
+ assert.equal(field.type,'text');
+ assert.equal(button.children[0],icon,'nested SVG must survive interaction');
+ assert.equal(label.textContent,'Hide');
+ api.destroy();
+ assert.equal(field.type,'password');
+ assert.equal(button.children[0],icon);
+ assert.equal(label.textContent,'View','original host label restored');
+ assert.equal(button.getAttribute('aria-pressed'),'mixed','original ARIA restored');
+});
+
+test('icon-only password toggle must not replace host-owned markup or override later ARIA changes',()=>{
+ const field=pass(),button=reveal(),icon={localName:'svg'};
+ button.childElementCount=1;
+ button.querySelector=()=>null;
+ button.children=[icon];
+ button.textContent='original-icon';
+ const api=initPasswordReveal(field,button);
+ button.dispatch('click');
+ assert.equal(button.children[0],icon);
+ assert.equal(button.textContent,'original-icon');
+ button.setAttribute('aria-pressed','external');
+ api.destroy();
+ assert.equal(field.type,'password','retiring a controller always masks its password');
+ assert.equal(button.getAttribute('aria-pressed'),'external');
+ assert.equal(button.textContent,'original-icon');
+});
+
+test('password controller restores original plain label only when still its last write',()=>{
+ const field=pass(),button=reveal(),api=initPasswordReveal(field,button);
+ button.dispatch('click');
+ button.textContent='Host changed this label';
+ api.destroy();
+ assert.equal(button.textContent,'Host changed this label');
+ assert.equal(button.getAttribute('aria-pressed'),null);
+});
+
+test('number stepper restores borrowed disabled flags on teardown and keeps newer changes',()=>{
+ const field=number({value:'1'}),dec=btn(),inc=btn();
+ dec.disabled=true;inc.disabled=true;
+ const api=initNumberStepper(field,dec,inc);
+ assert.equal(dec.disabled,true);assert.equal(inc.disabled,false);
+ field.value='12';field.dispatch('change');
+ assert.equal(dec.disabled,false);assert.equal(inc.disabled,true);
+ // The host changes the decrement state after the controller's last update.
+ dec.disabled=true;
+ api.destroy();
+ assert.equal(dec.disabled,true,'later app change preserved');
+ assert.equal(inc.disabled,true,'pre-mount disabled state restored');
+ api.destroy();
+});
+
+test('number stepper restores originally enabled controls regardless of terminal limit',()=>{
+ const field=number({value:'12'}),dec=btn(),inc=btn();
+ const api=initNumberStepper(field,dec,inc);
+ assert.equal(inc.disabled,true);
+ api.destroy();
+ assert.equal(dec.disabled,false);
+ assert.equal(inc.disabled,false);
 });

@@ -250,3 +250,88 @@ test('forms lab explicitly disables submission without JavaScript and never puts
   expect(new URL(page.url()).search).toBe('');
  }finally{await context.close()}
 });
+
+test('password reveal preserves nested icon/label DOM and original host ARIA on teardown',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const observed=await page.evaluate(async()=>{
+  const {initPasswordReveal}=await import('/src/gc-form-controls.mjs');
+  const root=document.createElement('section');
+  const input=document.createElement('input');
+  input.type='password';input.value='invented-demo-only';
+  const button=document.createElement('button');
+  button.type='button';
+  button.setAttribute('aria-label','Reveal invented demo value');
+  button.setAttribute('aria-pressed','mixed');
+  const icon=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  icon.setAttribute('aria-hidden','true');
+  const path=document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d','M2 12h20');icon.append(path);
+  const label=document.createElement('span');
+  label.setAttribute('data-gc-password-reveal-label','');
+  label.textContent='Reveal value';
+  button.append(icon,label);
+  root.append(input,button);document.body.append(root);
+  const api=initPasswordReveal(input,button);
+  button.click();
+  const expanded=input.type==='text'&&label.textContent==='Hide'&&button.contains(icon)&&icon.contains(path);
+  api.destroy();
+  const result={
+   expanded,masked:input.type==='password',value:input.value,
+   iconRetained:button.contains(icon)&&icon.contains(path),
+   label:label.textContent,pressed:button.getAttribute('aria-pressed'),
+   named:button.getAttribute('aria-label'),listenersGone:true
+  };
+  button.click();
+  result.maskedAfterClick=input.type==='password';
+  root.remove();
+  return result;
+ });
+ expect(observed).toEqual({
+  expanded:true,masked:true,value:'invented-demo-only',iconRetained:true,
+  label:'Reveal value',pressed:'mixed',named:'Reveal invented demo value',
+  listenersGone:true,maskedAfterClick:true
+ });
+});
+
+test('password reveal never replaces a host-owned icon-only button or later ARIA edits',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const observed=await page.evaluate(async()=>{
+  const {initPasswordReveal}=await import('/src/gc-form-controls.mjs');
+  const input=document.createElement('input');input.type='password';
+  const button=document.createElement('button');button.type='button';
+  button.setAttribute('aria-label','Reveal test value');
+  const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  button.append(svg);
+  document.body.append(input,button);
+  const api=initPasswordReveal(input,button);
+  button.click();
+  const retained=svg.isConnected&&button.firstElementChild===svg&&button.childElementCount===1;
+  button.setAttribute('aria-pressed','app-owned');
+  api.destroy();
+  const result={retained,masked:input.type==='password',pressed:button.getAttribute('aria-pressed')};
+  input.remove();button.remove();
+  return result;
+ });
+ expect(observed).toEqual({retained:true,masked:true,pressed:'app-owned'});
+});
+
+test('number stepper restores borrowed host button states during teardown',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const observed=await page.evaluate(async()=>{
+  const {initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const input=document.createElement('input');input.type='number';
+  input.min='1';input.max='12';input.step='1';input.value='1';
+  const dec=document.createElement('button'),inc=document.createElement('button');
+  dec.type='button';inc.type='button';dec.disabled=true;inc.disabled=true;
+  document.body.append(input,dec,inc);
+  const api=initNumberStepper(input,dec,inc);
+  const ownedState=dec.disabled===true&&inc.disabled===false;
+  input.value='12';input.dispatchEvent(new Event('change',{bubbles:true}));
+  dec.disabled=true; // newer app write, after the controller set false
+  api.destroy();
+  const result={ownedState,dec:dec.disabled,inc:inc.disabled,value:input.value};
+  input.remove();dec.remove();inc.remove();
+  return result;
+ });
+ expect(observed).toEqual({ownedState:true,dec:true,inc:true,value:'12'});
+});

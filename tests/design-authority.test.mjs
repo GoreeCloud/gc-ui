@@ -63,3 +63,16 @@ test('current GC UI guidance names exclusive successor and discloses governance 
   'docs/IMPLEMENTATION_STATUS.md'
  ])assert.match(read(guide),/DESIGN_SYSTEM_SUCCESSION\.md/,'Missing direction in '+guide);
 });
+
+test('source authority scan rejects predecessor design imports in TypeScript module variants',()=>{
+ for(const extension of ['.mts','.cts']){
+  const fixture=new URL('../src/__gc_authority_ts_probe_'+process.pid+extension,import.meta.url);
+  try{
+   writeFileSync(fixture,"import '../legacy/Glaze UI/components'","utf8");
+   assert.throws(()=>checkDesignAuthority(),/Legacy design authority.*__gc_authority_ts_probe/);
+  }finally{
+   rmSync(fileURLToPath(fixture),{force:true});
+  }
+ }
+ assert.ok(checkDesignAuthority()>40);
+});

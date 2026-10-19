@@ -396,3 +396,28 @@ test('real DOM menu disposal restores original ARIA, hidden state, and keyboard 
   haspopup:'dialog',controls:null,expanded:null,tabindex:'3',canReopen:false
  });
 });
+
+test('host-hide menu focusout preserves host visibility during teardown',async({page})=>{
+ await page.goto('/lab/components.html');
+ const observed=await page.evaluate(async()=>{
+  const {initMenu}=await import('/src/gc-menu.mjs');
+  const trigger=document.createElement('button');
+  trigger.type='button';trigger.textContent='Menu';
+  const menu=document.createElement('div');
+  menu.id='gc-menu-host-visibility-probe';
+  menu.setAttribute('role','menu');
+  const item=document.createElement('button');
+  item.type='button';item.textContent='Action';item.setAttribute('role','menuitem');
+  menu.append(item);document.body.append(trigger,menu);
+  const api=initMenu(trigger,menu);
+  api.open();
+  menu.hidden=true;
+  menu.dispatchEvent(new FocusEvent('focusout',{bubbles:true,relatedTarget:trigger}));
+  const dismissed=!api.isOpen();
+  api.destroy();
+  const result={dismissed,hidden:menu.hidden,expanded:trigger.getAttribute('aria-expanded')};
+  trigger.remove();menu.remove();
+  return result;
+ });
+ expect(observed).toEqual({dismissed:true,hidden:true,expanded:null});
+});

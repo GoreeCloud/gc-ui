@@ -9,16 +9,30 @@ export function initPasswordReveal(input,button){
  if(button.type!=='button')throw new TypeError('Password reveal button must be type=button');
  if(!button.getAttribute('aria-label')&&!button.getAttribute('aria-labelledby'))
   throw new TypeError('Password reveal needs a stable accessible button name');
- let destroyed=false;
+ // Host markup is not owned by the controller. A marked visible label may
+ // change, but never replace a button's children (icons, badges, SVG, etc.).
+ const label=button.querySelector?.('[data-gc-password-reveal-label]')??null;
+ const textTarget=label||((button.childElementCount??0)===0?button:null);
+ const originalText=textTarget?.textContent;
+ const priorPressed=button.getAttribute('aria-pressed');
+ let writtenText,writtenPressed,destroyed=false;
  const ensureActive=()=>{if(destroyed)throw new Error('Password controller was destroyed')};
+ const setPressed=value=>{
+  button.setAttribute('aria-pressed',value);
+  writtenPressed=value;
+ };
  const setVisible=visible=>{
   ensureActive();
   input.type=visible?'text':'password';
-  button.setAttribute('aria-pressed',String(visible));
-  button.textContent=visible?'Hide':'Show';
+  setPressed(String(visible));
+  if(textTarget){
+   const text=visible?'Hide':'Show';
+   textTarget.textContent=text;
+   writtenText=text;
+  }
   return visible;
  };
- button.setAttribute('aria-pressed','false');
+ setPressed('false');
  const toggle=()=>setVisible(input.type==='password');
  button.addEventListener('click',toggle);
  return {
@@ -26,10 +40,16 @@ export function initPasswordReveal(input,button){
   hide:()=>setVisible(false),
   destroy(){
    if(destroyed)return;
-   // A retired controller must never leave a password exposed.
-   setVisible(false);
    destroyed=true;
    button.removeEventListener('click',toggle);
+   // Password masking is a security invariant even when the view unmounts.
+   input.type='password';
+   if(button.getAttribute('aria-pressed')===writtenPressed){
+    if(priorPressed===null)button.removeAttribute('aria-pressed');
+    else button.setAttribute('aria-pressed',priorPressed);
+   }
+   if(textTarget&&textTarget.textContent===writtenText)
+    textTarget.textContent=originalText;
   }
  };
 }
@@ -50,6 +70,13 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
  if(input.min===''||input.max===''||!Number.isSafeInteger(minimum)||!Number.isSafeInteger(maximum)||
   !Number.isSafeInteger(step)||step<=0||maximum<=minimum||((maximum-minimum)%step)!==0)
   throw new RangeError('Stepper requires finite integer min, max, and positive dividing step');
+ // Controller-owned button disablement must not leak across remounts.
+ const priorDisabled=new Map([[decrease,decrease.disabled],[increase,increase.disabled]]);
+ const writtenDisabled=new Map();
+ const setDisabled=(button,value)=>{
+  button.disabled=value;
+  writtenDisabled.set(button,value);
+ };
  let destroyed=false;
  const ensureActive=()=>{if(destroyed)throw new Error('Number stepper was destroyed')};
  const normalize=value=>{
@@ -62,8 +89,8 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   ensureActive();
   const next=normalize(String(value));
   input.value=String(next);
-  decrease.disabled=next<=minimum;
-  increase.disabled=next>=maximum;
+  setDisabled(decrease,next<=minimum);
+  setDisabled(increase,next>=maximum);
   onChange(next);
   return next;
  };
@@ -89,6 +116,10 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
    decrease.removeEventListener('click',decrement);
    increase.removeEventListener('click',increment);
    input.removeEventListener('change',onInputChange);
+   for(const button of [decrease,increase]){
+    if(button.disabled===writtenDisabled.get(button))
+     button.disabled=priorDisabled.get(button);
+   }
   }
  };
 }
