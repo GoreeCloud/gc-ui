@@ -81,6 +81,14 @@ exits **2** until all public artifact proofs pass. Unexpected HTTP, network,
 malformed metadata, redirected/untrusted tarball URLs and checksum mismatches
 fail closed with exit **3**, not a false unpublished claim.
 
+The public metadata and tarball response bodies are streamed with a
+**128-KiB hard cap each**, well above the reviewed 16,043-byte release
+archive. Declared oversized or malformed `Content-Length` headers fail
+before reading, and unexpectedly oversized streams are cancelled during
+collection. This prevents a rogue or malfunctioning registry response from
+requiring unbounded in-memory package evidence. Response-size rejection is
+an integrity error, not evidence that npm publication is absent.
+
 An exact-byte registry proof is necessary but does not establish the actual
 publishing identity, organizational authorization, SLSA/signed provenance,
 consumer TypeScript/browser adoption, owner release approval or rollback.
