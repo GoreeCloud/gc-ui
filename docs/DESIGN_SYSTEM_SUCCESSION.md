@@ -1,6 +1,26 @@
 # GoreeCloud UI — Exclusive design-system succession
 
-**Owner direction:** 2026-10-17. **Destination:** permanent replacement of Glaze with **GoreeCloud UI (GC UI)**. **Repository execution scope:** `GoreeCloud/gc-ui` only. **Status:** authorized direction and migration plan; ecosystem cutover **not yet complete**.
+**Owner direction:** 2026-10-17, reaffirmed and strengthened 2026-10-19. **Design authority:** [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui). **Decision status:** effective immediately and permanent. **Implementation status:** ecosystem migration and verification are not yet complete.
+
+## 0. Mandatory GoreeCloud-wide design mandate — effective 2026-10-19
+
+**Owner directive (mandatory; permanent):** Every GoreeCloud-controlled application, website, icon, operating system, and every other product, visual asset, experience, or user-facing surface **MUST be built and designed based on** the [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui) repository and its applicable specifications, design tokens, components, patterns, platform adaptations, iconography, and versioned contracts.
+
+**Glaze and Glaze UI are permanently removed as approved GoreeCloud design systems and are banned from all new and continuing GoreeCloud design and development decisions.** They MUST NOT be used, specified, imported, promoted, adopted as a dependency, extended, treated as an alternative authority, or used as the basis for new or revised user-facing work.
+
+This rule governs Android, iOS, Linux, Windows, macOS, the web, desktop/mobile/tablet/TV/wearable surfaces, OS shells, launchers, icons, graphics, product branding, administrative interfaces, and future GoreeCloud platforms where relevant. Headless services must follow GC UI when they expose a GoreeCloud-controlled presentation layer.
+
+### Enforcement and transition
+
+1. **All new UI work:** Start with GC UI. Do not implement new Glaze/Glaze UI features, packages, tokens, icon treatments, or design patterns.
+2. **Existing GoreeCloud products:** Treat any remaining Glaze/Glaze UI usage as a **noncompliant legacy dependency requiring replacement**. Inventory it and migrate to GC UI through each product's authorized repository and verified release process.
+3. **Design source:** Use this repository as the versioned authority for interface language, semantic tokens, components, interactions, design patterns, responsive and native adaptations, and applicable iconography. Where official identity artwork is owned by [GoreeCloud/branding-assets](https://github.com/GoreeCloud/branding-assets), preserve that canonical artwork and apply GC UI's design requirements rather than duplicating brand ownership.
+4. **No disguised reuse:** Do not rebrand, rename, wrap, copy, or silently carry forward Glaze implementations under GC UI identifiers. Implement original GC UI replacements and preserve lawful attribution and historical provenance as records, not active design dependencies.
+5. **Verification:** Block production design acceptance when new or remaining Glaze dependencies are found, or when applicable GC UI conformance is unverified. Accessibility, security, performance, release safety and supported-platform requirements remain mandatory.
+6. **Governance reconciliation:** Update the controlling GoreeCloud Drive Instructions, Policies, Standards, Requirements, other references and downstream product documentation that still mandate Glaze. This repository records the new owner's design direction but does not falsely claim those external records or deployed products have already been changed. Preserve historical and legally required records without granting them current authority.
+
+**Important distinction:** Glaze is banned **as a design/development authority now**; this policy decision does not assert that all extant code, artifacts, documentation or deployed consumers have already been physically migrated, removed, or retired. Those implementation facts must be individually verified.
+
 
 ## 1. Decision and authority boundaries
 
