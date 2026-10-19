@@ -47,15 +47,35 @@ export function createSurfaceController({
  for(const keyName of Object.keys(GC_SURFACE_DEFAULTS))try{initial[keyName]=persistence?.getItem(key+keyName)}catch{}
  let state=normalizeSurfaceConfig(initial),destroyed=false;
  const listeners=[];
+ // Preserve application-owned attributes when this controller borrows a root.
+ const datasetKeys=['gcSurfaceContext','gcSurfaceIntensity','gcIllumination','gcLightDirection','gcSurfaceLens'];
+ const priorDataset=new Map(datasetKeys.map(name=>[
+  name,{present:Object.hasOwn(root.dataset,name),value:root.dataset[name]}
+ ]));
+ const writtenDataset=new Map();
+ const setDataset=(name,value)=>{
+  root.dataset[name]=value;
+  writtenDataset.set(name,value);
+ };
+ function restoreDataset(){
+  for(const name of datasetKeys){
+   // Do not overwrite consumer changes made after the controller's last render.
+   if(root.dataset[name]!==writtenDataset.get(name))continue;
+   const prior=priorDataset.get(name);
+   if(prior.present)root.dataset[name]=prior.value;
+   else delete root.dataset[name];
+  }
+  writtenDataset.clear();
+ }
  const system=()=>Object.fromEntries(Object.entries(mql).map(([k,v])=>[k,Boolean(v?.matches)]));
  function render(){
   if(destroyed)return;
   const effective=resolveSurfaceEnvironment(state,system());
-  root.dataset.gcSurfaceContext=effective.context;
-  root.dataset.gcSurfaceIntensity=effective.intensity;
-  root.dataset.gcIllumination=effective.illumination;
-  root.dataset.gcLightDirection=effective.lightDirection;
-  root.dataset.gcSurfaceLens=effective.solidLens?'solid':'auto';
+  setDataset('gcSurfaceContext',effective.context);
+  setDataset('gcSurfaceIntensity',effective.intensity);
+  setDataset('gcIllumination',effective.illumination);
+  setDataset('gcLightDirection',effective.lightDirection);
+  setDataset('gcSurfaceLens',effective.solidLens?'solid':'auto');
   if(typeof CustomEvent==='function')root.dispatchEvent?.(new CustomEvent('gc-surface-change',{detail:{...effective}}));
  }
  for(const m of Object.values(mql)){
@@ -84,6 +104,7 @@ export function createSurfaceController({
    if(destroyed)return;
    destroyed=true;
    for(const [m,fn] of listeners)m.removeEventListener?.('change',fn);
+   restoreDataset();
   }
  };
 }
