@@ -16,6 +16,7 @@ function elem(name,{id='',role='',disabled=false}={}){
   localName:name,id,disabled,tabIndex:0,hidden:false,isConnected:true,ownerDocument:null,
   getAttribute:key=>attrs.get(key)??null,
   setAttribute:(key,v)=>attrs.set(key,String(v)),
+  removeAttribute:key=>attrs.delete(key),
   addEventListener:(key,fn)=>{const list=handlers.get(key)||new Set();list.add(fn);handlers.set(key,list)},
   removeEventListener:(key,fn)=>handlers.get(key)?.delete(fn),
   fire(key,event={}){for(const fn of handlers.get(key)||[])fn(event)},
@@ -98,4 +99,72 @@ test('focus movement between menu items does not dismiss menu; reverse Tab does'
  menu.fire('focusout',{relatedTarget:trigger});
  assert.equal(api.isOpen(),false);
  api.destroy();
+});
+
+test('menu teardown restores borrowed accessibility state, original visibility and tab stops',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'borrowed',role:'menu'});
+ const first=elem('button',{role:'menuitem'}),second=elem('button',{role:'menuitem'});
+ for(const item of [trigger,menu,first,second])item.ownerDocument=doc;
+ trigger.setAttribute('aria-haspopup','dialog');
+ trigger.setAttribute('aria-controls','old-menu');
+ trigger.setAttribute('aria-expanded','true');
+ menu.hidden=true;
+ first.tabIndex=4;
+ second.tabIndex=2;
+ menu.querySelectorAll=()=>[first,second];
+ menu.contains=node=>node===menu||node===first||node===second;
+ const api=initMenu(trigger,menu,{document:doc});
+ assert.equal(first.tabIndex,-1);
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,first);
+ api.destroy();
+ assert.equal(menu.hidden,true);
+ assert.equal(trigger.getAttribute('aria-haspopup'),'dialog');
+ assert.equal(trigger.getAttribute('aria-controls'),'old-menu');
+ assert.equal(trigger.getAttribute('aria-expanded'),'true');
+ assert.equal(first.tabIndex,4);
+ assert.equal(second.tabIndex,2);
+ assert.equal(doc.activeElement,trigger,'focus must leave a hidden menu');
+ assert.equal(api.open(),false,'retired controller cannot open again');
+ api.destroy();
+});
+
+test('menu teardown leaves external changes intact and removes controller-only ARIA',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'external',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.hidden=false;
+ menu.querySelectorAll=()=>[item];
+ menu.contains=el=>el===menu||el===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ assert.equal(api.open(),true);
+ trigger.setAttribute('aria-haspopup','listbox');
+ trigger.setAttribute('aria-expanded','external');
+ menu.hidden=true;
+ item.tabIndex=3;
+ doc.activeElement=trigger;
+ api.destroy();
+ assert.equal(trigger.getAttribute('aria-haspopup'),'listbox');
+ assert.equal(trigger.getAttribute('aria-expanded'),'external');
+ assert.equal(trigger.getAttribute('aria-controls'),null,'controller-only attribute removed');
+ assert.equal(menu.hidden,true,'newer external visibility is not overwritten');
+ assert.equal(item.tabIndex,3,'newer external tab order is not overwritten');
+});
+
+test('menu teardown restores initially visible markup and removes new ARIA state',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'visible',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.hidden=false;
+ menu.querySelectorAll=()=>[item];
+ menu.contains=el=>el===menu||el===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ api.close({returnFocus:false});
+ api.destroy();
+ assert.equal(menu.hidden,false,'preexisting visibility survives disposal');
+ for(const name of ['aria-haspopup','aria-controls','aria-expanded'])
+  assert.equal(trigger.getAttribute(name),null);
+ assert.equal(item.tabIndex,0);
 });
