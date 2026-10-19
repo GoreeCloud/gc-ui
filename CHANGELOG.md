@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Fail-closed ecosystem consumer cutover readiness (2026-10-18)
+- Introduced a versioned, dependency-free, **read-only** readiness report generated from GC UI's 18-consumer identity ledger and exclusive-successor authority registry, without contacting or editing owning repositories.
+- Distinguished zero accepted migrations and four external governance/rollout/retirement proofs from a valid report: normal CI check succeeds for honest blocked evidence, while `--strict` exits 2 until real migration acceptance exists.
+- Confirmed npm registry publication is a parallel route rather than a universal prerequisite for using a verified GitHub release tarball. No consumer, Drive, npm, or predecessor repository state was changed.
+
 ## Verified Foundations v1.0.1 npm handoff preflight (2026-10-18)
 - Added a strictly read-only exact-archive preflight pinned to the v1.0.1 authority digest, asserting ten allowlisted regular tar members, release/source provenance hashes, scoped public exports, Apache-2.0 license, and no package install scripts or dependencies.
 - Independently downloaded and SHA-256-checked the actual GitHub release archive, then installed and exercised its ESM, JSON, CSS and color contract in an offline throwaway consumer.
