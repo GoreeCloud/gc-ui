@@ -87,31 +87,32 @@ export function initTabs(tablist,{rtl=false}={}){
 export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
  if(dialog?.localName!=='dialog')throw new TypeError('Expected native dialog');
  if(!document?.addEventListener)throw new TypeError('A document is required');
- let trigger=null,destroyed=false;
+ let trigger=null,destroyed=false,ownsOpen=false;
  const ensureActive=()=>{if(destroyed)throw new Error('Dialog controller was destroyed')};
  const click=e=>{
   if(destroyed)return;
   const opener=e.target.closest?.('[data-gc-dialog-open]');
   if(opener?.dataset.gcDialogOpen===dialog.id){
-   if(!dialog.open){trigger=opener;dialog.showModal()}
+   if(!dialog.open){dialog.showModal();trigger=opener;ownsOpen=true}
    return;
   }
   const close=e.target.closest?.('[data-gc-dialog-close]');
   if(close&&dialog.contains(close)&&dialog.open)dialog.close();
  };
- const closed=()=>{if(trigger?.isConnected)trigger.focus();trigger=null};
+ const closed=()=>{ownsOpen=false;if(trigger?.isConnected)trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
  return {
-  open(){ensureActive();if(!dialog.open)dialog.showModal()},
+  open(){ensureActive();if(!dialog.open){dialog.showModal();ownsOpen=true}},
   close(){ensureActive();if(dialog.open)dialog.close()},
   destroy(){
    if(destroyed)return;
    destroyed=true;
    document.removeEventListener('click',click);
    dialog.removeEventListener('close',closed);
-   if(dialog.open)dialog.close();
+   // A host-opened modal must survive disposal of this optional controller.
+   if(ownsOpen&&dialog.open)dialog.close();
    if(trigger?.isConnected)trigger.focus();
-   trigger=null;
+   trigger=null;ownsOpen=false;
   }
  };
 }

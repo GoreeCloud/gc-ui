@@ -108,3 +108,33 @@ test('initially ARIA-disabled selected tabs fall back to a valid enabled tab',()
  assert.equal(panels[1].hidden,false);
  controller.destroy();
 });
+
+test('destroying a dialog controller preserves a modal opened by its host before initialization',()=>{
+ const {dialog,doc,opener}=dialogFixture();
+ dialog.showModal();
+ const controller=initDialog(dialog);
+ controller.destroy();
+ assert.equal(dialog.open,true,'host-opened dialog must outlive optional controller');
+ assert.equal(opener.focused,0,'host-owned modal must keep its focus');
+ assert.equal(doc.count('click'),0);
+ dialog.close();
+});
+
+test('destroying a dialog controller preserves a modal opened externally after initialization',()=>{
+ const {dialog,opener}=dialogFixture();
+ const controller=initDialog(dialog);
+ dialog.showModal();
+ controller.destroy();
+ assert.equal(dialog.open,true,'host can open its own dialog after controller attachment');
+ assert.equal(opener.focused,0);
+ dialog.close();
+});
+
+test('programmatically opened controller modal is retired on destroy',()=>{
+ const {dialog}=dialogFixture();
+ const controller=initDialog(dialog);
+ controller.open();
+ assert.equal(dialog.open,true);
+ controller.destroy();
+ assert.equal(dialog.open,false,'controller-owned open modal must not strand focus');
+});

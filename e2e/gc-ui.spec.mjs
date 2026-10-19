@@ -548,3 +548,38 @@ test('borrowed toast live-region semantics survive overlapping controllers and h
   preserved:'off',afterAction:'false',afterHostChange:'host-managed'
  });
 });
+
+test('dialog teardown preserves native modals opened by the host app',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initDialog}=await import('/src/gc-interactions.mjs');
+  const dialog=document.createElement('dialog');
+  dialog.id='host-owned-dialog-test';
+  dialog.innerHTML='<p>Host-owned content</p>';
+  document.body.append(dialog);
+  dialog.showModal();
+  const first=initDialog(dialog);
+  first.destroy();
+  const alreadyOpen={open:dialog.open,modal:dialog.matches(':modal')};
+  dialog.close();
+
+  const second=initDialog(dialog);
+  dialog.showModal();
+  second.destroy();
+  const laterOpen={open:dialog.open,modal:dialog.matches(':modal')};
+  dialog.close();
+
+  const third=initDialog(dialog);
+  third.open();
+  const controllerOpened=dialog.open;
+  third.destroy();
+  const controllerRetired=!dialog.open;
+  dialog.remove();
+  return {alreadyOpen,laterOpen,controllerOpened,controllerRetired};
+ });
+ expect(result).toEqual({
+  alreadyOpen:{open:true,modal:true},
+  laterOpen:{open:true,modal:true},
+  controllerOpened:true,controllerRetired:true
+ });
+});
