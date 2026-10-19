@@ -158,3 +158,30 @@ test('dated discovery does not count the old consumer statuses as GC UI acceptan
  assert.match(text,/unverified/);
  assert.match(text,/not.*a GC UI production consumer acceptance record/);
 });
+
+test('TypeScript .mts and .cts module imports cannot yield a false-clean migration audit',()=>{
+ fixture(root=>{
+  make(root,'src/modern.mts',"import '@goreecloud/glaze';\n");
+  make(root,'src/common.cts',"const theme = require('@goreecloud/glaze');\n");
+  make(root,'types/module.d.mts',"export * from '@goreecloud/glaze';\n");
+  make(root,'types/module.d.cts',"export * from '@goreecloud/glaze';\n");
+  const report=auditConsumer(root);
+  assert.equal(report.status,'legacy-dependency-evidence');
+  assert.equal(report.scan.filesScanned,4);
+  assert.equal(report.totals.active,4);
+  for(const file of ['modern.mts','common.cts','module.d.mts','module.d.cts'])
+   assert.ok(report.findings.some(item=>item.path.endsWith(file)&&item.severity==='active'),file);
+  assert.equal(report.migrationComplete,false);
+ });
+});
+test('strict CLI rejects predecessor usage in .mts even without other checked source',()=>{
+ fixture(root=>{
+  make(root,'src/entry.mts',"import {theme} from '@goreecloud/glaze';");
+  const cli=new URL('../scripts/audit-legacy-consumer.mjs',import.meta.url).pathname;
+  const result=spawnSync(process.execPath,[cli,'--root',root,'--json','--strict'],{encoding:'utf8'});
+  assert.equal(result.status,2,result.stderr);
+  const report=JSON.parse(result.stdout);
+  assert.equal(report.status,'legacy-dependency-evidence');
+  assert.equal(report.totals.active,1);
+ });
+});

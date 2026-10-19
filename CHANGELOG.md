@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Consumer auditor TypeScript module coverage (2026-10-18)
+- Fixed false-clean migration scans for TypeScript ESM/CJS `.mts`, `.cts` and corresponding declaration-module files.
+- Added fail-before-fix direct and strict-CLI tests ensuring old imports are classified as active evidence; kept scans read-only and explicitly **not** proof of consumer migration or production acceptance.
+- No consumer repository, npm release, or governance records were changed.
+
 ## Isolated concurrent Playwright runner (2026-10-18)
 - Introduced opt-in `test:e2e:isolated` to allocate distinct loopback ports and artifact directories for overlapping browser runs, preventing test trace deletion and stale-server reuse.
 - Validates output IDs against path traversal while preserving the standard local and CI test commands unchanged; adds config and real-run verification.
