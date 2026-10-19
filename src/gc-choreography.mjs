@@ -21,12 +21,18 @@ export function createChoreography({
   cancel();
   if(reducedMotion||!permission())return {animated:0,skipped:items.length};
   const session=token,step=clampStagger(stagger);
+  const seen=new Set();
   let animated=0;
   // Only three explicitly visible child groups should be staggered.
+  // Repeated elements must never create animations that the map cannot retire.
   for(const [index,element] of items.slice(0,3).entries()){
-   if(typeof element?.animate!=='function')continue;
+   if(typeof element?.animate!=='function'||seen.has(element))continue;
+   seen.add(element);
    const {frames,timing}=getMotionPreset(preset,{direction});
-   const animation=element.animate(frames,{...timing,delay:index*step});
+   let animation;
+   try{animation=element.animate(frames,{...timing,delay:index*step})}
+   catch{continue} // Optional motion must not prevent content from rendering.
+   if(!animation)continue;
    animated++;
    animations.set(element,animation);
    const cleanup=()=>{

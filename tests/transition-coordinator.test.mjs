@@ -110,3 +110,15 @@ test('coordinator tolerates unavailable preference event APIs and retires active
  assert.equal(animationList[0].cancelled,1);
  assert.equal(ctl.activeCount(),0);
 });
+
+test('a failing optional Web Animations implementation falls back without throwing',()=>{
+ const ctl=createMotionCoordinator({media:()=>({matches:false}),root:{dataset:{}}});
+ const broken={animate(){throw new Error('Animation unavailable')}};
+ assert.equal(ctl.play(broken,'reveal'),null);
+ assert.equal(ctl.activeCount(),0);
+ const {el,animationList}=fakeElement();
+ assert.ok(ctl.play(el,'reveal'));
+ assert.equal(ctl.activeCount(),1);
+ ctl.destroy();
+ assert.equal(animationList[0].cancelled,1);
+});

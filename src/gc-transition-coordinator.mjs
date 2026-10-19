@@ -21,7 +21,10 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
   cancel(element);
   if(reducedMotion||!permitted()||typeof element.animate!=='function')return null;
   const {frames,timing}=getMotionPreset(name,{direction});
-  const animation=element.animate(frames,timing);
+  let animation;
+  try{animation=element.animate(frames,timing)}
+  catch{return null} // Optional motion failure must not break the interaction.
+  if(!animation)return null;
   active.set(element,animation);
   const finish=()=>{
    if(active.get(element)!==animation)return;
