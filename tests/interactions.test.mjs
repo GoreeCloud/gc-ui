@@ -57,6 +57,7 @@ test('public tab selection guards against foreign tabs and supports changing ena
     disabled:false,tabIndex:-1,focused:false,
     getAttribute:k=>k==='aria-controls'?panels[i].id:k==='aria-selected'&&i===0?'true':null,
     setAttribute(k,v){if(k==='aria-selected')this.selected=v},
+    removeAttribute(){},
     focus(){this.focused=true},
     closest(){return this}
   }));
@@ -86,7 +87,7 @@ test('vertical tablists use Up/Down arrows and ignore Left/Right',async()=>{
   const tabs=panels.map((_,i)=>({
     disabled:false,tabIndex:-1,
     getAttribute:k=>k==='aria-controls'?i===0?'one':'two':k==='aria-selected'&&i===0?'true':null,
-    setAttribute(){},focus(){this.focused=true},closest(){return this}
+    setAttribute(){},removeAttribute(){},focus(){this.focused=true},closest(){return this}
   }));
   const group={ownerDocument:{getElementById:id=>byId.get(id)},getAttribute:k=>k==='role'?'tablist':k==='aria-orientation'?'vertical':null,
     querySelectorAll:()=>tabs,addEventListener:(k,v)=>handlers.set(k,v),removeEventListener:k=>handlers.delete(k)};
@@ -248,4 +249,77 @@ test('external toast dismissal and teardown restore only focus held inside the t
  assert.equal(doc.activeElement,elsewhere,'dismissal must not steal focus from other controls');
  assert.equal(restored,2);
  replacement.destroy();
+});
+
+test('tabs controller restores borrowed aria, native tab order and panel visibility on destroy',async()=>{
+ const {initTabs}=await import('../src/gc-interactions.mjs');
+ const handles=new Map(),nodes=new Map();
+ const make=(role,props={})=>{
+  const attrs=new Map(Object.entries({role,...props}));
+  return {disabled:false,hidden:false,tabIndex:Number(attrs.get('tabindex')??0),
+   getAttribute:name=>attrs.get(name)??null,
+   setAttribute(name,value){attrs.set(name,String(value));if(name==='tabindex')this.tabIndex=Number(value)},
+   removeAttribute(name){attrs.delete(name);if(name==='tabindex')this.tabIndex=0},
+   focus(){this.focused=true},
+   closest(){return this}
+  };
+ };
+ const first=make('tab',{'aria-controls':'first-panel','aria-selected':'false',tabindex:'4'});
+ const second=make('tab',{'aria-controls':'second-panel','aria-selected':'true',tabindex:'2'});
+ const a=make('tabpanel'),b=make('tabpanel');a.hidden=true;b.hidden=false;
+ nodes.set('first-panel',a);nodes.set('second-panel',b);
+ const list={ownerDocument:{getElementById:id=>nodes.get(id)},
+  getAttribute:key=>key==='role'?'tablist':null,
+  querySelectorAll:()=>[first,second],
+  addEventListener:(name,fn)=>handles.set(name,fn),
+  removeEventListener:name=>handles.delete(name)};
+ const ctl=initTabs(list);
+ ctl.select(first);
+ assert.equal(first.getAttribute('aria-selected'),'true');
+ assert.equal(a.hidden,false);
+ ctl.destroy();
+ assert.equal(first.getAttribute('aria-selected'),'false');
+ assert.equal(second.getAttribute('aria-selected'),'true');
+ assert.equal(first.getAttribute('tabindex'),'4');
+ assert.equal(second.getAttribute('tabindex'),'2');
+ assert.equal(first.tabIndex,4);
+ assert.equal(second.tabIndex,2);
+ assert.equal(a.hidden,true);
+ assert.equal(b.hidden,false);
+ assert.equal(handles.size,0);
+ assert.throws(()=>ctl.select(first),/destroyed/);
+ ctl.destroy();
+});
+
+test('tabs teardown respects new application-owned states and removes only still-owned attributes',async()=>{
+ const {initTabs}=await import('../src/gc-interactions.mjs');
+ const attrs=(original={})=>{
+  const map=new Map(Object.entries(original));
+  return {
+   disabled:false,hidden:false,tabIndex:0,
+   getAttribute:name=>map.get(name)??null,
+   setAttribute(name,value){map.set(name,String(value));if(name==='tabindex')this.tabIndex=Number(value)},
+   removeAttribute(name){map.delete(name);if(name==='tabindex')this.tabIndex=0},
+   focus(){},closest(){return this}
+  };
+ };
+ const tab1=attrs({'role':'tab','aria-controls':'p1'}),tab2=attrs({'role':'tab','aria-controls':'p2'});
+ const p1=attrs({role:'tabpanel'}),p2=attrs({role:'tabpanel'});p2.hidden=true;
+ const panels=new Map([['p1',p1],['p2',p2]]);
+ const list={ownerDocument:{getElementById:id=>panels.get(id)},
+  getAttribute:n=>n==='role'?'tablist':null,querySelectorAll:()=>[tab1,tab2],
+  addEventListener(){},removeEventListener(){}};
+ const ctl=initTabs(list);
+ assert.equal(tab1.getAttribute('aria-selected'),'true');
+ assert.equal(tab1.getAttribute('tabindex'),null);
+ // The consumer changes some fields after controller activation.
+ tab1.setAttribute('aria-selected','app-selected');
+ tab2.tabIndex=7;tab2.setAttribute('tabindex','7');
+ p2.hidden=false;
+ ctl.destroy();
+ assert.equal(tab1.getAttribute('aria-selected'),'app-selected');
+ assert.equal(tab2.getAttribute('aria-selected'),null,'GC-owned ARIA removed');
+ assert.equal(tab1.getAttribute('tabindex'),null,'GC-owned tabIndex removed');
+ assert.equal(tab2.getAttribute('tabindex'),'7','newer tab order preserved');
+ assert.equal(p2.hidden,false,'newer host visibility preserved');
 });

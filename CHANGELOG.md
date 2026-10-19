@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Native tabs teardown ownership (2026-10-18)
+- Experimental tab controllers now restore original tab ARIA, tab stop attributes and panel `hidden` states on disposal only when still controller-owned; preserve later application edits and prohibit use after destroy.
+- Added negative-before-positive Node tests and real DOM Chromium/Firefox teardown regressions without expanding stable Foundations exports or changing consumer applications.
+
 ## Consumer auditor TypeScript module coverage (2026-10-18)
 - Fixed false-clean migration scans for TypeScript ESM/CJS `.mts`, `.cts` and corresponding declaration-module files.
 - Added fail-before-fix direct and strict-CLI tests ensuring old imports are classified as active evidence; kept scans read-only and explicitly **not** proof of consumer migration or production acceptance.

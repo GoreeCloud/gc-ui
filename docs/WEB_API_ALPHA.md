@@ -34,7 +34,7 @@ The runtime accepts `mode: auto|light|dark`, `accent: iris|lagoon|ember|moss|cus
 Custom seed generation uses an original OKLCH tonal mapping, not Google's HCT algorithm and not native wallpaper sampling. Only sampled opaque semantic foreground/background pairs are audited; dynamic backgrounds still require runtime contrast verification and solid Lens fallback.
 
 ## Reusable component behavior
-**Tabs:** `initTabs(tablist,{rtl:false})` requires `role=tablist`, `role=tab` children with `aria-controls`, and matching `role=tabpanel` IDs. Arrow Left/Right cycle among enabled tabs, Home/End jump, focus and selected state remain synchronized. Panels use `hidden`. Dispose via `destroy()`.
+**Tabs:** `initTabs(tablist,{rtl:false})` requires `role=tablist`, `role=tab` children with `aria-controls`, and matching `role=tabpanel` IDs. Arrow Left/Right cycle among enabled tabs, Home/End jump, focus and selected state remain synchronized. Panels use `hidden`. Dispose via `destroy()`; it returns borrowed `aria-selected`, tab stop attributes and panel visibility only where the controller's last values remain, preserves newer application-owned edits, unregisters handlers, and rejects later `select()` calls. This experimental behavior is not part of stable Foundations.
 
 **Action menu:** `initMenu(button,menu,{onSelect})` requires a button, an ID'd element with `role=menu`, and children with `role=menuitem`, `menuitemcheckbox` or `menuitemradio`. Arrow Down/Up, Home/End, Enter/Space, Escape, and Tab are handled; disabled items are skipped and outside pointer clicks dismiss. The callback receives the selected element/event. Menus execute commands; don't repurpose as a select or site navigation. See `#menus` in Components Lab.
 
