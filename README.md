@@ -5,7 +5,7 @@
 
 **License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. The versioned Foundations 1.0.1 release has a separate, narrow supported export contract, verified independently.
 
-**The original adaptive interface design language for GoreeCloud.**
+**GoreeCloud UI (GC UI) is the fifth of GoreeCloud's nine Integral Platform Systems, replacing Glaze and Glaze UI as the platform-wide experience authority.** GC UI is GoreeCloud's original adaptive interface design language. See [platform-system classification](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-an-integral-platform-system).
 
 **GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
 

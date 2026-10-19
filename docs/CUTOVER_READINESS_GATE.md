@@ -1,6 +1,8 @@
 # GC UI — Evidence-driven consumer cutover readiness
 
 **Owner directive effective 2026-10-19:** `GoreeCloud/gc-ui` is the **mandatory design foundation for all GoreeCloud products and presentation layers**; Glaze and Glaze UI are permanently banned as active design authorities. Existing predecessor-based products require migration. **This does not prove that current deployed applications have switched.**
+The fifth Integral Platform System is GC UI, succeeding the former Glaze UI system within the established nine-system architecture; this is not a tenth system. Current platform integration and migration conformance require separate verification.
+
 The verified public **Foundations 1.0.1 GitHub tarball** is a narrow stable contract;
 the development repository and optional component catalog remain alpha.
 

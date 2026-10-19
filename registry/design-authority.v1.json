@@ -43,5 +43,17 @@
     "applicableAccessibilitySecurityReleaseGatesRemain": true
   },
   "relatedSpecification": "docs/DESIGN_SYSTEM_SUCCESSION.md",
-  "ownerMandateEffectiveDate": "2026-10-19"
+  "ownerMandateEffectiveDate": "2026-10-19",
+  "integralPlatformSystem": {
+    "name": "GoreeCloud UI",
+    "classification": "Integral Platform System",
+    "ordinal": 5,
+    "totalSystems": 9,
+    "supersedes": [
+      "Glaze",
+      "Glaze UI"
+    ],
+    "scope": "design-user-experience-and-visual-consistency",
+    "effectiveDate": "2026-10-19"
+  }
 }

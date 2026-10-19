@@ -2,6 +2,18 @@
 
 **Owner direction:** 2026-10-17, reaffirmed and strengthened 2026-10-19. **Design authority:** [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui). **Decision status:** effective immediately and permanent. **Decision:** permanent replacement of Glaze. **Implementation status:** ecosystem cutover **not yet complete**; migration and verification remain outstanding.
 
+## GoreeCloud UI as an Integral Platform System
+
+**Owner classification — October 19, 2026:** GoreeCloud UI (GC UI) is an **Integral Platform System**, directly replacing **Glaze and Glaze UI** in GoreeCloud's established nine-system architecture. GC UI takes the **fifth position** formerly occupied by Glaze UI. This is a replacement, **not a tenth Integral Platform System** and not two concurrent experience authorities.
+
+The nine systems are: (1) GoreeCloud Manager, (2) Privacy Shield, (3) Wardveil Security, (4) Everkeep, (5) **GoreeCloud UI**, (6) GoreeCloud Mesh, (7) GoreeCloud Identity, (8) GoreeCloud Policy, and (9) GoreeCloud Observability. GoreeCloud Sync remains a separate specialized capability.
+
+GC UI's authority covers cross-product design and experience: visual and interaction language, design tokens, typography, color, iconography, components, navigation, layouts, motion, accessibility, adaptive/native interfaces, and truthful representation of platform state. GC UI does **not** assume the factual, security, privacy, identity, management, policy, recovery, coordination, or observability authority of the other systems simply because it displays their states.
+
+Every in-scope GoreeCloud component must evaluate the nine systems and implement those architecturally applicable to its runtime; a genuinely headless component may document presentation integration as not applicable. Using a GC UI name, icon, package or badge is not sufficient evidence of actual conformance.
+
+This **classification decision is effective now**. The governing Google Drive `Instructions — Integral Platform Systems.md`, the system-wide platform contract, other Glaze-bearing standards, and existing consumers still require verified amendment or migration in their owning systems. Do not claim that every deployed product is migrated, that old dependencies have been physically removed, or that the experimental full GC UI workspace is Stable.
+
 ## 0. Mandatory GoreeCloud-wide design mandate — effective 2026-10-19
 
 **Owner directive (mandatory; permanent):** Every GoreeCloud-controlled application, website, icon, operating system, and every other product, visual asset, experience, or user-facing surface **MUST be built and designed based on** the [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui) repository and its applicable specifications, design tokens, components, patterns, platform adaptations, iconography, and versioned contracts.
