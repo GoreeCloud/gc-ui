@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Consistent high-contrast motion permission (2026-10-19)
+- The shared motion predicate now suppresses direct WAAPI presets and optional injected motion adapters when `prefers-contrast: more` is active; individual unavailable media queries no longer mask a valid accessibility preference.
+- Single-element and group animation managers use the same shared predicate without duplicate contrast tests. Negative-path Node regression and real-DOM browser checks added; no Foundations stable contract or third-party dependency changed.
+
 ## Fail-closed ecosystem consumer cutover readiness (2026-10-18)
 - Introduced a versioned, dependency-free, **read-only** readiness report generated from GC UI's 18-consumer identity ledger and exclusive-successor authority registry, without contacting or editing owning repositories.
 - Distinguished zero accepted migrations and four external governance/rollout/retirement proofs from a valid report: normal CI check succeeds for honest blocked evidence, while `--strict` exits 2 until real migration acceptance exists.

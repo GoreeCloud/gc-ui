@@ -8,10 +8,7 @@ export function createChoreography({
  let destroyed=false;
  const animations=new Map();
  const listeners=[];
- const permission=()=>{
-  try{return motionAllowed({media,root})&&!media?.('(prefers-contrast: more)')?.matches}
-  catch{return motionAllowed({media,root})}
- };
+ const permission=()=>motionAllowed({media,root});
  let token=0;
  function cancel(){
   token++;

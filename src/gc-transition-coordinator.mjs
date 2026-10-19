@@ -4,10 +4,7 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
  root=globalThis.document?.documentElement}={}){
  const active=new Map(),listeners=[];
  let destroyed=false;
- const permitted=()=>{
-  if(!motionAllowed({media,root}))return false;
-  try{return !media?.('(prefers-contrast: more)')?.matches}catch{return true}
- };
+ const permitted=()=>motionAllowed({media,root});
  function cancelAll(){
   for(const element of [...active.keys()])cancel(element);
  }

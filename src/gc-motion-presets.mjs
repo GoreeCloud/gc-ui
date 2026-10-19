@@ -30,10 +30,17 @@ export function getMotionPreset(name,{direction='ltr'}={}){
 }
 export function motionAllowed({media=globalThis.matchMedia?.bind(globalThis),root=globalThis.document?.documentElement}={}){
  if(root?.dataset?.gcContrast==='high')return false;
- try{return !(
-  media?.('(prefers-reduced-motion: reduce)')?.matches||
-  media?.('(forced-colors: active)')?.matches
- )}catch{return true}
+ // Check each independently: browsers and embedded hosts may not support a
+ // particular media query. One unsupported query must not mask a valid,
+ // accessibility-relevant preference returned by the next query.
+ for(const query of [
+  '(prefers-reduced-motion: reduce)',
+  '(forced-colors: active)',
+  '(prefers-contrast: more)'
+ ]){
+  try{if(media?.(query)?.matches)return false}catch{}
+ }
+ return true;
 }
 export function playMotionPreset(element,name,options={}){
  if(!element || typeof element.animate!=='function')throw new TypeError('A Web Animations capable element is required');
