@@ -76,3 +76,23 @@ test('active sequence cancels immediately when reduced-motion activates at runti
  ctl.destroy();
  for(const value of queries.values())assert.equal(value.events.size,0);
 });
+
+test('repeated group elements never create orphaned animations',()=>{
+ const {elements,calls}=fixture();
+ const ctl=createChoreography({media:()=>({matches:false}),root:{dataset:{}}});
+ assert.deepEqual(ctl.play([elements[0],elements[0],elements[1]]),{animated:2,skipped:1});
+ assert.equal(calls.length,2);
+ ctl.destroy();
+ assert.equal(calls[0].cancelled,1);
+ assert.equal(calls[1].cancelled,1);
+});
+
+test('an unavailable animation implementation does not break the remaining group',()=>{
+ const {elements,calls}=fixture();
+ const unsupported={animate(){throw new Error('Animation unavailable')}};
+ const ctl=createChoreography({media:()=>({matches:false}),root:{dataset:{}}});
+ assert.deepEqual(ctl.play([unsupported,elements[0],elements[1]]),{animated:2,skipped:1});
+ assert.equal(ctl.activeCount(),2);
+ ctl.destroy();
+ assert.ok(calls.every(animation=>animation.cancelled===1));
+});
