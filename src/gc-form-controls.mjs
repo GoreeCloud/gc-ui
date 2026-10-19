@@ -78,6 +78,8 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   writtenDisabled.set(button,value);
  };
  let destroyed=false;
+ const priorInputValue=input.value;
+ let writtenInputValue;
  const ensureActive=()=>{if(destroyed)throw new Error('Number stepper was destroyed')};
  const normalize=value=>{
   const n=Number(value);
@@ -89,6 +91,7 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   ensureActive();
   const next=normalize(String(value));
   input.value=String(next);
+  writtenInputValue=input.value;
   setDisabled(decrease,next<=minimum);
   setDisabled(increase,next>=maximum);
   onChange(next);
@@ -103,10 +106,20 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   update(normalize(input.value)+step);
   input.focus();
  };
+ // Initialize before subscribing: a host callback can reject the initial
+ // value. Failed construction must never leave ghost click/change handlers
+ // or temporarily-controller-owned changes on the original host markup.
+ try{update(input.value)}
+ catch(error){
+  if(input.value===writtenInputValue)input.value=priorInputValue;
+  for(const button of [decrease,increase])
+   if(button.disabled===writtenDisabled.get(button))button.disabled=priorDisabled.get(button);
+  writtenDisabled.clear();
+  throw error;
+ }
  decrease.addEventListener('click',decrement);
  increase.addEventListener('click',increment);
  input.addEventListener('change',onInputChange);
- update(input.value);
  return {
   get:()=>Number(input.value),
   set:update,

@@ -335,3 +335,29 @@ test('number stepper restores borrowed host button states during teardown',async
  });
  expect(observed).toEqual({ownedState:true,dec:true,inc:true,value:'12'});
 });
+
+test('failed stepper callback rolls back live DOM and a later controller mounts without ghost events',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const wrap=document.createElement('section');
+  const input=document.createElement('input');
+  input.type='number';input.min='1';input.max='11';input.step='2';input.value='4';
+  const dec=document.createElement('button'),inc=document.createElement('button');
+  for(const button of [dec,inc]){button.type='button';button.disabled=true;wrap.append(button)}
+  wrap.append(input);document.body.append(wrap);
+  let threw=false;
+  try{initNumberStepper(input,dec,inc,{onChange(){throw Error('mount rejected')}})}
+  catch(error){threw=error.message==='mount rejected'}
+  const restored=threw&&input.value==='4'&&dec.disabled&&inc.disabled;
+  inc.disabled=false;inc.click(); // any ghost listener would normalize/mutate the input
+  const noGhost=input.value==='4';
+  const changes=[];
+  const controller=initNumberStepper(input,dec,inc,{onChange:n=>changes.push(n)});
+  inc.click();
+  const cleanRetry=input.value==='7'&&changes.join(',')==='5,7';
+  controller.destroy();wrap.remove();
+  return {restored,noGhost,cleanRetry};
+ });
+ expect(result).toEqual({restored:true,noGhost:true,cleanRetry:true});
+});
