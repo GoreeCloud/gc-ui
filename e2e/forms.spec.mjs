@@ -361,3 +361,35 @@ test('failed stepper callback rolls back live DOM and a later controller mounts 
  });
  expect(result).toEqual({restored:true,noGhost:true,cleanRetry:true});
 });
+
+test('rejected later number stepper changes restore committed native input and button states',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const input=document.createElement('input');input.type='number';
+  input.min='1';input.max='12';input.step='1';input.value='4';
+  const dec=document.createElement('button'),inc=document.createElement('button');
+  dec.type='button';inc.type='button';
+  document.body.append(input,dec,inc);
+  const api=initNumberStepper(input,dec,inc,{onChange:n=>{
+   if(n===12)throw new Error('application denied change');
+  }});
+  const accepted=api.set(5);
+  let rejectedSet=false;
+  try{api.set(12)}catch(error){rejectedSet=error.message==='application denied change'}
+  const afterSet={value:input.value,decDisabled:dec.disabled,incDisabled:inc.disabled};
+  input.value='12';
+  try{input.dispatchEvent(new Event('change',{bubbles:true}))}catch{} // browser reports handler exception globally
+  const afterTyped={value:input.value,decDisabled:dec.disabled,incDisabled:inc.disabled};
+  // Verify the controller remains usable after rejecting a change.
+  const recovered=api.set(6);
+  api.destroy();input.remove();dec.remove();inc.remove();
+  return {accepted,rejectedSet,afterSet,afterTyped,recovered};
+ });
+ expect(result).toEqual({
+  accepted:5,rejectedSet:true,
+  afterSet:{value:'5',decDisabled:false,incDisabled:false},
+  afterTyped:{value:'5',decDisabled:false,incDisabled:false},
+  recovered:6
+ });
+});
