@@ -74,7 +74,9 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   function hide({returnFocus=true}={}){
     if(!open)return;
     open=false;
-    setHidden(true);
+    // The host may already have hidden this menu. Do not take ownership of
+    // that newer visibility state merely because the controller is closing.
+    if(!menu.hidden)setHidden(true);
     setTriggerAttr('aria-expanded','false');
     if(returnFocus&&trigger.isConnected)trigger.focus();
   }

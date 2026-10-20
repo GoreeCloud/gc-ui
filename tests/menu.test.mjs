@@ -184,3 +184,17 @@ test('host hide followed by focusout never converts external visibility into men
  assert.equal(menu.hidden,true,'host hide must survive focusout then destroy');
  assert.equal(trigger.getAttribute('aria-expanded'),null);
 });
+
+test('controller close preserves externally hidden menu ownership through teardown',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'external-close',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.hidden=false;menu.querySelectorAll=()=>[item];
+ menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ menu.hidden=true; // host hides an initially visible menu before closing controller
+ api.close({returnFocus:false});
+ api.destroy();
+ assert.equal(menu.hidden,true,'teardown must not unhide a host-hidden menu');
+});
