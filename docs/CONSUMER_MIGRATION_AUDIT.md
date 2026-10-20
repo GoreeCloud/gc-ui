@@ -28,6 +28,8 @@ Top-level `acceptance/` and `evidence/` Markdown, JSON and YAML records are info
 
 Historical prose in `.md` and `.txt` is nonblocking by default. Documentation containing an import or old token instruction is marked for review. Code mentions outside recognized imports are likewise review-required. Names of legacy binary assets are detected without opening their bytes. Case-specific findings can include false positives; review each before taking action.
 
+A [generated migration evidence handoff](CONSUMER_MIGRATION_HANDOFF.md) groups all 18 dated products by the next authorization or verification required. Regenerate with `npm run migration:handoff:render` and check the committed report with `npm run migration:handoff:check`. It remains a **read-only 2026-10-17 snapshot**, not evidence that a later consumer `main` has been inspected or adopted GC UI.
+
 ## Current live source destinations
 
 Use the [October 17 provider-verified reconciliation](CURRENT_CONSUMER_RECONCILIATION_2026_10_17.md) and [machine-readable ledger](../registry/consumer-migration-reconciliation.v1.json) before selecting consumer source. Check integrity with `npm run migration:reconcile:check`. Do not use the old source paths in the legacy registry as current destinations.

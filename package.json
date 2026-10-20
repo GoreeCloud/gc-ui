@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "python3 -m http.server 4173",
     "test": "node --test tests/*.test.mjs",
-    "check": "npm run icons:check && npm run authority:check && npm run migration:reconcile:check && npm run migration:cutover:readiness -- --check && npm run tokens:check && npm test && npm run audit:colors && npm run audit:composited && node tests/check-lab-references.mjs && npm run pack:check",
+    "check": "npm run icons:check && npm run authority:check && npm run migration:reconcile:check && npm run migration:cutover:readiness -- --check && npm run migration:handoff:check && npm run tokens:check && npm test && npm run audit:colors && npm run audit:composited && node tests/check-lab-references.mjs && npm run pack:check",
     "icons:build": "python3 scripts/build-third-party-sprite.py",
     "icons:check": "python3 scripts/build-third-party-sprite.py --check",
     "tokens:build": "node scripts/build-v1-tokens.mjs",
@@ -51,6 +51,8 @@
     "migration:reconcile:check": "node scripts/check-consumer-reconciliation.mjs",
     "release:foundations:handoff:verify": "node scripts/verify-foundations-handoff.mjs",
     "migration:cutover:readiness": "node scripts/check-cutover-readiness.mjs",
+    "migration:handoff:check": "node scripts/render-consumer-migration-handoff.mjs --check",
+    "migration:handoff:render": "node scripts/render-consumer-migration-handoff.mjs --stdout",
     "release:foundations:registry:readback": "node scripts/verify-npm-registry-distribution.mjs"
   },
   "license": "Apache-2.0",
