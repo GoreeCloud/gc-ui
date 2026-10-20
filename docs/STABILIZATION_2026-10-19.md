@@ -63,3 +63,15 @@ Firefox interaction/effective-zoom coverage, before merging to `main`.
 
 These repairs do not change any consumer migration, deployment, publication,
 license decision, or governance/readiness assertion.
+
+## Parallel continuation — menu visibility ownership
+
+- A separate host controller can hide an open GC UI action menu and then
+  request `close()`. The old implementation rewrote `hidden=true` as if it
+  owned that newer application state, so `destroy()` could restore the
+  originally visible menu and unintentionally reveal host-hidden actions.
+- The menu now writes its hidden flag on `close()` only when the menu is still
+  visible. Regression tests exercise this exact external-hide, explicit-close,
+  teardown sequence with both simulated controls and the real browser DOM.
+- This corrects an optional component lifecycle edge case only; it makes no
+  release, consumer-migration, governance or deployment assertions.

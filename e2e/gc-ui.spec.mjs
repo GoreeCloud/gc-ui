@@ -583,3 +583,26 @@ test('dialog teardown preserves native modals opened by the host app',async({pag
   controllerOpened:true,controllerRetired:true
  });
 });
+
+test('programmatic menu close does not reopen a host-hidden menu on teardown',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initMenu}=await import('/src/gc-menu.mjs');
+  const trigger=document.createElement('button');
+  trigger.type='button';trigger.textContent='Open menu';
+  const menu=document.createElement('div');
+  menu.id='host-menu-close-probe';menu.setAttribute('role','menu');
+  const item=document.createElement('button');
+  item.type='button';item.setAttribute('role','menuitem');item.textContent='Action';
+  menu.append(item);document.body.append(trigger,menu);
+  const api=initMenu(trigger,menu);
+  api.open();
+  menu.hidden=true; // A separate application controller hides its own menu.
+  api.close({returnFocus:false});
+  api.destroy();
+  const state={hidden:menu.hidden,expanded:trigger.getAttribute('aria-expanded')};
+  menu.remove();trigger.remove();
+  return state;
+ });
+ expect(result).toEqual({hidden:true,expanded:null});
+});
