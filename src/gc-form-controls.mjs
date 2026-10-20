@@ -79,7 +79,7 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
  };
  let destroyed=false;
  const priorInputValue=input.value;
- let writtenInputValue;
+ let writtenInputValue,acceptedInputValue=priorInputValue;
  const ensureActive=()=>{if(destroyed)throw new Error('Number stepper was destroyed')};
  const normalize=value=>{
   const n=Number(value);
@@ -90,11 +90,29 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
  const update=value=>{
   ensureActive();
   const next=normalize(String(value));
+  const previousDisabled=new Map([[decrease,decrease.disabled],[increase,increase.disabled]]);
   input.value=String(next);
   writtenInputValue=input.value;
   setDisabled(decrease,next<=minimum);
   setDisabled(increase,next>=maximum);
-  onChange(next);
+  try{onChange(next)}
+  catch(error){
+   // Rejecting a later update must be as safe as rejecting initialization.
+   // Native editing already changed input.value before its 'change' handler;
+   // the last accepted value is therefore independent of the event snapshot.
+   if(input.value===writtenInputValue){
+    input.value=acceptedInputValue;
+    writtenInputValue=input.value;
+   }else writtenInputValue=undefined; // callback took ownership of the input
+   for(const button of [decrease,increase]){
+    if(button.disabled===writtenDisabled.get(button)){
+     button.disabled=previousDisabled.get(button);
+     writtenDisabled.set(button,button.disabled);
+    }else writtenDisabled.delete(button); // host changed the button in callback
+   }
+   throw error;
+  }
+  acceptedInputValue=input.value;
   return next;
  };
  const onInputChange=()=>update(input.value);

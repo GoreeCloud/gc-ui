@@ -208,3 +208,39 @@ test('stepper may be safely retried after an initialization callback throws',()=
  active.destroy();
  assert.equal(field.listenerCount('change'),0);
 });
+
+test('rejected later stepper updates roll back the last accepted value and boundary flags',()=>{
+ const field=number({value:'4'}),dec=btn(),inc=btn(),seen=[];
+ const api=initNumberStepper(field,dec,inc,{onChange:n=>{
+  seen.push(n);
+  if(n===12)throw new Error('application rejected maximum');
+ }});
+ assert.equal(api.set(5),5);
+ assert.equal(field.value,'5');
+ assert.throws(()=>api.set(12),/application rejected maximum/);
+ assert.equal(field.value,'5','a rejected programmatic update should retain the last accepted value');
+ assert.equal(inc.disabled,false,'rejected bound must not leave increment disabled');
+ field.value='12'; // manual editing happens before the native change event
+ assert.throws(()=>field.dispatch('change'),/application rejected maximum/);
+ assert.equal(field.value,'5','rejected manual edit must roll back to last accepted value');
+ assert.equal(dec.disabled,false);
+ assert.equal(inc.disabled,false);
+ api.destroy();
+});
+
+test('stepper rollback does not erase host changes made inside a throwing callback',()=>{
+ const field=number({value:'3'}),dec=btn(),inc=btn();
+ const api=initNumberStepper(field,dec,inc,{onChange:n=>{
+  if(n===12){
+   field.value='9'; // application took new ownership before signaling failure
+   dec.disabled=true;
+   throw new Error('host override');
+  }
+ }});
+ assert.throws(()=>api.set(12),/host override/);
+ assert.equal(field.value,'9','host-owned value must not be overwritten by rollback');
+ assert.equal(dec.disabled,true,'host-owned disabled button must survive rollback');
+ assert.equal(inc.disabled,false,'other button can roll back');
+ api.destroy();
+ assert.equal(dec.disabled,true,'teardown must not erase newer host button state');
+});
