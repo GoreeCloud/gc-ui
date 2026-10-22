@@ -204,6 +204,14 @@ search.disabled=false;
 /* Native-first experimental field and recovery controls (local-only specimens). */
 initPasswordReveal(document.getElementById('demo-passphrase'),document.getElementById('passphrase-reveal'));
 const density=document.getElementById('demo-density');
+const allowedDensity=new Set(['compact','comfortable','spacious']);
+const root=document.documentElement;
+function applyDensity(){
+ const next=allowedDensity.has(density.value)?density.value:'comfortable';
+ root.dataset.gcDensity=next;
+ return next;
+}
+applyDensity();
 const preferenceState=document.getElementById('preference-state');
 const quantity=document.getElementById('demo-collaborators');
 const stepper=initNumberStepper(
@@ -214,7 +222,7 @@ const stepper=initNumberStepper(
   }
  }
 );
-density.addEventListener('change',()=>stepper.set(stepper.get()));
+density.addEventListener('change',()=>{applyDensity();stepper.set(stepper.get())});
 // The native controls start as read-only examples when scripts are absent.
 for(const id of ['demo-passphrase','passphrase-reveal','demo-density','demo-collaborators'])
  document.getElementById(id).disabled=false;

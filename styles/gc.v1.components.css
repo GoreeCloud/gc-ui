@@ -105,7 +105,7 @@
 .gc-search-anchor{position:relative;inline-size:100%}
 .gc-search-wrap{display:flex;align-items:center;inline-size:100%;position:relative}
 .gc-search-input{font:inherit;font-size:14px;inline-size:100%;min-inline-size:0;min-block-size:48px;box-sizing:border-box;color:var(--gc-v1-color-on-surface);background:var(--gc-v1-color-surface);border:1px solid var(--gc-v1-color-outline);border-radius:15px;padding:10px 50px 10px 14px}
-.gc-search-clear{position:absolute;inset-inline-end:3px;display:grid;place-items:center;inline-size:42px;block-size:42px;border:0;border-radius:12px;background:transparent;color:var(--gc-v1-color-on-surface);cursor:pointer;font-size:24px}
+.gc-search-clear{position:absolute;inset-inline-end:3px;display:grid;place-items:center;inline-size:44px;block-size:44px;border:0;border-radius:12px;background:transparent;color:var(--gc-v1-color-on-surface);cursor:pointer;font-size:24px}
 .gc-search-clear:hover{background:var(--gc-v1-color-surface-tonal)}
 .gc-search-suggestions{position:absolute;z-index:25;inset-inline:0;inset-block-start:calc(100% + 5px);list-style:none;padding:6px;margin:0;max-block-size:260px;overflow:auto;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);border:1px solid var(--gc-v1-color-outline);border-radius:16px;box-shadow:0 14px 30px rgba(0,0,0,.12)}
 .gc-search-suggestions [role=option]{padding:11px 13px;border-radius:10px;min-block-size:44px;display:flex;align-items:center;cursor:pointer}
@@ -128,7 +128,7 @@
 /* Native-first passphrase, select, bounded number and error/retry patterns (experimental). */
 .gc-passphrase-wrap{position:relative;display:flex;align-items:center;inline-size:100%}
 .gc-passphrase-input{min-inline-size:0;inline-size:100%;padding-inline-end:82px}
-.gc-passphrase-reveal{position:absolute;inset-inline-end:3px;inline-size:74px;min-block-size:42px;border:0;border-radius:12px;background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.gc-passphrase-reveal{position:absolute;inset-inline-end:3px;inline-size:74px;min-block-size:44px;border:0;border-radius:12px;background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
 .gc-passphrase-reveal:focus-visible,.gc-native-select:focus-visible,.gc-stepper-button:focus-visible,.gc-stepper-input:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px}
 .gc-native-select{display:block;inline-size:100%;min-block-size:48px;color:var(--gc-v1-color-on-surface);background:var(--gc-v1-color-surface);cursor:pointer}
 .gc-stepper{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;align-items:stretch;gap:10px;inline-size:100%}
@@ -145,3 +145,9 @@
  .gc-passphrase-reveal:focus-visible,.gc-stepper-button:focus-visible{outline-color:Highlight}
  .gc-stepper-button:disabled{color:GrayText!important;opacity:1}
 }
+
+/* Experimental density preview: adjust layout whitespace, never shrink native targets. */
+:root[data-gc-density=compact] .gc-field{gap:4px}
+:root[data-gc-density=spacious] .gc-field{gap:10px}
+:root[data-gc-density=compact] .gc-card{padding:16px}
+:root[data-gc-density=spacious] .gc-card{padding:26px}
