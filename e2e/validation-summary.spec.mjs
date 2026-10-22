@@ -86,3 +86,32 @@ test('dynamic host help IDs survive validation cycles and controller teardown in
   teardown:'initial-hint new-host-hint'
  });
 });
+
+test('host-provided pre-submit description survives native validation teardown',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const state=await page.evaluate(async()=>{
+  const {initValidationSummary}=await import('/src/index.mjs');
+  const form=document.createElement('form'),summary=document.createElement('section');
+  const list=document.createElement('ul'),input=document.createElement('input');
+  const error=document.createElement('span');
+  summary.setAttribute('role','group');summary.tabIndex=-1;summary.hidden=true;
+  summary.append(list);input.id='pre-submit-hint-field';
+  input.setAttribute('aria-describedby','initial-hint');
+  error.id='pre-submit-hint-error';error.textContent='Required';error.hidden=true;
+  form.append(summary,input,error);document.body.append(form);
+  const api=initValidationSummary(form,summary,list,[{
+   input,error,label:'Project',valid:el=>el.value.trim().length>=3
+  }]);
+  input.setAttribute('aria-describedby','new-host-pre-submit-hint');
+  api.validate({focusSummary:false});
+  const during=input.getAttribute('aria-describedby');
+  api.destroy();
+  const after=input.getAttribute('aria-describedby');
+  form.remove();
+  return {during,after};
+ });
+ expect(state).toEqual({
+  during:'new-host-pre-submit-hint pre-submit-hint-error',
+  after:'new-host-pre-submit-hint'
+ });
+});

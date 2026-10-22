@@ -49,8 +49,9 @@ It builds error links through DOM text nodes (not HTML parsing), places focus on
 the summary after failed submission, and revalidates a previously invalid field
 as the user edits. Application-owned descriptions, ARIA, and error visibility
 are restored on teardown where the controller still owns its last writes.
-If a host adds or replaces `aria-describedby` hints between validations, subsequent
-validation preserves those current help IDs and cleanup does not resurrect stale hints.
+If a host adds or replaces `aria-describedby` hints after mounting (including
+before the first validation), validation preserves those current help IDs and
+cleanup does not resurrect stale hints.
 Host applications own the success message and any async/network submission.
 This extraction does not mark F22 or the whole GC UI workspace stable.
 

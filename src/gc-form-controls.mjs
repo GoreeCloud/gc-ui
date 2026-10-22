@@ -231,7 +231,9 @@ export function initValidationSummary(form,summary,list,fields,{onValid=()=>{},o
   const help=(current||'').split(/\s+/).filter(Boolean).filter(id=>id!==field.error.id);
   // A host may replace or extend its help links after mount. Respect its
   // current tokens and remember them for teardown, not the stale mount value.
-  if(owned?.has('aria-describedby')&&current!==owned.get('aria-describedby'))
+  const lastKnown=owned?.has('aria-describedby')?
+   owned.get('aria-describedby'):record.describedby;
+  if(current!==lastKnown)
    record.describedby=help.length?help.join(' '):null;
   if(!valid)help.push(field.error.id);
   setAttr(field.input,'aria-describedby',help.length?help.join(' '):null);

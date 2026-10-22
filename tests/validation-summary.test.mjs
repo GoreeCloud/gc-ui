@@ -105,3 +105,13 @@ test('replaced host description remains linked during subsequent invalid validat
  api.destroy();
  assert.equal(x.input.getAttribute('aria-describedby'),'host-current');
 });
+
+test('host description replacements before first validation are retained on teardown',()=>{
+ const x=fixture();
+ const api=initValidationSummary(x.form,x.summary,x.list,[x.field]);
+ x.input.setAttribute('aria-describedby','host-after-mount-before-submit');
+ assert.equal(api.validate({focusSummary:false}),false);
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-after-mount-before-submit task-error');
+ api.destroy();
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-after-mount-before-submit');
+});
