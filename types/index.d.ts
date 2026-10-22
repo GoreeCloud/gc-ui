@@ -102,6 +102,23 @@ export declare function initNumberStepper(
   options?:{onChange?:(value:number)=>void}
 ):GCNumberStepperController;
 
+/** Experimental native form-error summary. Not a stable validation framework. */
+export interface GCValidationField {
+ input:HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement;
+ error:HTMLElement;
+ label:string;
+ valid:(input:HTMLInputElement|HTMLTextAreaElement|HTMLSelectElement)=>boolean;
+}
+export interface GCValidationSummaryController {
+ validate(options?:{focusSummary?:boolean}):boolean;
+ destroy():void;
+}
+export declare function initValidationSummary(
+ form:HTMLFormElement,summary:HTMLElement,list:HTMLUListElement,
+ fields:GCValidationField[],
+ options?:{onValid?:()=>void;onInput?:(input:GCValidationField['input'])=>void}
+):GCValidationSummaryController;
+
 /** Experimental material contexts. Never infer accessibility preferences from content. */
 export type GCSurfaceContext='workspace'|'reading'|'analysis'|'media';
 export type GCSurfaceIntensity='auto'|'quiet'|'balanced'|'expressive';

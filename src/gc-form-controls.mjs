@@ -158,3 +158,120 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   }
  };
 }
+
+/**
+ * Experimental native-first form error summary controller.
+ * Field values are never persisted, transmitted, or HTML-parsed.
+ * Each descriptor has {input,error,label,valid}; all validations are synchronous.
+ */
+export function initValidationSummary(form,summary,list,fields,{onValid=()=>{},onInput=()=>{}}={}){
+ if(form?.localName!=='form'||summary?.getAttribute?.('role')!=='group'||
+  summary.getAttribute('tabindex')!=='-1'||list?.localName!=='ul'||
+  !list.ownerDocument?.createElement)
+  throw new TypeError('Expected a native form, focusable group summary and list');
+ if(!Array.isArray(fields)||!fields.length||typeof onValid!=='function'||typeof onInput!=='function')
+  throw new TypeError('Expected fields and callback functions');
+ const ids=new Set();
+ for(const field of fields){
+  if(!['input','textarea','select'].includes(field?.input?.localName)||
+   !field.input.id||!field.error?.id||typeof field.label!=='string'||!field.label.trim()||
+   typeof field.valid!=='function'||ids.has(field.input.id)||ids.has(field.error.id))
+   throw new TypeError('Invalid or duplicate form field/error descriptor');
+  ids.add(field.input.id);ids.add(field.error.id);
+ }
+ const original=fields.map(field=>({
+  field,invalid:field.input.getAttribute('aria-invalid'),
+  describedby:field.input.getAttribute('aria-describedby'),
+  errorHidden:field.error.hidden
+ }));
+ const summaryHidden=summary.hidden;
+ const ownedErrors=new Map();
+ let ownedSummary,ownedNodes=[],destroyed=false;
+ const ensureActive=()=>{if(destroyed)throw new Error('Validation summary controller was destroyed')};
+ // Keep last controller writes separate from host-provided values.
+ const written=new Map();
+ function setAttr(el,name,value){
+  if(value===null)el.removeAttribute(name);else el.setAttribute(name,value);
+  if(!written.has(el))written.set(el,new Map());
+  written.get(el).set(name,value);
+ }
+ function render(){
+  for(const node of ownedNodes)node.remove();
+  ownedNodes=[];
+  const invalid=fields.filter(field=>field.input.getAttribute('aria-invalid')==='true');
+  for(const field of invalid){
+   const li=list.ownerDocument.createElement('li');
+   const link=list.ownerDocument.createElement('a');
+   link.setAttribute('href','#'+field.input.id);
+   link.textContent=field.label+': '+field.error.textContent;
+   li.append(link);list.append(li);ownedNodes.push(li);
+  }
+  summary.hidden=invalid.length===0;ownedSummary=summary.hidden;
+  return invalid.length;
+ }
+ function validate({focusSummary=true}={}){
+  ensureActive();
+  // Evaluate every validator before changing any DOM. A throwing validator
+  // must not commit partially updated error states.
+  const decisions=fields.map(field=>{
+   const result=field.valid(field.input);
+   if(typeof result!=='boolean')throw new TypeError('Field validator must return a synchronous boolean');
+   return result;
+  });
+  for(let i=0;i<fields.length;i++)checkWithDecision(fields[i],decisions[i]);
+  const count=render();
+  if(count&&focusSummary)summary.focus();
+  if(!count)onValid();
+  return count===0;
+ }
+ function checkWithDecision(field,valid){
+  const prior=original.find(entry=>entry.field===field).describedby;
+  const help=(prior||'').split(/\s+/).filter(Boolean).filter(id=>id!==field.error.id);
+  if(!valid)help.push(field.error.id);
+  setAttr(field.input,'aria-describedby',help.length?help.join(' '):null);
+  setAttr(field.input,'aria-invalid',valid?null:'true');
+  field.error.hidden=valid;ownedErrors.set(field.error,valid);
+ }
+ const submit=event=>{event.preventDefault();validate()};
+ const click=event=>{
+  const link=event.target.closest?.('a[href^="#"]');
+  if(!link||!list.contains(link))return;
+  const field=fields.find(item=>'#'+item.input.id===link.getAttribute('href'));
+  if(field){event.preventDefault();field.input.focus()}
+ };
+ const listeners=fields.map(field=>{
+  const input=()=>{
+   onInput(field.input);
+   if(field.input.getAttribute('aria-invalid')!=='true')return;
+   const valid=field.valid(field.input);
+   if(typeof valid!=='boolean')throw new TypeError('Field validator must return a synchronous boolean');
+   checkWithDecision(field,valid);render();
+  };
+  field.input.addEventListener('input',input);
+  return [field.input,input];
+ });
+ form.addEventListener('submit',submit);
+ list.addEventListener('click',click);
+ return {validate,destroy(){
+  if(destroyed)return;
+  destroyed=true;
+  form.removeEventListener('submit',submit);
+  list.removeEventListener('click',click);
+  for(const [el,fn] of listeners)el.removeEventListener('input',fn);
+  for(const node of ownedNodes)node.remove();
+  for(const record of original){
+   const {field}=record;
+   const writtenAttrs=written.get(field.input);
+   for(const [name,prior] of [['aria-invalid',record.invalid],['aria-describedby',record.describedby]]){
+    const owned=writtenAttrs?.get(name);
+    if(owned===undefined)continue;
+    if(field.input.getAttribute(name)!==owned)continue;
+    if(prior===null)field.input.removeAttribute(name);
+    else field.input.setAttribute(name,prior);
+   }
+   if(ownedErrors.has(field.error)&&field.error.hidden===ownedErrors.get(field.error))
+    field.error.hidden=record.errorHidden;
+  }
+  if(ownedSummary!==undefined&&summary.hidden===ownedSummary)summary.hidden=summaryHidden;
+ }};
+}

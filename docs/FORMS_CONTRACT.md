@@ -37,6 +37,21 @@ This does not imply stable component API status.
 - A successful local validation shows an explicit message without sending data or silently discarding form entries.
 - Application validation must not rely solely on the decorative color of an input border.
 
+## Experimental extracted validation controller
+
+`initValidationSummary(form, summary, list, fields, {onValid, onInput})` is now
+an optional, typed **experimental** controller for native field validation and
+focusable linked errors. Each field supplies its native input, visible error
+element, human-readable label, and synchronous validator. The summary is a
+`role=group`, `tabindex=-1` element containing an initially empty `<ul>`.
+Validation happens locally; controller code never submits or saves a value.
+It builds error links through DOM text nodes (not HTML parsing), places focus on
+the summary after failed submission, and revalidates a previously invalid field
+as the user edits. Application-owned descriptions, ARIA, and error visibility
+are restored on teardown where the controller still owns its last writes.
+Host applications own the success message and any async/network submission.
+This extraction does not mark F22 or the whole GC UI workspace stable.
+
 ## Search keyboard contract
 
 - Typing filters six illustrative project names and updates a `role="status"` result count. The popup is named as a `role="listbox"`, with keyboard-active rows given `role="option"` and `aria-activedescendant`.
