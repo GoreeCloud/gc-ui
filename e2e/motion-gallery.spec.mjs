@@ -109,3 +109,28 @@ test('direct WAAPI preset honors increased contrast and remains usable when medi
   played:true,empty:true
  });
 });
+
+test('throwing native animation cancel does not prevent motion cleanup or newer play',async({page})=>{
+ await page.goto('/lab/motion-gallery.html');
+ const result=await page.evaluate(async()=>{
+  const {createMotionCoordinator}=await import('/src/gc-transition-coordinator.mjs');
+  const good={animate(){return {addEventListener(){},cancel(){}}}};
+  const broken={animate(){return {addEventListener(){},cancel(){throw Error('native WAAPI cancel failure')}}}};
+  const coordinator=createMotionCoordinator({
+   media:()=>({matches:false}),root:document.documentElement
+  });
+  const first=coordinator.play(broken,'reveal')!==null;
+  const second=coordinator.play(good,'settle')!==null;
+  let cancelledSafely=true;
+  try{coordinator.cancelAll()}catch{cancelledSafely=false}
+  const activeAfterCancel=coordinator.activeCount();
+  const playsAgain=coordinator.play(good,'settle')!==null;
+  let disposedSafely=true;
+  try{coordinator.destroy()}catch{disposedSafely=false}
+  return {first,second,cancelledSafely,activeAfterCancel,playsAgain,disposedSafely,activeAfterDestroy:coordinator.activeCount()};
+ });
+ expect(result).toEqual({
+  first:true,second:true,cancelledSafely:true,activeAfterCancel:0,
+  playsAgain:true,disposedSafely:true,activeAfterDestroy:0
+ });
+});
