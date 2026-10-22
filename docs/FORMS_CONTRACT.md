@@ -83,3 +83,13 @@ Show/Hide alongside an icon, put the mutable **text-only** label in a descendant
 pre-init disabled flags only for buttons still holding their controller-written states. When an application `onChange` callback rejects a later update by throwing, the controller rolls back the input to the last accepted value (including after manual typing) and restores the prior boundary-button states. A callback's newer host-owned value or button changes are preserved instead of being overwritten during rollback. If a rejecting callback performs a newer accepted nested stepper update, the older rejection also leaves that newer input value and boundary disabled state intact.
 A new nested-SVG browser regression verifies actual DOM ownership and focus behavior;
 the root GC UI workspace remains experimental and not certified for credential handling. Source and browser regressions cover the specimen and direct lifecycle. Form validation, search suggestions, native select status, and simulated retry remain lab-only behavior. See [Web API alpha](WEB_API_ALPHA.md).
+
+## Experimental density preview
+
+The native Workspace density select in Forms Lab now changes a bounded
+`data-gc-density` signal on the document root. Compact and Spacious vary field
+gaps and panel/card whitespace while native input and action targets keep
+their original 44–48 CSS-pixel minimums. Comfortable remains the default.
+This selection is local to the reference page and is **not persisted** or
+exposed as a stable GC UI theme/controller API. Browser-based reflow and
+assistive-technology review are still required for consumer applications.
