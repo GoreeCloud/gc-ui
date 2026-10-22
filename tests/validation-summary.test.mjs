@@ -81,3 +81,37 @@ test('asynchronous validation does not accidentally approve an invalid field',()
  assert.equal(x.input.getAttribute('aria-invalid'),null);
  api.destroy();
 });
+
+test('host-added descriptions survive invalid corrections, repeat validation, and teardown',()=>{
+ const x=fixture();
+ const api=initValidationSummary(x.form,x.summary,x.list,[x.field]);
+ assert.equal(api.validate({focusSummary:false}),false);
+ x.input.setAttribute('aria-describedby','task-help live-hint task-error');
+ x.input.value='New task';x.input.fire('input');
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help live-hint','correcting an error must not delete newer help');
+ assert.equal(api.validate({focusSummary:false}),true);
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help live-hint');
+ api.destroy();
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help live-hint','teardown must not revive stale snapshot');
+});
+
+test('replaced host description remains linked during subsequent invalid validation',()=>{
+ const x=fixture();
+ const api=initValidationSummary(x.form,x.summary,x.list,[x.field]);
+ assert.equal(api.validate({focusSummary:false}),false);
+ x.input.setAttribute('aria-describedby','host-current');
+ assert.equal(api.validate({focusSummary:false}),false);
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-current task-error');
+ api.destroy();
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-current');
+});
+
+test('host description replacements before first validation are retained on teardown',()=>{
+ const x=fixture();
+ const api=initValidationSummary(x.form,x.summary,x.list,[x.field]);
+ x.input.setAttribute('aria-describedby','host-after-mount-before-submit');
+ assert.equal(api.validate({focusSummary:false}),false);
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-after-mount-before-submit task-error');
+ api.destroy();
+ assert.equal(x.input.getAttribute('aria-describedby'),'host-after-mount-before-submit');
+});
