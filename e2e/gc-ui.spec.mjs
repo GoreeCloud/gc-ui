@@ -606,3 +606,31 @@ test('programmatic menu close does not reopen a host-hidden menu on teardown',as
  });
  expect(result).toEqual({hidden:true,expanded:null});
 });
+
+test('ARIA-disabled action-menu triggers stay closed until the host enables them',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initMenu}=await import('/src/gc-menu.mjs');
+  const trigger=document.createElement('button'),menu=document.createElement('div');
+  const item=document.createElement('button');
+  trigger.type='button';trigger.textContent='Focusable disabled menu';
+  trigger.setAttribute('aria-disabled','true');
+  menu.id='aria-disabled-menu-probe';menu.setAttribute('role','menu');
+  item.type='button';item.setAttribute('role','menuitem');item.textContent='Do action';
+  menu.append(item);document.body.append(trigger,menu);
+  const api=initMenu(trigger,menu);
+  trigger.click();
+  const blocked={open:api.isOpen(),hidden:menu.hidden,expanded:trigger.getAttribute('aria-expanded')};
+  trigger.dispatchEvent(new KeyboardEvent('keydown',{key:'ArrowDown',bubbles:true}));
+  const blockedKey=!api.isOpen();
+  trigger.setAttribute('aria-disabled','false');
+  trigger.click();
+  const enabled={open:api.isOpen(),hidden:menu.hidden,expanded:trigger.getAttribute('aria-expanded')};
+  api.destroy();menu.remove();trigger.remove();
+  return {blocked,blockedKey,enabled};
+ });
+ expect(result).toEqual({
+  blocked:{open:false,hidden:true,expanded:'false'},blockedKey:true,
+  enabled:{open:true,hidden:false,expanded:'true'}
+ });
+});

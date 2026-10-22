@@ -198,3 +198,22 @@ test('controller close preserves externally hidden menu ownership through teardo
  api.destroy();
  assert.equal(menu.hidden,true,'teardown must not unhide a host-hidden menu');
 });
+
+test('aria-disabled menu triggers cannot open by mouse, keys or API until re-enabled',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'a11y-disabled',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=el=>el===menu||el===item;
+ trigger.setAttribute('aria-disabled','true');
+ const api=initMenu(trigger,menu,{document:doc});
+ assert.equal(api.open(),false);
+ trigger.fire('click');
+ trigger.fire('keydown',{key:'ArrowDown',preventDefault(){}});
+ assert.equal(api.isOpen(),false);
+ assert.equal(menu.hidden,true);
+ assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ trigger.setAttribute('aria-disabled','false');
+ assert.equal(api.open(),true,'host can re-enable a focusable menu trigger');
+ assert.equal(menu.hidden,false);
+ api.destroy();
+});

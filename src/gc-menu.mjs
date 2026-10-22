@@ -63,7 +63,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     if(candidates.length)candidates[((index%candidates.length)+candidates.length)%candidates.length].focus();
   }
   function show(position='first'){
-    if(destroyed||trigger.disabled)return false;
+    if(destroyed||trigger.disabled||trigger.getAttribute('aria-disabled')==='true')return false;
     if(!enabled().length)return false;
     open=true;
     setHidden(false);
