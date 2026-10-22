@@ -14,7 +14,7 @@ and no third-party JavaScript UI library is automatically imported.
 
 | Pattern | Reference | Behavior / accessibility contract |
 | --- | --- | --- |
-| Single-select choice chips | `initChoiceChips`, `.gc-pattern-chips` | native buttons, one `aria-pressed=true`, Enter/Space, disabled choices skipped, retained host ARIA on teardown |
+| Single-select choice chips | `initChoiceChips`, `.gc-pattern-chips` | native buttons, one `aria-pressed=true`, Enter/Space, disabled choices skipped, retained host ARIA on teardown; rejected `onChange` rolls back the previously accepted choice without clobbering newer host ARIA |
 | Single-open disclosure group | `initDisclosureGroup`, `.gc-pattern-disclosures` | native `details`/`summary`; progressive enhancement; no scripted focus trap; one open at a time when JS enabled |
 | Status note | `.gc-pattern-alert` | message always present, semantic text and decorative SVG |
 | Local progress | `.gc-pattern-progress` | native `<progress>` with visible associated label and live text feedback |
