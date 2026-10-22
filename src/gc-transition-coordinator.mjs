@@ -12,7 +12,9 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
   const animation=active.get(element);
   if(!animation)return false;
   active.delete(element);
-  animation.cancel?.();
+  // Optional browser motion must never interrupt state/focus cleanup, even
+  // when a buggy WAAPI implementation throws while cancelling.
+  try{animation.cancel?.()}catch{}
   return true;
  }
  function play(element,name,{direction='ltr',reducedMotion=false}={}){
@@ -30,7 +32,7 @@ export function createMotionCoordinator({media=globalThis.matchMedia?.bind(globa
    if(active.get(element)!==animation)return;
    active.delete(element);
    // No animation-fill should remain after the underlying DOM reaches its normal state.
-   animation.cancel?.();
+   try{animation.cancel?.()}catch{}
   };
   animation.addEventListener?.('finish',finish,{once:true});
   animation.addEventListener?.('cancel',()=>{

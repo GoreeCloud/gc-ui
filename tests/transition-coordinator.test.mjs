@@ -122,3 +122,42 @@ test('a failing optional Web Animations implementation falls back without throwi
  ctl.destroy();
  assert.equal(animationList[0].cancelled,1);
 });
+
+test('a throwing animation cancel cannot strand other active animations or block disposal',()=>{
+ const animations=[];
+ const element=throws=>{
+  const item={animate(){
+   const listeners={};
+   const animation={addEventListener(name,fn){listeners[name]=fn},
+    cancel(){if(throws)throw Error('bad WAAPI cancellation');listeners.cancel?.()},
+    finish(){listeners.finish?.()}
+   };
+   animations.push(animation);
+   return animation;
+  }};
+  return item;
+ };
+ const ctl=createMotionCoordinator({media:()=>({matches:false}),root:{dataset:{}}});
+ const broken=element(true),healthy=element(false);
+ assert.ok(ctl.play(broken,'reveal'));
+ assert.ok(ctl.play(healthy,'settle'));
+ assert.doesNotThrow(()=>ctl.cancelAll(),'optional motion failure must never block other cleanup');
+ assert.equal(ctl.activeCount(),0);
+ assert.ok(ctl.play(healthy,'settle'),'controller should remain usable');
+ assert.doesNotThrow(()=>ctl.destroy());
+ assert.equal(ctl.activeCount(),0);
+ assert.ok(animations.length>=3);
+});
+
+test('throwing WAAPI finish cleanup cannot surface into application event processing',()=>{
+ const ctl=createMotionCoordinator({media:()=>({matches:false}),root:{dataset:{}}});
+ let finish;
+ const el={animate(){return {
+  addEventListener(name,fn){if(name==='finish')finish=fn},
+  cancel(){throw Error('browser cancel failed')}
+ }}};
+ ctl.play(el,'reveal');
+ assert.doesNotThrow(()=>finish());
+ assert.equal(ctl.activeCount(),0);
+ ctl.destroy();
+});
