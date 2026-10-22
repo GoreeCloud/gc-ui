@@ -369,3 +369,27 @@ test('async action preserves borrowed ARIA and does not overwrite newer applicat
  assert.equal(button.getAttribute('aria-busy'),'host-managed','newer host value must not be removed');
  assert.equal(button.disabled,false);
 });
+
+test('async action respects aria-disabled before launch and host disablement during request',async()=>{
+ const attrs=new Map();
+ const button={disabled:false,
+  getAttribute:name=>attrs.get(name)??null,
+  setAttribute:(name,value)=>attrs.set(name,String(value)),
+  removeAttribute:name=>attrs.delete(name)
+ };
+ let called=0;
+ button.setAttribute('aria-disabled','true');
+ assert.equal(await runAsyncAction(button,()=>{called++;return 'should not execute'}),null);
+ assert.equal(called,0,'an ARIA-disabled native button cannot invoke the action');
+ assert.equal(button.disabled,false,'a focusable ARIA-disabled button remains focusable');
+ button.setAttribute('aria-disabled','false');
+ let finish;
+ const pending=runAsyncAction(button,()=>new Promise(resolve=>{called++;finish=resolve}));
+ assert.equal(button.disabled,true);
+ button.setAttribute('aria-disabled','true'); // host marks the action unavailable while pending
+ finish('saved');
+ assert.equal(await pending,'saved');
+ assert.equal(button.disabled,true,'host-disabled action must not become actionable after completion');
+ assert.equal(button.getAttribute('aria-busy'),null,'busy belongs to the action, not the host disabled flag');
+ assert.equal(called,1);
+});
