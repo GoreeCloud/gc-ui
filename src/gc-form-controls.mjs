@@ -77,7 +77,7 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   button.disabled=value;
   writtenDisabled.set(button,value);
  };
- let destroyed=false;
+ let destroyed=false,updateRevision=0;
  const priorInputValue=input.value;
  let writtenInputValue,acceptedInputValue=priorInputValue;
  const ensureActive=()=>{if(destroyed)throw new Error('Number stepper was destroyed')};
@@ -89,6 +89,7 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
  };
  const update=value=>{
   ensureActive();
+  const revision=++updateRevision;
   const next=normalize(String(value));
   const previousDisabled=new Map([[decrease,decrease.disabled],[increase,increase.disabled]]);
   input.value=String(next);
@@ -97,6 +98,9 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   setDisabled(increase,next>=maximum);
   try{onChange(next)}
   catch(error){
+   // An application callback can synchronously commit a newer nested update.
+   // Never let an older rejection roll back its accepted input or boundaries.
+   if(revision!==updateRevision)throw error;
    // Rejecting a later update must be as safe as rejecting initialization.
    // Native editing already changed input.value before its 'change' handler;
    // the last accepted value is therefore independent of the event snapshot.

@@ -244,3 +244,17 @@ test('stepper rollback does not erase host changes made inside a throwing callba
  api.destroy();
  assert.equal(dec.disabled,true,'teardown must not erase newer host button state');
 });
+
+test('a rejected outer number update cannot overwrite a newer accepted nested boundary state',()=>{
+ const field=number({value:'4'}),dec=btn(),inc=btn();
+ let api;
+ api=initNumberStepper(field,dec,inc,{onChange:n=>{
+  if(n===12){api.set(1);throw Error('outer request rejected')}
+ }});
+ assert.throws(()=>api.set(12),/outer request rejected/);
+ assert.equal(field.value,'1','the newer accepted nested update must win');
+ assert.equal(api.get(),1);
+ assert.equal(dec.disabled,true,'minimum boundary remains disabled after nested acceptance');
+ assert.equal(inc.disabled,false);
+ api.destroy();
+});
