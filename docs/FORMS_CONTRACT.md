@@ -49,6 +49,8 @@ It builds error links through DOM text nodes (not HTML parsing), places focus on
 the summary after failed submission, and revalidates a previously invalid field
 as the user edits. Application-owned descriptions, ARIA, and error visibility
 are restored on teardown where the controller still owns its last writes.
+If a host adds or replaces `aria-describedby` hints between validations, subsequent
+validation preserves those current help IDs and cleanup does not resurrect stale hints.
 Host applications own the success message and any async/network submission.
 This extraction does not mark F22 or the whole GC UI workspace stable.
 
@@ -97,7 +99,7 @@ Show/Hide alongside an icon, put the mutable **text-only** label in a descendant
 `data-gc-password-reveal-label`. Unmarked child markup remains untouched. Steppers restore
 pre-init disabled flags only for buttons still holding their controller-written states. When an application `onChange` callback rejects a later update by throwing, the controller rolls back the input to the last accepted value (including after manual typing) and restores the prior boundary-button states. A callback's newer host-owned value or button changes are preserved instead of being overwritten during rollback. If a rejecting callback performs a newer accepted nested stepper update, the older rejection also leaves that newer input value and boundary disabled state intact.
 A new nested-SVG browser regression verifies actual DOM ownership and focus behavior;
-the root GC UI workspace remains experimental and not certified for credential handling. Source and browser regressions cover the specimen and direct lifecycle. Form validation, search suggestions, native select status, and simulated retry remain lab-only behavior. See [Web API alpha](WEB_API_ALPHA.md).
+the root GC UI workspace remains experimental and not certified for credential handling. Source and browser regressions cover the specimen and direct lifecycle. Search suggestions, native select status, and simulated retry remain lab-only behavior; form error-summary validation is available as an experimental exported controller, but its original lab orchestration remains a specimen. See [Web API alpha](WEB_API_ALPHA.md).
 
 ## Experimental density preview
 

@@ -225,8 +225,14 @@ export function initValidationSummary(form,summary,list,fields,{onValid=()=>{},o
   return count===0;
  }
  function checkWithDecision(field,valid){
-  const prior=original.find(entry=>entry.field===field).describedby;
-  const help=(prior||'').split(/\s+/).filter(Boolean).filter(id=>id!==field.error.id);
+  const record=original.find(entry=>entry.field===field);
+  const current=field.input.getAttribute('aria-describedby');
+  const owned=written.get(field.input);
+  const help=(current||'').split(/\s+/).filter(Boolean).filter(id=>id!==field.error.id);
+  // A host may replace or extend its help links after mount. Respect its
+  // current tokens and remember them for teardown, not the stale mount value.
+  if(owned?.has('aria-describedby')&&current!==owned.get('aria-describedby'))
+   record.describedby=help.length?help.join(' '):null;
   if(!valid)help.push(field.error.id);
   setAttr(field.input,'aria-describedby',help.length?help.join(' '):null);
   setAttr(field.input,'aria-invalid',valid?null:'true');

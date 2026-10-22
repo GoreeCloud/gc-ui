@@ -53,3 +53,36 @@ test('native validation summary links errors, focuses inputs and restores origin
   retired:{describedby:'validation-help',invalid:null,errorHidden:true,summaryHidden:true}
  });
 });
+
+test('dynamic host help IDs survive validation cycles and controller teardown in native DOM',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const state=await page.evaluate(async()=>{
+  const {initValidationSummary}=await import('/src/index.mjs');
+  const form=document.createElement('form'),summary=document.createElement('section');
+  const list=document.createElement('ul'),input=document.createElement('input');
+  const error=document.createElement('span');
+  summary.setAttribute('role','group');summary.tabIndex=-1;summary.hidden=true;
+  summary.append(list);
+  input.id='dynamic-help-field';input.setAttribute('aria-describedby','initial-hint');
+  error.id='dynamic-help-error';error.textContent='Required';error.hidden=true;
+  form.append(summary,input,error);document.body.append(form);
+  const api=initValidationSummary(form,summary,list,[{
+   input,error,label:'Project',valid:el=>el.value.trim().length>=3
+  }]);
+  api.validate({focusSummary:false});
+  input.setAttribute('aria-describedby','initial-hint new-host-hint dynamic-help-error');
+  input.value='Studio';input.dispatchEvent(new Event('input',{bubbles:true}));
+  const corrected=input.getAttribute('aria-describedby');
+  input.value='';api.validate({focusSummary:false});
+  const invalid=input.getAttribute('aria-describedby');
+  api.destroy();
+  const teardown=input.getAttribute('aria-describedby');
+  form.remove();
+  return {corrected,invalid,teardown};
+ });
+ expect(state).toEqual({
+  corrected:'initial-hint new-host-hint',
+  invalid:'initial-hint new-host-hint dynamic-help-error',
+  teardown:'initial-hint new-host-hint'
+ });
+});
