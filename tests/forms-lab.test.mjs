@@ -98,3 +98,14 @@ test('no-JavaScript markup is safe and includes all six real example projects',(
  assert.match(script,/search\.disabled=false/);
  assert.match(script,/simulate\.disabled=false/);
 });
+
+
+test('validation and density browser regressions are part of hosted Chromium and Firefox interaction commands',()=>{
+ const pkg=JSON.parse(read('package.json'));
+ for(const command of ['test:e2e:interaction','test:e2e:firefox']){
+  for(const file of ['e2e/validation-summary.spec.mjs','e2e/density-preview.spec.mjs']){
+   assert.ok(pkg.scripts[command].includes(file),command+' must run '+file);
+   assert.ok(read(file).includes('test('),file+' defines a browser regression');
+  }
+ }
+});
