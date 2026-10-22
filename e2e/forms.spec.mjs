@@ -393,3 +393,25 @@ test('rejected later number stepper changes restore committed native input and b
   recovered:6
  });
 });
+
+test('newer nested stepper update survives an older callback rejection in real DOM',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const field=document.createElement('input');
+  field.type='number';field.min='1';field.max='12';field.step='1';field.value='4';
+  const dec=document.createElement('button'),inc=document.createElement('button');
+  dec.type='button';inc.type='button';
+  document.body.append(field,dec,inc);
+  let api;
+  api=initNumberStepper(field,dec,inc,{onChange:n=>{
+   if(n===12){api.set(1);throw Error('outer rejected')}
+  }});
+  let rejected=false;
+  try{api.set(12)}catch(err){rejected=err.message==='outer rejected'}
+  const state={rejected,value:field.value,current:api.get(),decDisabled:dec.disabled,incDisabled:inc.disabled};
+  api.destroy();field.remove();dec.remove();inc.remove();
+  return state;
+ });
+ expect(result).toEqual({rejected:true,value:'1',current:1,decDisabled:true,incDisabled:false});
+});
