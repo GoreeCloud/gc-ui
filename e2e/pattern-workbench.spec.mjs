@@ -40,3 +40,25 @@ test('responsive, RTL and reduced motion preserve content without overflow',asyn
  expect(await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth)).toBeLessThanOrEqual(1);
  expect(await page.locator('#pattern-card-grid').evaluate(el=>el.getAnimations({subtree:true}).length)).toBe(0);
 });
+
+test('rejected filter callback does not expose an unaccepted choice in native DOM',async({page})=>{
+ await page.goto('/lab/pattern-workbench.html');
+ const state=await page.evaluate(async()=>{
+  const {initChoiceChips}=await import('/src/gc-patterns.mjs');
+  const group=document.createElement('div'),all=document.createElement('button'),work=document.createElement('button');
+  for(const [button,value] of [[all,'all'],[work,'work']]){
+   button.type='button';button.setAttribute('data-gc-choice',value);group.append(button);
+  }
+  document.body.append(group);
+  const ctl=initChoiceChips(group,{onChange:value=>{
+   if(value==='work')throw Error('filter was rejected');
+  }});
+  let rejected=false;
+  try{ctl.select('work')}catch(error){rejected=error.message==='filter was rejected'}
+  const after={rejected,current:ctl.get(),all:all.getAttribute('aria-pressed'),work:work.getAttribute('aria-pressed')};
+  ctl.destroy();
+  group.remove();
+  return after;
+ });
+ expect(state).toEqual({rejected:true,current:'all',all:'true',work:'false'});
+});

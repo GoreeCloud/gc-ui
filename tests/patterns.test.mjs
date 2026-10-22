@@ -103,3 +103,50 @@ test('multi-open disclosures remain independent, and malformed markup is rejecte
  const bad=disclosure();bad.querySelector=()=>null;
  assert.throws(()=>initDisclosureGroup(group([bad])),/details and a summary/);
 });
+
+test('rejected choice-chip selection preserves the previously accepted option',()=>{
+ const all=choice('all','true'),work=choice('work');
+ const scope=group([all,work]);
+ const ctl=initChoiceChips(scope,{onChange:v=>{if(v==='work')throw Error('host refused filter')}});
+ assert.equal(ctl.get(),'all');
+ assert.throws(()=>ctl.select('work'),/host refused filter/);
+ assert.equal(ctl.get(),'all','a rejected selection must not become the current choice');
+ assert.equal(all.getAttribute('aria-pressed'),'true');
+ assert.equal(work.getAttribute('aria-pressed'),'false');
+ assert.throws(()=>scope.fire('click',work),/host refused filter/);
+ assert.equal(ctl.get(),'all');
+ ctl.destroy();
+});
+
+test('failed choice selection rollback preserves newer ARIA changed by the host callback',()=>{
+ const all=choice('all'),work=choice('work'),scope=group([all,work]);
+ const ctl=initChoiceChips(scope,{onChange:v=>{
+  if(v==='work'){
+   work.setAttribute('aria-pressed','host-owned');
+   throw Error('rejected');
+  }
+ }});
+ assert.throws(()=>ctl.select('work'),/rejected/);
+ assert.equal(ctl.get(),'all');
+ assert.equal(work.getAttribute('aria-pressed'),'host-owned');
+ assert.equal(all.getAttribute('aria-pressed'),'true');
+ ctl.destroy();
+ assert.equal(work.getAttribute('aria-pressed'),'host-owned','teardown must not undo the newer host value');
+});
+
+test('a rejected outer choice change does not undo a newer nested host selection',()=>{
+ const all=choice('all'),work=choice('work'),later=choice('later');
+ let ctl;
+ ctl=initChoiceChips(group([all,work,later]),{onChange:value=>{
+  if(value==='work'){
+   ctl.select('later');
+   throw Error('outer rejected');
+  }
+ }});
+ assert.throws(()=>ctl.select('work'),/outer rejected/);
+ assert.equal(ctl.get(),'later');
+ assert.equal(later.getAttribute('aria-pressed'),'true');
+ assert.equal(all.getAttribute('aria-pressed'),'false');
+ assert.equal(work.getAttribute('aria-pressed'),'false');
+ ctl.destroy();
+});

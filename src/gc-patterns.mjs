@@ -31,10 +31,34 @@ export function initChoiceChips(group,{onChange=()=>{}}={}){
   const button=buttons[index];
   if(!enabled(button))return false;
   const changed=current!==button;
+  const previous=current;
+  const before=new Map(buttons.map(item=>[item,{
+   attribute:item.getAttribute('aria-pressed'),written:written.get(item)
+  }]));
   current=button;
   render();
   if(focus)button.focus();
-  if(changed)onChange(value);
+  if(changed)try{onChange(value)}
+  catch(error){
+   // A rejected application selection must not become the committed choice.
+   // Restore only controller-written ARIA; callback-owned changes win.
+   // A nested host selection may have committed a newer choice while this
+   // callback was running. Never roll that newer transaction back.
+   if(current!==button)throw error;
+   current=previous;
+   for(const item of buttons){
+    if(item.getAttribute('aria-pressed')!==written.get(item)){
+     written.delete(item);
+     continue;
+    }
+    const prior=before.get(item);
+    if(prior.attribute===null)item.removeAttribute('aria-pressed');
+    else item.setAttribute('aria-pressed',prior.attribute);
+    if(prior.attribute===prior.written)written.set(item,prior.written);
+    else written.delete(item);
+   }
+   throw error;
+  }
   return changed;
  }
  const click=event=>{
