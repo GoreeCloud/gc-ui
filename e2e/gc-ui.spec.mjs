@@ -634,3 +634,32 @@ test('ARIA-disabled action-menu triggers stay closed until the host enables them
   enabled:{open:true,hidden:false,expanded:'true'}
  });
 });
+
+test('ARIA-disabled async button remains focusable and is not reenabled after a host policy change',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {runAsyncAction}=await import('/src/gc-interactions.mjs');
+  const button=document.createElement('button');
+  button.type='button';button.textContent='Host policy action';
+  button.setAttribute('aria-disabled','true');document.body.append(button);
+  button.focus();
+  let called=0;
+  const blocked=await runAsyncAction(button,()=>{called++;return 'not allowed'});
+  const stillFocusable=document.activeElement===button&&!button.disabled;
+  button.setAttribute('aria-disabled','false');
+  let done;
+  const pending=runAsyncAction(button,()=>new Promise(resolve=>{called++;done=resolve}));
+  const pendingState={busy:button.getAttribute('aria-busy'),disabled:button.disabled};
+  button.setAttribute('aria-disabled','true');
+  done('saved');
+  const saved=await pending;
+  const finished={disabled:button.disabled,busy:button.getAttribute('aria-busy'),ariaDisabled:button.getAttribute('aria-disabled')};
+  button.remove();
+  return {blocked,stillFocusable,called,saved,pendingState,finished};
+ });
+ expect(result).toEqual({
+  blocked:null,stillFocusable:true,called:1,saved:'saved',
+  pendingState:{busy:'true',disabled:true},
+  finished:{disabled:true,busy:null,ariaDisabled:'true'}
+ });
+});

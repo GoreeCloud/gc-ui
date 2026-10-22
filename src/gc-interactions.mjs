@@ -195,12 +195,15 @@ export function createToast(region){
  }};
 }
 export async function runAsyncAction(button,operation){
- if(button.getAttribute('aria-busy')==='true'||button.disabled)return null;
+ if(button.getAttribute('aria-busy')==='true'||button.disabled||
+    button.getAttribute('aria-disabled')==='true')return null;
  const previousBusy=button.getAttribute('aria-busy');
  button.setAttribute('aria-busy','true');button.disabled=true;
  try{return await operation()}
  finally{
-  button.disabled=false;
+  // The host may disable the action while the request is pending. Preserve
+  // explicit host ARIA disablement instead of making it clickable on cleanup.
+  if(button.getAttribute('aria-disabled')!=='true')button.disabled=false;
   if(button.getAttribute('aria-busy')==='true'){
    if(previousBusy===null)button.removeAttribute('aria-busy');
    else button.setAttribute('aria-busy',previousBusy);
