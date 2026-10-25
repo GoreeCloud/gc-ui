@@ -1,5 +1,6 @@
 import {test,expect} from '@playwright/test';
 import {resolve} from 'node:path';
+import {retainAxeEvidence} from '../scripts/axe-evidence.mjs';
 
 /**
  * Automated WCAG A/AA screen, NOT a certification. Preserve inconclusive checks
@@ -16,12 +17,10 @@ async function audit(page,testInfo,label){
  const results=await page.evaluate(async values=>
   await window.axe.run(document,{runOnly:{type:'tag',values}})
  ,tags);
- await testInfo.attach('axe-'+label+'-review.json',{
-  body:Buffer.from(JSON.stringify({
-   scenario:label,violations:results.violations.map(format),
-   incomplete:results.incomplete.map(format),rulesPassed:results.passes.length,
-   note:'Incomplete checks require manual review; green tests do not establish WCAG conformance.'
-  },null,2)),contentType:'application/json'
+ await retainAxeEvidence(testInfo,{
+  scenario:label,violations:results.violations.map(format),
+  incomplete:results.incomplete.map(format),rulesPassed:results.passes.length,
+  note:'Incomplete checks require manual review; green tests do not establish WCAG conformance.'
  });
  expect(results.violations.map(result=>
   result.id+': '+result.nodes.map(node=>node.target.join(' ')).join(', ')
