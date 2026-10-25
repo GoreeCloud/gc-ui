@@ -9,7 +9,7 @@ test('documented accessibility screening count matches executable matrix',()=>{
  const pages=source.split('for(const name of [')[1].split('])')[0];
  const baseline=pages.split("'").length/2-0.5;
  const states=source.split('const states=[')[1].split('];\nfor(const state')[0];
- const interactive=states.split("{name:'").length-1;
+ const interactive=states.split('\n').filter(line=>line.trimStart().startsWith("{name:'")).length;
  assert.equal(baseline,10);
  assert.equal(interactive,16);
  assert.equal(baseline+interactive,26);
