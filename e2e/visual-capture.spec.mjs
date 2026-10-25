@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 
 /** Evidence captures run separately from interaction tests to avoid competing render workloads. */
 const scenarios=[
@@ -19,7 +20,7 @@ for(const scenario of scenarios){
    await page.evaluate(()=>document.fonts?.ready);
    await expect(page.getByRole('heading',{name:/Made to feel/i})).toBeVisible();
    const png=await page.screenshot({fullPage:true,animations:'disabled'});
-   await testInfo.attach('gc-ui-'+scenario.name,{body:png,contentType:'image/png'});
+   await retainVisualEvidence(testInfo,'components-'+scenario.name,png);
  });
 }
 test('capture GC UI component registry',async({page},testInfo)=>{
@@ -28,5 +29,5 @@ test('capture GC UI component registry',async({page},testInfo)=>{
  await expect(page.locator('#result-message')).toHaveText('63 of 63 patterns shown');
  await page.evaluate(()=>document.fonts?.ready);
  const png=await page.screenshot({fullPage:true,animations:'disabled'});
- await testInfo.attach('gc-ui-catalog',{body:png,contentType:'image/png'});
+ await retainVisualEvidence(testInfo,'catalog-desktop',png);
 });
