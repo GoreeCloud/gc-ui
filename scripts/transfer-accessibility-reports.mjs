@@ -11,7 +11,8 @@ export async function transferAccessibilityReports(source,destination){
   throw new TypeError('Expected evidence source and destination directories');
  if(resolve(source)===resolve(destination))throw new TypeError('Cannot overwrite evidence with itself');
  const manifest=resolve(source,'manifest.json');
- if(!(await stat(manifest)).isFile())throw new Error('Accessibility manifest is missing: '+manifest);
+ const details=await stat(manifest).catch(error=>{if(error.code==='ENOENT')return null;throw error});
+ if(!details?.isFile())throw new Error('Accessibility manifest is missing: '+manifest);
  await mkdir(resolve(destination,'..'),{recursive:true});
  await cp(source,destination,{recursive:true,force:true});
 }
