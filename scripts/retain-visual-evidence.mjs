@@ -8,10 +8,10 @@ import {resolve,join} from 'node:path';
 export async function retainVisualEvidence(testInfo,name,png){
  if(!/^[a-z0-9][a-z0-9-]{0,79}$/.test(name))
   throw new TypeError('Visual evidence name must be a safe slug');
- const root=testInfo?.config?.outputDir;
+ const root=testInfo?.project?.outputDir;
  if(typeof root!=='string'||!root||!Buffer.isBuffer(png)||png.length<8||
     png.subarray(0,8).toString('hex')!=='89504e470d0a1a0a')
-  throw new TypeError('Expected a Playwright output directory and PNG bytes');
+  throw new TypeError('Expected testInfo.project.outputDir and PNG bytes');
  const folder=resolve(root,'visual-review');
  await mkdir(folder,{recursive:true});
  const file=join(folder,name+'.png');
