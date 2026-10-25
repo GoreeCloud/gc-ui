@@ -115,3 +115,40 @@ test('host description replacements before first validation are retained on tear
  api.destroy();
  assert.equal(x.input.getAttribute('aria-describedby'),'host-after-mount-before-submit');
 });
+
+test('disposing validation in onInput cannot revive obsolete field or summary state',()=>{
+ const x=fixture();
+ // Pre-existing host errors may intentionally survive optional controller teardown.
+ x.input.setAttribute('aria-invalid','true');
+ let api;
+ api=initValidationSummary(x.form,x.summary,x.list,[x.field],{
+  onInput(){api.destroy()}
+ });
+ assert.equal(api.validate({focusSummary:false}),false);
+ x.input.value='Completed task';
+ x.input.fire('input');
+ assert.equal(x.input.getAttribute('aria-invalid'),'true','original host ARIA must survive teardown');
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help');
+ assert.equal(x.error.hidden,true);
+ assert.equal(x.summary.hidden,true);
+ assert.equal(x.list.children.length,0);
+ assert.equal(x.input.listeners.get('input').size,0);
+});
+
+test('a validator that unmounts its controller must not commit stale error state',()=>{
+ const x=fixture();
+ let api,unmount=false;
+ const field={...x.field,valid:el=>{
+  if(unmount)api.destroy();
+  return el.value.trim().length>=3;
+ }};
+ api=initValidationSummary(x.form,x.summary,x.list,[field]);
+ assert.equal(api.validate({focusSummary:false}),false);
+ unmount=true;x.input.value='Task completed';x.input.fire('input');
+ assert.equal(x.input.getAttribute('aria-invalid'),null);
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help');
+ assert.equal(x.error.hidden,true);
+ assert.equal(x.summary.hidden,true);
+ assert.equal(x.list.children.length,0);
+ assert.equal(x.input.listeners.get('input').size,0);
+});
