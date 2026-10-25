@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
+import {captureFullPageVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 import {readFileSync} from 'node:fs';
 const iconInventory=JSON.parse(readFileSync(new URL('../registry/third-party-assets.v1.json',import.meta.url),'utf8'));
 for(const variant of [
@@ -15,7 +15,6 @@ for(const variant of [
   if(variant.dark)await page.getByRole('button',{name:'Switch to dark appearance'}).click();
   await expect(page.locator('.provider')).toHaveCount(iconInventory.providers.length);
   await page.evaluate(()=>document.fonts?.ready);
-  const png=await page.screenshot({fullPage:true,animations:'disabled'});
-  await retainVisualEvidence(testInfo,'environment-'+variant.name,png);
+  await captureFullPageVisualEvidence(page,testInfo,'environment-'+variant.name);
  });
 }

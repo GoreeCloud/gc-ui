@@ -21,3 +21,21 @@ export async function retainVisualEvidence(testInfo,name,png){
  await testInfo.attach(name,{path:file,contentType:'image/png'});
  return file;
 }
+
+/** Capture a neutral, top-of-page baseline from the actual current browser.
+ * A fixed, offscreen skip link can otherwise appear halfway down a stitched
+ * full-page image after clicking a lower-page theme or profile control.
+ */
+export async function captureFullPageVisualEvidence(page,testInfo,name){
+ await page.evaluate(()=>{
+  document.activeElement?.blur?.();
+  window.scrollTo({top:0,left:0,behavior:'instant'});
+ });
+ await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
+ const misplaced=await page.evaluate(()=>[...document.querySelectorAll('.skip-link,.gc-skip-link')]
+  .filter(el=>el.getBoundingClientRect().bottom>0)
+  .map(el=>el.textContent?.trim()||'skip link'));
+ if(misplaced.length)throw new Error('Focus-only skip links exposed in screenshot: '+misplaced.join(', '));
+ const png=await page.screenshot({fullPage:true,animations:'disabled'});
+ return retainVisualEvidence(testInfo,name,png);
+}

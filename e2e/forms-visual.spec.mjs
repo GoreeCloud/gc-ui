@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
+import {captureFullPageVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 
 /** Screenshot evidence, not an approved visual baseline. */
 for(const scenario of [
@@ -16,8 +16,7 @@ for(const scenario of [
   await expect(page.getByRole('heading',{name:'Every detail matters.'})).toBeVisible();
   await expect(page.locator('#project-results li')).toHaveCount(6);
   await page.evaluate(()=>document.fonts?.ready);
-  await retainVisualEvidence(testInfo,'forms-'+scenario.name,
-   await page.screenshot({fullPage:true,animations:'disabled'}));
+  await captureFullPageVisualEvidence(page,testInfo,'forms-'+scenario.name);
  });
 }
 
@@ -29,6 +28,5 @@ test('capture GoreeCloud UI forms validation and retry at compact width',async({
  await page.locator('#simulate-failure').click();
  await expect(page.locator('#recovery-error')).toBeVisible();
  await page.evaluate(()=>document.fonts?.ready);
- await retainVisualEvidence(testInfo,'forms-recovery-compact',
-  await page.screenshot({fullPage:true,animations:'disabled'}));
+ await captureFullPageVisualEvidence(page,testInfo,'forms-recovery-compact');
 });

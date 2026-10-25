@@ -1,5 +1,5 @@
 import {test,expect} from '@playwright/test';
-import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
+import {captureFullPageVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 
 for(const state of [
  {name:'workspace-light',width:1440,height:900},
@@ -15,7 +15,6 @@ for(const state of [
   if(state.dark)await page.getByRole('button',{name:'Switch to dark appearance'}).click();
   await expect(page.getByRole('heading',{name:/One language/i})).toBeVisible();
   await page.evaluate(()=>document.fonts?.ready);
-  const png=await page.screenshot({fullPage:true,animations:'disabled'});
-  await retainVisualEvidence(testInfo,'experience-'+state.name,png);
+  await captureFullPageVisualEvidence(page,testInfo,'experience-'+state.name);
  });
 }
