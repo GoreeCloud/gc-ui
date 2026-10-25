@@ -35,6 +35,25 @@ for(const name of ['v1','components','catalog','adaptive','forms','environment',
 }
 const states=[
 
+ {name:'components-forced-colors',page:'components',width:375,setup:async page=>{
+  await page.emulateMedia({forcedColors:'active'});
+  await expect.poll(()=>page.evaluate(()=>matchMedia('(forced-colors: active)').matches)).toBe(true);
+ }},
+ {name:'adaptive-forced-colors-compact',page:'adaptive',width:320,setup:async page=>{
+  await page.emulateMedia({forcedColors:'active'});
+  await expect(page.locator('.gc-nav-bottom')).toBeVisible();
+  await expect.poll(()=>page.evaluate(()=>matchMedia('(forced-colors: active)').matches)).toBe(true);
+ }},
+ {name:'environment-forced-colors',page:'environment',width:375,setup:async page=>{
+  await page.emulateMedia({forcedColors:'active'});
+  await page.locator('#context').selectOption('reading');
+  await expect.poll(()=>page.evaluate(()=>matchMedia('(forced-colors: active)').matches)).toBe(true);
+ }},
+ {name:'experience-studio-reduced-motion',page:'experience-studio',width:375,setup:async page=>{
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await expect.poll(()=>page.evaluate(()=>matchMedia('(prefers-reduced-motion: reduce)').matches)).toBe(true);
+ }},
+
  {name:'experience-studio-conserve',page:'experience-studio',width:375,setup:async page=>{
   await page.locator('#conserve').check();
   await expect(page.locator('html')).toHaveAttribute('data-gc-resource-mode','conserve');
