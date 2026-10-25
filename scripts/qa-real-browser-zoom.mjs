@@ -172,7 +172,7 @@ try{
  assert(Math.abs(reset.dpr-1)<0.025,'Native browser zoom failed to reset');
  await writeFile(resolve(out,'metrics.json'),JSON.stringify({
   engine:engineName,windowId,initial,reset,observations,
-  screenshotCount,screenshotFailures,
+  screenshotCount,screenshotExpected:11,screenshotFailures,
   interaction:'PASS',method:'XTest Ctrl+= in isolated Xvfb browser window',
   limitations:'Not manual screen-reader speech, Safari, OS text scaling or visual certification'
  },null,2)+'\n');
