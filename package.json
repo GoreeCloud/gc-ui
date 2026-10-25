@@ -20,6 +20,7 @@
     "test:e2e:interaction": "playwright test e2e/foundations-packaged.spec.mjs e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/validation-summary.spec.mjs e2e/density-preview.spec.mjs e2e/balanced-surfaces.spec.mjs e2e/environment.spec.mjs e2e/composited-contrast.spec.mjs e2e/icon-atlas.spec.mjs e2e/pattern-workbench.spec.mjs e2e/motion-gallery.spec.mjs e2e/experience-studio.spec.mjs e2e/native-host.spec.mjs",
     "test:e2e:visual": "playwright test e2e/visual-capture.spec.mjs e2e/adaptive-visual.spec.mjs e2e/forms-visual.spec.mjs e2e/environment-visual.spec.mjs e2e/experience-studio-visual.spec.mjs --workers=1 --timeout=90000",
     "qa:visual-evidence:verify": "node scripts/verify-visual-evidence.mjs",
+    "qa:accessibility-evidence:verify": "node scripts/axe-evidence.mjs",
     "pretest:e2e:firefox": "npm run release:foundations:verify",
     "test:e2e:firefox": "playwright test e2e/foundations-packaged.spec.mjs e2e/gc-ui.spec.mjs e2e/adaptive.spec.mjs e2e/forms.spec.mjs e2e/validation-summary.spec.mjs e2e/density-preview.spec.mjs e2e/composited-contrast.spec.mjs e2e/effective-zoom.spec.mjs e2e/pattern-workbench.spec.mjs --browser firefox --workers=1",
     "test:e2e:accessibility": "playwright test e2e/accessibility.spec.mjs --workers=1",
