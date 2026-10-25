@@ -85,6 +85,8 @@ jobs:
         run: npm run release:foundations:verify
       - name: Test responsive browser behaviors
         run: npm run test:e2e
+      - name: Verify all 21 actual-build full-page visual evidence files
+        run: npm run qa:visual-evidence:verify
       - name: Verify genuine 200% and 400% Chromium browser zoom
         run: |
           sudo apt-get update

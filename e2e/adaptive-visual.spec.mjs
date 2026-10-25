@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 
 /** Independent viewport captures: evidence only, not pixel-diff signoff. */
 for(const viewport of [
@@ -18,6 +19,6 @@ for(const viewport of [
    await expect(page.locator('#page-title')).toBeVisible();
    await page.evaluate(()=>document.fonts?.ready);
    const png=await page.screenshot({fullPage:true,animations:'disabled'});
-   await testInfo.attach('gc-ui-adaptive-'+viewport.name,{body:png,contentType:'image/png'});
+   await retainVisualEvidence(testInfo,'adaptive-'+viewport.name,png);
  });
 }
