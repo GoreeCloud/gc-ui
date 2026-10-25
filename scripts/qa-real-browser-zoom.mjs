@@ -14,6 +14,7 @@ import {createServer} from 'node:http';
 import {readFile,mkdir,writeFile} from 'node:fs/promises';
 import {dirname,extname,resolve,sep} from 'node:path';
 import {fileURLToPath} from 'node:url';
+import {captureZoomScreenshot} from './zoom-screenshot-evidence.mjs';
 
 const engineName=process.argv[2];
 assert(['chromium','firefox'].includes(engineName),'Use chromium or firefox');
@@ -88,16 +89,18 @@ try{
     observations.push({lab,scale,direction,...current});
    }
    await page.evaluate(()=>document.documentElement.dir='ltr');
-   try{
-    await page.screenshot({path:resolve(out,lab+'-'+scale*100+'.png'),
-     animations:'disabled',timeout:15000});
+   const capture=await captureZoomScreenshot(page,{
+    path:resolve(out,lab+'-'+scale*100+'.png'),
+    animations:'disabled',timeout:15000
+   });
+   if(capture.captured){
     screenshotCount++;
-   }catch(error){
-    // Some CI Xvfb/GPU combinations cannot implement Page.captureScreenshot
-    // at real 200%/400% zoom. This does not invalidate assertions on actual
-    // DPR, viewport, hit targets, or keyboard behavior. Surface the gap.
-    screenshotFailures.push({lab,scale,message:String(error).slice(0,350)});
-    console.warn('WARN screenshot unavailable '+engineName+' '+lab+' '+scale*100+'%: '+error.message.split('\n')[0]);
+    if(capture.attempts>1)console.log('RECOVERED screenshot '+engineName+' '+lab+' '+scale*100+'% on retry');
+   }else{
+    // Screenshot coverage is optional evidence, separate from required
+    // native DPR, reflow, hit-target, and keyboard assertions.
+    screenshotFailures.push({lab,scale,message:String(capture.error).slice(0,350)});
+    console.warn('WARN screenshot unavailable after '+capture.attempts+' attempts '+engineName+' '+lab+' '+scale*100+'%: '+String(capture.error).split('\n')[0]);
    }
    console.log('PASS '+engineName+' '+lab+' '+scale*100+'% native zoom LTR/RTL');
   }
@@ -114,11 +117,15 @@ try{
   return {dpr:devicePixelRatio,innerHeight,mozInnerScreenX:window.mozInnerScreenX,mozInnerScreenY:window.mozInnerScreenY,screenX,screenY,outerHeight,header:box(header),nav:box(nav),link:box(link),mid,hit:document.elementFromPoint(mid.x,mid.y)?.outerHTML.slice(0,240)};
  });
  console.log('400% geometry '+engineName+' '+JSON.stringify(geometry));
- try{
-  await page.screenshot({path:resolve(out,'adaptive-interaction-400.png'),animations:'disabled'});
- }catch(error){
-  screenshotFailures.push({lab:'adaptive interaction',scale:4,message:String(error).slice(0,350)});
-  console.warn('WARN interaction screenshot unavailable: '+error.message.split('\n')[0]);
+ const interactionCapture=await captureZoomScreenshot(page,{
+  path:resolve(out,'adaptive-interaction-400.png'),animations:'disabled',timeout:15000
+ });
+ if(interactionCapture.captured){
+  screenshotCount++;
+  if(interactionCapture.attempts>1)console.log('RECOVERED interaction screenshot on retry');
+ }else{
+  screenshotFailures.push({lab:'adaptive interaction',scale:4,message:String(interactionCapture.error).slice(0,350)});
+  console.warn('WARN interaction screenshot unavailable after '+interactionCapture.attempts+' attempts: '+String(interactionCapture.error).split('\n')[0]);
  }
  if(engineName==='firefox'){
   const px=Math.round((geometry.mozInnerScreenX+geometry.mid.x)*geometry.dpr);
