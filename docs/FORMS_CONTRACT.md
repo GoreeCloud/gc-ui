@@ -53,7 +53,12 @@ If a host adds or replaces `aria-describedby` hints after mounting (including
 before the first validation), validation preserves those current help IDs and
 cleanup does not resurrect stale hints.
 Host applications own the success message and any async/network submission.
-This extraction does not mark F22 or the whole GC UI workspace stable.
+If an application `onInput` callback or synchronous field validator disposes the
+controller during an input event, its old handler stops immediately; it must
+not restore errors, ARIA state, or summary markup after the host unmounts it.
+The unit and native-browser regressions exercise disposal with pre-existing
+host-owned invalid state. This extraction does not mark F22 or the whole GC
+UI workspace stable.
 
 ## Search keyboard contract
 

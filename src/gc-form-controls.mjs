@@ -250,8 +250,12 @@ export function initValidationSummary(form,summary,list,fields,{onValid=()=>{},o
  const listeners=fields.map(field=>{
   const input=()=>{
    onInput(field.input);
-   if(field.input.getAttribute('aria-invalid')!=='true')return;
+   // Host callbacks may unmount this view or replace its validation controller.
+   // Never resume an obsolete input handler after disposal.
+   if(destroyed||field.input.getAttribute('aria-invalid')!=='true')return;
    const valid=field.valid(field.input);
+   // Validators are host functions too; a synchronous unmount must win.
+   if(destroyed)return;
    if(typeof valid!=='boolean')throw new TypeError('Field validator must return a synchronous boolean');
    checkWithDecision(field,valid);render();
   };
