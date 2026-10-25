@@ -1,4 +1,5 @@
 import {test,expect} from '@playwright/test';
+import {retainVisualEvidence} from '../scripts/retain-visual-evidence.mjs';
 
 for(const state of [
  {name:'workspace-light',width:1440,height:900},
@@ -15,6 +16,6 @@ for(const state of [
   await expect(page.getByRole('heading',{name:/One language/i})).toBeVisible();
   await page.evaluate(()=>document.fonts?.ready);
   const png=await page.screenshot({fullPage:true,animations:'disabled'});
-  await testInfo.attach('gc-experience-'+state.name,{body:png,contentType:'image/png'});
+  await retainVisualEvidence(testInfo,'experience-'+state.name,png);
  });
 }
