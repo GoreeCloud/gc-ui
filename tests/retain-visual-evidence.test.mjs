@@ -50,7 +50,7 @@ test('full-page capture resets scroll and focus before screenshot and retains it
 test('a visible resting skip link fails screenshot capture rather than creating misleading evidence',async()=>{
  const events=[];
  const page={
-  async evaluate(){events.push('evaluate');return events.length===2?['Skip to content']:undefined},
+  async evaluate(){events.push('evaluate');return events.length===3?['Skip to content']:undefined},
   async waitForFunction(){events.push('wait')},
   async screenshot(){throw Error('Screenshot must not run')}
  };
