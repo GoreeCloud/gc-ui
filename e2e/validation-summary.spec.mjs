@@ -115,3 +115,40 @@ test('host-provided pre-submit description survives native validation teardown',
   after:'new-host-pre-submit-hint'
  });
 });
+
+test('native input event does not revive validation after its host disposes the controller',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initValidationSummary}=await import('/src/gc-form-controls.mjs');
+  const form=document.createElement('form'),summary=document.createElement('section'),
+   list=document.createElement('ul'),input=document.createElement('input'),
+   error=document.createElement('span');
+  summary.setAttribute('role','group');summary.setAttribute('tabindex','-1');
+  summary.hidden=true;summary.append(list);
+  input.id='teardown-validation-field';
+  input.setAttribute('aria-invalid','true');
+  input.setAttribute('aria-describedby','teardown-validation-help');
+  error.id='teardown-validation-error';error.hidden=true;
+  error.textContent='Enter a longer title';
+  form.append(summary,input,error);document.body.append(form);
+  let api;
+  api=initValidationSummary(form,summary,list,[{
+   input,error,label:'Title',valid:element=>element.value.length>=3
+  }],{onInput(){api.destroy()}});
+  api.validate({focusSummary:false});
+  input.value='Valid title';
+  input.dispatchEvent(new Event('input',{bubbles:true}));
+  const result={
+   invalid:input.getAttribute('aria-invalid'),
+   describedby:input.getAttribute('aria-describedby'),
+   errorHidden:error.hidden,summaryHidden:summary.hidden,
+   links:list.childElementCount
+  };
+  form.remove();
+  return result;
+ });
+ expect(result).toEqual({
+  invalid:'true',describedby:'teardown-validation-help',
+  errorHidden:true,summaryHidden:true,links:0
+ });
+});
