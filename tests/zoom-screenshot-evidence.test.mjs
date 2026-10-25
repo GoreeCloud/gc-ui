@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
 import {captureZoomScreenshot} from '../scripts/zoom-screenshot-evidence.mjs';
 
 function fixture(failures){
@@ -39,4 +40,9 @@ test('retry limits reject malformed or unbounded invocation parameters',async()=
   await assert.rejects(captureZoomScreenshot(f.page,{path:'/tmp/bad.png'},options),RangeError);
  }
  assert.equal(f.calls.length,0);
+});
+
+test('native zoom metrics declare expected count alongside actual captures and failures',()=>{
+ const script=readFileSync(new URL('../scripts/qa-real-browser-zoom.mjs',import.meta.url),'utf8');
+ assert.match(script,/screenshotCount,screenshotExpected:11,screenshotFailures/);
 });
