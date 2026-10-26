@@ -157,3 +157,43 @@ test('new external priority survives theme-controller teardown even with same co
  assert.deepEqual(map.get(prop),{value:current,priority:'important'});
  assert.equal(map.has('--gc-v1-color-on-primary'),false);
 });
+
+test('OS and seed rerenders never reclaim an inline color role changed by the consuming app',()=>{
+ const values=new Map(),queries=new Map();
+ const style={
+  getPropertyValue:name=>values.get(name)?.value||'',
+  getPropertyPriority:name=>values.get(name)?.priority||'',
+  setProperty:(name,value,priority='')=>values.set(name,{value,priority}),
+  removeProperty:name=>values.delete(name)
+ };
+ const media=query=>{
+  if(!queries.has(query)){
+   const listeners=new Set();
+   queries.set(query,{matches:false,addEventListener:(_,fn)=>listeners.add(fn),removeEventListener:(_,fn)=>listeners.delete(fn),
+    emit(value){this.matches=value;for(const fn of listeners)fn();}});
+  }
+  return queries.get(query);
+ };
+ const root={dataset:{},style,dispatchEvent(){}};
+ const controller=createThemeController({root,media,storage:null});
+ controller.set({accent:'custom',seed:'#2A78B9'});
+ const property='--gc-v1-color-primary';
+ const original=style.getPropertyValue(property);
+ assert.match(original,/^#[0-9A-Fa-f]{6}$/);
+ const external={value:'#112233',priority:'important'};
+ style.setProperty(property,external.value,external.priority);
+
+ queries.get('(prefers-color-scheme: dark)').emit(true);
+ assert.deepEqual(values.get(property),external,'OS rerender must not steal a newer host color');
+ controller.set({seed:'#CA4258'});
+ assert.deepEqual(values.get(property),external,'explicit seed update must not steal the host color');
+ assert.notEqual(style.getPropertyValue('--gc-v1-color-on-primary'),'',
+  'remaining controller-owned roles should continue updating');
+ controller.set({accent:'iris'});
+ assert.deepEqual(values.get(property),external,'leaving custom mode must preserve the host declaration');
+ controller.set({accent:'custom',seed:'#25B07A'});
+ assert.deepEqual(values.get(property),external,'reentering custom mode must preserve relinquished ownership');
+ controller.destroy();
+ assert.deepEqual(values.get(property),external);
+ assert.equal(values.has('--gc-v1-color-on-primary'),false,'other generated roles are restored');
+});
