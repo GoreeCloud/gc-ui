@@ -47,7 +47,7 @@ export function createThemeController({
     try{previous[name]=persistence?.getItem(key+name)}catch{}
   }
   let state=normalizeTheme(previous),destroyed=false;
-  const overridden=new Map(),listeners=[];
+  const overridden=new Map(),relinquished=new Set(),listeners=[];
   const datasetKeys=['gcMode','gcAccent','gcMaterial','gcContrast'];
   const priorDataset=new Map(datasetKeys.map(name=>[
     name,{present:Object.hasOwn(root.dataset,name),value:root.dataset[name]}
@@ -74,7 +74,12 @@ export function createThemeController({
       const property='--gc-v1-color-'+kebab(name);
       if(typeof root.style.getPropertyValue==='function' &&
          root.style.getPropertyValue(property)!==original.owned ||
-         (root.style.getPropertyPriority?.(property)||'')!==original.ownedPriority)continue;
+         (root.style.getPropertyPriority?.(property)||'')!==original.ownedPriority){
+        // Once the host changes an owned role, later OS preference changes or
+        // seed updates must not silently retake that declaration.
+        relinquished.add(name);
+        continue;
+      }
       if(original.value)root.style.setProperty(property,original.value,original.priority);
       else root.style.removeProperty(property);
     }
@@ -91,6 +96,7 @@ export function createThemeController({
     clearOverrides();
     if(next.accent==='custom'&&next.contrast!=='high'&&!system().forcedColors){
       for(const [name,value] of Object.entries(generateTheme(next.seed,next.mode).roles)){
+        if(relinquished.has(name))continue;
         const property='--gc-v1-color-'+kebab(name);
         overridden.set(name,{
           value:root.style.getPropertyValue?.(property)||'',
