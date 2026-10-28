@@ -35,3 +35,17 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
 
 /* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
 .identity img.logo{display:block;object-fit:contain;flex:none;background:none;padding:0}
+
+/* Decorative ambient imagery must not interfere with explicit higher-contrast
+   reading or the operating system's forced-color palette. */
+:root[data-gc-contrast=high] :is(.environment,.material-scene){
+ background-image:none;
+ background-color:var(--gc-v1-color-canvas)
+}
+@media(forced-colors:active){
+ :is(.environment,.material-scene){
+  background-image:none!important;
+  background-color:Canvas!important;
+  color:CanvasText!important
+ }
+}

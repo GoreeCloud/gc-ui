@@ -663,3 +663,28 @@ test('ARIA-disabled async button remains focusable and is not reenabled after a 
   finished:{disabled:true,busy:null,ariaDisabled:'true'}
  });
 });
+
+test('component ambient background respects manual high contrast and OS forced colors',async({page})=>{
+ await page.goto('/lab/components.html');
+ const scene=page.locator('.material-scene');
+ const environment=page.locator('.environment');
+ await expect(scene).not.toHaveCSS('background-image','none');
+ await expect(environment).not.toHaveCSS('background-image','none');
+ const highContrast=page.locator('label:has(#contrast-switch)');
+ await highContrast.click();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+ await expect(scene).toHaveCSS('background-image','none');
+ await expect(environment).toHaveCSS('background-image','none');
+ await highContrast.click();
+ await expect(scene).not.toHaveCSS('background-image','none');
+ await page.emulateMedia({forcedColors:'active'});
+ await expect(scene).toHaveCSS('background-image','none');
+ await expect(environment).toHaveCSS('background-image','none');
+ const systemColor=await page.evaluate(()=>{
+  const probe=document.createElement('div');probe.style.backgroundColor='Canvas';
+  document.body.append(probe);
+  const color=getComputedStyle(probe).backgroundColor;probe.remove();
+  return color;
+ });
+ await expect(scene).toHaveCSS('background-color',systemColor);
+});
