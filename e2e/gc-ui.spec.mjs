@@ -680,5 +680,11 @@ test('component ambient background respects manual high contrast and OS forced c
  await page.emulateMedia({forcedColors:'active'});
  await expect(scene).toHaveCSS('background-image','none');
  await expect(environment).toHaveCSS('background-image','none');
- await expect(scene).toHaveCSS('background-color','rgb(255, 255, 255)');
+ const systemColor=await page.evaluate(()=>{
+  const probe=document.createElement('div');probe.style.backgroundColor='Canvas';
+  document.body.append(probe);
+  const color=getComputedStyle(probe).backgroundColor;probe.remove();
+  return color;
+ });
+ await expect(scene).toHaveCSS('background-color',systemColor);
 });
