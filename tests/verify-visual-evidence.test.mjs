@@ -12,9 +12,9 @@ function smallPngHeader(width,height){
  bytes.writeUInt32BE(width,16);bytes.writeUInt32BE(height,20);
  return bytes;
 }
-test('full-page visual inventory has 21 distinct named browser states',()=>{
+test('full-page visual inventory has 22 distinct named browser states',()=>{
  const names=visualEvidenceScenarios.map(([name])=>name);
- assert.equal(names.length,21);assert.equal(new Set(names).size,21);
+ assert.equal(names.length,22);assert.equal(new Set(names).size,21);
  for(const [name,width,height] of visualEvidenceScenarios){
   assert.match(name,/^[a-z0-9][a-z0-9-]+$/);
   assert.ok(width>=320&&height>=720);
@@ -26,7 +26,7 @@ test('complete browser screenshots produce a checked SHA-256 manifest with no vi
   for(const [name,w,h] of visualEvidenceScenarios)
    await writeFile(join(root,name+'.png'),smallPngHeader(w,h));
   const report=await verifyVisualEvidence(root,{revision:'test-head'});
-  assert.equal(report.expected,21);assert.equal(report.captured,21);
+  assert.equal(report.expected,22);assert.equal(report.captured,22);
   assert.equal(report.revision,'test-head');
   assert.match(report.checks,/NOT visual approval/);
   assert.equal(report.images[0].sha256.length,64);
