@@ -1,5 +1,6 @@
+/* Foreground roles change synchronously on theme switches. Do not animate button\n   backgrounds independently or transient text contrast can fall below 4.5:1. */
 /* GC UI web component primitives · v1 candidate · semantic DOM first */
-.gc-button,.gc-icon-button{font:inherit;font-size:14px;font-weight:620;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-block-size:44px;box-sizing:border-box;touch-action:manipulation;text-decoration:none;border:1px solid transparent;cursor:pointer;line-height:1.2;transition:background var(--gc-v1-foundation-motion-duration-fast,120ms),transform var(--gc-v1-foundation-motion-duration-fast,120ms)}
+.gc-button,.gc-icon-button{font:inherit;font-size:14px;font-weight:620;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-block-size:44px;box-sizing:border-box;touch-action:manipulation;text-decoration:none;border:1px solid transparent;cursor:pointer;line-height:1.2;transition:transform var(--gc-v1-foundation-motion-duration-fast,120ms)}
 .gc-button{border-radius:var(--gc-v1-component-button-radius,18px);padding:10px 18px}
 .gc-button[data-size=small]{min-block-size:44px;padding-inline:12px}.gc-button[data-size=large]{min-block-size:52px;padding-inline:24px}
 .gc-button[data-variant=primary]{background:var(--gc-v1-color-primary);color:var(--gc-v1-color-on-primary)}
