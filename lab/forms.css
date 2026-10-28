@@ -4,8 +4,23 @@ body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-ca
 .gc-form-header{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;padding:16px max(20px,4vw);background:var(--gc-v1-color-surface);border-block-end:1px solid var(--gc-v1-color-divider)}
 .gc-form-brand{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--gc-v1-color-on-surface);font-weight:750}
 .gc-form-brand span{color:var(--gc-v1-color-on-surface-muted);font-size:13px;font-weight:500}
-.gc-form-header nav{display:flex;flex-wrap:wrap;gap:12px 20px}
-.gc-form-header nav a,.gc-form-footer a{color:var(--gc-v1-color-link);text-underline-offset:4px;font-size:13px}
+.gc-form-header nav{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.gc-form-header nav a{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-block-size:44px;padding:9px 15px;border:1px solid var(--gc-v1-color-divider);
+ border-radius:12px;background:var(--gc-v1-color-surface-tonal);
+ color:var(--gc-v1-color-on-surface);font-size:13px;font-weight:650;
+ text-align:center;text-decoration:none;text-wrap:balance
+}
+.gc-form-header nav a:hover{
+ background:var(--gc-v1-color-secondary-container);
+ color:var(--gc-v1-color-on-secondary-container);
+ border-color:var(--gc-v1-color-outline)
+}
+.gc-form-header nav a:focus-visible{
+ outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px
+}
+.gc-form-footer a{color:var(--gc-v1-color-link);text-underline-offset:4px;font-size:13px}
 .gc-form-layout{max-width:1260px;margin:auto;padding:clamp(26px,5vw,68px) clamp(18px,4vw,54px) 80px}
 .gc-form-intro{margin-bottom:42px;max-width:800px}
 .gc-form-eyebrow{color:var(--gc-v1-color-primary);letter-spacing:.11em;font-weight:750;font-size:12px}
@@ -27,7 +42,7 @@ body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-ca
 .gc-search-results li span{font-size:12px;color:var(--gc-v1-color-on-surface-muted)}
 .gc-form-disclaimer{font-size:13px;margin-top:36px}
 .gc-form-footer{text-align:center;padding:20px 20px 40px;font-size:13px}
-@media(max-width:760px){.gc-form-grid{grid-template-columns:1fr}.gc-form-layout{padding-inline:18px}.gc-form-header{padding-inline:18px}}
+@media(max-width:760px){.gc-form-grid{grid-template-columns:1fr}.gc-form-layout{padding-inline:18px}.gc-form-header{padding-inline:18px}.gc-form-header nav{display:flex;justify-content:space-between;flex-wrap:wrap;gap:6px;inline-size:100%}.gc-form-header nav a{flex:1 0 auto;min-inline-size:max-content;padding-inline:8px;font-size:clamp(12px,3.8vw,13px);white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
 
 
