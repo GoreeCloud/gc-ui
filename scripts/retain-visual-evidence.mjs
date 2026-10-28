@@ -26,11 +26,14 @@ export async function retainVisualEvidence(testInfo,name,png){
  * A fixed, offscreen skip link can otherwise appear halfway down a stitched
  * full-page image after clicking a lower-page theme or profile control.
  */
-export async function captureFullPageVisualEvidence(page,testInfo,name){
- await page.evaluate(()=>{
-  document.activeElement?.blur?.();
+export async function captureFullPageVisualEvidence(page,testInfo,name,{preserveFocus=false}={}){
+ if(typeof preserveFocus!=='boolean')throw new TypeError('preserveFocus must be a boolean');
+ await page.evaluate(keepFocus=>{
+  // Preserve focus for open menu/dialog evidence: blurring a menu item would
+  // dispatch focusout and dismiss the very interaction being photographed.
+  if(!keepFocus)document.activeElement?.blur?.();
   window.scrollTo({top:0,left:0,behavior:'instant'});
- });
+ },preserveFocus);
  await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
  const misplaced=await page.evaluate(()=>[...document.querySelectorAll('.skip-link,.gc-skip-link')]
   .filter(el=>el.getBoundingClientRect().bottom>0)
