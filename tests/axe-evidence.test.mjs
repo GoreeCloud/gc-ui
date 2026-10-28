@@ -32,11 +32,15 @@ test('complete source-derived report inventory produces manifest showing inconcl
  const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-'));
  try{
   for(const name of names)await writeFile(join(dir,name+'.json'),
-   JSON.stringify({...report(name),incomplete:name==='components'?[{id:'color-contrast'}]:[]}));
+   JSON.stringify({...report(name),incomplete:name==='components'?[{id:'color-contrast',nodes:[{target:['#project-title'],summary:'Manual contrast review required'}]}]:[]}));
   const manifest=await verifyAxeEvidence(dir,names,{revision:'test'});
   assert.equal(manifest.expected,26);
   assert.equal(manifest.captured,26);
   assert.equal(manifest.incompleteChecks,1);
+  assert.equal(manifest.incompleteNodes,1);
+  assert.deepEqual(manifest.incompleteByRule,[{
+   id:'color-contrast',checks:1,nodes:1,scenarios:['components']
+  }]);
   assert.match(manifest.limitations,/Not certification/);
   assert.deepEqual(JSON.parse(await readFile(join(dir,'manifest.json'),'utf8')),manifest);
  }finally{await rm(dir,{recursive:true,force:true})}
@@ -61,5 +65,34 @@ test('malformed report and scenario traversal are rejected',async()=>{
   const info={project:{outputDir:dir},attach:async()=>{}};
   await assert.rejects(retainAxeEvidence(info,report('../unsafe')),TypeError);
   await assert.rejects(retainAxeEvidence(info,{scenario:'safe',violations:[],incomplete:'missing',rulesPassed:0}),TypeError);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('incomplete rule triage preserves separate check and node totals across screens',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-rule-'));
+ try{
+  for(const name of names){
+   const incomplete=name==='components'?[{id:'aria-valid-attr-value',nodes:[{target:['#trigger']}]},
+     {id:'color-contrast',nodes:[{target:['h1']},{target:['p']}]}]:
+    name==='forms'?[{id:'color-contrast',nodes:[{target:['input']}]}]:[];
+   await writeFile(join(dir,name+'.json'),JSON.stringify({...report(name),incomplete}));
+  }
+  const manifest=await verifyAxeEvidence(dir,names);
+  assert.equal(manifest.incompleteChecks,3);
+  assert.equal(manifest.incompleteNodes,4);
+  assert.deepEqual(manifest.incompleteByRule,[
+   {id:'color-contrast',checks:2,nodes:3,scenarios:['components','forms']},
+   {id:'aria-valid-attr-value',checks:1,nodes:1,scenarios:['components']}
+  ]);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+test('malformed incomplete-rule evidence cannot silently undercount affected elements',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-rule-'));
+ try{
+  for(const name of names)await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  await writeFile(join(dir,'components.json'),JSON.stringify({
+   ...report('components'),incomplete:[{id:'color-contrast',nodes:'unknown'}]
+  }));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Malformed incomplete axe rule/);
  }finally{await rm(dir,{recursive:true,force:true})}
 });
