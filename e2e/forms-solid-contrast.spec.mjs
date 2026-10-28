@@ -16,6 +16,10 @@ for(const scenario of [
    if(scenario.high)await page.locator('label:has(#contrast-switch)').click();
   }
   await page.goto('/lab/forms.html');
+  const transition=await page.locator('#brief-submit').evaluate(el=>getComputedStyle(el).transitionProperty);
+  expect(transition.split(',').map(value=>value.trim()),
+   'Button background must not animate while foreground semantic roles switch').not.toContain('background');
+  expect(transition.split(',').map(value=>value.trim())).not.toContain('background-color');
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode',scenario.mode);
   if(scenario.high)await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
   const contrasts=await page.evaluate(()=>{
