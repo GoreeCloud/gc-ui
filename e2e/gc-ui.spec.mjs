@@ -688,3 +688,37 @@ test('component ambient background respects manual high contrast and OS forced c
  });
  await expect(scene).toHaveCSS('background-color',systemColor);
 });
+
+for(const context of ['standard','high-contrast','forced-colors']){
+ test('action menu preserves its accessible relationship and focus in '+context,async({page})=>{
+  await page.setViewportSize({width:375,height:812});
+  await page.goto('/lab/components.html');
+  if(context==='high-contrast'){
+   await page.locator('label:has(#contrast-switch)').click();
+   await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+  }else if(context==='forced-colors'){
+   await page.emulateMedia({forcedColors:'active'});
+   await expect.poll(()=>page.evaluate(()=>matchMedia('(forced-colors: active)').matches)).toBe(true);
+  }
+  const trigger=page.getByRole('button',{name:/Workspace actions/});
+  const menu=page.locator('#gc-file-actions');
+  await expect(trigger).toHaveAttribute('aria-haspopup','menu');
+  await expect(trigger).toHaveAttribute('aria-controls','gc-file-actions');
+  await expect(trigger).toHaveAttribute('aria-expanded','false');
+  await expect(menu).toHaveAttribute('role','menu');
+  await expect(menu).toHaveAttribute('aria-labelledby','gc-file-action-trigger');
+  await expect(menu).toBeHidden();
+  await expect(page.getByRole('menu',{name:/Workspace actions/})).toHaveCount(0);
+  await trigger.focus();
+  await trigger.press('ArrowUp');
+  const accessibleMenu=page.getByRole('menu',{name:/Workspace actions/});
+  await expect(accessibleMenu).toBeVisible();
+  await expect(trigger).toHaveAttribute('aria-expanded','true');
+  await expect(accessibleMenu.getByRole('menuitem',{name:'Rename workspace'})).toBeFocused();
+  await expect(accessibleMenu.getByRole('menuitem',{name:'Archive (unavailable)'})).toHaveAttribute('aria-disabled','true');
+  await page.keyboard.press('Escape');
+  await expect(trigger).toHaveAttribute('aria-expanded','false');
+  await expect(accessibleMenu).toHaveCount(0);
+  await expect(trigger).toBeFocused();
+ });
+}
