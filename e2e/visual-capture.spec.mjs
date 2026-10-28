@@ -22,6 +22,25 @@ for(const scenario of scenarios){
    await captureFullPageVisualEvidence(page,testInfo,'components-'+scenario.name);
  });
 }
+test('capture GC UI open action menu with live keyboard focus',async({page},testInfo)=>{
+ await page.setViewportSize({width:375,height:812});
+ await page.goto('/lab/components.html');
+ await page.locator('[data-theme-mode="dark"]').click();
+ const trigger=page.getByRole('button',{name:/Workspace actions/});
+ await trigger.focus();
+ await trigger.press('ArrowDown');
+ const menu=page.getByRole('menu',{name:/Workspace actions/});
+ await expect(trigger).toHaveAttribute('aria-haspopup','menu');
+ await expect(trigger).toHaveAttribute('aria-expanded','true');
+ await expect(menu).toBeVisible();
+ const first=menu.getByRole('menuitem',{name:'Duplicate workspace'});
+ await expect(first).toBeFocused();
+ await page.evaluate(()=>document.fonts?.ready);
+ await captureFullPageVisualEvidence(page,testInfo,'components-menu-open',{preserveFocus:true});
+ await expect(menu).toBeVisible();
+ await expect(trigger).toHaveAttribute('aria-expanded','true');
+ await expect(first).toBeFocused();
+});
 test('capture GC UI component registry',async({page},testInfo)=>{
  await page.setViewportSize({width:1440,height:900});
  await page.goto('/lab/catalog.html');
