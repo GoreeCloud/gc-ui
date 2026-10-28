@@ -10,6 +10,8 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
+The Chromium and Firefox interaction suites also sample browser-resolved *opaque* foreground/background pairs for six Forms Lab text/control surfaces in desktop light, 320px dark, and 375px high-contrast dark modes (18 contrast pairs per engine). Each pair must meet 4.5:1; these measurements do **not** measure text antialiasing, translucent Lens, photographic backdrops or non-text icon contrast, which retain separate review requirements.
+
 The alpha suite includes interactive browser checks, text reflow/RTL checks, **26 axe-core accessibility screens (10 baseline labs and 16 interactive/system-preference states)**, and **21 independent full-page screenshot-capture tests**. The historical counts in older dated QA checkpoints are not the current test inventory. Inventory alone is not acceptance.
 The optional browser suite is in `e2e/*.spec.mjs`. GitHub Actions installs `@playwright/test@1.64.1` and Chromium in a separate job, then runs `npm run test:e2e`. To run locally:
 ```sh
