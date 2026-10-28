@@ -17,6 +17,24 @@ test('request envelope prevents oversized, arbitrary, and malformed actions',()=
   assert.throws(()=>validateNativeHostRequest(raw));
  }
 });
+test('native action normalization rejects hidden fields and never invokes payload getters',async()=>{
+ const f=fixture(),client=createNativeHostClient({transport:f.transport});
+ let getterCalls=0;
+ const accessor=Object.defineProperty({},'mode',{enumerable:true,get(){getterCalls++;return 'dark'}});
+ await assert.rejects(client.request('setAppearance',accessor),/Invalid appearance/);
+ assert.equal(getterCalls,0);
+ const valid={mode:'dark'};
+ const hidden=Object.defineProperty({...valid},'secret',{value:'discard me'});
+ const symbol={...valid,[Symbol('secret')]:'discard me'};
+ for(const payload of [hidden,symbol]){
+  await assert.rejects(client.request('setAppearance',payload),/Invalid appearance/);
+ }
+ const emptyHidden=Object.defineProperty({},'secret',{value:1});
+ await assert.rejects(client.request('getCapabilities',emptyHidden),/Unexpected native action payload/);
+ assert.equal(f.messages.length,0,'invalid payloads must never reach the host');
+ client.destroy();
+});
+
 test('browser fallback requires no host and returns a descriptive nonconnected client',async()=>{
  assert.equal(createNativeTransport({}),null);
  const client=createNativeHostClient({transport:null});

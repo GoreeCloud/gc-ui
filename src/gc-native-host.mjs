@@ -6,14 +6,28 @@ const LIMIT=2048;
 const IDs=/^[A-Za-z0-9_-]{1,64}$/;
 const androidMessageSubscribers=new WeakMap();
 let requestCounter=0;
+function dataPayload(payload){
+ try{
+  if(!payload||typeof payload!=='object'||Array.isArray(payload))return null;
+  const keys=Reflect.ownKeys(payload);
+  const fields=Object.getOwnPropertyDescriptors(payload);
+  // Do not evaluate source-controlled getters or ignore nonenumerable/symbol data.
+  if(keys.some(key=>typeof key!=='string'||!Object.prototype.hasOwnProperty.call(fields[key],'value')))return null;
+  return {keys,fields};
+ }catch{return null}
+}
 function normalizeAction(action,payload){
  if(!GC_NATIVE_ACTIONS.includes(action))throw new RangeError('Unsupported native action');
  if(action==='setAppearance'){
-  if(!payload||typeof payload!=='object'||Array.isArray(payload)||Object.keys(payload).length!==1||
-   !['system','light','dark'].includes(payload.mode))throw new TypeError('Invalid appearance mode');
-  return {mode:payload.mode};
+  const inspected=dataPayload(payload);
+  if(!inspected||inspected.keys.length!==1||inspected.keys[0]!=='mode'||
+   !['system','light','dark'].includes(inspected.fields.mode.value))throw new TypeError('Invalid appearance mode');
+  return {mode:inspected.fields.mode.value};
  }
- if(payload!=null && (typeof payload!=='object'||Array.isArray(payload)||Object.keys(payload).length))throw new TypeError('Unexpected native action payload');
+ if(payload!=null){
+  const inspected=dataPayload(payload);
+  if(!inspected||inspected.keys.length)throw new TypeError('Unexpected native action payload');
+ }
  return {};
 }
 export function validateNativeHostRequest(value){
