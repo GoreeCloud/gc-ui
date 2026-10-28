@@ -44,7 +44,7 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
  const extra=found.filter(x=>x.endsWith('.json')&&x!=='manifest.json'&&!expected.includes(x));
  if(missing.length||extra.length)
   throw new Error('Accessibility evidence mismatch: missing='+missing.join(',')+' unexpected='+extra.join(','));
- const reports=[];
+ const reports=[],incompleteByRule=new Map();
  for(const scenario of names){
   const bytes=await readFile(join(folder,scenario+'.json'));
   let data;
@@ -53,11 +53,25 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
      !Array.isArray(data.incomplete)||!Number.isSafeInteger(data.rulesPassed)||
      data.rulesPassed<0)throw new Error('Malformed accessibility report: '+scenario);
   if(data.violations.length)throw new Error('Unresolved axe violations: '+scenario);
+  let incompleteNodes=0;
+  for(const rule of data.incomplete){
+   if(!rule||typeof rule.id!=='string'||!rule.id||!Array.isArray(rule.nodes))
+    throw new Error('Malformed incomplete axe rule in '+scenario);
+   const count=rule.nodes.length;
+   incompleteNodes+=count;
+   const total=incompleteByRule.get(rule.id)??{id:rule.id,checks:0,nodes:0,scenarios:[]};
+   total.checks++;
+   total.nodes+=count;
+   if(!total.scenarios.includes(scenario))total.scenarios.push(scenario);
+   incompleteByRule.set(rule.id,total);
+  }
   reports.push({scenario,rulesPassed:data.rulesPassed,incompleteChecks:data.incomplete.length,
-   bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
+   incompleteNodes,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
  }
  const manifest={revision,expected:names.length,captured:reports.length,
   incompleteChecks:reports.reduce((total,x)=>total+x.incompleteChecks,0),
+  incompleteNodes:reports.reduce((total,x)=>total+x.incompleteNodes,0),
+  incompleteByRule:[...incompleteByRule.values()].sort((a,b)=>b.nodes-a.nodes||a.id.localeCompare(b.id)),
   limitations:'Automated axe WCAG A/AA screen; inconclusive checks require manual review. Not certification.',
   reports};
  await writeFile(join(folder,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
