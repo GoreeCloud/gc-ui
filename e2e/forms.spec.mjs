@@ -415,3 +415,41 @@ test('newer nested stepper update survives an older callback rejection in real D
  });
  expect(result).toEqual({rejected:true,value:'1',current:1,decDisabled:true,incDisabled:false});
 });
+
+for(const width of [320,375,1440]){
+ test('Forms lab navigation has readable, reachable touch and keyboard targets at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:812});
+  await page.goto('/lab/forms.html');
+  const nav=page.getByRole('navigation',{name:'Lab navigation'});
+  const links=nav.getByRole('link');
+  await expect(links).toHaveCount(3);
+  const geometry=await nav.evaluate(el=>{
+   const targets=[...el.querySelectorAll('a')];
+   return {
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+    boxes:targets.map(a=>{
+     const rect=a.getBoundingClientRect(),style=getComputedStyle(a);
+     return {height:rect.height,left:rect.left,right:rect.right,
+      color:style.color,background:style.backgroundColor,decoration:style.textDecorationLine};
+    })
+   };
+  });
+  expect(geometry.overflow).toBeLessThanOrEqual(1);
+  for(const box of geometry.boxes){
+   expect(box.height).toBeGreaterThanOrEqual(44);
+   expect(box.left).toBeGreaterThanOrEqual(0);
+   expect(box.right).toBeLessThanOrEqual(width+1);
+   expect(box.background).not.toBe('rgba(0, 0, 0, 0)');
+   expect(box.decoration).toBe('none');
+  }
+  if(width<760){
+   const ys=await links.evaluateAll(all=>all.map(el=>Math.round(el.getBoundingClientRect().top)));
+   expect(new Set(ys).size).toBe(1,'compact navigation stays on one aligned row');
+  }
+  await page.keyboard.press('Tab');
+  await links.first().focus();
+  await expect(links.first()).toBeFocused();
+  await links.first().click();
+  await expect(page).toHaveURL(/\/lab\/components\.html$/);
+ });
+}
