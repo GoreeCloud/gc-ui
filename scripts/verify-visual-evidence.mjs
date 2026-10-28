@@ -12,6 +12,7 @@ export const visualEvidenceScenarios=Object.freeze([
  ['components-desktop-dark',1440,900],
  ['components-desktop-high-contrast',1440,900],
  ['components-mobile-light',375,812],
+ ['components-menu-open',375,812],
  ['catalog-desktop',1440,900],
  ['adaptive-compact',375,812],
  ['adaptive-compact-320',320,740],
