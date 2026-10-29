@@ -1,6 +1,6 @@
 /** GC UI experimental web API: signatures may change before stable 1.0. */
 export type GCAppearance='auto'|'light'|'dark';
-export type GCAccent='iris'|'lagoon'|'ember'|'moss'|'custom';
+export type GCAccent='neutral'|'ocean'|'iris'|'lagoon'|'ember'|'moss'|'custom';
 export type GCMaterial='translucent'|'solid';
 export type GCContrast='system'|'standard'|'high';
 
@@ -40,12 +40,18 @@ export interface GCThemeControllerOptions {
   media?:(query:string)=>MediaQueryList;
   storage?:Storage|null;
   key?:string;
+  /** Product fallback only. Valid saved user accents always take precedence. */
+  defaultAccent?:Exclude<GCAccent,'custom'>;
 }
 export declare const GC_THEME_DEFAULTS:Readonly<GCThemeConfiguration>;
 export declare const GC_UI_VERSION:'0.2.0-alpha.1';
 export declare function normalizeTheme(input?:Partial<GCThemeConfiguration>|null):GCThemeConfiguration;
 export declare function resolveTheme(input?:Partial<GCThemeConfiguration>,system?:GCSystemPreferences):GCResolvedTheme;
 export declare function createThemeController(options?:GCThemeControllerOptions):GCThemeController;
+/** GC UI experimental product suggestions; unrecognized products are neutral. */
+export declare const GC_PRODUCT_ACCENTS:Readonly<Record<string,Exclude<GCAccent,'custom'>>>;
+export declare function getProductAccent(product?:unknown):Exclude<GCAccent,'custom'>;
+export declare function createProductThemeController(options?:GCThemeControllerOptions&{product?:string}):GCThemeController;
 export declare function generateTheme(seed:string,mode?:'light'|'dark'):GCColorScheme;
 export declare function contrastRatio(a:string,b:string):number;
 

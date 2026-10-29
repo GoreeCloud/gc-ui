@@ -38,3 +38,36 @@ Changing *appearance* (light/dark) must not freeze the suggested accent into sto
 ## Acceptance
 
 An application is accepted only after its compiled runtime uses the approved semantic token contract, the user can override and retain their accent, default appearance is contrast-accessible, and the change passes app-specific CI and visual review. Repository changes alone do not establish deployment.
+
+## Centralized experimental product profiles (2026-10-29)
+
+The alpha source exports `getProductAccent(product)`, `GC_PRODUCT_ACCENTS`, and
+`createProductThemeController({product,...options})` from
+`src/gc-product-themes.mjs` and the experimental `src/index.mjs`.
+
+Example (inside a first-party web application that has already integrated the
+matching GC UI CSS roles):
+
+```js
+import {createProductThemeController} from '@goreecloud/gc-ui'; // future versioned package entry
+const controller = createProductThemeController({product:'messenger'});
+// With no saved accent, Messenger suggests Ocean blue. A saved Iris choice wins.
+// controller.set({accent:'iris'}) is an explicit user selection only.
+```
+
+The package name above is illustrative for an eventual verified distribution;
+the current full workspace remains private alpha and is **not a confirmed npm
+registry installation**. Direct source consumers can import the experimental
+`src/gc-product-themes.mjs` from a pinned, verified first-party revision.
+
+The app-local offline snapshot `integrations/themes/gc-app-semantic.css` has
+an automated contract test covering GC UI base surfaces, curated palettes,
+neutral/Ocean overlays, and light/dark primary contrast. Vendors should retain
+source provenance and verify their copied snapshot against a pinned GC UI
+revision, rather than independently editing product hex values. Do not include
+remote browser CDN dependencies that could delay, block, or alter login UI.
+
+Before general release, the v1 canonical token registry and generated stylesheet
+must be brought into neutral-first alignment and all consumers must pass real
+rendered/forced-color accessibility review. The alpha compatibility overlay
+is not a substitute for a formally qualified versioned token release.
