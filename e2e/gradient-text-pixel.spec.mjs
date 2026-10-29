@@ -38,15 +38,21 @@ async function sampleBackdrop(page,selector){
  },{data:png.toString('base64'),color});
 }
 
-for(const mode of ['light','dark']){
- test('actual Components gradient keeps text readable in '+mode,async({page})=>{
-  await page.setViewportSize({width:1440,height:900});
+for(const viewport of [
+ {name:'desktop',width:1440,height:900},
+ {name:'compact',width:320,height:812},
+ {name:'mobile',width:375,height:812}
+])for(const mode of ['light','dark']){
+ test('actual Components gradient keeps text readable in '+mode+' at '+viewport.name,async({page})=>{
+  await page.setViewportSize({width:viewport.width,height:viewport.height});
   await page.goto('/lab/components.html');
   if(mode==='dark')await page.locator('[data-theme-mode=dark]').click();
   await expect(page.locator('.environment')).not.toHaveCSS('background-image','none');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow,viewport.name+' horizontal reflow').toBeLessThanOrEqual(1);
   for(const selector of ['.intro > .eyebrow','.intro > .summary','#components-title']){
    const result=await sampleBackdrop(page,selector);
-   console.log('PIXEL-CONTRAST '+JSON.stringify({mode,selector,...result}));
+   console.log('PIXEL-CONTRAST '+JSON.stringify({mode,viewport:viewport.name,width:viewport.width,selector,...result}));
    expect(result.samples).toBeGreaterThan(20);
    expect(result.min,mode+' '+selector).toBeGreaterThanOrEqual(4.5);
   }
