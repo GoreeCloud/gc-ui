@@ -10,6 +10,8 @@ Run `npm run check` from the repository root. It runs:
 The seed sample tests **opaque color roles**. It is not a proof that overlay text contrasts against arbitrary photos/videos or that all possible sRGB seeds pass.
 
 ## 2. Browser interaction checks (Playwright)
+Chromium and Firefox also audit **real rendered gradient pixels** beneath the Components eyebrow, summary and section title at 320px, 375px and 1440px under light/dark Iris. The palette expansion samples the same text at 320px and 1440px under Lagoon, Ember and Moss in both appearances. The minimum computed text-to-background-pixel contrast must be at least 4.5:1; this is background pixel evidence, not optical glyph acceptance or an audit of photographs and all custom seeds.
+
 The Chromium and Firefox interaction suites also sample browser-resolved *opaque* foreground/background pairs for six Forms Lab text/control surfaces in desktop light, 320px dark, and 375px high-contrast dark modes (18 contrast pairs per engine). Each pair must meet 4.5:1; these measurements do **not** measure text antialiasing, translucent Lens, photographic backdrops or non-text icon contrast, which retain separate review requirements.
 
 The alpha suite includes interactive browser checks, text reflow/RTL checks, **27 axe-core accessibility screens (10 baseline labs and 17 interactive/system-preference states)**, and **22 independent full-page screenshot-capture tests**. The historical counts in older dated QA checkpoints are not the current test inventory. Inventory alone is not acceptance.
