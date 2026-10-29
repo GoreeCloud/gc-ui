@@ -46,7 +46,7 @@ a{color:inherit}
 :root[data-gc-contrast=high] .gc-metric-card,:root[data-gc-contrast=high] .gc-activity-list li{background:var(--gc-v1-color-surface)}
 @media(forced-colors:active){.gc-metric-card,.gc-activity-list li{background:Canvas!important;color:CanvasText!important}}
 
-/* Canonical GC UI icon, derived from GoreeCloud/branding-assets. */
+/* Official GC UI icon, source-verified in GoreeCloud/brand-assets. */
 img.gc-shell-mark{display:block;object-fit:contain;flex:none;background:none;padding:0}
 
 /* Compact header keeps appearance preferences discoverable without crowding the brand. */
