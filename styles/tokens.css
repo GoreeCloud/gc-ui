@@ -23,6 +23,10 @@
   --gc-brand:#374151;--gc-on-brand:#fff;--gc-brand-container:#e5e7eb;--gc-on-brand-container:#111827;
   --gc-accent-soft:#f3f4f6;--gc-accent-border:#cbd5e1;--gc-accent-rgb:55,65,81;
 }
+:root[data-accent="ocean"] {
+  --gc-brand:#1d4ed8;--gc-on-brand:#fff;--gc-brand-container:#dbeafe;--gc-on-brand-container:#1e3a8a;
+  --gc-accent-soft:#eff6ff;--gc-accent-border:#93c5fd;--gc-accent-rgb:29,78,216;
+}
 :root[data-accent="iris"] {
   --gc-brand: #5145d9; --gc-on-brand: #fff; --gc-brand-container: #e8e6ff; --gc-on-brand-container: #2c227c;
   --gc-accent-soft: #f1efff; --gc-accent-border: #cfc9ff; --gc-accent-rgb: 100, 86, 232;
@@ -56,6 +60,8 @@
   --gc-positive: #93ddb1; --gc-positive-container: #1c4e38; --gc-negative: #ffacb1; --gc-negative-container: #562d38;
   --gc-selection: rgba(var(--gc-accent-rgb), .22); --gc-art-glow: rgba(var(--gc-accent-rgb),.2);
 }
+:root[data-mode="dark"][data-accent="neutral"] {--gc-brand:#d1d5db;--gc-on-brand:#111827;--gc-brand-container:#374151;--gc-on-brand-container:#f9fafb;--gc-accent-soft:#2b3442;--gc-accent-border:#687587;}
+:root[data-mode="dark"][data-accent="ocean"] {--gc-brand:#93c5fd;--gc-on-brand:#172554;--gc-brand-container:#1e3a8a;--gc-on-brand-container:#dbeafe;--gc-accent-soft:#1e3052;--gc-accent-border:#315996;}
 :root[data-mode="dark"][data-accent="iris"] { --gc-brand: #c5bfff; --gc-on-brand: #241b66; --gc-brand-container: #39316b; --gc-on-brand-container: #ebe8ff; --gc-accent-soft:#2c2949; --gc-accent-border:#524a80; }
 :root[data-mode="dark"][data-accent="lagoon"] { --gc-brand: #89e1e9; --gc-on-brand: #003b43; --gc-brand-container: #1c4d57; --gc-on-brand-container: #c8fcff; --gc-accent-soft:#1a3b43; --gc-accent-border:#346974; }
 :root[data-mode="dark"][data-accent="ember"] { --gc-brand: #ffc2ad; --gc-on-brand: #592a20; --gc-brand-container: #603c36; --gc-on-brand-container: #ffe9e0; --gc-accent-soft:#4b312f; --gc-accent-border:#785048; }
@@ -71,3 +77,6 @@
 @media (prefers-reduced-motion: reduce) {
   :root { --gc-duration-fast: 0ms; --gc-duration-base: 0ms; --gc-duration-slow: 0ms; }
 }
+
+.swatch-neutral,.accent-swatch.swatch-neutral{background:#374151;color:#fff}
+.swatch-ocean,.accent-swatch.swatch-ocean{background:#1d4ed8;color:#fff}
