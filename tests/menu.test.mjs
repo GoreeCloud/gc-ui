@@ -263,3 +263,18 @@ test('released pointer away from trigger clears deferred dismissal and listeners
  api.destroy();
  assert.equal(handlers.size,0);
 });
+
+test('canceling trigger after focus moves closes the menu safely',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'cancel-foc',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const e of [trigger,menu,item])e.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=e=>e===menu||e===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();trigger.fire('pointerdown');trigger.focus();
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),true);
+ trigger.fire('pointercancel');
+ assert.equal(api.isOpen(),false);
+ assert.equal(doc.activeElement,trigger);
+ api.destroy();
+});
