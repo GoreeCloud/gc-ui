@@ -9,10 +9,16 @@ import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence} from '../scrip
 const scenarioSource=readFileSync(new URL('../e2e/accessibility.spec.mjs',import.meta.url),'utf8');
 const names=expectedAxeScenarios(scenarioSource);
 const report=name=>({scenario:name,violations:[],incomplete:[],rulesPassed:90,
+ ...(name.startsWith('components-menu-open')?{semanticEvidence:{
+  engine:'Playwright browser-computed ARIA snapshot; not screen-reader speech',
+  triggerTree:'- button "Workspace actions" [expanded]',
+  menuTree:'- menu "Workspace actions": menuitem "Duplicate workspace"; menuitem "Archive (unavailable)"',
+  expanded:true,focusedItem:'Duplicate workspace'
+ }}:{}),
  note:'Manual checks still required'});
 
-test('source-derived accessibility evidence inventory has all 26 unique scenarios',()=>{
- assert.equal(names.length,26);
+test('source-derived accessibility evidence inventory has all 27 unique scenarios',()=>{
+ assert.equal(names.length,27);
  assert.equal(names[0],'v1');
  assert.ok(names.includes('components-forced-colors'));
  assert.ok(names.includes('experience-studio-reduced-motion'));
@@ -34,8 +40,9 @@ test('complete source-derived report inventory produces manifest showing inconcl
   for(const name of names)await writeFile(join(dir,name+'.json'),
    JSON.stringify({...report(name),incomplete:name==='components'?[{id:'color-contrast',nodes:[{target:['#project-title'],summary:'Manual contrast review required'}]}]:[]}));
   const manifest=await verifyAxeEvidence(dir,names,{revision:'test'});
-  assert.equal(manifest.expected,26);
-  assert.equal(manifest.captured,26);
+  assert.equal(manifest.expected,27);
+  assert.equal(manifest.captured,27);
+  assert.deepEqual(manifest.menuSemanticTrees,['components-menu-open','components-menu-open-forced-colors']);
   assert.equal(manifest.incompleteChecks,1);
   assert.equal(manifest.incompleteNodes,1);
   assert.deepEqual(manifest.incompleteByRule,[{
@@ -94,5 +101,19 @@ test('malformed incomplete-rule evidence cannot silently undercount affected ele
    ...report('components'),incomplete:[{id:'color-contrast',nodes:'unknown'}]
   }));
   await assert.rejects(verifyAxeEvidence(dir,names),/Malformed incomplete axe rule/);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('open-menu evidence must include real browser-computed ARIA tree snapshots',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-menu-a11y-'));
+ try{
+  for(const name of names)await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  await writeFile(join(dir,'components-menu-open.json'),JSON.stringify({
+   ...report('components-menu-open'),semanticEvidence:null
+  }));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Missing or invalid browser ARIA tree evidence/);
+  await writeFile(join(dir,'components-menu-open.json'),JSON.stringify(report('components-menu-open')));
+  const manifest=await verifyAxeEvidence(dir,names);
+  assert.deepEqual(manifest.menuSemanticTrees,['components-menu-open','components-menu-open-forced-colors']);
  }finally{await rm(dir,{recursive:true,force:true})}
 });

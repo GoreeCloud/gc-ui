@@ -53,6 +53,17 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
      !Array.isArray(data.incomplete)||!Number.isSafeInteger(data.rulesPassed)||
      data.rulesPassed<0)throw new Error('Malformed accessibility report: '+scenario);
   if(data.violations.length)throw new Error('Unresolved axe violations: '+scenario);
+  const needsMenuTree=scenario==='components-menu-open'||
+    scenario==='components-menu-open-forced-colors';
+  if(needsMenuTree){
+   const evidence=data.semanticEvidence;
+   if(!evidence||typeof evidence.engine!=='string'||
+      typeof evidence.triggerTree!=='string'||!evidence.triggerTree.includes('Workspace actions')||
+      typeof evidence.menuTree!=='string'||!evidence.menuTree.includes('Duplicate workspace')||
+      !evidence.menuTree.includes('Archive (unavailable)')||
+      evidence.expanded!==true||evidence.focusedItem!=='Duplicate workspace')
+    throw new Error('Missing or invalid browser ARIA tree evidence: '+scenario);
+  }
   let incompleteNodes=0;
   for(const rule of data.incomplete){
    if(!rule||typeof rule.id!=='string'||!rule.id||!Array.isArray(rule.nodes))
@@ -66,11 +77,13 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
    incompleteByRule.set(rule.id,total);
   }
   reports.push({scenario,rulesPassed:data.rulesPassed,incompleteChecks:data.incomplete.length,
-   incompleteNodes,bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
+   incompleteNodes,semanticTreeCaptured:needsMenuTree,
+   bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
  }
  const manifest={revision,expected:names.length,captured:reports.length,
   incompleteChecks:reports.reduce((total,x)=>total+x.incompleteChecks,0),
   incompleteNodes:reports.reduce((total,x)=>total+x.incompleteNodes,0),
+  menuSemanticTrees:reports.filter(x=>x.semanticTreeCaptured).map(x=>x.scenario),
   incompleteByRule:[...incompleteByRule.values()].sort((a,b)=>b.nodes-a.nodes||a.id.localeCompare(b.id)),
   limitations:'Automated axe WCAG A/AA screen; inconclusive checks require manual review. Not certification.',
   reports};
