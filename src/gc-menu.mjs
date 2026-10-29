@@ -22,7 +22,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   if(!document?.addEventListener)throw new TypeError('Document required');
   const items=Array.from(menu.querySelectorAll(ITEM));
   if(!items.length)throw new Error('Menu must contain at least one menu item');
-  let open=false,destroyed=false;
+  let open=false,destroyed=false,pendingTriggerPointer=false;
   // Controller state is borrowed from the host application, not owned forever.
   const attrs=['aria-haspopup','aria-controls','aria-expanded'];
   const priorAttrs=new Map(attrs.map(name=>[name,trigger.getAttribute(name)]));
@@ -80,7 +80,19 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     setTriggerAttr('aria-expanded','false');
     if(returnFocus&&trigger.isConnected)trigger.focus();
   }
-  const triggerClick=()=>{open?hide():show()};
+  // A second pointer activation moves focus out of the menu before click.
+  // Keep the menu open through focusout so click can toggle it CLOSED.
+  const triggerPointerDown=()=>{pendingTriggerPointer=true};
+  const triggerPointerCancel=()=>{pendingTriggerPointer=false};
+  const documentPointerUp=event=>{
+    if(!pendingTriggerPointer||trigger.contains(event.target))return;
+    pendingTriggerPointer=false;
+    if(open&&!menu.contains(document.activeElement))hide({returnFocus:false});
+  };
+  const triggerClick=()=>{
+    pendingTriggerPointer=false;
+    open?hide():show();
+  };
   const triggerKeys=event=>{
     if(event.key==='ArrowDown'||event.key==='ArrowUp'){
       event.preventDefault();
@@ -124,8 +136,11 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       dismissOnFocusLeaving();
   };
   const focusout=event=>{
-    if(open&&!menu.contains(event.relatedTarget))dismissOnFocusLeaving();
+    if(open&&!menu.contains(event.relatedTarget)&&!pendingTriggerPointer)dismissOnFocusLeaving();
   };
+  trigger.addEventListener('pointerdown',triggerPointerDown);
+  trigger.addEventListener('pointercancel',triggerPointerCancel);
+  document.addEventListener('pointerup',documentPointerUp);
   trigger.addEventListener('click',triggerClick);
   trigger.addEventListener('keydown',triggerKeys);
   menu.addEventListener('keydown',menuKeys);
@@ -139,6 +154,10 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       // Remove callbacks before moving focus; a teardown focusout must not rewrite DOM.
       destroyed=true;
       open=false;
+      pendingTriggerPointer=false;
+      trigger.removeEventListener('pointerdown',triggerPointerDown);
+      trigger.removeEventListener('pointercancel',triggerPointerCancel);
+      document.removeEventListener('pointerup',documentPointerUp);
       trigger.removeEventListener('click',triggerClick);
       trigger.removeEventListener('keydown',triggerKeys);
       menu.removeEventListener('keydown',menuKeys);
