@@ -154,6 +154,7 @@ export function applyVerifiedHostCapabilities(root,capabilities,options={}){
   throw new TypeError('Invalid native host capabilities');
  const profile=applyPlatformProfile(root,capabilities.platform,{
   highContrast:Boolean(capabilities.highContrast||options.highContrast),
+  forcedColors:Boolean(options.forcedColors),
   reducedMotion:Boolean(capabilities.reducedMotion||options.reducedMotion),
   reducedTransparency:Boolean(capabilities.reducedTransparency||options.reducedTransparency),
   lowPower:Boolean(capabilities.lowPower||options.lowPower)
