@@ -152,3 +152,18 @@ test('a validator that unmounts its controller must not commit stale error state
  assert.equal(x.list.children.length,0);
  assert.equal(x.input.listeners.get('input').size,0);
 });
+
+test('submit validator unmount cannot reintroduce obsolete errors or focus',()=>{
+ const x=fixture();
+ let api;
+ const destroyingField={...x.field,valid:()=>{api.destroy();return false}};
+ api=initValidationSummary(x.form,x.summary,x.list,[destroyingField]);
+ assert.throws(()=>api.validate(),/destroyed/);
+ assert.equal(x.input.getAttribute('aria-invalid'),null);
+ assert.equal(x.input.getAttribute('aria-describedby'),'task-help');
+ assert.equal(x.error.hidden,true);
+ assert.equal(x.summary.hidden,true);
+ assert.equal(x.summary.focused,0);
+ assert.equal(x.list.children.length,0);
+ assert.equal(x.form.listeners.get('submit').size,0);
+});
