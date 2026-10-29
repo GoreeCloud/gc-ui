@@ -4,6 +4,7 @@
  * The custom seed engine is independent from Google HCT; wallpaper extraction is not provided.
  */
 import {generateTheme} from './gc-color-engine.mjs';
+import {getCuratedAccentRoles} from './gc-curated-accent-roles.mjs';
 
 export const GC_THEME_DEFAULTS=Object.freeze({
   mode:'auto',accent:'neutral',material:'translucent',contrast:'system',seed:'#374151'
@@ -94,9 +95,13 @@ export function createThemeController({
     setDataset('gcMaterial',next.material);
     setDataset('gcContrast',next.contrast);
     clearOverrides();
-    if((next.accent==='custom'||next.accent==='neutral'||next.accent==='ocean')&&next.contrast!=='high'&&!system().forcedColors){
-      const seed=next.accent==='neutral'?'#374151':next.accent==='ocean'?'#1D4ED8':next.seed;
-      for(const [name,value] of Object.entries(generateTheme(seed,next.mode).roles)){
+    // Curated defaults must retain their reviewed semantic values. The custom
+    // color engine intentionally shifts hue and is only for explicit custom seeds.
+    if(next.contrast!=='high'&&!system().forcedColors){
+      const roles=next.accent==='custom'
+        ?generateTheme(next.seed,next.mode).roles
+        :getCuratedAccentRoles(next.accent,next.mode);
+      for(const [name,value] of Object.entries(roles||{})){
         if(relinquished.has(name))continue;
         const property='--gc-v1-color-'+kebab(name);
         overridden.set(name,{
