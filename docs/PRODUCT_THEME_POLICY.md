@@ -2,6 +2,25 @@
 
 **Status:** proposed implementation in the GC UI development branch; not a released or ecosystem-wide verified migration. The existing Foundations 1.0.1 stable artifact is unchanged.
 
+## Mandatory appearance baseline — founder direction (2026-10-29)
+
+**Scope and authority.** As GoreeCloud's founder, I require **every GoreeCloud application**—across supported web, desktop, and mobile clients—to **use the light theme by default**. I require users to be able to change the appearance at any time through their application settings. This is a founder-directed product requirement for future development and conformance assessment, not evidence that all consumers already comply. [GC UI](../README.md) remains the sole GoreeCloud design-system authority; this appearance requirement is distinct from an application's suggested accent color.
+
+**Required appearance behavior:**
+
+1. **First launch / no saved selection:** Render the **light** appearance even when the host operating system currently prefers dark mode. Invalid, missing, or cleared stored appearance preferences fall back to light.
+2. **User control:** Offer a discoverable, accessible appearance control in application settings. Users may select **Light** or **Dark** whenever they wish; changes should apply immediately without requiring a restart wherever the platform permits.
+3. **Preference precedence and persistence:** A valid, explicit user-selected appearance takes precedence over the default, persists across ordinary app restarts/sessions using the product's approved preference storage, and is not silently replaced by OS appearance changes.
+4. **Optional automatic mode:** An app may offer **Auto / Follow system** as an additional *explicitly user-selected* option. Auto is **not** the first-run default. Once chosen by the user, Auto follows host appearance changes until the user chooses something else or clears the selection.
+5. **Reset behavior:** Resetting appearance to its unspecified state restores the GoreeCloud **light** default. Do not mistake a product's suggested accent for a stored user appearance choice.
+6. **Accessibility and privacy:** Preserve high-contrast, forced-colors, reduced-transparency and other applicable accessibility protections independently of light/dark selection. Do not assume cross-device preference synchronization; synchronization requires its own verified, privacy-aware design and authorization.
+
+**Implementation guidance and acceptance.** The shared GC UI theme contract and every participating app need implementation and regression checks for (a) a clean profile with a dark-preferring OS still showing Light, (b) switching Light ↔ Dark in Settings without loss of access or focus, (c) retained explicit choice after restart, (d) explicitly opted-in Auto following OS changes, (e) a reset returning to Light, and (f) accessible contrast and forced-color behavior. Test each declared supported platform. App-by-app rollout, release and deployment require independent verification.
+
+**Current-state gap (verified from repository source on 2026-10-29):** [`src/gc-theme-runtime.mjs`](../src/gc-theme-runtime.mjs) currently defines `GC_THEME_DEFAULTS.mode = 'auto'`, and [`src/main.js`](../src/main.js) uses the host's `prefers-color-scheme` on an unset mode. Those existing alpha behaviors may resolve to Dark with no saved user choice and **do not yet satisfy this newly documented light-first requirement**. This document changes the required target behavior only; it does not modify runtime code, migrate apps, or certify compliance.
+
+See [GC UI appearance and theme specification](COLOR_THEMES.md#5-appearance-and-precedence) for the corresponding design contract.
+
 ## Design identity
 
 GoreeCloud UI (GC UI) owns the shared semantic tokens, typography, navigation, spacing, component states, elevation and accessibility behaviors. Product personalities select semantic roles, not hardcoded UI colors. The ecosystem fallback accent is **Neutral** (slate, not violet). Purple **Iris** remains an opt-in palette.
