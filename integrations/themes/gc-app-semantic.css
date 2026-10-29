@@ -1,0 +1,74 @@
+/* GoreeCloud UI semantic color contract — app-local, privacy-preserving snapshot.
+   Canonical contract: GoreeCloud/gc-ui (GC UI), integrations/themes/gc-app-semantic.css.
+   Use --gc-v1-color-* semantic roles; never hardcode an app's primary hue.
+   Product accent is a suggestion only. User preferences select data-gc-accent. */
+:root {
+  --gc-v1-color-canvas:#10131e;--gc-v1-color-surface:#1d2231;
+  --gc-v1-color-surface-raised:#252b3d;--gc-v1-color-surface-tonal:#292f40;
+  --gc-v1-color-surface-inset:#151a27;--gc-v1-color-on-surface:#f2f2fa;
+  --gc-v1-color-on-surface-muted:#b3b9cf;--gc-v1-color-outline:#747c99;
+  --gc-v1-color-divider:#373c50;--gc-v1-color-primary:#d1d5db;
+  --gc-v1-color-on-primary:#111827;--gc-v1-color-primary-container:#374151;
+  --gc-v1-color-on-primary-container:#f9fafb;--gc-v1-color-focus-ring:#d1d5db;
+  --gc-v1-color-secondary:#b3b9cf;--gc-v1-color-success:#9ce3b9;
+  --gc-v1-color-danger:#ffb5be;--gc-v1-color-warning:#ffd28a;
+}
+:root[data-theme="light"] {
+  --gc-v1-color-canvas:#ecf0f8;--gc-v1-color-surface:#f9fafd;
+  --gc-v1-color-surface-raised:#ffffff;--gc-v1-color-surface-tonal:#e5ebf6;
+  --gc-v1-color-surface-inset:#dfe6f3;--gc-v1-color-on-surface:#20243a;
+  --gc-v1-color-on-surface-muted:#5f657b;--gc-v1-color-outline:#8990a7;
+  --gc-v1-color-divider:#e5e7f0;--gc-v1-color-primary:#374151;
+  --gc-v1-color-on-primary:#ffffff;--gc-v1-color-primary-container:#e5e7eb;
+  --gc-v1-color-on-primary-container:#111827;--gc-v1-color-focus-ring:#374151;
+  --gc-v1-color-secondary:#5f657b;--gc-v1-color-success:#206a46;
+  --gc-v1-color-danger:#a73549;--gc-v1-color-warning:#875500;
+}
+/* Palette pairs match the GC UI curated accent semantic contract. */
+:root[data-gc-accent="ocean"] {
+  --gc-v1-color-primary:#93c5fd;--gc-v1-color-on-primary:#172554;
+  --gc-v1-color-primary-container:#1e3a8a;--gc-v1-color-on-primary-container:#dbeafe;
+}
+:root[data-theme="light"][data-gc-accent="ocean"] {
+  --gc-v1-color-primary:#1d4ed8;--gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#dbeafe;--gc-v1-color-on-primary-container:#1e3a8a;
+}
+:root[data-gc-accent="lagoon"] {
+  --gc-v1-color-primary:#89e1e9;--gc-v1-color-on-primary:#003b43;
+  --gc-v1-color-primary-container:#1c4d57;--gc-v1-color-on-primary-container:#c8fcff;
+}
+:root[data-theme="light"][data-gc-accent="lagoon"] {
+  --gc-v1-color-primary:#087c8d;--gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#d1f4f5;--gc-v1-color-on-primary-container:#07565d;
+}
+:root[data-gc-accent="moss"] {
+  --gc-v1-color-primary:#a6dfa9;--gc-v1-color-on-primary:#224b2a;
+  --gc-v1-color-primary-container:#304e37;--gc-v1-color-on-primary-container:#e8f8e9;
+}
+:root[data-theme="light"][data-gc-accent="moss"] {
+  --gc-v1-color-primary:#3f744b;--gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#d8f1d9;--gc-v1-color-on-primary-container:#25542d;
+}
+:root[data-gc-accent="iris"] {
+  --gc-v1-color-primary:#c5bfff;--gc-v1-color-on-primary:#241b66;
+  --gc-v1-color-primary-container:#39316b;--gc-v1-color-on-primary-container:#ebe8ff;
+}
+:root[data-theme="light"][data-gc-accent="iris"] {
+  --gc-v1-color-primary:#5145d9;--gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#e8e6ff;--gc-v1-color-on-primary-container:#2c227c;
+}
+:root[data-gc-accent="ember"] {
+  --gc-v1-color-primary:#ffc2ad;--gc-v1-color-on-primary:#592a20;
+  --gc-v1-color-primary-container:#603c36;--gc-v1-color-on-primary-container:#ffe9e0;
+}
+:root[data-theme="light"][data-gc-accent="ember"] {
+  --gc-v1-color-primary:#ae4d3f;--gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#ffe2d7;--gc-v1-color-on-primary-container:#6e3024;
+}
+@media (forced-colors: active) {
+  :root {
+    --gc-v1-color-primary:Highlight !important;
+    --gc-v1-color-on-primary:HighlightText !important;
+    --gc-v1-color-focus-ring:Highlight !important;
+  }
+}
