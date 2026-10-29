@@ -8,7 +8,7 @@ import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence,normalizeIncomp
 
 const scenarioSource=readFileSync(new URL('../e2e/accessibility.spec.mjs',import.meta.url),'utf8');
 const names=expectedAxeScenarios(scenarioSource);
-const report=name=>({scenario:name,violations:[],incomplete:[],rulesPassed:90,
+const report=name=>({scenario:name,pagePath:'/lab/'+(name.startsWith('components')?'components':name.startsWith('forms')?'forms':name)+'.html',violations:[],incomplete:[],rulesPassed:90,
  ...(name.startsWith('components-menu-open')?{semanticEvidence:{
   engine:'Playwright browser-computed ARIA snapshot; not screen-reader speech',
   triggerTree:'- button "Workspace actions" [expanded]',
