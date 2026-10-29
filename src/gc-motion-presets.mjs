@@ -1,14 +1,15 @@
 /** Native, progressive GC UI motion grammar; optional third-party adapters live in integrations. */
+const immutableFrames=frames=>Object.freeze(frames.map(frame=>Object.freeze(frame)));
 export const GC_MOTION_PRESETS=Object.freeze({
- reveal:Object.freeze([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}]),
- soften:Object.freeze([{opacity:0.65},{opacity:1}]),
- settle:Object.freeze([{opacity:0.94,transform:'scale(0.985)'},{opacity:1,transform:'scale(1)'}]),
- slideInline:Object.freeze([{opacity:0,transform:'translateX(8px)'},{opacity:1,transform:'translateX(0)'}]),
- dismiss:Object.freeze([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(4px)'}]),
- surfaceEnter:Object.freeze([{opacity:0,transform:'translateY(10px) scale(.99)'},{opacity:1,transform:'translateY(0) scale(1)'}]),
- surfaceExit:Object.freeze([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(-6px) scale(.99)'}]),
- press:Object.freeze([{transform:'scale(1)'},{transform:'scale(.975)'},{transform:'scale(1)'}]),
- nudgeInline:Object.freeze([{transform:'translateX(0)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}])
+ reveal:immutableFrames([{opacity:0,transform:'translateY(6px)'},{opacity:1,transform:'translateY(0)'}]),
+ soften:immutableFrames([{opacity:0.65},{opacity:1}]),
+ settle:immutableFrames([{opacity:0.94,transform:'scale(0.985)'},{opacity:1,transform:'scale(1)'}]),
+ slideInline:immutableFrames([{opacity:0,transform:'translateX(8px)'},{opacity:1,transform:'translateX(0)'}]),
+ dismiss:immutableFrames([{opacity:1,transform:'translateY(0)'},{opacity:0,transform:'translateY(4px)'}]),
+ surfaceEnter:immutableFrames([{opacity:0,transform:'translateY(10px) scale(.99)'},{opacity:1,transform:'translateY(0) scale(1)'}]),
+ surfaceExit:immutableFrames([{opacity:1,transform:'translateY(0) scale(1)'},{opacity:0,transform:'translateY(-6px) scale(.99)'}]),
+ press:immutableFrames([{transform:'scale(1)'},{transform:'scale(.975)'},{transform:'scale(1)'}]),
+ nudgeInline:immutableFrames([{transform:'translateX(0)'},{transform:'translateX(4px)'},{transform:'translateX(0)'}])
 });
 const timing=Object.freeze({
  reveal:Object.freeze({duration:320,easing:'cubic-bezier(.16,1,.3,1)'}),
