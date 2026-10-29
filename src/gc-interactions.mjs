@@ -205,13 +205,18 @@ export async function runAsyncAction(button,operation){
  button.setAttribute('aria-busy','true');button.disabled=true;
  try{return await operation()}
  finally{
-  pendingAsyncActions.delete(button);
-  // The host may disable the action while the request is pending. Preserve
-  // explicit host ARIA disablement instead of making it clickable on cleanup.
-  if(button.getAttribute('aria-disabled')!=='true')button.disabled=false;
-  if(button.getAttribute('aria-busy')==='true'){
-   if(previousBusy===null)button.removeAttribute('aria-busy');
-   else button.setAttribute('aria-busy',previousBusy);
+  try{
+   // The host may disable the action while pending. Keep an explicit
+   // aria-disabled host override, and preserve independently changed ARIA.
+   if(button.getAttribute('aria-disabled')!=='true')button.disabled=false;
+   if(button.getAttribute('aria-busy')==='true'){
+    if(previousBusy===null)button.removeAttribute('aria-busy');
+    else button.setAttribute('aria-busy',previousBusy);
+   }
+  }finally{
+   // Keep the lock until the last cleanup write has finished, even if a host
+   // setter throws during teardown.
+   pendingAsyncActions.delete(button);
   }
  }
 }
