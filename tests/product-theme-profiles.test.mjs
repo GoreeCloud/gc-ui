@@ -27,6 +27,7 @@ test('product themes are neutral by default but may suggest distinct personaliti
   assert.equal(getProductAccent('unexpected-product'),'neutral');
   assert.equal(getProductAccent(undefined),'neutral');
   assert.equal(getProductAccent('__proto__'),'neutral');
+  assert.equal(getProductAccent('constructor'),'neutral');
   assert.ok(Object.isFrozen(GC_PRODUCT_ACCENTS));
 });
 test('app suggestions are not persisted and appearance changes do not freeze them',()=>{
