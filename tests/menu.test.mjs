@@ -217,3 +217,16 @@ test('aria-disabled menu triggers cannot open by mouse, keys or API until re-ena
  assert.equal(menu.hidden,false);
  api.destroy();
 });
+
+test('a second pointer activation closes an open menu even after blur',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'pointer-menu',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,item])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ trigger.fire('pointerdown');trigger.fire('click');
+ assert.equal(api.isOpen(),true);
+ trigger.fire('pointerdown');menu.fire('focusout',{relatedTarget:trigger});trigger.fire('click');
+ assert.equal(api.isOpen(),false);
+ api.destroy();
+});
