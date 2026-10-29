@@ -152,3 +152,32 @@ test('native input event does not revive validation after its host disposes the 
   errorHidden:true,summaryHidden:true,links:0
  });
 });
+
+test('submit-time host teardown never revives an obsolete validation summary',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initValidationSummary}=await import('/src/gc-form-controls.mjs');
+  const form=document.createElement('form'),summary=document.createElement('section'),
+   list=document.createElement('ul'),input=document.createElement('input'),
+   error=document.createElement('span');
+  summary.setAttribute('role','group');summary.tabIndex=-1;summary.hidden=true;
+  summary.append(list);input.id='teardown-validation-field';
+  input.setAttribute('aria-describedby','teardown-validation-help');
+  error.id='teardown-validation-error';error.textContent='Required';error.hidden=true;
+  form.append(summary,input,error);document.body.append(form);
+  let api,called=0,exception='';
+  api=initValidationSummary(form,summary,list,[{
+   input,error,label:'Detached field',valid:()=>{called++;api.destroy();return false}
+  }]);
+  try{api.validate()}catch(e){exception=e.message}
+  const state={exception,called,invalid:input.getAttribute('aria-invalid'),
+   describedby:input.getAttribute('aria-describedby'),errorHidden:error.hidden,
+   summaryHidden:summary.hidden,summaryCount:list.children.length,
+   focusRestored:document.activeElement!==summary};
+  form.remove();
+  return state;
+ });
+ expect(result).toEqual({exception:'Validation summary controller was destroyed',
+  called:1,invalid:null,describedby:'teardown-validation-help',
+  errorHidden:true,summaryHidden:true,summaryCount:0,focusRestored:true});
+});
