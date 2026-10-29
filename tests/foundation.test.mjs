@@ -14,7 +14,7 @@ test('all declared spatial and radius tokens are implemented in CSS', () => {
   }
 });
 test('all palette roles and modes exist', () => {
-  assert.equal(Object.keys(tokens.color.palettes).length,4);
+  assert.equal(Object.keys(tokens.color.palettes).length,6);
   for (const [name, palette] of Object.entries(tokens.color.palettes)) {
     assert.match(css, new RegExp(`data-accent="${name}"`));
     for (const key of ['brand','onBrand','container','onContainer']) assert.match(palette[key].$value,/^#[0-9a-f]{6}$/i);

@@ -1,7 +1,7 @@
 /** GC UI playground interactions. No runtime dependencies. */
 const root = document.documentElement;
 const allowedRoutes = new Set(['overview', 'components', 'foundations', 'guidelines']);
-const allowedAccents = new Set(['iris', 'lagoon', 'ember', 'moss']);
+const allowedAccents = new Set(['neutral', 'ocean', 'iris', 'lagoon', 'ember', 'moss']);
 const store = {
   get(key) { try { return localStorage.getItem(`gc-ui:${key}`); } catch { return null; } },
   set(key, value) { try { localStorage.setItem(`gc-ui:${key}`, value); } catch { /* private mode */ } },
@@ -12,7 +12,7 @@ const labels = {overview: 'Overview', components: 'Components', foundations: 'Fo
 const safeMode = store.get('mode');
 const systemDark = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
 root.dataset.mode = ['light', 'dark'].includes(safeMode) ? safeMode : systemDark ? 'dark' : 'light';
-root.dataset.accent = allowedAccents.has(store.get('accent')) ? store.get('accent') : 'iris';
+root.dataset.accent = allowedAccents.has(store.get('accent')) ? store.get('accent') : 'neutral';
 root.dataset.material = store.get('material') === 'solid' ? 'solid' : 'translucent';
 
 function toast(message) {
@@ -65,6 +65,24 @@ function currentHash() {return window.location.hash.slice(1).toLowerCase();}
 
 setMode(root.dataset.mode);
 setAccent(root.dataset.accent);
+const accentRow = document.querySelector('.accent-row');
+if (accentRow) {
+  for (const accent of ['neutral', 'ocean']) {
+    if (accentRow.querySelector('[data-set-accent="' + accent + '"]')) continue;
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'accent-swatch swatch-' + accent;
+    button.dataset.setAccent = accent;
+    button.setAttribute('aria-label', accent === 'neutral' ? 'Neutral accent' : 'Ocean blue accent');
+    button.setAttribute('aria-pressed', String(root.dataset.accent === accent));
+    const check = document.createElement('span');
+    check.className = 'checkmark'; check.setAttribute('aria-hidden', 'true');
+    check.textContent = '✓'; button.append(check);
+    button.addEventListener('click', () => setAccent(accent));
+    accentRow.prepend(button);
+  }
+}
+
 setMaterial(root.dataset.material === 'translucent');
 navigate(currentHash());
 window.addEventListener('hashchange', () => navigate(currentHash(), true));

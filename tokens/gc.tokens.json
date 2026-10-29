@@ -4,32 +4,259 @@
   "version": "0.1.0",
   "description": "Original, platform-independent foundation token contract for GC UI. CSS maps semantic roles and themes.",
   "space": {
-    "1": {"$type":"dimension","$value":"4px"}, "2": {"$type":"dimension","$value":"8px"},
-    "3": {"$type":"dimension","$value":"12px"}, "4": {"$type":"dimension","$value":"16px"},
-    "5": {"$type":"dimension","$value":"20px"}, "6": {"$type":"dimension","$value":"24px"},
-    "8": {"$type":"dimension","$value":"32px"}, "10": {"$type":"dimension","$value":"40px"},
-    "12": {"$type":"dimension","$value":"48px"}, "16": {"$type":"dimension","$value":"64px"}
+    "1": {
+      "$type": "dimension",
+      "$value": "4px"
+    },
+    "2": {
+      "$type": "dimension",
+      "$value": "8px"
+    },
+    "3": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "4": {
+      "$type": "dimension",
+      "$value": "16px"
+    },
+    "5": {
+      "$type": "dimension",
+      "$value": "20px"
+    },
+    "6": {
+      "$type": "dimension",
+      "$value": "24px"
+    },
+    "8": {
+      "$type": "dimension",
+      "$value": "32px"
+    },
+    "10": {
+      "$type": "dimension",
+      "$value": "40px"
+    },
+    "12": {
+      "$type": "dimension",
+      "$value": "48px"
+    },
+    "16": {
+      "$type": "dimension",
+      "$value": "64px"
+    }
   },
   "radius": {
-    "sm": {"$type":"dimension","$value":"12px"}, "md": {"$type":"dimension","$value":"18px"},
-    "lg": {"$type":"dimension","$value":"26px"}, "xl": {"$type":"dimension","$value":"36px"},
-    "full": {"$type":"dimension","$value":"999px"}
+    "sm": {
+      "$type": "dimension",
+      "$value": "12px"
+    },
+    "md": {
+      "$type": "dimension",
+      "$value": "18px"
+    },
+    "lg": {
+      "$type": "dimension",
+      "$value": "26px"
+    },
+    "xl": {
+      "$type": "dimension",
+      "$value": "36px"
+    },
+    "full": {
+      "$type": "dimension",
+      "$value": "999px"
+    }
   },
   "motion": {
-    "duration": {"fast":{"$type":"duration","$value":"120ms"}, "base":{"$type":"duration","$value":"220ms"}, "slow":{"$type":"duration","$value":"380ms"}},
-    "easing": {"standard":{"$type":"cubicBezier","$value":[0.2,0.8,0.2,1]}, "expressive":{"$type":"cubicBezier","$value":[0.16,1,0.3,1]}}
+    "duration": {
+      "fast": {
+        "$type": "duration",
+        "$value": "120ms"
+      },
+      "base": {
+        "$type": "duration",
+        "$value": "220ms"
+      },
+      "slow": {
+        "$type": "duration",
+        "$value": "380ms"
+      }
+    },
+    "easing": {
+      "standard": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.2,
+          0.8,
+          0.2,
+          1
+        ]
+      },
+      "expressive": {
+        "$type": "cubicBezier",
+        "$value": [
+          0.16,
+          1,
+          0.3,
+          1
+        ]
+      }
+    }
   },
   "color": {
     "palettes": {
-      "iris": {"brand":{"$type":"color","$value":"#5145d9"},"onBrand":{"$type":"color","$value":"#ffffff"},"container":{"$type":"color","$value":"#e8e6ff"},"onContainer":{"$type":"color","$value":"#2c227c"}},
-      "lagoon": {"brand":{"$type":"color","$value":"#087c8d"},"onBrand":{"$type":"color","$value":"#ffffff"},"container":{"$type":"color","$value":"#d1f4f5"},"onContainer":{"$type":"color","$value":"#07565d"}},
-      "ember": {"brand":{"$type":"color","$value":"#ae4d3f"},"onBrand":{"$type":"color","$value":"#ffffff"},"container":{"$type":"color","$value":"#ffe2d7"},"onContainer":{"$type":"color","$value":"#6e3024"}},
-      "moss": {"brand":{"$type":"color","$value":"#3f744b"},"onBrand":{"$type":"color","$value":"#ffffff"},"container":{"$type":"color","$value":"#d8f1d9"},"onContainer":{"$type":"color","$value":"#25542d"}}
+      "iris": {
+        "brand": {
+          "$type": "color",
+          "$value": "#5145d9"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#e8e6ff"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#2c227c"
+        }
+      },
+      "lagoon": {
+        "brand": {
+          "$type": "color",
+          "$value": "#087c8d"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#d1f4f5"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#07565d"
+        }
+      },
+      "ember": {
+        "brand": {
+          "$type": "color",
+          "$value": "#ae4d3f"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#ffe2d7"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#6e3024"
+        }
+      },
+      "moss": {
+        "brand": {
+          "$type": "color",
+          "$value": "#3f744b"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#ffffff"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#d8f1d9"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#25542d"
+        }
+      },
+      "neutral": {
+        "brand": {
+          "$type": "color",
+          "$value": "#374151"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#FFFFFF"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#E5E7EB"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#111827"
+        }
+      },
+      "ocean": {
+        "brand": {
+          "$type": "color",
+          "$value": "#1D4ED8"
+        },
+        "onBrand": {
+          "$type": "color",
+          "$value": "#FFFFFF"
+        },
+        "container": {
+          "$type": "color",
+          "$value": "#DBEAFE"
+        },
+        "onContainer": {
+          "$type": "color",
+          "$value": "#1E3A8A"
+        }
+      }
     },
-    "semanticRoles": ["brand","on-brand","brand-container","on-brand-container","canvas","canvas-alt","surface","surface-raised","surface-tonal","text","text-soft","text-faint","outline","divider","positive","negative","positive-container","negative-container","lens-fill","lens-stroke"]
+    "semanticRoles": [
+      "brand",
+      "on-brand",
+      "brand-container",
+      "on-brand-container",
+      "canvas",
+      "canvas-alt",
+      "surface",
+      "surface-raised",
+      "surface-tonal",
+      "text",
+      "text-soft",
+      "text-faint",
+      "outline",
+      "divider",
+      "positive",
+      "negative",
+      "positive-container",
+      "negative-container",
+      "lens-fill",
+      "lens-stroke"
+    ]
   },
-  "component": {"controlMinimumHeight":{"$type":"dimension","$value":"44px"},"focusOutlineWidth":{"$type":"dimension","$value":"3px"}},
-  "modes": ["light","dark"],
-  "materialOptions": ["translucent","solid"],
-  "densityOptions": ["comfortable","compact"]
+  "component": {
+    "controlMinimumHeight": {
+      "$type": "dimension",
+      "$value": "44px"
+    },
+    "focusOutlineWidth": {
+      "$type": "dimension",
+      "$value": "3px"
+    }
+  },
+  "modes": [
+    "light",
+    "dark"
+  ],
+  "materialOptions": [
+    "translucent",
+    "solid"
+  ],
+  "densityOptions": [
+    "comfortable",
+    "compact"
+  ]
 }
