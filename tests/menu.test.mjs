@@ -230,3 +230,35 @@ test('a second pointer activation closes an open menu even after blur',()=>{
  assert.equal(api.isOpen(),false);
  api.destroy();
 });
+
+test('canceled trigger pointer does not suppress subsequent keyboard focus dismissal',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'cancel-pointer',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,item])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ trigger.fire('pointerdown');
+ trigger.fire('pointercancel');
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),false);
+ assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ api.destroy();
+});
+test('released pointer away from trigger clears deferred dismissal and listeners',()=>{
+ const handlers=new Map();
+ const doc={activeElement:null,addEventListener(name,fn){handlers.set(name,fn)},
+  removeEventListener(name){handlers.delete(name)}};
+ const trigger=elem('button'),menu=elem('div',{id:'drag-pointer',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,item])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ trigger.fire('pointerdown');
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),true,'do not close while trigger press is pending');
+ handlers.get('pointerup')({target:elem('div')});
+ assert.equal(api.isOpen(),false,'abandoned pointer press must not leave an orphaned menu');
+ api.destroy();
+ assert.equal(handlers.size,0);
+});
