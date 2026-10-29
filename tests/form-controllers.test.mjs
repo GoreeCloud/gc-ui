@@ -258,3 +258,31 @@ test('a rejected outer number update cannot overwrite a newer accepted nested bo
  assert.equal(inc.disabled,false);
  api.destroy();
 });
+
+
+test('stepper click does not reclaim focus after callback destroys the controller',()=>{
+ for(const direction of ['decrement','increment']){
+  const field=number({value:'5'}),dec=btn(),inc=btn();
+  let api;
+  api=initNumberStepper(field,dec,inc,{onChange:value=>{
+   if(value!==5)api.destroy();
+  }});
+  (direction==='decrement'?dec:inc).dispatch('click');
+  assert.equal(field.focusCount,0);
+  assert.equal(field.listenerCount('change'),0);
+  assert.equal(dec.listenerCount('click'),0);
+  assert.equal(inc.listenerCount('click'),0);
+ }
+});
+
+test('stepper does not focus a field detached during its change callback',()=>{
+ const field=number({value:'5'}),dec=btn(),inc=btn();
+ field.isConnected=true;
+ const api=initNumberStepper(field,dec,inc,{onChange:value=>{
+  if(value===6)field.isConnected=false;
+ }});
+ inc.dispatch('click');
+ assert.equal(field.value,'6');
+ assert.equal(field.focusCount,0);
+ api.destroy();
+});
