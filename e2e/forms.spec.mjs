@@ -453,3 +453,55 @@ for(const width of [320,375,1440]){
   await expect(page).toHaveURL(/\/lab\/components\.html$/);
  });
 }
+
+test('pointer selecting a suggestion keeps input focus and closes its active descendant',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const search=page.getByRole('combobox',{name:'Search projects'});
+ await search.fill('studio');
+ const option=page.getByRole('option',{name:'Studio refresh'});
+ await expect(option).toBeVisible();
+ await option.click();
+ await expect(search).toBeFocused();
+ await expect(search).toHaveValue('Studio refresh');
+ await expect(search).toHaveAttribute('aria-expanded','false');
+ await expect(search).not.toHaveAttribute('aria-activedescendant',/.+/);
+ await expect(page.locator('#project-result-count')).toHaveText('1 project found');
+ await expect(page.getByRole('option',{name:'Studio refresh'})).toHaveCount(0);
+});
+test('touch selection commits a suggestion without stealing focus from the combobox',async({browser})=>{
+ const context=await browser.newContext({viewport:{width:375,height:812},hasTouch:true});
+ try{
+  const page=await context.newPage();
+  await page.goto('/lab/forms.html');
+  const search=page.getByRole('combobox',{name:'Search projects'});
+  await search.fill('mobile');
+  await expect(page.getByRole('option',{name:'Mobile launch'})).toBeVisible();
+  await page.getByRole('option',{name:'Mobile launch'}).tap();
+  await expect(search).toHaveValue('Mobile launch');
+  await expect(search).toBeFocused();
+  await expect(search).toHaveAttribute('aria-expanded','false');
+  await expect(search).not.toHaveAttribute('aria-activedescendant',/.+/);
+  await expect(page.locator('#project-result-count')).toHaveText('1 project found');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow).toBeLessThanOrEqual(1);
+ }finally{await context.close()}
+});
+test('rapidly changing suggestions clears stale active descendants and keyboard wrap remains deterministic',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const search=page.getByRole('combobox',{name:'Search projects'});
+ await search.fill('d');
+ await expect(page.getByRole('option')).toHaveCount(3);
+ await search.press('ArrowUp');
+ await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-2');
+ await search.fill('nothing-matches');
+ await expect(search).toHaveAttribute('aria-expanded','false');
+ await expect(search).not.toHaveAttribute('aria-activedescendant',/.+/);
+ await expect(page.getByRole('option')).toHaveCount(0);
+ await search.fill('team');
+ await search.press('ArrowDown');
+ await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
+ await search.press('Enter');
+ await expect(search).toHaveValue('Team dashboard');
+ await expect(search).toBeFocused();
+ await expect(search).toHaveAttribute('aria-expanded','false');
+});
