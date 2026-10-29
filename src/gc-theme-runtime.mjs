@@ -6,10 +6,10 @@
 import {generateTheme} from './gc-color-engine.mjs';
 
 export const GC_THEME_DEFAULTS=Object.freeze({
-  mode:'auto',accent:'iris',material:'translucent',contrast:'system',seed:'#5145D9'
+  mode:'auto',accent:'neutral',material:'translucent',contrast:'system',seed:'#374151'
 });
 const choices={
-  mode:['auto','light','dark'],accent:['iris','lagoon','ember','moss','custom'],
+  mode:['auto','light','dark'],accent:['neutral','ocean','iris','lagoon','ember','moss','custom'],
   material:['translucent','solid'],contrast:['system','standard','high']
 };
 const hex=/^#[0-9a-fA-F]{6}$/;
