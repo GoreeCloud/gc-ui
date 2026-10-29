@@ -1,0 +1,55 @@
+/* GC UI semantic accent layer. Import after gc.v1.generated.css.
+   Accessibility high-contrast / forced-color roles always take precedence.
+   Base generated tokens remain versioned; this opt-in alpha layer is not a stable release. */
+:root:not([data-gc-accent]):not([data-gc-contrast="high"]),
+:root[data-gc-accent="neutral"]:not([data-gc-contrast="high"]) {
+  --gc-v1-color-primary:#374151;
+  --gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#e5e7eb;
+  --gc-v1-color-on-primary-container:#111827;
+  --gc-v1-color-secondary:#475569;
+  --gc-v1-color-on-secondary:#ffffff;
+  --gc-v1-color-tertiary:#57534e;
+  --gc-v1-color-on-tertiary:#ffffff;
+  --gc-v1-color-focus-ring:#374151;
+  --gc-v1-color-selection:#e2e8f0;
+  --gc-v1-color-on-selection:#1f2937;
+  --gc-v1-color-link:#334155;
+  --gc-v1-color-visited-link:#475569;
+}
+:root[data-gc-mode="dark"]:not([data-gc-accent]):not([data-gc-contrast="high"]),
+:root[data-gc-mode="dark"][data-gc-accent="neutral"]:not([data-gc-contrast="high"]) {
+  --gc-v1-color-primary:#d1d5db;
+  --gc-v1-color-on-primary:#111827;
+  --gc-v1-color-primary-container:#374151;
+  --gc-v1-color-on-primary-container:#f9fafb;
+  --gc-v1-color-secondary:#cbd5e1;
+  --gc-v1-color-on-secondary:#1f2937;
+  --gc-v1-color-tertiary:#d6d3d1;
+  --gc-v1-color-on-tertiary:#292524;
+  --gc-v1-color-focus-ring:#e5e7eb;
+  --gc-v1-color-selection:#374151;
+  --gc-v1-color-on-selection:#f9fafb;
+  --gc-v1-color-link:#cbd5e1;
+  --gc-v1-color-visited-link:#d1d5db;
+}
+:root[data-gc-accent="ocean"]:not([data-gc-contrast="high"]) {
+  --gc-v1-color-primary:#1d4ed8;
+  --gc-v1-color-on-primary:#ffffff;
+  --gc-v1-color-primary-container:#dbeafe;
+  --gc-v1-color-on-primary-container:#1e3a8a;
+}
+:root[data-gc-mode="dark"][data-gc-accent="ocean"]:not([data-gc-contrast="high"]) {
+  --gc-v1-color-primary:#93c5fd;
+  --gc-v1-color-on-primary:#172554;
+  --gc-v1-color-primary-container:#1e3a8a;
+  --gc-v1-color-on-primary-container:#dbeafe;
+}
+/* Explicit accent selectors never override user-selected high-contrast mode. */
+@media (forced-colors: active) {
+  :root { --gc-v1-color-primary:Highlight !important;
+    --gc-v1-color-on-primary:HighlightText !important;
+    --gc-v1-color-focus-ring:Highlight !important; }
+}
+.swatch.neutral { background:#374151; }
+.swatch.ocean { background:#1d4ed8; }
