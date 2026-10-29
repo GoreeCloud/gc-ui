@@ -113,6 +113,11 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
   incompleteByRule:[...incompleteByRule.values()].sort((a,b)=>b.nodes-a.nodes||a.id.localeCompare(b.id)),
   incompleteByReason:[...incompleteByReason.values()].sort((a,b)=>b.nodes-a.nodes||
    a.rule.localeCompare(b.rule)||a.reason.localeCompare(b.reason)),
+  uniqueIncompleteReviewTargets:incompleteReviewTargets.size,
+  incompleteReviewTargets:[...incompleteReviewTargets.values()].sort((a,b)=>
+   b.occurrences-a.occurrences||a.pagePath.localeCompare(b.pagePath)||
+   a.rule.localeCompare(b.rule)||JSON.stringify(a.selector).localeCompare(JSON.stringify(b.selector))||
+   a.reason.localeCompare(b.reason)),
   limitations:'Automated axe WCAG A/AA screen; inconclusive checks require manual review. Not certification.',
   reports};
  await writeFile(join(folder,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
