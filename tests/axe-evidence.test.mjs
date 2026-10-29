@@ -146,3 +146,35 @@ test('manifest groups inconclusive node occurrences by exact reason and scenario
   ]);
  }finally{await rm(dir,{recursive:true,force:true})}
 });
+
+test('review queue deduplicates equivalent selectors within one lab, not across different pages',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-targets-'));
+ try{
+  for(const name of names){
+   const incomplete=['components','components-menu-open','forms'].includes(name)?
+    [{id:'color-contrast',nodes:[{target:['h1'],summary:'Gradient backdrop needs review'}]}]:[];
+   await writeFile(join(dir,name+'.json'),JSON.stringify({...report(name),incomplete}));
+  }
+  const manifest=await verifyAxeEvidence(dir,names);
+  assert.equal(manifest.incompleteNodes,3);
+  assert.equal(manifest.uniqueIncompleteReviewTargets,2);
+  assert.deepEqual(manifest.incompleteReviewTargets,[
+   {pagePath:'/lab/components.html',rule:'color-contrast',selector:['h1'],
+    reason:'Gradient backdrop needs review',occurrences:2,scenarios:['components','components-menu-open']},
+   {pagePath:'/lab/forms.html',rule:'color-contrast',selector:['h1'],
+    reason:'Gradient backdrop needs review',occurrences:1,scenarios:['forms']}
+  ]);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+test('review evidence fails closed when page origin or target selector is malformed',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-targets-'));
+ try{
+  for(const name of names)await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  await writeFile(join(dir,'forms.json'),JSON.stringify({...report('forms'),pagePath:'https://external.example/'}));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Malformed accessibility report/);
+  await writeFile(join(dir,'forms.json'),JSON.stringify({
+   ...report('forms'),incomplete:[{id:'color-contrast',nodes:[{summary:'Unknown selector'}]}]
+  }));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Missing or invalid axe CSS target/);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
