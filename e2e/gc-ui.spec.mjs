@@ -43,6 +43,8 @@ test('high contrast and OS accessibility force solid material',async({page})=>{
   await expect(page.locator('html')).toHaveAttribute('data-gc-material','solid');
   await page.locator('label:has(#contrast-switch)').click();
   await page.emulateMedia({reducedMotion:'reduce',colorScheme:'dark',forcedColors:'active'});
+  await expect(page.locator('html')).toHaveAttribute('data-gc-mode','light');
+  await page.locator('[data-theme-mode="auto"]').click();
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
   await expect(page.locator('html')).toHaveAttribute('data-gc-material','solid');
 });
@@ -798,4 +800,25 @@ test('tab keyboard navigation ignores host-hidden and detached actions',async({p
  await overview.focus();
  await overview.press('ArrowRight');
  await expect(details).toHaveAttribute('aria-selected','true');
+});
+
+
+test('first launch is Light even under dark OS; appearance remains user-controlled',async({page})=>{
+ await page.emulateMedia({colorScheme:'dark'});
+ await page.goto('/lab/components.html');
+ const root=page.locator('html');
+ await expect(root).toHaveAttribute('data-gc-mode','light');
+ await expect(page.locator('[data-theme-mode="light"]')).toHaveAttribute('aria-pressed','true');
+ const storedDefault=await page.evaluate(()=>localStorage.getItem('gc-ui-v1:mode'));
+ expect(storedDefault).toBeNull();
+ await page.locator('[data-theme-mode="dark"]').click();
+ await expect(root).toHaveAttribute('data-gc-mode','dark');
+ await page.reload();
+ await expect(root).toHaveAttribute('data-gc-mode','dark');
+ await page.emulateMedia({colorScheme:'light'});
+ await expect(root).toHaveAttribute('data-gc-mode','dark','explicit Dark survives OS changes');
+ await page.locator('[data-theme-mode="auto"]').click();
+ await expect(root).toHaveAttribute('data-gc-mode','light');
+ await page.emulateMedia({colorScheme:'dark'});
+ await expect(root).toHaveAttribute('data-gc-mode','dark','opted-in Auto tracks OS changes');
 });
