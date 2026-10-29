@@ -8,6 +8,7 @@ export {GC_PLATFORM_PROFILES,resolvePlatformProfile,applyPlatformProfile} from '
 export {GC_NATIVE_PROTOCOL_VERSION,GC_NATIVE_ACTIONS,validateNativeHostRequest,createNativeTransport,createNativeHostClient,applyVerifiedHostCapabilities,resolveEffectiveNativePreferences} from './gc-native-host.mjs';
 export {createChoreography} from './gc-choreography.mjs';
 export {GC_THEME_DEFAULTS,normalizeTheme,resolveTheme,createThemeController} from './gc-theme-runtime.mjs';
+export {GC_PRODUCT_ACCENTS,getProductAccent,createProductThemeController} from './gc-product-themes.mjs';
 export {nextTabIndex,initTabs,initDialog,createToast,runAsyncAction} from './gc-interactions.mjs';
 export {nextMenuIndex,initMenu} from './gc-menu.mjs';
 export {initChoiceChips,initDisclosureGroup} from './gc-patterns.mjs';
