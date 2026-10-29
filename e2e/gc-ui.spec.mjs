@@ -753,3 +753,23 @@ test('secondary pointer press never blocks menu dismissal on focus leaving',asyn
  await expect(trigger).toHaveAttribute('aria-expanded','false');
  await expect(page.locator('#action-primary')).toBeFocused();
 });
+
+test('menu keyboard opening skips an action hidden by its host',async({page})=>{
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:/Workspace actions/});
+ const first=page.locator('[data-command="duplicate"]');
+ const share=page.getByRole('menuitem',{name:'Share a link'});
+ await first.evaluate(el=>{el.hidden=true});
+ await trigger.focus();
+ await trigger.press('ArrowDown');
+ await expect(trigger).toHaveAttribute('aria-expanded','true');
+ await expect(share).toBeFocused();
+ await page.keyboard.press('Escape');
+ await expect(trigger).toHaveAttribute('aria-expanded','false');
+ await page.locator('#gc-file-actions [role="menuitem"]').evaluateAll(items=>{
+  items.forEach(item=>{item.hidden=true});
+ });
+ await trigger.press('ArrowDown');
+ await expect(trigger).toHaveAttribute('aria-expanded','false');
+ await expect(page.getByRole('menu',{name:/Workspace actions/})).toHaveCount(0);
+});

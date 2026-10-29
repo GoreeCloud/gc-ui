@@ -307,3 +307,30 @@ test('external close clears a pending trigger press before a new menu open',()=>
  assert.equal(api.isOpen(),false,'external close must clear pending pointer state');
  api.destroy();
 });
+
+test('menu skips host-hidden actions and refuses a menu with no available actions',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'hidden-actions',role:'menu'});
+ const first=elem('button',{role:'menuitem'}),second=elem('button',{role:'menuitem'}),third=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,first,second,third])el.ownerDocument=doc;
+ first.hidden=true;
+ second.setAttribute('aria-hidden','true');
+ menu.querySelectorAll=()=>[first,second,third];
+ menu.contains=el=>[menu,first,second,third].includes(el);
+ const api=initMenu(trigger,menu,{document:doc});
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,third,'first eligible visible action receives focus');
+ assert.equal(menu.hidden,false);
+ third.hidden=true;
+ api.close({returnFocus:false});
+ assert.equal(api.open(),false,'all-hidden menu must not be exposed');
+ assert.equal(menu.hidden,true);
+ assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ third.hidden=false;
+ third.inert=true;
+ assert.equal(api.open(),false,'inert actions are also excluded from the focus ring');
+ third.inert=false;
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,third,'host can restore an action dynamically');
+ api.destroy();
+});

@@ -57,7 +57,13 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   setTriggerAttr('aria-expanded','false');
   setHidden(true);
   items.forEach(item=>{item.tabIndex=-1});
-  const enabled=()=>items.filter(item=>!item.disabled&&item.getAttribute('aria-disabled')!=='true');
+  // Host applications may temporarily remove actions without disposing this
+  // controller. Hidden/inert actions must never enter the keyboard focus ring.
+  const enabled=()=>items.filter(item=>
+    !item.disabled&&!item.hidden&&!item.inert&&
+    item.getAttribute('aria-disabled')!=='true'&&
+    item.getAttribute('aria-hidden')!=='true'
+  );
   function focusItem(index){
     const candidates=enabled();
     if(candidates.length)candidates[((index%candidates.length)+candidates.length)%candidates.length].focus();
