@@ -15,6 +15,42 @@ const choices={
 const hex=/^#[0-9a-fA-F]{6}$/;
 const kebab=s=>s.replace(/([a-z0-9])([A-Z])/g,'$1-$2').toLowerCase();
 
+const neutralLight=Object.freeze({
+  primary:'#374151',onPrimary:'#FFFFFF',
+  primaryContainer:'#E5E7EB',onPrimaryContainer:'#111827',
+  secondary:'#475569',onSecondary:'#FFFFFF',
+  tertiary:'#57534E',onTertiary:'#FFFFFF',
+  focusRing:'#374151',selection:'#E2E8F0',onSelection:'#1F2937',
+  link:'#334155',visitedLink:'#475569'
+});
+const neutralDark=Object.freeze({
+  primary:'#D1D5DB',onPrimary:'#111827',
+  primaryContainer:'#374151',onPrimaryContainer:'#F9FAFB',
+  secondary:'#CBD5E1',onSecondary:'#1F2937',
+  tertiary:'#D6D3D1',onTertiary:'#292524',
+  focusRing:'#E5E7EB',selection:'#374151',onSelection:'#F9FAFB',
+  link:'#CBD5E1',visitedLink:'#D1D5DB'
+});
+const oceanLight=Object.freeze({
+  primary:'#1D4ED8',onPrimary:'#FFFFFF',
+  primaryContainer:'#DBEAFE',onPrimaryContainer:'#1E3A8A'
+});
+const oceanDark=Object.freeze({
+  primary:'#93C5FD',onPrimary:'#172554',
+  primaryContainer:'#1E3A8A',onPrimaryContainer:'#DBEAFE'
+});
+const curated=Object.freeze({
+  neutral:Object.freeze({light:neutralLight,dark:neutralDark}),
+  ocean:Object.freeze({light:oceanLight,dark:oceanDark})
+});
+/** Curated roles are stable in light/dark; custom seeds use generateTheme. */
+export function getCuratedAccentRoles(accent,mode) {
+  if(mode!=='light'&&mode!=='dark')return null;
+  if(accent!=='neutral'&&accent!=='ocean')return null;
+  return curated[accent][mode];
+}
+
+
 export function normalizeTheme(input={},defaultAccent=GC_THEME_DEFAULTS.accent){
   const out={...GC_THEME_DEFAULTS,accent:choices.accent.includes(defaultAccent)&&defaultAccent!=='custom'?defaultAccent:GC_THEME_DEFAULTS.accent};
   if(!input||typeof input!=='object')return out;
@@ -94,9 +130,13 @@ export function createThemeController({
     setDataset('gcMaterial',next.material);
     setDataset('gcContrast',next.contrast);
     clearOverrides();
-    if((next.accent==='custom'||next.accent==='neutral'||next.accent==='ocean')&&next.contrast!=='high'&&!system().forcedColors){
-      const seed=next.accent==='neutral'?'#374151':next.accent==='ocean'?'#1D4ED8':next.seed;
-      for(const [name,value] of Object.entries(generateTheme(seed,next.mode).roles)){
+    // Curated defaults must retain their reviewed semantic values. The custom
+    // color engine intentionally shifts hue and is only for explicit custom seeds.
+    if(next.contrast!=='high'&&!system().forcedColors){
+      const roles=next.accent==='custom'
+        ?generateTheme(next.seed,next.mode).roles
+        :getCuratedAccentRoles(next.accent,next.mode);
+      for(const [name,value] of Object.entries(roles||{})){
         if(relinquished.has(name))continue;
         const property='--gc-v1-color-'+kebab(name);
         overridden.set(name,{
