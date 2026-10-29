@@ -11,16 +11,17 @@ const table={
 export const GC_PLATFORM_PROFILES=Object.freeze(Object.fromEntries(
  Object.entries(table).map(([key,value])=>[key,Object.freeze({...value})])
 ));
-export function resolvePlatformProfile(kind='web',{highContrast=false,reducedMotion=false,reducedTransparency=false,lowPower=false}={}){
+export function resolvePlatformProfile(kind='web',{highContrast=false,forcedColors=false,reducedMotion=false,reducedTransparency=false,lowPower=false}={}){
  const id=Object.hasOwn(GC_PLATFORM_PROFILES,kind)?kind:'web';
  const base=GC_PLATFORM_PROFILES[id];
  const index=['e0','e1','e2','e3'];
- const cap=(highContrast||lowPower)?0:index.indexOf(base.depth);
+ const constrained=highContrast||forcedColors;
+ const cap=(constrained||lowPower)?0:index.indexOf(base.depth);
  return Object.freeze({
   kind:id,targetPx:base.target,navigation:base.nav,focus:base.focus,
   maxDepth:index[cap],
-  motion:(reducedMotion||highContrast)?'none':base.motion,
-  lens:(highContrast||reducedTransparency||lowPower)?'solid':base.lens,
+  motion:(reducedMotion||constrained)?'none':base.motion,
+  lens:(constrained||reducedTransparency||lowPower)?'solid':base.lens,
   // Design guidance only: no OS keyboard, haptics or safe area APIs are called here.
   nativeAdapterInstalled:false
  });
