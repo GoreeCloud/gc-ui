@@ -220,6 +220,7 @@ export declare function resolveMaterialDepth(options?:GCDepthOptions):Readonly<{
 export type GCPlatformKind='web'|'phone'|'tablet'|'desktop'|'tv'|'wearable'|'spatial';
 export interface GCPlatformSystem {
  highContrast?:boolean;
+ forcedColors?:boolean;
  reducedMotion?:boolean;
  reducedTransparency?:boolean;
  lowPower?:boolean;
