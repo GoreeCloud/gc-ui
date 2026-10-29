@@ -15,8 +15,8 @@ const choices={
 const hex=/^#[0-9a-fA-F]{6}$/;
 const kebab=s=>s.replace(/([a-z0-9])([A-Z])/g,'$1-$2').toLowerCase();
 
-export function normalizeTheme(input={}){
-  const out={...GC_THEME_DEFAULTS};
+export function normalizeTheme(input={},defaultAccent=GC_THEME_DEFAULTS.accent){
+  const out={...GC_THEME_DEFAULTS,accent:choices.accent.includes(defaultAccent)&&defaultAccent!=='custom'?defaultAccent:GC_THEME_DEFAULTS.accent};
   if(!input||typeof input!=='object')return out;
   for(const [key,values] of Object.entries(choices))if(values.includes(input[key]))out[key]=input[key];
   if(typeof input.seed==='string'&&hex.test(input.seed))out.seed=input.seed.toUpperCase();
@@ -32,7 +32,7 @@ export function resolveTheme(config={},system={}){
 export function createThemeController({
   root=globalThis.document?.documentElement,
   media=globalThis.matchMedia?.bind(globalThis),
-  storage,key='gc-ui-v1:'
+  storage,key='gc-ui-v1:',defaultAccent=GC_THEME_DEFAULTS.accent
 }={}){
   if(!root?.style||!root?.dataset)throw new TypeError('A document root with style and dataset is required');
   let persistence=storage;
@@ -44,9 +44,9 @@ export function createThemeController({
   }));
   const previous={};
   for(const name of Object.keys(GC_THEME_DEFAULTS)){
-    try{previous[name]=persistence?.getItem(key+name)}catch{}
+    try{const value=persistence?.getItem(key+name);if(value!==null&&value!==undefined)previous[name]=value}catch{}
   }
-  let state=normalizeTheme(previous),destroyed=false;
+  let state=normalizeTheme(previous,defaultAccent),destroyed=false;
   const overridden=new Map(),relinquished=new Set(),listeners=[];
   const datasetKeys=['gcMode','gcAccent','gcMaterial','gcContrast'];
   const priorDataset=new Map(datasetKeys.map(name=>[
@@ -94,8 +94,9 @@ export function createThemeController({
     setDataset('gcMaterial',next.material);
     setDataset('gcContrast',next.contrast);
     clearOverrides();
-    if(next.accent==='custom'&&next.contrast!=='high'&&!system().forcedColors){
-      for(const [name,value] of Object.entries(generateTheme(next.seed,next.mode).roles)){
+    if((next.accent==='custom'||next.accent==='neutral'||next.accent==='ocean')&&next.contrast!=='high'&&!system().forcedColors){
+      const seed=next.accent==='neutral'?'#374151':next.accent==='ocean'?'#1D4ED8':next.seed;
+      for(const [name,value] of Object.entries(generateTheme(seed,next.mode).roles)){
         if(relinquished.has(name))continue;
         const property='--gc-v1-color-'+kebab(name);
         overridden.set(name,{
@@ -121,16 +122,18 @@ export function createThemeController({
     resolved:()=>resolveTheme(state,system()),
     set(patch={}){
       if(destroyed)throw new Error('Theme controller was destroyed');
-      state=normalizeTheme({...state,...patch});
-      for(const [name,value] of Object.entries(state)){
-        try{persistence?.setItem(key+name,value)}catch{}
+      state=normalizeTheme({...state,...patch},defaultAccent);
+      // Persist only fields explicitly chosen by the user, never an app-suggested accent.
+      for(const name of Object.keys(patch)){
+        if(!Object.hasOwn(choices,name)&&name!=='seed')continue;
+        try{persistence?.setItem(key+name,state[name])}catch{}
       }
       render();
       return {...state};
     },
     reset(){
       if(destroyed)throw new Error('Theme controller was destroyed');
-      state=normalizeTheme();
+      state=normalizeTheme({},defaultAccent);
       for(const name of Object.keys(state)){
         try{persistence?.removeItem(key+name)}catch{}
       }
