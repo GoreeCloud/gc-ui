@@ -39,7 +39,7 @@ async function audit(page,testInfo,label){
  ,tags);
  const menuEvidence=label.startsWith('components-menu-open')?await menuSemanticEvidence(page):null;
  await retainAxeEvidence(testInfo,{
-  scenario:label,violations:results.violations.map(format),
+  scenario:label,pagePath:new URL(page.url()).pathname,violations:results.violations.map(format),
   incomplete:results.incomplete.map(format),rulesPassed:results.passes.length,
   ...(menuEvidence?{semanticEvidence:menuEvidence}:{}),
   note:'Incomplete checks and browser accessibility trees require manual review; not WCAG certification.'

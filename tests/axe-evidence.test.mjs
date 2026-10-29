@@ -8,7 +8,7 @@ import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence,normalizeIncomp
 
 const scenarioSource=readFileSync(new URL('../e2e/accessibility.spec.mjs',import.meta.url),'utf8');
 const names=expectedAxeScenarios(scenarioSource);
-const report=name=>({scenario:name,violations:[],incomplete:[],rulesPassed:90,
+const report=name=>({scenario:name,pagePath:'/lab/'+(name.startsWith('components')?'components':name.startsWith('forms')?'forms':name)+'.html',violations:[],incomplete:[],rulesPassed:90,
  ...(name.startsWith('components-menu-open')?{semanticEvidence:{
   engine:'Playwright browser-computed ARIA snapshot; not screen-reader speech',
   triggerTree:'- button "Workspace actions" [expanded]',
@@ -144,5 +144,37 @@ test('manifest groups inconclusive node occurrences by exact reason and scenario
    {rule:'color-contrast',reason:'Element background has a gradient',nodes:3,scenarios:['components','forms']},
    {rule:'color-contrast',reason:symbol,nodes:1,scenarios:['components']}
   ]);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('review queue deduplicates equivalent selectors within one lab, not across different pages',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-targets-'));
+ try{
+  for(const name of names){
+   const incomplete=['components','components-menu-open','forms'].includes(name)?
+    [{id:'color-contrast',nodes:[{target:['h1'],summary:'Gradient backdrop needs review'}]}]:[];
+   await writeFile(join(dir,name+'.json'),JSON.stringify({...report(name),incomplete}));
+  }
+  const manifest=await verifyAxeEvidence(dir,names);
+  assert.equal(manifest.incompleteNodes,3);
+  assert.equal(manifest.uniqueIncompleteReviewTargets,2);
+  assert.deepEqual(manifest.incompleteReviewTargets,[
+   {pagePath:'/lab/components.html',rule:'color-contrast',selector:['h1'],
+    reason:'Gradient backdrop needs review',occurrences:2,scenarios:['components','components-menu-open']},
+   {pagePath:'/lab/forms.html',rule:'color-contrast',selector:['h1'],
+    reason:'Gradient backdrop needs review',occurrences:1,scenarios:['forms']}
+  ]);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+test('review evidence fails closed when page origin or target selector is malformed',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-targets-'));
+ try{
+  for(const name of names)await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  await writeFile(join(dir,'forms.json'),JSON.stringify({...report('forms'),pagePath:'https://external.example/'}));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Malformed accessibility report/);
+  await writeFile(join(dir,'forms.json'),JSON.stringify({
+   ...report('forms'),incomplete:[{id:'color-contrast',nodes:[{summary:'Unknown selector'}]}]
+  }));
+  await assert.rejects(verifyAxeEvidence(dir,names),/Missing or invalid axe CSS target/);
  }finally{await rm(dir,{recursive:true,force:true})}
 });
