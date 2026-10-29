@@ -773,3 +773,29 @@ test('menu keyboard opening skips an action hidden by its host',async({page})=>{
  await expect(trigger).toHaveAttribute('aria-expanded','false');
  await expect(page.getByRole('menu',{name:/Workspace actions/})).toHaveCount(0);
 });
+
+test('tab keyboard navigation ignores host-hidden and detached actions',async({page})=>{
+ await page.goto('/lab/components.html');
+ const overview=page.getByRole('tab',{name:'Overview'});
+ const details=page.getByRole('tab',{name:'Details'});
+ const activity=page.locator('[role="tab"]').nth(1);
+ for(const state of ['hidden','inert','aria-hidden']){
+  await activity.evaluate((tab,kind)=>{
+   if(kind==='hidden')tab.hidden=true;
+   if(kind==='inert')tab.inert=true;
+   if(kind==='aria-hidden')tab.setAttribute('aria-hidden','true');
+  },state);
+  await overview.focus();
+  await overview.press('ArrowRight');
+  await expect(details).toHaveAttribute('aria-selected','true');
+  await activity.evaluate(tab=>tab.click());
+  await expect(details).toHaveAttribute('aria-selected','true');
+  await activity.evaluate(tab=>{
+   tab.hidden=false;tab.inert=false;tab.removeAttribute('aria-hidden');
+  });
+ }
+ await activity.evaluate(tab=>tab.remove());
+ await overview.focus();
+ await overview.press('ArrowRight');
+ await expect(details).toHaveAttribute('aria-selected','true');
+});

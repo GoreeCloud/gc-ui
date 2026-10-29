@@ -18,6 +18,8 @@ The alpha provides **visual reference implementations** in HTML/CSS/JS, not vers
 | Dialog | `.gc-dialog` | open / closed | native `<dialog>` with name and description |
 | Navigation | `.gc-nav`, `.mobile-nav` | current, default, focus | named navigation, active page in `aria-current` |
 
+The experimental `initTabs` controller filters hidden, inert, aria-hidden, disabled and removed tabs from selection and keyboard navigation. When a host inserts new tab and panel nodes, it must remount the controller; when it hides an active tab, it should select an available replacement.
+
 ## A working component must meet these criteria
 
 1. Behavior changes meaningfully on activation; disabled actions do not fire.
