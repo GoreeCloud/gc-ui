@@ -10,7 +10,7 @@ export function initChoiceChips(group,{onChange=()=>{}}={}){
  if(!buttons.length||buttons.some(button=>button.localName!=='button'||button.type!=='button')||
     values.some(value=>!value)||new Set(values).size!==values.length)
   throw new TypeError('Choices must be uniquely named native type=button controls');
- const enabled=button=>!button.disabled&&button.getAttribute('aria-disabled')!=='true';
+ const enabled=button=>!button.disabled&&!button.hidden&&!button.inert&&button.isConnected!==false&&button.getAttribute('aria-disabled')!=='true'&&button.getAttribute('aria-hidden')!=='true'&&(typeof group.contains!=='function'||group.contains(button))&&!button.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"]');
  if(!buttons.some(enabled))throw new Error('At least one enabled choice required');
  const original=new Map(buttons.map(button=>[button,button.getAttribute('aria-pressed')]));
  const written=new Map();
