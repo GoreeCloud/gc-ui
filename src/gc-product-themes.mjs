@@ -25,7 +25,8 @@ export const GC_PRODUCT_ACCENTS=Object.freeze({
 /** Unknown or malformed products are neutral, never the first curated hue. */
 export function getProductAccent(product) {
   if(typeof product!=='string'||!/^([a-z0-9]+-?)+$/.test(product)) return GC_THEME_DEFAULTS.accent;
-  return GC_PRODUCT_ACCENTS[product.toLowerCase()] ?? GC_THEME_DEFAULTS.accent;
+  const key=product.toLowerCase();
+  return Object.hasOwn(GC_PRODUCT_ACCENTS,key)?GC_PRODUCT_ACCENTS[key]:GC_THEME_DEFAULTS.accent;
 }
 
 /**
