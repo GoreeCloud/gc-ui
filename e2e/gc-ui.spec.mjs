@@ -722,3 +722,19 @@ for(const context of ['standard','high-contrast','forced-colors']){
   await expect(trigger).toBeFocused();
  });
 }
+
+test('pointer click closes an expanded menu instead of immediately reopening it',async({page})=>{
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:/Workspace actions/});
+ const menu=page.getByRole('menu',{name:/Workspace actions/});
+ await trigger.click();
+ await expect(menu).toBeVisible();
+ await expect(menu.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
+ await trigger.click();
+ await expect(menu).toHaveCount(0);
+ await expect(trigger).toHaveAttribute('aria-expanded','false');
+ await trigger.click();
+ await expect(menu).toBeVisible();
+ await page.keyboard.press('Escape');
+ await expect(menu).toHaveCount(0);
+});
