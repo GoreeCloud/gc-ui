@@ -194,13 +194,18 @@ export function createToast(region){
   }
  }};
 }
+// Attribute state is host-owned presentation, not a reliable request lock: a
+// consumer can change aria-busy or disabled before the first promise settles.
+const pendingAsyncActions=new WeakSet();
 export async function runAsyncAction(button,operation){
- if(button.getAttribute('aria-busy')==='true'||button.disabled||
-    button.getAttribute('aria-disabled')==='true')return null;
+ if(pendingAsyncActions.has(button)||button.getAttribute('aria-busy')==='true'||
+    button.disabled||button.getAttribute('aria-disabled')==='true')return null;
  const previousBusy=button.getAttribute('aria-busy');
+ pendingAsyncActions.add(button);
  button.setAttribute('aria-busy','true');button.disabled=true;
  try{return await operation()}
  finally{
+  pendingAsyncActions.delete(button);
   // The host may disable the action while the request is pending. Preserve
   // explicit host ARIA disablement instead of making it clickable on cleanup.
   if(button.getAttribute('aria-disabled')!=='true')button.disabled=false;
