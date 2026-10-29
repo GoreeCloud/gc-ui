@@ -26,12 +26,18 @@ export async function retainVisualEvidence(testInfo,name,png){
  * A fixed, offscreen skip link can otherwise appear halfway down a stitched
  * full-page image after clicking a lower-page theme or profile control.
  */
-export async function captureFullPageVisualEvidence(page,testInfo,name){
- await page.evaluate(()=>{
-  document.activeElement?.blur?.();
-  window.scrollTo({top:0,left:0,behavior:'instant'});
- });
- await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
+export async function captureFullPageVisualEvidence(page,testInfo,name,{preserveFocus=false}={}){
+ if(typeof preserveFocus!=='boolean')throw new TypeError('preserveFocus must be a boolean');
+ if(!preserveFocus){
+  await page.evaluate(()=>{
+   document.activeElement?.blur?.();
+   window.scrollTo({top:0,left:0,behavior:'instant'});
+  });
+  await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
+ }
+ // An open, focused menu farther down the page must retain its scroll position:
+ // forcing the viewport to the top fights native browser focus scrolling and
+ // can hang indefinitely. Full-page capture still includes the entire document.
  const misplaced=await page.evaluate(()=>[...document.querySelectorAll('.skip-link,.gc-skip-link')]
   .filter(el=>el.getBoundingClientRect().bottom>0)
   .map(el=>el.textContent?.trim()||'skip link'));
