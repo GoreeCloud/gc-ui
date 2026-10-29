@@ -202,8 +202,10 @@ export async function runAsyncAction(button,operation){
     button.disabled||button.getAttribute('aria-disabled')==='true')return null;
  const previousBusy=button.getAttribute('aria-busy');
  pendingAsyncActions.add(button);
- button.setAttribute('aria-busy','true');button.disabled=true;
- try{return await operation()}
+ try{
+  button.setAttribute('aria-busy','true');button.disabled=true;
+  return await operation();
+ }
  finally{
   try{
    // The host may disable the action while pending. Keep an explicit
