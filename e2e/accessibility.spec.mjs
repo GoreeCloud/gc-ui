@@ -12,15 +12,37 @@ const format=entry=>({
  id:entry.id,impact:entry.impact,help:entry.help,
  nodes:entry.nodes.map(node=>({target:node.target,summary:node.failureSummary}))
 });
+/** A browser-computed ARIA snapshot, not a physical screen-reader transcript. */
+async function menuSemanticEvidence(page){
+ const trigger=page.locator('#gc-file-action-trigger');
+ const menu=page.getByRole('menu',{name:/Workspace actions/});
+ await expect(trigger).toHaveAttribute('aria-haspopup','menu');
+ await expect(trigger).toHaveAttribute('aria-controls','gc-file-actions');
+ await expect(trigger).toHaveAttribute('aria-expanded','true');
+ await expect(menu).toHaveAttribute('aria-labelledby','gc-file-action-trigger');
+ await expect(menu).toBeVisible();
+ await expect(menu.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
+ await expect(menu.getByRole('menuitem',{name:/Archive \(unavailable\)/})).toHaveAttribute('aria-disabled','true');
+ const triggerTree=await trigger.ariaSnapshot();
+ const menuTree=await menu.ariaSnapshot();
+ if(!triggerTree.includes('Workspace actions')||
+    !menuTree.includes('Duplicate workspace')||
+    !menuTree.includes('Archive (unavailable)'))
+  throw new Error('Menu accessibility tree evidence incomplete');
+ return {engine:'Playwright browser-computed ARIA snapshot; not assistive-technology speech',
+  triggerTree,menuTree,expanded:true,focusedItem:'Duplicate workspace'};
+}
 async function audit(page,testInfo,label){
  await page.addScriptTag({path:axePath});
  const results=await page.evaluate(async values=>
   await window.axe.run(document,{runOnly:{type:'tag',values}})
  ,tags);
+ const menuEvidence=label.startsWith('components-menu-open')?await menuSemanticEvidence(page):null;
  await retainAxeEvidence(testInfo,{
   scenario:label,violations:results.violations.map(format),
   incomplete:results.incomplete.map(format),rulesPassed:results.passes.length,
-  note:'Incomplete checks require manual review; green tests do not establish WCAG conformance.'
+  ...(menuEvidence?{semanticEvidence:menuEvidence}:{}),
+  note:'Incomplete checks and browser accessibility trees require manual review; not WCAG certification.'
  });
  expect(results.violations.map(result=>
   result.id+': '+result.nodes.map(node=>node.target.join(' ')).join(', ')
@@ -91,7 +113,18 @@ const states=[
   await page.locator('.gc-nav-bottom [data-gc-route="activity"]').click();
  }},
  {name:'components-menu-open',page:'components',width:375,setup:async page=>{
-  await page.locator('#gc-file-action-trigger').click();
+  const trigger=page.locator('#gc-file-action-trigger');
+  await trigger.focus();
+  await trigger.press('ArrowDown');
+  await expect(page.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
+ }},
+ {name:'components-menu-open-forced-colors',page:'components',width:375,setup:async page=>{
+  await page.emulateMedia({forcedColors:'active'});
+  await expect.poll(()=>page.evaluate(()=>matchMedia('(forced-colors: active)').matches)).toBe(true);
+  const trigger=page.locator('#gc-file-action-trigger');
+  await trigger.focus();
+  await trigger.press('ArrowDown');
+  await expect(page.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
  }},
  {name:'components-high-contrast-dark',page:'components',width:375,setup:async page=>{
   await page.locator('[data-theme-mode="dark"]').click();
