@@ -28,13 +28,16 @@ export async function retainVisualEvidence(testInfo,name,png){
  */
 export async function captureFullPageVisualEvidence(page,testInfo,name,{preserveFocus=false}={}){
  if(typeof preserveFocus!=='boolean')throw new TypeError('preserveFocus must be a boolean');
- await page.evaluate(keepFocus=>{
-  // Preserve focus for open menu/dialog evidence: blurring a menu item would
-  // dispatch focusout and dismiss the very interaction being photographed.
-  if(!keepFocus)document.activeElement?.blur?.();
-  window.scrollTo({top:0,left:0,behavior:'instant'});
- },preserveFocus);
- await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
+ if(!preserveFocus){
+  await page.evaluate(()=>{
+   document.activeElement?.blur?.();
+   window.scrollTo({top:0,left:0,behavior:'instant'});
+  });
+  await page.waitForFunction(()=>window.scrollX===0&&window.scrollY===0);
+ }
+ // An open, focused menu farther down the page must retain its scroll position:
+ // forcing the viewport to the top fights native browser focus scrolling and
+ // can hang indefinitely. Full-page capture still includes the entire document.
  const misplaced=await page.evaluate(()=>[...document.querySelectorAll('.skip-link,.gc-skip-link')]
   .filter(el=>el.getBoundingClientRect().bottom>0)
   .map(el=>el.textContent?.trim()||'skip link'));
