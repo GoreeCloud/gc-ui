@@ -738,3 +738,18 @@ test('pointer click closes an expanded menu instead of immediately reopening it'
  await page.keyboard.press('Escape');
  await expect(menu).toHaveCount(0);
 });
+
+test('secondary pointer press never blocks menu dismissal on focus leaving',async({page})=>{
+ await page.goto('/lab/components.html');
+ const trigger=page.getByRole('button',{name:/Workspace actions/});
+ const menu=page.getByRole('menu',{name:/Workspace actions/});
+ await trigger.click();
+ await expect(menu).toBeVisible();
+ await expect(menu.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
+ // Dispatch the nonprimary browser event without a synthetic primary click.
+ await trigger.dispatchEvent('pointerdown',{button:2,isPrimary:true,pointerType:'mouse'});
+ await page.locator('#action-primary').focus();
+ await expect(menu).toHaveCount(0);
+ await expect(trigger).toHaveAttribute('aria-expanded','false');
+ await expect(page.locator('#action-primary')).toBeFocused();
+});
