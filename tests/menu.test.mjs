@@ -327,6 +327,9 @@ test('menu skips host-hidden actions and refuses a menu with no available action
  assert.equal(menu.hidden,true);
  assert.equal(trigger.getAttribute('aria-expanded'),'false');
  third.hidden=false;
+ third.inert=true;
+ assert.equal(api.open(),false,'inert actions are also excluded from the focus ring');
+ third.inert=false;
  assert.equal(api.open(),true);
  assert.equal(doc.activeElement,third,'host can restore an action dynamically');
  api.destroy();
