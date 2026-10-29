@@ -122,11 +122,20 @@ export function createThemeController({
     resolved:()=>resolveTheme(state,system()),
     set(patch={}){
       if(destroyed)throw new Error('Theme controller was destroyed');
-      state=normalizeTheme({...state,...patch},defaultAccent);
-      // Persist only fields explicitly chosen by the user, never an app-suggested accent.
-      for(const name of Object.keys(patch)){
-        if(!Object.hasOwn(choices,name)&&name!=='seed')continue;
-        try{persistence?.setItem(key+name,state[name])}catch{}
+      // Invalid input must not convert a product suggestion into a stored
+      // "user choice". Accept and persist only explicitly validated fields.
+      if(!patch||typeof patch!=='object'||Array.isArray(patch))return {...state};
+      const accepted={};
+      for(const [name,values] of Object.entries(choices)){
+        if(Object.hasOwn(patch,name)&&values.includes(patch[name]))accepted[name]=patch[name];
+      }
+      if(Object.hasOwn(patch,'seed')&&typeof patch.seed==='string'&&hex.test(patch.seed)){
+        accepted.seed=patch.seed.toUpperCase();
+      }
+      if(!Object.keys(accepted).length)return {...state};
+      state=normalizeTheme({...state,...accepted},defaultAccent);
+      for(const [name,value] of Object.entries(accepted)){
+        try{persistence?.setItem(key+name,value)}catch{}
       }
       render();
       return {...state};
