@@ -20,6 +20,12 @@ export function expectedAxeScenarios(source){
  return names;
 }
 
+export function normalizeIncompleteReason(summary){
+ const text=typeof summary==='string'?summary.trim():'';
+ return text.replace(/^Fix (?:any|all) of the following:\\s*/i,'')
+  .replace(/\\s+/g,' ').trim()||'No failure summary supplied by axe';
+}
+
 export async function retainAxeEvidence(testInfo,report){
  const {scenario,violations,incomplete,rulesPassed}=report??{};
  const root=testInfo?.project?.outputDir;
@@ -44,7 +50,7 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
  const extra=found.filter(x=>x.endsWith('.json')&&x!=='manifest.json'&&!expected.includes(x));
  if(missing.length||extra.length)
   throw new Error('Accessibility evidence mismatch: missing='+missing.join(',')+' unexpected='+extra.join(','));
- const reports=[],incompleteByRule=new Map();
+ const reports=[],incompleteByRule=new Map(),incompleteByReason=new Map();
  for(const scenario of names){
   const bytes=await readFile(join(folder,scenario+'.json'));
   let data;
@@ -70,6 +76,14 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
     throw new Error('Malformed incomplete axe rule in '+scenario);
    const count=rule.nodes.length;
    incompleteNodes+=count;
+   for(const node of rule.nodes){
+    const reason=normalizeIncompleteReason(node?.summary);
+    const key=JSON.stringify([rule.id,reason]);
+    const entry=incompleteByReason.get(key)??{rule:rule.id,reason,nodes:0,scenarios:[]};
+    entry.nodes++;
+    if(!entry.scenarios.includes(scenario))entry.scenarios.push(scenario);
+    incompleteByReason.set(key,entry);
+   }
    const total=incompleteByRule.get(rule.id)??{id:rule.id,checks:0,nodes:0,scenarios:[]};
    total.checks++;
    total.nodes+=count;
@@ -85,6 +99,8 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
   incompleteNodes:reports.reduce((total,x)=>total+x.incompleteNodes,0),
   menuSemanticTrees:reports.filter(x=>x.semanticTreeCaptured).map(x=>x.scenario),
   incompleteByRule:[...incompleteByRule.values()].sort((a,b)=>b.nodes-a.nodes||a.id.localeCompare(b.id)),
+  incompleteByReason:[...incompleteByReason.values()].sort((a,b)=>b.nodes-a.nodes||
+   a.rule.localeCompare(b.rule)||a.reason.localeCompare(b.reason)),
   limitations:'Automated axe WCAG A/AA screen; inconclusive checks require manual review. Not certification.',
   reports};
  await writeFile(join(folder,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
