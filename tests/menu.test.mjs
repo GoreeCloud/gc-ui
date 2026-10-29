@@ -278,3 +278,32 @@ test('canceling trigger after focus moves closes the menu safely',()=>{
  assert.equal(doc.activeElement,trigger);
  api.destroy();
 });
+
+test('nonprimary pointerdown cannot suppress focusout dismissal',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'secondary-pointer-menu',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,item])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ trigger.fire('pointerdown',{button:2,isPrimary:true,pointerType:'mouse'});
+ trigger.focus();
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),false,'right-click must not arm a pending primary click');
+ assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ api.destroy();
+});
+test('external close clears a pending trigger press before a new menu open',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'externally-closed-menu',role:'menu'}),item=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,item])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[item];menu.contains=node=>node===menu||node===item;
+ const api=initMenu(trigger,menu,{document:doc});
+ api.open();
+ trigger.fire('pointerdown',{button:0,isPrimary:true,pointerType:'mouse'});
+ api.close({returnFocus:false});
+ assert.equal(api.open(),true);
+ menu.fire('focusout',{relatedTarget:trigger});
+ assert.equal(api.isOpen(),false,'external close must clear pending pointer state');
+ api.destroy();
+});
