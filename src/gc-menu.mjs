@@ -83,7 +83,11 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   // A second pointer activation moves focus out of the menu before click.
   // Keep the menu open through focusout so click can toggle it CLOSED.
   const triggerPointerDown=()=>{pendingTriggerPointer=true};
-  const triggerPointerCancel=()=>{pendingTriggerPointer=false};
+  const triggerPointerCancel=()=>{
+    if(!pendingTriggerPointer)return;
+    pendingTriggerPointer=false;
+    if(open&&!menu.contains(document.activeElement))hide({returnFocus:false});
+  };
   const documentPointerUp=event=>{
     if(!pendingTriggerPointer||trigger.contains(event.target))return;
     pendingTriggerPointer=false;
