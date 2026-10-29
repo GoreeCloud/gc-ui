@@ -69,10 +69,17 @@ Primary is not the only expressive color. Secondary is contextual; tertiary intr
 **Review prompt:** Does this screen still communicate Canvas / Surface / Lens hierarchy, grouping and actionable emphasis with its accent temporarily hidden? Is each white area intentional rather than simply an unstyled default?
 
 ## 5. Appearance and precedence
-User overrides > accessibility system preference > explicit product configuration > OS appearance > GC UI default. Accessibility overrides are *orthogonal*: increased contrast, reduced transparency, reduced motion, larger type, color-filter support, forced colors. Never infer accessibility needs based on appearance alone.
+
+**Founder-directed application default (2026-10-29):** As GoreeCloud's founder, I require every GoreeCloud application to start in **Light** when there is no valid saved user appearance choice, regardless of the host's current light/dark preference. Every application must permit the user to switch appearance **at any time in Settings**; explicit Light or Dark selections must be honored and persisted. **Auto / Follow system** is permitted as a user-selectable option, **not** the automatic first-run choice. Resetting or clearing appearance returns to Light. The requirement applies to all supported clients and is detailed in [the product theme policy](PRODUCT_THEME_POLICY.md#mandatory-appearance-baseline--founder-direction-2026-10-29).
+
+**Appearance selection precedence:** A valid saved explicit user selection takes priority. Light and Dark remain fixed despite OS appearance changes; an explicitly selected Auto resolves to the OS appearance and follows changes. When no valid selection exists, use the **Light** GoreeCloud baseline—not the OS appearance. Accessibility-related system requirements (including forced colors and increased contrast) continue to govern applicable accessibility rendering and are not diminished by a user appearance choice. Product accent suggestion and color-personality precedence remain separately defined by the product theme policy.
+
+**Current-state distinction (2026-10-29):** The experimental browser implementation still uses `GC_THEME_DEFAULTS.mode = 'auto'` in [`src/gc-theme-runtime.mjs`](../src/gc-theme-runtime.mjs), and the reference UI's [`src/main.js`](../src/main.js) resolves an unset mode from the host appearance. This is an existing implementation gap, not compliant default behavior. Runtime changes, consumer migrations, and tests are still required before implementation claims can be made.
+
+User-selectable appearance and accessible system presentation have distinct precedence as specified above. Accessibility overrides are *orthogonal*: increased contrast, reduced transparency, reduced motion, larger type, color-filter support, forced colors. Never infer accessibility needs based on appearance alone.
 - **Light:** bright Canvas, opaque information Surfaces, restrained shadow; darker primary actions.
 - **Dark:** non-black near-neutral Canvas, raised Surfaces slightly lighter than resting, luminous but desaturated primary, distinct edges.
-- **Auto:** follows host appearance changes live while preserving user-selected palette; explicit light/dark preference persists until reset to Auto.
+- **Auto:** an *explicit opt-in* to follow host appearance changes live while preserving user-selected palette; explicit Light/Dark preferences persist until changed or cleared, and clearing returns to Light.
 - **High contrast:** stronger outlines, opaque Lens, more prominent focus indicator, no pastel-on-pastel text.
 - **Quiet premium:** lower chroma (0.75–0.85 multiplier), reduced gradients, standard motion.
 - **Signature premium:** default chroma, wider but still bounded highlights, expressive entrance motion.
