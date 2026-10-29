@@ -4,7 +4,7 @@ import {mkdtemp,readFile,rm,writeFile} from 'node:fs/promises';
 import {readFileSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence} from '../scripts/axe-evidence.mjs';
+import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence,normalizeIncompleteReason} from '../scripts/axe-evidence.mjs';
 
 const scenarioSource=readFileSync(new URL('../e2e/accessibility.spec.mjs',import.meta.url),'utf8');
 const names=expectedAxeScenarios(scenarioSource);
@@ -115,5 +115,34 @@ test('open-menu evidence must include real browser-computed ARIA tree snapshots'
   await writeFile(join(dir,'components-menu-open.json'),JSON.stringify(report('components-menu-open')));
   const manifest=await verifyAxeEvidence(dir,names);
   assert.deepEqual(manifest.menuSemanticTrees,['components-menu-open','components-menu-open-forced-colors']);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('inconclusive rule reasons preserve axe language and fold header whitespace',()=>{
+ assert.equal(normalizeIncompleteReason('Fix any of the following:\n  Background uses a gradient  '),'Background uses a gradient');
+ assert.equal(normalizeIncompleteReason('Fix all of the following:\n Reference cannot be resolved'),'Reference cannot be resolved');
+ assert.equal(normalizeIncompleteReason(null),'No failure summary supplied by axe');
+});
+test('manifest groups inconclusive node occurrences by exact reason and scenario',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-axe-reasons-'));
+ try{
+  const gradient='Fix any of the following:\n Element background has a gradient';
+  const symbol='Element content contains only non-text characters';
+  for(const name of names){
+   const incomplete=name==='components'?[
+    {id:'color-contrast',nodes:[{target:['h1'],summary:gradient},
+      {target:['.eyebrow'],summary:gradient},{target:['.icon'],summary:symbol}]}
+   ]:name==='forms'?[
+    {id:'color-contrast',nodes:[{target:['h2'],summary:gradient}]}
+   ]:[];
+   await writeFile(join(dir,name+'.json'),JSON.stringify({...report(name),incomplete}));
+  }
+  const manifest=await verifyAxeEvidence(dir,names);
+  assert.equal(manifest.incompleteChecks,2);
+  assert.equal(manifest.incompleteNodes,4);
+  assert.deepEqual(manifest.incompleteByReason,[
+   {rule:'color-contrast',reason:'Element background has a gradient',nodes:3,scenarios:['components','forms']},
+   {rule:'color-contrast',reason:symbol,nodes:1,scenarios:['components']}
+  ]);
  }finally{await rm(dir,{recursive:true,force:true})}
 });
