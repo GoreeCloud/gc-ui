@@ -1,11 +1,11 @@
 # GC UI — Official Identity and Brand Asset Provenance
 
-**Brand owner / source of truth:** [GoreeCloud/branding-assets](https://github.com/GoreeCloud/branding-assets/tree/main/products/gc-ui)  
+**Current official brand asset authority:** [GoreeCloud/brand-assets](https://github.com/GoreeCloud/brand-assets/tree/main/products/gc-ui)  
 **Official GC UI identity:** version 1.0.0  
-**Canonical publication commit:** `29ea759c167a86390a2b4ff559e5fc40ec7c99a3` (vector sources and catalog)  
-**Verified derivative publication commit:** `dd13aad` (PNG/icon derivatives and reproducible export script)
+**Earlier reported publication commit (historical; former repository inaccessible at review):** `29ea759c167a86390a2b4ff559e5fc40ec7c99a3` (vector sources and catalog)  
+**Earlier reported raster derivative commit (historical; former repository inaccessible at review):** `dd13aad` (PNG/icon derivatives and reproducible export script)
 
-GC UI is its own design language and product identity, designated to **permanently replace** the predecessor Glaze design system. **It is not the GoreeCloud platform symbol and not a relabeling of predecessor artwork.** `GoreeCloud/branding-assets` is authoritative, and local SVG files in this repository are exact synchronized derivatives for standalone hosting, offline documentation, demos, and package consumption.
+GC UI is its own design language and product identity, designated to **permanently replace** the predecessor Glaze design system. **It is not the GoreeCloud platform symbol and not a relabeling of predecessor artwork.** The four source-identical official SVGs now have a verified master at `GoreeCloud/brand-assets/products/gc-ui/`. Local SVG files in this repository remain exact byte-matched consumer copies for standalone hosting, offline documentation, demos, and package consumption.
 
 ## Canonical → GC UI consumer mapping
 
@@ -22,12 +22,19 @@ GC UI is its own design language and product identity, designated to **permanent
 2. Use the horizontal full-color logo in appropriately wide header/splash contexts, and the outlined reversed logo for dark backgrounds.
 3. Keep icon/wordmark proportions and source colors unchanged. Avoid extending official imagery with extra blur, outline, glow, shadow, or logo reinterpretation.
 4. For standalone rendering, include informative alternative text as appropriate; if adjacent text already says “GC UI”, the icon image can use `alt=""` to avoid repeating the name.
-5. Only reproduce raster/icon versions from the SVG master in branding-assets. Do not independently recolor or redraw consumer artwork.
+5. Only reproduce raster/icon versions from the canonical SVG master in `GoreeCloud/brand-assets`. Do not independently recolor or redraw consumer artwork.
 6. The identity is stable even when the interface uses a user-selected theme accent; the icon does **not** change along with application theme color.
 7. Branding authority does not imply product stability, accessibility certification, security, or any other operational claim.
 
 ## Checks
 
-`tests/branding.test.mjs` verifies exact source Git blob IDs for all four synchronized SVG files. If the brand master changes, update branding-assets **first**, replace consumer copies from the new canonical files, then deliberately update the pinned blob identifiers here and in the regression test.
+`tests/branding.test.mjs` verifies exact source Git blob IDs for all four synchronized SVG files. If the brand master changes, update `GoreeCloud/brand-assets` **first**, replace consumer copies from the new canonical files, then deliberately update the pinned blob identifiers here and in the regression test.
 
 The original GC UI component-glyph sprite (`assets/gc-glyphs.svg`) is an independent iconography library and should not be confused with the GC UI identity mark.
+
+
+## Current canonical repository and migration verification (October 29, 2026)
+
+The founder has designated [GoreeCloud/brand-assets](https://github.com/GoreeCloud/brand-assets) for **all** official application and service assets, including development and alpha. Its [GC UI product namespace](https://github.com/GoreeCloud/brand-assets/tree/main/products/gc-ui) now contains the four SVG sources listed above. Connected GitHub readback verified their byte-identical Git blob identities against the four corresponding consumer assets and `tests/branding.test.mjs` pins.
+
+The previously cited `GoreeCloud/branding-assets` repository was not found in the connected GitHub account review. The older reported history and publication SHAs at the top of this file are **retained as historical claims**, not reverified source history. Do not treat its historical PNG/favicons/manifest claims as evidence of files currently published at the new `brand-assets` destination. Rasters, web manifests, native asset bundles, and remaining GoreeCloud product migrations require their own verified publication and tests.
