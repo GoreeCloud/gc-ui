@@ -64,15 +64,16 @@ test('live menu capture keeps keyboard focus and rejects invalid focus options',
   const flags=[],png=Buffer.concat([signature,Buffer.from('menu-open')]);
   const page={
    async evaluate(fn,arg){
-    if(arg!==undefined)flags.push(arg);
-    return flags.length===1&&arg===true?undefined:[];
+    flags.push('check-skip-links');
+    assert.equal(arg,undefined);
+    return [];
    },
-   async waitForFunction(){},
+   async waitForFunction(){throw new Error('Focused menu capture must not request scroll reset')},
    async screenshot(opts){assert.equal(opts.fullPage,true);return png}
   };
   const info={project:{outputDir:dir},async attach(){}};
   const file=await captureFullPageVisualEvidence(page,info,'components-menu-open',{preserveFocus:true});
-  assert.deepEqual(flags,[true]);
+  assert.deepEqual(flags,['check-skip-links']);
   assert.deepEqual(await readFile(file),png);
   await assert.rejects(captureFullPageVisualEvidence(page,info,'invalid',{preserveFocus:'yes'}),TypeError);
  }finally{await rm(dir,{recursive:true,force:true})}
