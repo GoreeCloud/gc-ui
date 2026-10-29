@@ -11,8 +11,8 @@ test('documented accessibility screening count matches executable matrix',()=>{
  const states=source.split('const states=[')[1].split('];\nfor(const state')[0];
  const interactive=states.split('\n').filter(line=>line.trimStart().startsWith("{name:'")).length;
  assert.equal(baseline,10);
- assert.equal(interactive,16);
- assert.equal(baseline+interactive,26);
- assert.ok(guide.includes('26 axe-core accessibility screens'));
- assert.ok(guide.includes('10 GC UI baseline labs and 16 additional'));
+ assert.equal(interactive,17);
+ assert.equal(baseline+interactive,27);
+ assert.ok(guide.includes('27 axe-core accessibility screens'));
+ assert.ok(guide.includes('10 GC UI baseline labs and 17 additional'));
 });
