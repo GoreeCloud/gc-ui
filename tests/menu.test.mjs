@@ -255,6 +255,7 @@ test('released pointer away from trigger clears deferred dismissal and listeners
  const api=initMenu(trigger,menu,{document:doc});
  api.open();
  trigger.fire('pointerdown');
+ trigger.focus(); // emulate the browser's focus transfer before focusout
  menu.fire('focusout',{relatedTarget:trigger});
  assert.equal(api.isOpen(),true,'do not close while trigger press is pending');
  handlers.get('pointerup')({target:elem('div')});
