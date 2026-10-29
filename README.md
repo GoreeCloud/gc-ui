@@ -47,7 +47,7 @@ npm test
 
 - **Original three-layer material model**: Canvas (background), Surface (content), Lens (floating navigation and controls).
 - **Four starter accent palettes**: Iris, Lagoon, Ember, and Moss.
-- **Light and dark themes**, automatic system preference on first visit, persisted user choice.
+- **Light-first appearance** on the first visit, with accessible Light/Dark controls, opt-in system-following mode in the shared runtime, and persisted explicit user choices (consumer rollout pending).
 - **Reduced-transparency and reduced-motion fallbacks**, plus an explicit solid-Lens switch.
 - **Reference components**: buttons, selectable controls, fields, checkboxes, range input, progress, status chips, toast, dialog, responsive navigation, and task lists.
 - **Token contract** in `tokens/gc.tokens.json` and CSS implementation in `styles/tokens.css`.
