@@ -122,11 +122,13 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
  const onInputChange=()=>update(input.value);
  const decrement=()=>{
   update(normalize(input.value)-step);
-  input.focus();
+  // Host callbacks can synchronously retire or detach this controller.
+  // Do not reclaim focus from the replacement screen after teardown.
+  if(!destroyed&&input.isConnected!==false)input.focus();
  };
  const increment=()=>{
   update(normalize(input.value)+step);
-  input.focus();
+  if(!destroyed&&input.isConnected!==false)input.focus();
  };
  // Initialize before subscribing: a host callback can reject the initial
  // value. Failed construction must never leave ghost click/change handlers
