@@ -74,6 +74,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   function hide({returnFocus=true}={}){
     if(!open)return;
     open=false;
+    pendingTriggerPointer=false;
     // The host may already have hidden this menu. Do not take ownership of
     // that newer visibility state merely because the controller is closing.
     if(!menu.hidden)setHidden(true);
@@ -82,7 +83,12 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   }
   // A second pointer activation moves focus out of the menu before click.
   // Keep the menu open through focusout so click can toggle it CLOSED.
-  const triggerPointerDown=()=>{pendingTriggerPointer=true};
+  const triggerPointerDown=event=>{
+    // Nonprimary/right clicks may not emit a normal click; never defer focusout
+    // for them or a collapsed menu may remain accessible after focus leaves.
+    if((event.button===undefined||event.button===0)&&event.isPrimary!==false)
+      pendingTriggerPointer=true;
+  };
   const triggerPointerCancel=()=>{
     if(!pendingTriggerPointer)return;
     pendingTriggerPointer=false;
