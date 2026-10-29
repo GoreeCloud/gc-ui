@@ -393,3 +393,22 @@ test('async action respects aria-disabled before launch and host disablement dur
  assert.equal(button.getAttribute('aria-busy'),null,'busy belongs to the action, not the host disabled flag');
  assert.equal(called,1);
 });
+
+
+test('pending action remains locked when its host clears busy presentation',async()=>{
+ const attrs=new Map();
+ const button={disabled:false,getAttribute:key=>attrs.get(key)??null,
+  setAttribute:(key,value)=>attrs.set(key,String(value)),
+  removeAttribute:key=>attrs.delete(key)};
+ let done,runs=0;
+ const first=runAsyncAction(button,()=>{runs++;return new Promise(resolve=>done=resolve)});
+ button.setAttribute('aria-busy','false');
+ button.disabled=false;
+ const second=await runAsyncAction(button,()=>{runs++;return 'duplicate'});
+ assert.equal(second,null);
+ assert.equal(runs,1);
+ done('saved');
+ assert.equal(await first,'saved');
+ assert.equal(button.getAttribute('aria-busy'),'false');
+ assert.equal(await runAsyncAction(button,()=> 'retry'),'retry');
+});
