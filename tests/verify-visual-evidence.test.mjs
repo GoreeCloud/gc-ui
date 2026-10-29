@@ -14,7 +14,7 @@ function smallPngHeader(width,height){
 }
 test('full-page visual inventory has 22 distinct named browser states',()=>{
  const names=visualEvidenceScenarios.map(([name])=>name);
- assert.equal(names.length,22);assert.equal(new Set(names).size,21);
+ assert.equal(names.length,22);assert.equal(new Set(names).size,22);
  for(const [name,width,height] of visualEvidenceScenarios){
   assert.match(name,/^[a-z0-9][a-z0-9-]+$/);
   assert.ok(width>=320&&height>=720);
