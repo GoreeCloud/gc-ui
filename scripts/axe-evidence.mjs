@@ -22,8 +22,8 @@ export function expectedAxeScenarios(source){
 
 export function normalizeIncompleteReason(summary){
  const text=typeof summary==='string'?summary.trim():'';
- return text.replace(/^Fix (?:any|all) of the following:\\s*/i,'')
-  .replace(/\\s+/g,' ').trim()||'No failure summary supplied by axe';
+ return text.replace(/^Fix (?:any|all) of the following:\s*/i,'')
+  .replace(/\s+/g,' ').trim()||'No failure summary supplied by axe';
 }
 
 export async function retainAxeEvidence(testInfo,report){
