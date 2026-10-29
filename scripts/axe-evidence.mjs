@@ -9,6 +9,7 @@ import {fileURLToPath} from 'node:url';
 import {resolvePlaywrightIsolation} from './playwright-isolation-config.mjs';
 
 const safeName=/^[a-z0-9][a-z0-9-]{0,79}$/;
+const safePagePath=/^\/lab\/[a-z0-9-]+\.html$/;
 export function expectedAxeScenarios(source){
  const baseline=source.match(/for\(const name of \[([^\]]+)\]\)/)?.[1];
  const interactive=source.split('const states=[')[1]?.split('];\nfor(const state')[0];
@@ -27,9 +28,9 @@ export function normalizeIncompleteReason(summary){
 }
 
 export async function retainAxeEvidence(testInfo,report){
- const {scenario,violations,incomplete,rulesPassed}=report??{};
+ const {scenario,pagePath,violations,incomplete,rulesPassed}=report??{};
  const root=testInfo?.project?.outputDir;
- if(typeof root!=='string'||!root||!safeName.test(scenario??'')||
+ if(typeof root!=='string'||!root||!safeName.test(scenario??'')||!safePagePath.test(pagePath??'')||
     !Array.isArray(violations)||!Array.isArray(incomplete)||
     !Number.isSafeInteger(rulesPassed)||rulesPassed<0)
   throw new TypeError('Invalid Playwright accessibility evidence');
@@ -50,12 +51,12 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
  const extra=found.filter(x=>x.endsWith('.json')&&x!=='manifest.json'&&!expected.includes(x));
  if(missing.length||extra.length)
   throw new Error('Accessibility evidence mismatch: missing='+missing.join(',')+' unexpected='+extra.join(','));
- const reports=[],incompleteByRule=new Map(),incompleteByReason=new Map();
+ const reports=[],incompleteByRule=new Map(),incompleteByReason=new Map(),incompleteReviewTargets=new Map();
  for(const scenario of names){
   const bytes=await readFile(join(folder,scenario+'.json'));
   let data;
   try{data=JSON.parse(bytes.toString('utf8'))}catch{throw new Error('Invalid accessibility report JSON: '+scenario)}
-  if(data.scenario!==scenario||!Array.isArray(data.violations)||
+  if(data.scenario!==scenario||!safePagePath.test(data.pagePath??'')||!Array.isArray(data.violations)||
      !Array.isArray(data.incomplete)||!Number.isSafeInteger(data.rulesPassed)||
      data.rulesPassed<0)throw new Error('Malformed accessibility report: '+scenario);
   if(data.violations.length)throw new Error('Unresolved axe violations: '+scenario);
@@ -90,7 +91,7 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
    if(!total.scenarios.includes(scenario))total.scenarios.push(scenario);
    incompleteByRule.set(rule.id,total);
   }
-  reports.push({scenario,rulesPassed:data.rulesPassed,incompleteChecks:data.incomplete.length,
+  reports.push({scenario,pagePath:data.pagePath,rulesPassed:data.rulesPassed,incompleteChecks:data.incomplete.length,
    incompleteNodes,semanticTreeCaptured:needsMenuTree,
    bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
  }
