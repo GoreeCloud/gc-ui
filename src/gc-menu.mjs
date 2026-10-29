@@ -60,7 +60,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   // Host applications may temporarily remove actions without disposing this
   // controller. Hidden/inert actions must never enter the keyboard focus ring.
   const enabled=()=>items.filter(item=>
-    !item.disabled&&!item.hidden&&!item.inert&&
+    menu.contains(item)&&!item.disabled&&!item.hidden&&!item.inert&&
     item.getAttribute('aria-disabled')!=='true'&&
     item.getAttribute('aria-hidden')!=='true'
   );
