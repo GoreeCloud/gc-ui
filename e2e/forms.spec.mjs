@@ -490,13 +490,13 @@ test('rapidly changing suggestions clears stale active descendants and keyboard 
  await page.goto('/lab/forms.html');
  const search=page.getByRole('combobox',{name:'Search projects'});
  await search.fill('d');
- await expect(page.getByRole('option')).toHaveCount(3);
+ await expect(page.locator('#project-suggestions').getByRole('option')).toHaveCount(3);
  await search.press('ArrowUp');
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-2');
  await search.fill('nothing-matches');
  await expect(search).toHaveAttribute('aria-expanded','false');
  await expect(search).not.toHaveAttribute('aria-activedescendant',/.+/);
- await expect(page.getByRole('option')).toHaveCount(0);
+ await expect(page.locator('#project-suggestions').getByRole('option')).toHaveCount(0);
  await search.fill('team');
  await search.press('ArrowDown');
  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
