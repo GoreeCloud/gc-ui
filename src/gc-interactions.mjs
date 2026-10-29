@@ -145,6 +145,8 @@ export function createToast(region){
  };
  function show(message,{duration=6000}={}){
   if(destroyed)throw new Error('Toast controller was destroyed');
+  if(!Number.isSafeInteger(duration)||duration<0||duration>600000)
+   throw new RangeError('Toast duration must be an integer between 0 and 600000 milliseconds');
   dismiss();
   const doc=region.ownerDocument;
   returnFocus=doc.activeElement;
