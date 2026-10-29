@@ -82,14 +82,14 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
        !node.target.every(s=>typeof s==='string'&&s.length>0))
      throw new Error('Missing or invalid axe CSS target: '+scenario+' / '+rule.id);
     const reason=normalizeIncompleteReason(node?.summary);
-    const key=JSON.stringify([data.pagePath,rule.id,node.target,reason]);
-    const target=incompleteReviewTargets.get(key)??{
+    const targetKey=JSON.stringify([data.pagePath,rule.id,node.target,reason]);
+    const target=incompleteReviewTargets.get(targetKey)??{
      pagePath:data.pagePath,rule:rule.id,selector:node.target,
      reason,occurrences:0,scenarios:[]
     };
     target.occurrences++;
     if(!target.scenarios.includes(scenario))target.scenarios.push(scenario);
-    incompleteReviewTargets.set(key,target);
+    incompleteReviewTargets.set(targetKey,target);
     const key=JSON.stringify([rule.id,reason]);
     const entry=incompleteByReason.get(key)??{rule:rule.id,reason,nodes:0,scenarios:[]};
     entry.nodes++;
