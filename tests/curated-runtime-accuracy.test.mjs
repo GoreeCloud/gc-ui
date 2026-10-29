@@ -1,8 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {createThemeController} from '../src/gc-theme-runtime.mjs';
-import {getCuratedAccentRoles} from '../src/gc-curated-accent-roles.mjs';
+import {createThemeController,getCuratedAccentRoles} from '../src/gc-theme-runtime.mjs';
 import {contrastRatio,generateTheme} from '../src/gc-color-engine.mjs';
 
 const css=readFileSync(new URL('../styles/gc.v1.product-palettes.css',import.meta.url),'utf8');
