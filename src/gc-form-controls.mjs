@@ -215,6 +215,9 @@ export function initValidationSummary(form,summary,list,fields,{onValid=()=>{},o
   // must not commit partially updated error states.
   const decisions=fields.map(field=>{
    const result=field.valid(field.input);
+   // Host validators may synchronously dispose this view (e.g. navigation).
+   // Never continue into another validator or commit error/focus state after teardown.
+   ensureActive();
    if(typeof result!=='boolean')throw new TypeError('Field validator must return a synchronous boolean');
    return result;
   });
