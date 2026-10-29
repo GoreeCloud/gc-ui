@@ -412,3 +412,16 @@ test('pending action remains locked when its host clears busy presentation',asyn
  assert.equal(button.getAttribute('aria-busy'),'false');
  assert.equal(await runAsyncAction(button,()=> 'retry'),'retry');
 });
+
+test('action lock is released when host presentation setup throws',async()=>{
+ const attrs=new Map();let rejectWrite=true;
+ const button={disabled:false,
+  getAttribute:key=>attrs.get(key)??null,
+  setAttribute(key,value){
+   if(rejectWrite){rejectWrite=false;throw new Error('host setter failed')}
+   attrs.set(key,String(value));
+  },
+  removeAttribute:key=>attrs.delete(key)};
+ await assert.rejects(runAsyncAction(button,()=> 'unreachable'),/host setter failed/);
+ assert.equal(await runAsyncAction(button,()=> 'recovered'),'recovered');
+});
