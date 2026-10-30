@@ -70,6 +70,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   };
   const enabled=()=>items.filter(item=>
     menu.contains(item)&&!item.disabled&&!item.hidden&&!item.inert&&
+    item.matches?.(':disabled')!==true&&
     item.getAttribute('aria-disabled')!=='true'&&
     item.getAttribute('aria-hidden')!=='true'&&!blockedByAncestor(item)
   );
