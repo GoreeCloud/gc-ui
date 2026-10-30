@@ -14,3 +14,21 @@ test('disabled host group prevents async work',async()=>{
  assert.equal(n,0);
  blocked=false;assert.equal(await runAsyncAction(button,()=>++n),1);
 });
+
+test('inert, detached and ARIA-hidden async actions stay idle',async()=>{
+ const attrs=new Map();let called=0;
+ const button={disabled:false,inert:true,isConnected:true,
+  getAttribute:k=>attrs.get(k)??null,
+  setAttribute:(k,v)=>attrs.set(k,v),
+  removeAttribute:k=>attrs.delete(k)};
+ const action=()=>{called++;return 'run'};
+ assert.equal(await runAsyncAction(button,action),null);
+ button.inert=false;button.isConnected=false;
+ assert.equal(await runAsyncAction(button,action),null);
+ button.isConnected=true;button.setAttribute('aria-hidden','true');
+ assert.equal(await runAsyncAction(button,action),null);
+ assert.equal(called,0);
+ button.removeAttribute('aria-hidden');
+ assert.equal(await runAsyncAction(button,action),'run');
+ assert.equal(called,1);
+});
