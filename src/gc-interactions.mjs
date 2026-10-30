@@ -19,7 +19,7 @@ export function initTabs(tablist,{rtl=false}={}){
   return p;
  });
  if(new Set(panels).size!==panels.length)throw new Error('Each tab requires a unique tabpanel');
- const enabled=()=>tabs.filter(tab=>!tab.disabled&&!tab.hidden&&!tab.inert&&tab.getAttribute('aria-disabled')!=='true'&&tab.getAttribute('aria-hidden')!=='true'&&tab.isConnected!==false&&(typeof tablist.contains!=='function'||tablist.contains(tab))&&!tab.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]'));
+ const enabled=()=>tabs.filter(tab=>!tab.disabled&&tab.matches?.(':disabled')!==true&&!tab.hidden&&!tab.inert&&tab.getAttribute('aria-disabled')!=='true'&&tab.getAttribute('aria-hidden')!=='true'&&tab.isConnected!==false&&(typeof tablist.contains!=='function'||tablist.contains(tab))&&!tab.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]'));
  if(!enabled().length)throw new Error('No enabled tab');
  // A tablist borrows attributes and panel visibility from its host app.
  // Restore only values that are still the controller's last writes.
@@ -201,7 +201,8 @@ export function createToast(region){
 const pendingAsyncActions=new WeakSet();
 export async function runAsyncAction(button,operation){
  if(pendingAsyncActions.has(button)||button.getAttribute('aria-busy')==='true'||
-    button.disabled||button.getAttribute('aria-disabled')==='true')return null;
+    button.disabled||button.matches?.(':disabled')===true||
+    button.getAttribute('aria-disabled')==='true')return null;
  const previousBusy=button.getAttribute('aria-busy');
  pendingAsyncActions.add(button);
  try{
