@@ -251,6 +251,10 @@ for(const scenario of scenarios){
   await page.addScriptTag({path:resolve('node_modules/axe-core/axe.min.js')});
   const axeOpen=await page.evaluate(browserAxe);
   expect(axeOpen.violations,'Expanded-menu violations: '+scenario.id).toEqual([]);
+  const contrastSelectors=axeOpen.incomplete.filter(item=>item.id==='color-contrast')
+   .flatMap(item=>item.nodes.map(node=>node.target[0])).filter(Boolean);
+  const inconclusiveContrastSamples=await page.evaluate(browserContrastStack,contrastSelectors);
+  expect(inconclusiveContrastSamples.every(sample=>sample.found)).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
   await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
@@ -281,7 +285,7 @@ for(const scenario of scenarios){
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,
-   axeOpen,menuAria:{closed:menuClosed,open:menuOpen},
+   axeOpen,inconclusiveContrastSamples,menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };
