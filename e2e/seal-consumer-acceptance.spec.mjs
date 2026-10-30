@@ -143,6 +143,27 @@ for(const scenario of scenarios){
    disabledByFieldset:true,ownDisabledAttribute:false,
    allowed:false,expanded:'false',menuHidden:true
   });
+  const unavailableMenuitem=await page.evaluate(()=>{
+   const item=document.getElementById('duplicate');
+   const popup=document.getElementById('actions-menu');
+   const trigger=document.getElementById('actions');
+   const group=document.createElement('fieldset');
+   group.disabled=true;
+   item.before(group);
+   group.appendChild(item);
+   const disabledByFieldset=item.matches(':disabled');
+   const ownDisabledAttribute=item.disabled;
+   const allowed=window.__sealControllers[3].open();
+   item.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+   const expanded=trigger.getAttribute('aria-expanded');
+   const menuHidden=popup.hidden;
+   group.replaceWith(item);
+   return {disabledByFieldset,ownDisabledAttribute,allowed,expanded,menuHidden};
+  });
+  expect(unavailableMenuitem).toEqual({
+   disabledByFieldset:true,ownDisabledAttribute:false,
+   allowed:false,expanded:'false',menuHidden:true
+  });
   await page.locator('#actions').focus();
   await page.locator('#actions').press('ArrowDown');
   await expect(page.locator('#duplicate')).toBeFocused();
