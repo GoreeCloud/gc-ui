@@ -107,7 +107,7 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
    return;
   }
   const close=e.target.closest?.('[data-gc-dialog-close]');
-  if(close&&dialog.contains(close)&&dialog.open&&
+  if(close&&dialog.contains(close)&&dialog.open&&!unavailable(close)&&
      close.matches?.(':disabled')!==true&&!close.hidden&&!close.inert&&
      close.getAttribute?.('aria-disabled')!=='true'&&
      close.getAttribute?.('aria-hidden')!=='true')dialog.close();
