@@ -89,6 +89,11 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
  if(!document?.addEventListener)throw new TypeError('A document is required');
  let trigger=null,destroyed=false,ownsOpen=false;
  const ensureActive=()=>{if(destroyed)throw new Error('Dialog controller was destroyed')};
+ // Delegated events can be synthetic; native and inherited host availability
+ // must be checked independently of the explicit programmatic controller API.
+ const unavailable=el=>el.disabled===true||el.isConnected===false||
+  el.matches?.(':disabled')===true||
+  !!el.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]');
  const click=e=>{
   if(destroyed)return;
   const opener=e.target.closest?.('[data-gc-dialog-open]');
