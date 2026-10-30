@@ -482,3 +482,33 @@ test('fieldset-disabled menuitem is omitted from keyboard and action selection',
  assert.equal(selected,1);
  api.destroy();
 });
+
+
+test('menu never restores focus to host-disabled triggers',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'focus-recovery',role:'menu'});
+ const item=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,item])el.ownerDocument=doc;
+ menu.hidden=true;menu.querySelectorAll=()=>[item];
+ menu.contains=el=>el===menu||el===item;
+ let returned=0,nativeDisabled=false;
+ trigger.focus=()=>{returned++;doc.activeElement=trigger};
+ trigger.matches=selector=>selector===':disabled'&&nativeDisabled;
+ const api=initMenu(trigger,menu,{document:doc});
+ const cases=[
+  [()=>{trigger.hidden=true},()=>{trigger.hidden=false}],
+  [()=>{trigger.inert=true},()=>{trigger.inert=false}],
+  [()=>trigger.setAttribute('aria-disabled','true'),()=>trigger.removeAttribute('aria-disabled')],
+  [()=>{nativeDisabled=true},()=>{nativeDisabled=false}]
+ ];
+ for(const [block,restore] of cases){
+  assert.equal(api.open(),true);
+  block();api.close();assert.equal(returned,0);
+  restore();
+ }
+ assert.equal(api.open(),true);api.close();assert.equal(returned,1);
+ assert.equal(api.open(),true);
+ trigger.hidden=true;api.destroy();
+ assert.equal(returned,1,'retiring menu must not focus hidden trigger');
+ assert.equal(menu.hidden,true);
+});
