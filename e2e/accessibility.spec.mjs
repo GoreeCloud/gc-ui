@@ -93,7 +93,7 @@ const states=[
   await expect(page.locator('#demo-passphrase')).toHaveAttribute('type','text');
  }},
  {name:'forms-invalid-summary',page:'forms',width:375,setup:async page=>{
-  await page.getByRole('button',{name:'Create brief'}).click();
+  await page.getByRole('button',{name:'Check brief'}).click();
   await expect(page.locator('#brief-errors')).toBeVisible();
  }},
  {name:'forms-search-suggestions',page:'forms',width:375,setup:async page=>{
