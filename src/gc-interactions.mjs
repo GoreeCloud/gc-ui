@@ -93,7 +93,7 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
   if(destroyed)return;
   const opener=e.target.closest?.('[data-gc-dialog-open]');
   if(opener?.dataset.gcDialogOpen===dialog.id){
-   if(!dialog.open){dialog.showModal();trigger=opener;ownsOpen=true}
+   if(!dialog.open&&opener.matches?.(':disabled')!==true){dialog.showModal();trigger=opener;ownsOpen=true}
    return;
   }
   const close=e.target.closest?.('[data-gc-dialog-close]');
