@@ -110,9 +110,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gc-ui-browser-qa-evidence
+          # Preserve the staged axe report even if the visual suite exits early.
           path: |
             test-results/
             playwright-report/
+            dist/qa/accessibility-review/
           retention-days: 7
           if-no-files-found: ignore
 

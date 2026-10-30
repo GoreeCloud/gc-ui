@@ -28,3 +28,11 @@ test('staging refuses absent manifests and the same source/destination directory
   await assert.rejects(transferAccessibilityReports(root,root),TypeError);
  }finally{await rm(root,{recursive:true,force:true})}
 });
+
+test('CI archive retains stashed accessibility review after visual-suite failure',async()=>{
+ const workflow=await readFile(new URL('../.github/workflows/ci.yml',import.meta.url),'utf8');
+ const section=workflow.split('      - name: Upload visual captures and failure traces\n')[1]?.split('\n  browser-firefox:')[0];
+ assert.ok(section,'Chromium evidence upload job missing');
+ assert.match(section,/if:\s*always\(\)/);
+ assert.match(section,/dist\/qa\/accessibility-review\//);
+});
