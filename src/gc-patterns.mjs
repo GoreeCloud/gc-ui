@@ -37,7 +37,6 @@ export function initChoiceChips(group,{onChange=()=>{}}={}){
   }]));
   current=button;
   render();
-  if(focus)button.focus();
   if(changed)try{onChange(value)}
   catch(error){
    // A rejected application selection must not become the committed choice.
@@ -59,6 +58,10 @@ export function initChoiceChips(group,{onChange=()=>{}}={}){
    }
    throw error;
   }
+  // Focus is a post-commit effect, not part of speculative selection.
+  // Callbacks may reject, dispose the controller, select another choice,
+  // or detach/disable the requested button before we get here.
+  if(focus&&!destroyed&&current===button&&enabled(button))button.focus();
   return changed;
  }
  const click=event=>{
