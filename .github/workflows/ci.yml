@@ -113,6 +113,8 @@ jobs:
           path: |
             test-results/
             playwright-report/
+            # The visual suite can fail after axe evidence is stashed outside test-results.
+            dist/qa/accessibility-review/
           retention-days: 7
           if-no-files-found: ignore
 
