@@ -104,7 +104,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     // that newer visibility state merely because the controller is closing.
     if(!menu.hidden)setHidden(true);
     setTriggerAttr('aria-expanded','false');
-    if(returnFocus&&trigger.isConnected)trigger.focus();
+    if(returnFocus&&trigger.isConnected&&!triggerUnavailable())trigger.focus();
   }
   // A second pointer activation moves focus out of the menu before click.
   // Keep the menu open through focusout so click can toggle it CLOSED.
@@ -203,7 +203,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       // Capture focus ownership before restore() changes its visibility.
       const heldMenuFocus=menu.contains(document.activeElement);
       restore();
-      if(heldMenuFocus&&menu.hidden&&trigger.isConnected)trigger.focus();
+      if(heldMenuFocus&&menu.hidden&&trigger.isConnected&&!triggerUnavailable())trigger.focus();
     }
   };
 }
