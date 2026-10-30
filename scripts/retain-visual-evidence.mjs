@@ -42,6 +42,12 @@ export async function captureFullPageVisualEvidence(page,testInfo,name,{preserve
   .filter(el=>el.getBoundingClientRect().bottom>0)
   .map(el=>el.textContent?.trim()||'skip link'));
  if(misplaced.length)throw new Error('Focus-only skip links exposed in screenshot: '+misplaced.join(', '));
- const png=await page.screenshot({fullPage:true,animations:'disabled'});
+ const png=await page.screenshot({
+  fullPage:true,animations:'disabled',
+  // Screenshot-only suppression of nonfocused off-screen skip links avoids
+  // Chromium full-page compositing ghosts. Focused links stay visible; the
+  // real DOM and keyboard behavior remain unchanged after capture.
+  style:'.skip-link:not(:focus-visible),.gc-skip-link:not(:focus-visible){visibility:hidden!important}'
+ });
  return retainVisualEvidence(testInfo,name,png);
 }
