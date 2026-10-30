@@ -78,6 +78,10 @@
   background:var(--gc-floating-nav-surface);
   box-shadow:var(--gc-floating-nav-shadow);
 }
+/* Floating sidebar/rail have a separate tonal plane from the top chrome. */
+.gc-nav-sidebar,.gc-nav-rail{
+  background:var(--gc-v1-color-surface-tonal);
+}
 .gc-nav-sidebar{
   inset-block-start:102px;
   inset-block-end:16px;
