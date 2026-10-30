@@ -103,6 +103,67 @@ for(const scenario of scenarios){
   await expect(page.locator('#tab-overview')).toHaveAttribute('aria-selected','true');
   await page.getByRole('tab',{name:'Accessibility'}).click();
   await expect(page.getByRole('tabpanel',{name:'Accessibility'})).toBeVisible();
+  // Synthetic events/API calls must not bypass native or semantic trigger state.
+  // Restore the exact fixture before screenshot and accessibility evidence.
+  const unavailableTriggers=await page.evaluate(()=>{
+   const trigger=document.getElementById('actions');
+   const popup=document.getElementById('actions-menu');
+   const controller=window.__sealControllers[3];
+   const result=[];
+   for(const kind of ['hidden','inert','aria-hidden']){
+    if(kind==='aria-hidden')trigger.setAttribute('aria-hidden','true');
+    else trigger[kind]=true;
+    const allowed=controller.open();
+    trigger.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+    result.push({kind,allowed,expanded:trigger.getAttribute('aria-expanded'),
+     menuHidden:popup.hidden});
+    if(kind==='aria-hidden')trigger.removeAttribute('aria-hidden');
+    else trigger[kind]=false;
+   }
+   const fieldset=document.createElement('fieldset');
+   fieldset.disabled=true;
+   trigger.before(fieldset);
+   fieldset.appendChild(trigger);
+   const disabledByFieldset=trigger.matches(':disabled');
+   const ownDisabledAttribute=trigger.disabled;
+   const allowed=controller.open();
+   trigger.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+   const expanded=trigger.getAttribute('aria-expanded');
+   const menuHidden=popup.hidden;
+   fieldset.replaceWith(trigger);
+   return {result,fieldset:{disabledByFieldset,ownDisabledAttribute,
+    allowed,expanded,menuHidden}};
+  });
+  expect(unavailableTriggers.result).toEqual(
+   ['hidden','inert','aria-hidden'].map(kind=>({
+    kind,allowed:false,expanded:'false',menuHidden:true
+   }))
+  );
+  expect(unavailableTriggers.fieldset).toEqual({
+   disabledByFieldset:true,ownDisabledAttribute:false,
+   allowed:false,expanded:'false',menuHidden:true
+  });
+  const unavailableMenuitem=await page.evaluate(()=>{
+   const item=document.getElementById('duplicate');
+   const popup=document.getElementById('actions-menu');
+   const trigger=document.getElementById('actions');
+   const group=document.createElement('fieldset');
+   group.disabled=true;
+   item.before(group);
+   group.appendChild(item);
+   const disabledByFieldset=item.matches(':disabled');
+   const ownDisabledAttribute=item.disabled;
+   const allowed=window.__sealControllers[3].open();
+   item.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+   const expanded=trigger.getAttribute('aria-expanded');
+   const menuHidden=popup.hidden;
+   group.replaceWith(item);
+   return {disabledByFieldset,ownDisabledAttribute,allowed,expanded,menuHidden};
+  });
+  expect(unavailableMenuitem).toEqual({
+   disabledByFieldset:true,ownDisabledAttribute:false,
+   allowed:false,expanded:'false',menuHidden:true
+  });
   await page.locator('#actions').focus();
   await page.locator('#actions').press('ArrowDown');
   await expect(page.locator('#duplicate')).toBeFocused();

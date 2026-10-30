@@ -70,6 +70,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   };
   const enabled=()=>items.filter(item=>
     menu.contains(item)&&!item.disabled&&!item.hidden&&!item.inert&&
+    item.matches?.(':disabled')!==true&&
     item.getAttribute('aria-disabled')!=='true'&&
     item.getAttribute('aria-hidden')!=='true'&&!blockedByAncestor(item)
   );
@@ -77,10 +78,14 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     const candidates=enabled();
     if(candidates.length)candidates[((index%candidates.length)+candidates.length)%candidates.length].focus();
   }
-  // ARIA-disabled state on a container also disables its interactive children.
-  // A disabled/hidden trigger group must not open a new action menu.
-  const triggerUnavailable=()=>trigger.disabled||
+  // A hidden, inert, detached or natively disabled trigger cannot expose
+  // an actionable menu, even through a synthetic event or controller API.
+  // :disabled also covers a button inside disabled <fieldset> (except legend).
+  const triggerUnavailable=()=>trigger.disabled||trigger.hidden||trigger.inert||
+    trigger.isConnected===false||menu.isConnected===false||
     trigger.getAttribute('aria-disabled')==='true'||
+    trigger.getAttribute('aria-hidden')==='true'||
+    trigger.matches?.(':disabled')===true||
     !!trigger.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]');
   function show(position='first'){
     if(destroyed||triggerUnavailable())return false;
