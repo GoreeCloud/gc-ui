@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GC UI — Installed Candidate Acceptance Fixture</title>
+  <!-- Only the offline-installed QA archive supplies runtime styles and scripts. -->
+  <link rel="stylesheet" href="/dist/seal-web-verify/consumer/node_modules/@goreecloud/gc-ui/styles/gc.v1.generated.css">
+  <link rel="stylesheet" href="/dist/seal-web-verify/consumer/node_modules/@goreecloud/gc-ui/styles/gc.v1.components.css">
+  <link rel="stylesheet" href="/dist/seal-web-verify/consumer/node_modules/@goreecloud/gc-ui/styles/gc.v1.product-palettes.css">
+  <style>
+    *,*::before,*::after{box-sizing:border-box}
+    html{color-scheme:light dark}
+    body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-surface);font:16px/1.5 system-ui,sans-serif}
+    .frame{max-width:1120px;margin:auto;padding:clamp(18px,4vw,56px)}
+    .header{display:flex;gap:20px;align-items:flex-start;margin-bottom:32px}
+    .logo{display:grid;place-items:center;flex:none;width:62px;height:62px;border-radius:18px;background:var(--gc-v1-color-primary);color:var(--gc-v1-color-on-primary);font-weight:800;font-size:24px}
+    .eyebrow{margin:0 0 8px;font-size:12px;font-weight:750;text-transform:uppercase;letter-spacing:.1em}
+    h1{font-size:clamp(30px,4vw,52px);line-height:1.1;letter-spacing:-.04em;margin:0 0 12px}
+    h2{font-size:22px;margin:0 0 8px}
+    p{margin:0 0 12px}.muted{color:var(--gc-v1-color-on-surface-muted)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin:18px 0}
+    .gc-card{min-width:0;box-shadow:0 10px 34px rgb(0 0 0 / .04)}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin:22px 0}
+    .choices{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+    .choices button{min-height:44px;padding:8px 17px;border:1px solid var(--gc-v1-color-outline-strong);border-radius:999px;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);font:inherit;cursor:pointer}
+    .choices button[aria-pressed=true]{background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container);border-color:var(--gc-v1-color-primary)}
+    .choices button:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px}
+    .status{font-size:13px;font-weight:650}.note{margin-top:20px}
+    /* Keep English copy in logical LTR order while independently testing RTL layout and control flow. */
+    html[dir=rtl] .frame :is(h1,h2,p,strong,footer,.gc-accordion-content){direction:ltr;text-align:right}
+    @media(max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}.header{gap:12px}.logo{width:46px;height:46px;font-size:18px}.frame{padding:20px 16px}.gc-card{padding:18px}}
+    @media(forced-colors:active){.logo,.choices button{background:Canvas!important;color:CanvasText!important;border:2px solid CanvasText!important}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
+  </style>
+</head>
+<body>
+<div class="frame">
+  <header class="header">
+    <div class="logo" aria-hidden="true">GC</div>
+    <div><p class="eyebrow muted">GoreeCloud UI / Installed candidate</p>
+    <h1>Care in every control.</h1>
+    <p class="muted">Accessible interactions and distinct semantic surfaces from a narrow, unpublished browser package.</p></div>
+  </header>
+  <main>
+    <div class="gc-banner" role="note"><strong>Verified controls. Deliberately limited scope.</strong><p>The package is private and experimental, not a complete native product or a certified stable release.</p></div>
+    <div class="grid">
+      <section class="gc-card" aria-labelledby="actions-heading">
+        <h2 id="actions-heading">Everyday actions</h2>
+        <p class="muted">Native buttons, clear states and accessible feedback.</p>
+        <div class="actions">
+          <button type="button" id="save" class="gc-button" data-variant="primary">Show notification</button>
+          <div class="gc-menu-anchor">
+            <button type="button" id="actions" class="gc-button" data-variant="secondary">More actions</button>
+            <div id="actions-menu" class="gc-menu gc-card" role="menu" aria-label="More actions" hidden>
+              <button type="button" id="duplicate" role="menuitem">Duplicate preview</button>
+              <button type="button" role="menuitem" aria-disabled="true">Archive unavailable</button>
+            </div>
+          </div>
+        </div>
+        <p class="muted">Collection filter</p>
+        <div id="choices" class="choices" role="group" aria-label="Collection filter">
+          <button type="button" data-gc-choice="all" aria-pressed="true">All</button>
+          <button type="button" data-gc-choice="pinned">Pinned</button>
+        </div>
+        <p id="status" class="status" role="status" aria-live="polite">Ready to preview.</p>
+      </section>
+      <section class="gc-card" aria-labelledby="tabs-heading">
+        <h2 id="tabs-heading">A familiar foundation</h2>
+        <p class="muted">Keyboard-operable navigation, transparent state and no focus tricks.</p>
+        <div class="gc-tabs" role="tablist" aria-label="Details">
+          <button id="tab-overview" class="gc-tab" type="button" role="tab" aria-selected="true" aria-controls="panel-overview">Overview</button>
+          <button id="tab-access" class="gc-tab" type="button" role="tab" aria-selected="false" aria-controls="panel-access">Accessibility</button>
+        </div>
+        <div id="panel-overview" role="tabpanel" class="gc-tabpanel" aria-labelledby="tab-overview"><p>Shared language, appropriate context.</p></div>
+        <div id="panel-access" role="tabpanel" class="gc-tabpanel" aria-labelledby="tab-access" hidden><p>Readable color, reliable focus and reduced motion.</p></div>
+        <details id="details" class="gc-accordion"><summary>Included surfaces</summary><div class="gc-accordion-content">Only supported candidate exports, styles and tokens.</div></details>
+      </section>
+    </div>
+    <div class="gc-banner note" role="note" aria-label="Candidate status"><strong>Private candidate / not Seal</strong><p>Visual review evidence is distinct from production consumer or native acceptance.</p></div>
+  </main>
+  <footer class="muted note">GC UI candidate acceptance fixture. No remote assets or network dependencies.</footer>
+</div>
+<div id="notifications" class="gc-toast-region" aria-live="polite" aria-label="Notifications"></div>
+</body></html>

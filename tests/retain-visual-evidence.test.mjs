@@ -37,7 +37,7 @@ test('full-page capture resets scroll and focus before screenshot and retains it
    async waitForFunction(){events.push('wait')},
    async screenshot(options){
     events.push('screenshot');
-    assert.deepEqual(options,{fullPage:true,animations:'disabled'});
+    assert.deepEqual(options,{fullPage:true,animations:'disabled',style:'.skip-link:not(:focus-visible),.gc-skip-link:not(:focus-visible){visibility:hidden!important}'});
     return png;
    }
   };
@@ -69,7 +69,11 @@ test('live menu capture keeps keyboard focus and rejects invalid focus options',
     return [];
    },
    async waitForFunction(){throw new Error('Focused menu capture must not request scroll reset')},
-   async screenshot(opts){assert.equal(opts.fullPage,true);return png}
+   async screenshot(opts){
+    assert.equal(opts.fullPage,true);
+    assert.equal(opts.style,'.skip-link:not(:focus-visible),.gc-skip-link:not(:focus-visible){visibility:hidden!important}');
+    return png;
+   }
   };
   const info={project:{outputDir:dir},async attach(){}};
   const file=await captureFullPageVisualEvidence(page,info,'components-menu-open',{preserveFocus:true});
