@@ -41,6 +41,31 @@ async function browserAxe(){
   incomplete:data.incomplete.map(compact),passes:data.passes.length};
 }
 
+// Preserve the actual CSS context and topmost DOM elements behind axe's
+// incomplete contrast checks. These samples are review evidence, not ratios.
+function browserContrastStack(selectors){
+ return [...new Set(selectors)].map(selector=>{
+  let element=null;
+  try{element=document.querySelector(selector)}catch{}
+  if(!element)return {selector,found:false};
+  const rect=element.getBoundingClientRect();
+  const css=getComputedStyle(element);
+  const x=rect.left+rect.width/2,y=rect.top+rect.height/2;
+  const centerInViewport=rect.width>0&&rect.height>0&&
+   x>=0&&x<innerWidth&&y>=0&&y<innerHeight;
+  const stack=centerInViewport?
+   document.elementsFromPoint(x,y).slice(0,8).map(node=>({
+    tag:node.localName,id:node.id||null,
+    role:node.getAttribute('role'),className:typeof node.className==='string'?node.className.slice(0,100):''
+   })):[];
+  return {selector,found:true,centerInViewport,
+   rect:{x:rect.x,y:rect.y,width:rect.width,height:rect.height},
+   computed:{color:css.color,backgroundColor:css.backgroundColor,
+    opacity:css.opacity,position:css.position,zIndex:css.zIndex},
+   centerStack:stack};
+ });
+}
+
 for(const scenario of scenarios){
  test('installed candidate acceptance matrix — '+scenario.id,async({page},testInfo)=>{
   await page.setViewportSize({width:scenario.width,height:scenario.height});
@@ -227,6 +252,10 @@ for(const scenario of scenarios){
   await page.addScriptTag({path:resolve('node_modules/axe-core/axe.min.js')});
   const axeOpen=await page.evaluate(browserAxe);
   expect(axeOpen.violations,'Expanded-menu violations: '+scenario.id).toEqual([]);
+  const contrastSelectors=axeOpen.incomplete.filter(item=>item.id==='color-contrast')
+   .flatMap(item=>item.nodes.map(node=>node.target[0])).filter(Boolean);
+  const inconclusiveContrastSamples=await page.evaluate(browserContrastStack,contrastSelectors);
+  expect(inconclusiveContrastSamples.every(sample=>sample.found)).toBe(true);
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
   await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
@@ -257,7 +286,7 @@ for(const scenario of scenarios){
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,
-   axeOpen,menuAria:{closed:menuClosed,open:menuOpen},
+   axeOpen,inconclusiveContrastSamples,menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };
