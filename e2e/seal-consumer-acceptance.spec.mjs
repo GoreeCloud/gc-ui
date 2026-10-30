@@ -92,6 +92,17 @@ for(const scenario of scenarios){
   await expect(page.getByRole('button',{name:'Pinned'})).toHaveAttribute('aria-pressed','true');
   await page.getByRole('tab',{name:'Accessibility'}).click();
   await expect(page.getByRole('tabpanel',{name:'Accessibility'})).toBeVisible();
+  // An ancestor-level ARIA disabled state must block delegated tab activation.
+  const tablist=page.locator('[role=tablist]');
+  await tablist.evaluate(el=>el.setAttribute('aria-disabled','true'));
+  await page.locator('#tab-overview').dispatchEvent('click');
+  await expect(page.locator('#tab-access')).toHaveAttribute('aria-selected','true');
+  await expect(page.getByRole('tabpanel',{name:'Accessibility'})).toBeVisible();
+  await tablist.evaluate(el=>el.removeAttribute('aria-disabled'));
+  await page.locator('#tab-overview').click();
+  await expect(page.locator('#tab-overview')).toHaveAttribute('aria-selected','true');
+  await page.getByRole('tab',{name:'Accessibility'}).click();
+  await expect(page.getByRole('tabpanel',{name:'Accessibility'})).toBeVisible();
   await page.locator('#actions').focus();
   await page.locator('#actions').press('ArrowDown');
   await expect(page.locator('#duplicate')).toBeFocused();
