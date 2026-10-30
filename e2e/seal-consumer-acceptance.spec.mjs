@@ -99,6 +99,41 @@ for(const scenario of scenarios){
   await expect(page.locator('#tab-access')).toHaveAttribute('aria-selected','true');
   await expect(page.getByRole('tabpanel',{name:'Accessibility'})).toBeVisible();
   await tablist.evaluate(el=>el.removeAttribute('aria-disabled'));
+  // An inherited native disabled state differs from the button's own disabled
+  // property. Exercise the INSTALLED package through real disabled fieldsets.
+  const fieldsetEligibility=await page.evaluate(async prefix=>{
+   const gc=await import(prefix+'src/index.mjs');
+   const overview=document.getElementById('tab-overview');
+   const accessibility=document.getElementById('tab-access');
+   const tabs=window.__sealControllers[2];
+   const tabFieldset=document.createElement('fieldset');
+   tabFieldset.disabled=true;
+   overview.before(tabFieldset);tabFieldset.appendChild(overview);
+   const tabNative=overview.matches(':disabled');
+   const tabOwn=overview.disabled;
+   tabs.select(overview);
+   overview.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+   const retained=accessibility.getAttribute('aria-selected');
+   tabFieldset.replaceWith(overview);
+
+   const save=document.getElementById('save');
+   const actionFieldset=document.createElement('fieldset');
+   actionFieldset.disabled=true;
+   save.before(actionFieldset);actionFieldset.appendChild(save);
+   let invocations=0;
+   const actionNative=save.matches(':disabled');
+   const actionOwn=save.disabled;
+   const rejected=await gc.runAsyncAction(save,()=>{invocations++;return 'unexpected'});
+   actionFieldset.replaceWith(save);
+   const resumed=await gc.runAsyncAction(save,()=>{invocations++;return 'accepted'});
+   return {tabNative,tabOwn,retained,actionNative,actionOwn,
+    rejected,invocations,resumed,restoredDisabled:save.disabled};
+  },prefix);
+  expect(fieldsetEligibility).toEqual({
+   tabNative:true,tabOwn:false,retained:'true',
+   actionNative:true,actionOwn:false,rejected:null,
+   invocations:1,resumed:'accepted',restoredDisabled:false
+  });
   await page.locator('#tab-overview').click();
   await expect(page.locator('#tab-overview')).toHaveAttribute('aria-selected','true');
   await page.getByRole('tab',{name:'Accessibility'}).click();
