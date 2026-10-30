@@ -78,7 +78,7 @@ test('400%-equivalent native form errors and stepper remain keyboard reachable',
  await page.getByRole('button',{name:'Add one collaborator'}).click();
  await expect(field).toHaveValue('4');
  await expect(field).toBeFocused();
- await page.getByRole('button',{name:'Create brief'}).click();
+ await page.getByRole('button',{name:'Check brief'}).click();
  const summary=page.locator('#brief-errors');
  await expect(summary).toBeVisible();
  await expect(summary).toBeFocused();
