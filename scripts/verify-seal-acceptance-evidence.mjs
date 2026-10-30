@@ -39,23 +39,37 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  if(forcedColors)assert.equal(report.primaryContrast,null,'System forced colors are not numeric CSS RGB values');
  else assert.ok(report.primaryContrast>=4.5,'Primary/on-primary contrast regression '+name);
  assert.ok(report.overflow?.content<=report.overflow?.viewport,'Horizontal reflow failure '+name);
- assert.ok(Number.isSafeInteger(report.axe?.passes)&&report.axe.passes>0,'No axe rules run '+name);
- assert.deepEqual(report.axe?.violations,[],'Confirmed axe violation '+name);
- assert.ok(Array.isArray(report.axe?.incomplete),'Missing incomplete axe evidence '+name);
- for(const item of report.axe.incomplete){
-  assert.equal(typeof item.id,'string');
-  assert.ok(Array.isArray(item.nodes));
-  for(const node of item.nodes)assert.ok(Array.isArray(node.target)&&node.target.length,'Incomplete node missing selector');
+ const menuBase={popup:'menu',controls:'actions-menu',referenceCount:1,
+  referencedRole:'menu',referencedConnected:true};
+ assert.deepEqual(report.menuAria?.closed,{...menuBase,expanded:'false',
+  referencedHidden:true,referencedRendered:false},'Invalid closed popup linkage '+name);
+ assert.deepEqual(report.menuAria?.open,{...menuBase,expanded:'true',
+  referencedHidden:false,referencedRendered:true},'Invalid expanded popup linkage '+name);
+ for(const [phase,result] of [['closed',report.axe],['expanded',report.axeOpen]]){
+  assert.ok(Number.isSafeInteger(result?.passes)&&result.passes>0,'No '+phase+' axe rules run '+name);
+  assert.deepEqual(result.violations,[],'Confirmed '+phase+' axe violation '+name);
+  assert.ok(Array.isArray(result.incomplete),'Missing '+phase+' inconclusive axe evidence '+name);
+  for(const item of result.incomplete){
+   assert.equal(typeof item.id,'string');
+   assert.ok(Array.isArray(item.nodes));
+   for(const node of item.nodes)assert.ok(Array.isArray(node.target)&&node.target.length,
+    'Incomplete '+phase+' node missing selector');
+  }
  }
+ const nodeCount=result=>result.incomplete.reduce((sum,x)=>sum+x.nodes.length,0);
  captures.push({scenario:name,width,height:image.readUInt32BE(20),
-  sha256:sha(image),bytes:image.length,axePassedRules:report.axe.passes,
+  sha256:sha(image),bytes:image.length,menuAriaReferenceVerified:true,
+  axePassedRules:report.axe.passes,
   inconclusiveChecks:report.axe.incomplete.length,
-  inconclusiveNodes:report.axe.incomplete.reduce((sum,x)=>sum+x.nodes.length,0)});
+  inconclusiveNodes:nodeCount(report.axe),
+  expandedAxePassedRules:report.axeOpen.passes,
+  expandedInconclusiveChecks:report.axeOpen.incomplete.length,
+  expandedInconclusiveNodes:nodeCount(report.axeOpen)});
 }
 const manifest={
  schema:'gc-ui-seal-web-acceptance-manifest.v1',revision:process.env.GITHUB_SHA??null,
  candidate:'@goreecloud/gc-ui@0.2.0-seal.0',expected:scenarios.length,captured:captures.length,
- results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, axe no confirmed violation and preserved incomplete node targets',
+ results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening and preserved incomplete targets',
  limitations:'Axe and screenshot evidence support scoped browser review; visual quality and human AT acceptance are not certified by this manifest.'
 };
 await writeFile(join(root,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');

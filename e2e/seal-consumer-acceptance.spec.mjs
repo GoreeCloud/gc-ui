@@ -13,6 +13,34 @@ const scenarios=[
 ];
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
 
+// Evaluate actual browser DOM linkage, not merely literal aria-controls text.
+// This separates an axe inconclusive finding from a verified missing target.
+function browserMenuState(){
+ const trigger=document.getElementById('actions');
+ const controls=trigger?.getAttribute('aria-controls')??null;
+ const references=controls?[...document.querySelectorAll('[id]')].filter(el=>el.id===controls):[];
+ const popup=references[0]??null;
+ return {
+  popup:trigger?.getAttribute('aria-haspopup')??null,
+  expanded:trigger?.getAttribute('aria-expanded')??null,
+  controls,referenceCount:references.length,
+  referencedRole:popup?.getAttribute('role')??null,
+  referencedConnected:popup?.isConnected??false,
+  referencedHidden:popup?.hidden??null,
+  referencedRendered:popup?popup.getClientRects().length>0:false
+ };
+}
+
+async function browserAxe(){
+ const data=await window.axe.run(document,{
+  runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa']}
+ });
+ const compact=x=>({id:x.id,impact:x.impact,
+  nodes:x.nodes.map(n=>({target:n.target,summary:n.failureSummary}))});
+ return {violations:data.violations.map(compact),
+  incomplete:data.incomplete.map(compact),passes:data.passes.length};
+}
+
 for(const scenario of scenarios){
  test('installed candidate acceptance matrix — '+scenario.id,async({page},testInfo)=>{
   await page.setViewportSize({width:scenario.width,height:scenario.height});
@@ -73,6 +101,28 @@ for(const scenario of scenarios){
   await expect(page.locator('#actions')).toHaveAttribute('aria-controls','actions-menu');
   await expect(page.locator('#actions-menu')).toHaveAttribute('role','menu');
   await expect(page.locator('#actions-menu')).toBeHidden();
+  const menuClosed=await page.evaluate(browserMenuState);
+  expect(menuClosed).toEqual({
+   popup:'menu',expanded:'false',controls:'actions-menu',referenceCount:1,
+   referencedRole:'menu',referencedConnected:true,referencedHidden:true,
+   referencedRendered:false
+  });
+  // An expanded popup must resolve to the SAME unique, connected menu node.
+  await page.locator('#actions').press('ArrowDown');
+  await expect(page.locator('#duplicate')).toBeFocused();
+  await expect(page.getByRole('menu',{name:'More actions'})).toBeVisible();
+  const menuOpen=await page.evaluate(browserMenuState);
+  expect(menuOpen).toEqual({
+   popup:'menu',expanded:'true',controls:'actions-menu',referenceCount:1,
+   referencedRole:'menu',referencedConnected:true,referencedHidden:false,
+   referencedRendered:true
+  });
+  await page.addScriptTag({path:resolve('node_modules/axe-core/axe.min.js')});
+  const axeOpen=await page.evaluate(browserAxe);
+  expect(axeOpen.violations,'Expanded-menu violations: '+scenario.id).toEqual([]);
+  await page.keyboard.press('Escape');
+  await expect(page.locator('#actions-menu')).toBeHidden();
+  await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
   await expect(page.locator('#details')).not.toHaveAttribute('open','');
   await page.locator('#details summary').click();
   await expect(page.locator('#details')).toHaveAttribute('open','');
@@ -87,16 +137,7 @@ for(const scenario of scenarios){
   expect(overflow.mode).toBe(scenario.mode);
   expect(overflow.rtl).toBe(scenario.rtl);
 
-  await page.addScriptTag({path:resolve('node_modules/axe-core/axe.min.js')});
-  const axe=await page.evaluate(async()=>{
-   const data=await window.axe.run(document,{
-    runOnly:{type:'tag',values:['wcag2a','wcag2aa','wcag21a','wcag21aa']}
-   });
-   const compact=x=>({id:x.id,impact:x.impact,
-    nodes:x.nodes.map(n=>({target:n.target,summary:n.failureSummary}))});
-   return {violations:data.violations.map(compact),
-    incomplete:data.incomplete.map(compact),passes:data.passes.length};
-  });
+  const axe=await page.evaluate(browserAxe);
   expect(axe.violations,'Confirmed installed-package violations: '+scenario.id).toEqual([]);
 
   await page.evaluate(()=>document.fonts?.ready);
@@ -109,6 +150,7 @@ for(const scenario of scenarios){
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,
+   axeOpen,menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };
