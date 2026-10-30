@@ -56,6 +56,27 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
     'Incomplete '+phase+' node missing selector');
   }
  }
+ // Keep the exact inconclusive contrast targets and their real browser
+ // compositing context. Offscreen samples must not invent a hit-test stack.
+ const contrastSelectors=[...new Set(report.axeOpen.incomplete
+  .filter(item=>item.id==='color-contrast')
+  .flatMap(item=>item.nodes.map(node=>node.target[0])).filter(Boolean))];
+ const samples=report.inconclusiveContrastSamples;
+ assert.ok(Array.isArray(samples),'Missing expanded contrast context '+name);
+ assert.deepEqual(samples.map(sample=>sample.selector),contrastSelectors,
+  'Missing or reordered contrast review targets '+name);
+ for(const sample of samples){
+  assert.equal(sample.found,true,'Unresolved contrast element '+sample.selector);
+  assert.equal(typeof sample.centerInViewport,'boolean');
+  for(const key of ['x','y','width','height'])
+   assert.ok(Number.isFinite(sample.rect?.[key]),'Invalid target geometry '+name);
+  for(const key of ['color','backgroundColor','opacity','position','zIndex'])
+   assert.equal(typeof sample.computed?.[key],'string','Missing computed CSS '+name);
+  assert.ok(Array.isArray(sample.centerStack),'Missing element stacking data '+name);
+  if(!sample.centerInViewport)assert.equal(sample.centerStack.length,0,
+   'Offscreen elements must not report viewport overlap');
+  for(const entry of sample.centerStack)assert.equal(typeof entry.tag,'string');
+ }
  const nodeCount=result=>result.incomplete.reduce((sum,x)=>sum+x.nodes.length,0);
  captures.push({scenario:name,width,height:image.readUInt32BE(20),
   sha256:sha(image),bytes:image.length,menuAriaReferenceVerified:true,
@@ -64,13 +85,14 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
   inconclusiveNodes:nodeCount(report.axe),
   expandedAxePassedRules:report.axeOpen.passes,
   expandedInconclusiveChecks:report.axeOpen.incomplete.length,
-  expandedInconclusiveNodes:nodeCount(report.axeOpen)});
+  expandedInconclusiveNodes:nodeCount(report.axeOpen),
+  expandedContrastTargetsReviewed:samples.length});
 }
 const manifest={
  schema:'gc-ui-seal-web-acceptance-manifest.v1',revision:process.env.GITHUB_SHA??null,
  candidate:'@goreecloud/gc-ui@0.2.0-seal.0',expected:scenarios.length,captured:captures.length,
- results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening and preserved incomplete targets',
- limitations:'Axe and screenshot evidence support scoped browser review; visual quality and human AT acceptance are not certified by this manifest.'
+ results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, and expanded contrast target CSS/stack evidence',
+ limitations:'Axe and screenshot evidence support scoped browser review; computed styles and element stacking are diagnostics, not pixel-composited contrast ratios or human AT acceptance.'
 };
 await writeFile(join(root,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log('PASS installed candidate Seal evidence '+manifest.captured+'/'+manifest.expected+
