@@ -213,6 +213,8 @@ The [concurrent stabilization QA report](docs/QA_CONCURRENT_STABILIZATION_2026-1
 ### Forms and search reference
 The [Forms Lab](lab/forms.html) demonstrates eight experimental web treatments: F10 textarea, F11 combobox search, F12 revealable passphrase, F17 native select, F21 bounded number stepper, F22 linked validation summary, O53 empty state and O54 error/retry. See the [forms interaction contract](docs/FORMS_CONTRACT.md). The registry now counts **32 experimental**, **31 specified**, and **0 stable** patterns out of 63; no web components are production-certified.
 
+The [founder-directed eight UX/UI design principles](docs/UX_UI_DESIGN_PRINCIPLES.md) guide semantic color, truthful actions, searchable choices, input help, spacing, feedback, and navigation. The Forms Lab's **Check brief** action only validates locally; it does not create or save a project. Long forms may benefit from steps, but this short example should remain on one page.
+
 The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 153-test laptop run, successful three-job GitHub Actions check, and remaining manual screen-reader/device gates.
 
 The Forms Lab additionally covers IME-safe search and simulated error/retry behavior. The controller source is experimental demonstration code, not a stable public form API.
