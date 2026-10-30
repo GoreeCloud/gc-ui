@@ -47,6 +47,8 @@
     "qa:native:desktop:direct": "node native/desktop/electron-smoke.mjs",
     "release:foundations:build": "node scripts/build-foundations-candidate.mjs",
     "release:foundations:verify": "node scripts/verify-foundations-candidate.mjs",
+    "release:seal:web:verify": "node scripts/verify-seal-web-candidate.mjs",
+    "release:seal:web:types": "npm exec --yes --package typescript@5.9.3 -- tsc --project dist/seal-web-verify/consumer/tsconfig.json",
     "release:foundations:types": "npm exec --yes --package typescript@5.9.3 -- tsc --project dist/foundations-verify/consumer/tsconfig.json",
     "release:foundations:stable:build": "node scripts/build-foundations-candidate.mjs --stable",
     "release:foundations:stable:verify": "node scripts/verify-foundations-candidate.mjs --stable",
