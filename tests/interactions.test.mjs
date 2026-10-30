@@ -80,6 +80,55 @@ test('public tab selection guards against foreign tabs and supports changing ena
   assert.equal(panels[2].hidden,false);
   control.destroy();
 });
+
+test('tab navigation excludes ARIA-disabled ancestor groups and reacts to host re-enablement',async()=>{
+ const {initTabs}=await import('../src/gc-interactions.mjs');
+ const handlers=new Map();
+ const panels=['first','blocked','last'].map(id=>({id,hidden:false,
+  getAttribute:name=>name==='role'?'tabpanel':null}));
+ const byId=new Map(panels.map(p=>[p.id,p]));
+ let groupDisabled=true;
+ const tabs=panels.map((panel,index)=>{
+  const attrs=new Map([['aria-controls',panel.id]]);
+  if(index===0)attrs.set('aria-selected','true');
+  return {
+   disabled:false,hidden:false,inert:false,tabIndex:0,isConnected:true,
+   parentElement:{closest:selector=>
+    index===1&&groupDisabled&&selector.includes('[aria-disabled="true"]')?{}:null},
+   getAttribute:name=>attrs.get(name)??null,
+   setAttribute(name,value){attrs.set(name,String(value))},
+   removeAttribute:name=>attrs.delete(name),
+   focus(){this.focused=true},
+   closest(){return this}
+  };
+ });
+ const tablist={
+  ownerDocument:{getElementById:id=>byId.get(id)},
+  getAttribute:name=>name==='role'?'tablist':null,
+  querySelectorAll:()=>tabs,
+  addEventListener:(name,callback)=>handlers.set(name,callback),
+  removeEventListener:name=>handlers.delete(name),
+  contains:tab=>tabs.includes(tab)
+ };
+ const controller=initTabs(tablist);
+ assert.equal(panels[0].hidden,false);
+ let prevented=0;
+ handlers.get('keydown')({target:tabs[0],key:'ArrowRight',preventDefault(){prevented++}});
+ assert.equal(prevented,1);
+ assert.equal(panels[2].hidden,false,'keyboard skips a tab with an ARIA-disabled ancestor');
+ assert.equal(panels[1].hidden,true);
+ controller.select(tabs[1]);
+ handlers.get('click')({target:tabs[1]});
+ assert.equal(panels[2].hidden,false,'programmatic and pointer activation also skip unavailable tabs');
+ groupDisabled=false;
+ controller.select(tabs[0]);
+ handlers.get('keydown')({target:tabs[0],key:'ArrowRight',preventDefault(){prevented++}});
+ assert.equal(panels[1].hidden,false,'host re-enablement restores the tab without remount');
+ assert.equal(tabs[1].focused,true);
+ controller.destroy();
+ assert.equal(handlers.size,0,'controller does not retain delegated listeners');
+});
+
 test('vertical tablists use Up/Down arrows and ignore Left/Right',async()=>{
   const panels=['one','two'].map(id=>({hidden:false,getAttribute:()=> 'tabpanel'}));
   const byId=new Map([['one',panels[0]],['two',panels[1]]]);
