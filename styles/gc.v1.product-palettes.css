@@ -9,8 +9,12 @@
   --gc-v1-color-on-primary-container:#111827;
   --gc-v1-color-secondary:#475569;
   --gc-v1-color-on-secondary:#ffffff;
+  --gc-v1-color-secondary-container:#e2e8f0;
+  --gc-v1-color-on-secondary-container:#1e293b;
   --gc-v1-color-tertiary:#57534e;
   --gc-v1-color-on-tertiary:#ffffff;
+  --gc-v1-color-tertiary-container:#e7e5e4;
+  --gc-v1-color-on-tertiary-container:#292524;
   --gc-v1-color-focus-ring:#374151;
   --gc-v1-color-selection:#e2e8f0;
   --gc-v1-color-on-selection:#1f2937;
@@ -25,8 +29,12 @@
   --gc-v1-color-on-primary-container:#f9fafb;
   --gc-v1-color-secondary:#cbd5e1;
   --gc-v1-color-on-secondary:#1f2937;
+  --gc-v1-color-secondary-container:#334155;
+  --gc-v1-color-on-secondary-container:#f1f5f9;
   --gc-v1-color-tertiary:#d6d3d1;
   --gc-v1-color-on-tertiary:#292524;
+  --gc-v1-color-tertiary-container:#44403c;
+  --gc-v1-color-on-tertiary-container:#fafaf9;
   --gc-v1-color-focus-ring:#e5e7eb;
   --gc-v1-color-selection:#374151;
   --gc-v1-color-on-selection:#f9fafb;

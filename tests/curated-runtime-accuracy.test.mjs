@@ -110,3 +110,35 @@ test('a host-owned inline role and priority survive controller mount, render and
   c.destroy();
   assert.deepEqual(f.props.get('--gc-v1-color-primary'),{v:'#123456',p:'important'});
 });
+
+test('neutral secondary and tertiary containers are complete, readable and curated',()=>{
+ for(const mode of ['light','dark']){
+  const roles=getCuratedAccentRoles('neutral',mode);
+  const expected=declarations(selectors.neutral[mode]);
+  for(const prefix of ['secondary','tertiary']){
+   const surface=prefix+'Container',onSurface='on'+prefix[0].toUpperCase()+prefix.slice(1)+'Container';
+   assert.equal(roles[surface],expected[kebab(surface)]);
+   assert.equal(roles[onSurface],expected[kebab(onSurface)]);
+   assert.ok(contrastRatio(roles[surface],roles[onSurface])>=4.5,mode+' '+prefix+' text contrast');
+  }
+ }
+});
+test('neutral container roles retain host ownership and disappear in system high contrast',()=>{
+ const f=fixture();
+ const property='--gc-v1-color-secondary-container';
+ const c=createThemeController({...f});
+ assert.equal(f.root.style.getPropertyValue(property),'#E2E8F0');
+ // The app may take ownership after the controller has rendered.
+ f.root.style.setProperty(property,'#ABCDEF','important');
+ c.set({mode:'dark'});
+ assert.equal(f.root.style.getPropertyValue(property),'#ABCDEF');
+ assert.equal(f.root.style.getPropertyPriority(property),'important');
+ c.set({contrast:'high'});
+ assert.equal(f.root.style.getPropertyValue('--gc-v1-color-tertiary-container'),'');
+ c.set({contrast:'standard'});
+ assert.equal(f.root.style.getPropertyValue('--gc-v1-color-tertiary-container'),'#44403C');
+ c.set({accent:'iris'});
+ assert.equal(f.root.style.getPropertyValue('--gc-v1-color-tertiary-container'),'');
+ c.destroy();
+ assert.equal(f.root.style.getPropertyValue(property),'#ABCDEF');
+});

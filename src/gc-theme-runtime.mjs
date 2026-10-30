@@ -19,7 +19,9 @@ const neutralLight=Object.freeze({
   primary:'#374151',onPrimary:'#FFFFFF',
   primaryContainer:'#E5E7EB',onPrimaryContainer:'#111827',
   secondary:'#475569',onSecondary:'#FFFFFF',
+  secondaryContainer:'#E2E8F0',onSecondaryContainer:'#1E293B',
   tertiary:'#57534E',onTertiary:'#FFFFFF',
+  tertiaryContainer:'#E7E5E4',onTertiaryContainer:'#292524',
   focusRing:'#374151',selection:'#E2E8F0',onSelection:'#1F2937',
   link:'#334155',visitedLink:'#475569'
 });
@@ -27,7 +29,9 @@ const neutralDark=Object.freeze({
   primary:'#D1D5DB',onPrimary:'#111827',
   primaryContainer:'#374151',onPrimaryContainer:'#F9FAFB',
   secondary:'#CBD5E1',onSecondary:'#1F2937',
+  secondaryContainer:'#334155',onSecondaryContainer:'#F1F5F9',
   tertiary:'#D6D3D1',onTertiary:'#292524',
+  tertiaryContainer:'#44403C',onTertiaryContainer:'#FAFAF9',
   focusRing:'#E5E7EB',selection:'#374151',onSelection:'#F9FAFB',
   link:'#CBD5E1',visitedLink:'#D1D5DB'
 });

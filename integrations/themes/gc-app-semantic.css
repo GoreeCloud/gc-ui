@@ -10,7 +10,10 @@
   --gc-v1-color-divider:#373c50;--gc-v1-color-primary:#d1d5db;
   --gc-v1-color-on-primary:#111827;--gc-v1-color-primary-container:#374151;
   --gc-v1-color-on-primary-container:#f9fafb;--gc-v1-color-focus-ring:#d1d5db;
-  --gc-v1-color-secondary:#b3b9cf;--gc-v1-color-success:#9ce3b9;
+  --gc-v1-color-secondary:#b3b9cf;
+  --gc-v1-color-secondary-container:#334155;--gc-v1-color-on-secondary-container:#f1f5f9;
+  --gc-v1-color-tertiary-container:#44403c;--gc-v1-color-on-tertiary-container:#fafaf9;
+  --gc-v1-color-success:#9ce3b9;
   --gc-v1-color-danger:#ffb5be;--gc-v1-color-warning:#ffd28a;
 }
 :root[data-theme="light"] {
@@ -21,7 +24,10 @@
   --gc-v1-color-divider:#e5e7f0;--gc-v1-color-primary:#374151;
   --gc-v1-color-on-primary:#ffffff;--gc-v1-color-primary-container:#e5e7eb;
   --gc-v1-color-on-primary-container:#111827;--gc-v1-color-focus-ring:#374151;
-  --gc-v1-color-secondary:#5f657b;--gc-v1-color-success:#206a46;
+  --gc-v1-color-secondary:#5f657b;
+  --gc-v1-color-secondary-container:#e2e8f0;--gc-v1-color-on-secondary-container:#1e293b;
+  --gc-v1-color-tertiary-container:#e7e5e4;--gc-v1-color-on-tertiary-container:#292524;
+  --gc-v1-color-success:#206a46;
   --gc-v1-color-danger:#a73549;--gc-v1-color-warning:#875500;
 }
 /* Palette pairs match the GC UI curated accent semantic contract. */
