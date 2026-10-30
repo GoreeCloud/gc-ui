@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="solid">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Experimental accessible multi-step setup and native locale-aware date reference for GoreeCloud UI">
+<title>GoreeCloud UI · Setup Workflow Lab</title>
+<link rel="icon" type="image/svg+xml" href="../assets/gc-mark.svg">
+<link rel="stylesheet" href="../styles/gc.v1.generated.css">
+<link rel="stylesheet" href="../styles/gc.v1.components.css">
+<link rel="stylesheet" href="./workflow.css">
+<script type="module" src="./workflow.mjs"></script>
+</head>
+<body>
+<a class="gc-skip-link" href="#content">Skip to setup</a>
+<header class="gc-workflow-header">
+ <a href="./forms.html" class="gc-workflow-brand"><img src="../assets/gc-mark.svg" width="38" height="38" alt=""><strong>GC UI</strong><span>Workflow Lab</span></a>
+ <nav aria-label="Lab navigation"><a href="./forms.html">Forms</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
+</header>
+<main id="content" class="gc-workflow-layout">
+ <div class="gc-workflow-intro">
+  <p class="gc-workflow-eyebrow">EXPERIMENTAL / LOCAL ONLY</p>
+  <h1>Plan without losing your place.</h1>
+  <p>This longer, fictional workspace setup demonstrates grouped steps, reversible navigation, and a native regional date input. No account or workspace is created; no values are sent or saved.</p>
+ </div>
+ <div class="gc-card gc-workflow-card">
+  <h2 class="gc-workflow-section-title">Example workspace setup</h2>
+  <p id="workflow-fallback" class="gc-field-description" role="status">JavaScript is required for this interactive demonstration. Navigation and checking are disabled, and no values will be sent.</p>
+  <p id="workflow-progress" class="gc-workflow-progress" role="status" aria-live="polite" aria-atomic="true">Step 1 of 4: Basics</p>
+  <ol class="gc-workflow-steps" aria-label="Setup steps">
+   <li aria-current="step">Basics</li>
+   <li>Preferences</li>
+   <li>Schedule</li>
+   <li>Review</li>
+  </ol>
+  <form id="workflow-form" novalidate>
+   <p id="workflow-alert" role="alert" class="gc-workflow-alert" hidden></p>
+   <section data-workflow-step data-title="Basics" aria-labelledby="workflow-title-basics">
+    <h3 id="workflow-title-basics" tabindex="-1">1. Workspace basics</h3>
+    <p class="gc-workflow-hint">Choose invented example values. These fields are not connected to an account.</p>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-name">Workspace name (required)</label>
+     <input class="gc-input" id="workspace-name" required minlength="2" maxlength="64" autocomplete="off" aria-describedby="workspace-name-help" placeholder="Example: Family archive">
+     <span id="workspace-name-help" class="gc-field-description">2–64 characters. Use an invented name.</span>
+     <span id="workspace-name-error" class="gc-field-error" hidden>Enter at least two characters for a workspace name.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-owner">Sample owner label (required)</label>
+     <input class="gc-input" id="workspace-owner" required minlength="2" maxlength="40" autocomplete="off" aria-describedby="workspace-owner-help" placeholder="Example: Home team">
+     <span id="workspace-owner-help" class="gc-field-description">Use an example, not a person's real details.</span>
+     <span id="workspace-owner-error" class="gc-field-error" hidden>Enter at least two characters for the owner label.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-purpose">Workspace type (required)</label>
+     <select class="gc-input" id="workspace-purpose" required aria-describedby="workspace-purpose-help">
+      <option value="">Choose a type</option><option value="personal">Personal</option><option value="family">Family</option><option value="team">Small team</option>
+     </select>
+     <span id="workspace-purpose-help" class="gc-field-description">Select the kind of example workspace you want to preview.</span>
+     <span id="workspace-purpose-error" class="gc-field-error" hidden>Choose a workspace type.</span>
+    </div>
+   </section>
+   <section data-workflow-step data-title="Preferences" aria-labelledby="workflow-title-preferences" hidden>
+    <h3 id="workflow-title-preferences" tabindex="-1">2. Organize your preferences</h3>
+    <p class="gc-workflow-hint">These are illustrative settings. They will not change notification or backup services.</p>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-goal">Organization goal (required)</label>
+     <textarea class="gc-input gc-workflow-textarea" id="workspace-goal" required minlength="12" maxlength="240" rows="4" aria-describedby="workspace-goal-help" placeholder="Example: Organize scanned letters and family photos."></textarea>
+     <span id="workspace-goal-help" class="gc-field-description">At least 12 characters. Avoid real personal information.</span>
+     <span id="workspace-goal-error" class="gc-field-error" hidden>Describe your example goal in at least 12 characters.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-reminders">Example reminders (required)</label>
+     <select class="gc-input" id="workspace-reminders" required aria-describedby="workspace-reminders-help">
+      <option value="">Choose reminders</option><option value="off">Off</option><option value="important">Important only</option><option value="all">All</option>
+     </select>
+     <span id="workspace-reminders-help" class="gc-field-description">Preview only. No notifications are scheduled.</span>
+     <span id="workspace-reminders-error" class="gc-field-error" hidden>Choose a reminders preference.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-backups">Example backup frequency (required)</label>
+     <select class="gc-input" id="workspace-backups" required aria-describedby="workspace-backups-help">
+      <option value="">Choose a frequency</option><option value="daily">Daily</option><option value="weekly">Weekly</option><option value="manual">Manual only</option>
+     </select>
+     <span id="workspace-backups-help" class="gc-field-description">No backup is configured or performed by this page.</span>
+     <span id="workspace-backups-error" class="gc-field-error" hidden>Choose a backup frequency.</span>
+    </div>
+   </section>
+   <section data-workflow-step data-title="Schedule" aria-labelledby="workflow-title-schedule" hidden>
+    <h3 id="workflow-title-schedule" tabindex="-1">3. Pick a sample schedule</h3>
+    <p class="gc-workflow-hint">The date is a calendar day, not an instant in a timezone. Your browser supplies its native regional date editor.</p>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-date">Sample review date (required)</label>
+     <input class="gc-input" id="workspace-date" type="date" required aria-describedby="workspace-date-help">
+     <span id="workspace-date-help" class="gc-field-description">Choose a day using your device's date picker. The review displays it using your browser's locale; no fixed month/day order is assumed.</span>
+     <span id="workspace-date-error" class="gc-field-error" hidden>Choose a valid sample review date.</span>
+    </div>
+    <div class="gc-field">
+     <label class="gc-field-label" for="workspace-density">Example layout density (required)</label>
+     <select class="gc-input" id="workspace-density" required aria-describedby="workspace-density-help">
+      <option value="">Choose a density</option><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="spacious">Spacious</option>
+     </select>
+     <span id="workspace-density-help" class="gc-field-description">This is a preview value, not an application appearance setting.</span>
+     <span id="workspace-density-error" class="gc-field-error" hidden>Choose a layout density.</span>
+    </div>
+   </section>
+   <section data-workflow-step data-title="Review" aria-labelledby="workflow-title-review" hidden>
+    <h3 id="workflow-title-review" tabindex="-1">4. Review your example</h3>
+    <p class="gc-workflow-hint">Use Back to edit earlier answers. The button below checks the example but does not create or save a workspace.</p>
+    <dl class="gc-workflow-review">
+     <div><dt>Name</dt><dd id="review-name">—</dd></div>
+     <div><dt>Owner label</dt><dd id="review-owner">—</dd></div>
+     <div><dt>Type</dt><dd id="review-purpose">—</dd></div>
+     <div><dt>Goal</dt><dd id="review-goal">—</dd></div>
+     <div><dt>Reminders</dt><dd id="review-reminders">—</dd></div>
+     <div><dt>Backup frequency</dt><dd id="review-backups">—</dd></div>
+     <div><dt>Review date</dt><dd id="review-date">—</dd></div>
+     <div><dt>Layout density</dt><dd id="review-density">—</dd></div>
+    </dl>
+   </section>
+   <div id="workflow-success" class="gc-banner" data-intent="success" role="status" hidden><strong>Example checks passed</strong><p>No account, workspace, notification, or backup was created. Nothing was sent or saved.</p></div>
+   <div class="gc-workflow-actions">
+    <button id="workflow-back" type="button" class="gc-button" data-variant="secondary" disabled hidden>Back</button>
+    <button id="workflow-next" type="button" class="gc-button" data-variant="primary" disabled>Next: Preferences</button>
+    <button id="workflow-check" type="button" class="gc-button" data-variant="primary" disabled hidden>Check example</button>
+   </div>
+  </form>
+ </div>
+ <p class="gc-workflow-note">Experimental GC UI reference, not a production onboarding wizard or a stable component API. <a href="../docs/UX_UI_DESIGN_PRINCIPLES.md">Eight UX/UI principles</a> · <a href="./forms.html">Return to short forms</a></p>
+</main>
+</body>
+</html>
