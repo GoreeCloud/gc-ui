@@ -203,7 +203,7 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
       // Capture focus ownership before restore() changes its visibility.
       const heldMenuFocus=menu.contains(document.activeElement);
       restore();
-      if(heldMenuFocus&&menu.hidden&&trigger.isConnected)trigger.focus();
+      if(heldMenuFocus&&menu.hidden&&trigger.isConnected&&!triggerUnavailable())trigger.focus();
     }
   };
 }
