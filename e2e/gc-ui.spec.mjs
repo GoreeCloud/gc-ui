@@ -576,12 +576,27 @@ test('delegated dialog openers do not bypass unavailable native and ARIA states'
   fire();result.fieldsetOpen=dialog.open;
   fieldset.replaceWith(opener);
   fire();result.restored=dialog.open;
-  api.close();api.destroy();dialog.remove();opener.remove();
+  const closer=document.createElement('button');
+  closer.type='button';closer.setAttribute('data-gc-dialog-close','');
+  dialog.appendChild(closer);
+  const clickClose=()=>closer.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+  const closeFieldset=document.createElement('fieldset');
+  closeFieldset.disabled=true;closer.before(closeFieldset);closeFieldset.appendChild(closer);
+  result.closerInheritedDisabled=closer.matches(':disabled');
+  clickClose();result.closedFromFieldset=!dialog.open;
+  closeFieldset.replaceWith(closer);
+  closer.setAttribute('aria-disabled','true');
+  clickClose();result.closedFromAria=!dialog.open;
+  closer.removeAttribute('aria-disabled');
+  clickClose();result.closedAfterRestore=!dialog.open;
+  api.destroy();dialog.remove();opener.remove();
   return result;
  });
  expect(result).toEqual({
   hidden:false,inert:false,ariaHidden:false,ariaDisabled:false,
-  fieldsetNative:true,fieldsetOwn:false,fieldsetOpen:false,restored:true
+  fieldsetNative:true,fieldsetOwn:false,fieldsetOpen:false,restored:true,
+  closerInheritedDisabled:true,closedFromFieldset:false,closedFromAria:false,
+  closedAfterRestore:true
  });
 });
 
