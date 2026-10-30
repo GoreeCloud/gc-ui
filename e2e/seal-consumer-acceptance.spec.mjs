@@ -41,6 +41,30 @@ async function browserAxe(){
   incomplete:data.incomplete.map(compact),passes:data.passes.length};
 }
 
+// Preserve the actual CSS context and topmost DOM elements behind axe's
+// incomplete contrast checks. These samples are review evidence, not ratios.
+function browserContrastStack(selectors){
+ return [...new Set(selectors)].map(selector=>{
+  let element=null;
+  try{element=document.querySelector(selector)}catch{}
+  if(!element)return {selector,found:false};
+  const rect=element.getBoundingClientRect();
+  const css=getComputedStyle(element);
+  const x=Math.min(innerWidth-1,Math.max(0,rect.left+rect.width/2));
+  const y=Math.min(innerHeight-1,Math.max(0,rect.top+rect.height/2));
+  const stack=rect.width&&rect.height&&innerWidth&&innerHeight?
+   document.elementsFromPoint(x,y).slice(0,8).map(node=>({
+    tag:node.localName,id:node.id||null,
+    role:node.getAttribute('role'),className:typeof node.className==='string'?node.className.slice(0,100):''
+   })):[];
+  return {selector,found:true,
+   rect:{x:rect.x,y:rect.y,width:rect.width,height:rect.height},
+   computed:{color:css.color,backgroundColor:css.backgroundColor,
+    opacity:css.opacity,position:css.position,zIndex:css.zIndex},
+   centerStack:stack};
+ });
+}
+
 for(const scenario of scenarios){
  test('installed candidate acceptance matrix — '+scenario.id,async({page},testInfo)=>{
   await page.setViewportSize({width:scenario.width,height:scenario.height});
