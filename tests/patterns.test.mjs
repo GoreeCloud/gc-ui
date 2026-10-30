@@ -150,3 +150,46 @@ test('a rejected outer choice change does not undo a newer nested host selection
  assert.equal(work.getAttribute('aria-pressed'),'false');
  ctl.destroy();
 });
+
+test('choice selection focuses only after the host accepts the change',()=>{
+ const all=choice('all','true'),work=choice('work');
+ let focusSeenDuringCallback=false;
+ const ctl=initChoiceChips(group([all,work]),{onChange:()=>{
+  focusSeenDuringCallback=work.focused;
+ }});
+ assert.equal(ctl.select('work',{focus:true}),true);
+ assert.equal(focusSeenDuringCallback,false,'callback must run before any focus side effect');
+ assert.equal(work.focused,true);
+ ctl.destroy();
+});
+
+test('rejected selection does not steal focus and restores selected ARIA',()=>{
+ const all=choice('all','true'),work=choice('work');
+ const ctl=initChoiceChips(group([all,work]),{onChange:()=>{
+  throw Error('host refused choice');
+ }});
+ assert.throws(()=>ctl.select('work',{focus:true}),/host refused choice/);
+ assert.equal(work.focused,false);
+ assert.equal(ctl.get(),'all');
+ assert.equal(all.getAttribute('aria-pressed'),'true');
+ assert.equal(work.getAttribute('aria-pressed'),'false');
+ ctl.destroy();
+});
+
+test('disposal, nested selection, or detachment during callback prevents stale focus',()=>{
+ for(const scenario of ['destroy','nested','detach','disable']){
+  const all=choice('all','true'),work=choice('work'),later=choice('later');
+  let ctl;
+  ctl=initChoiceChips(group([all,work,later]),{onChange:value=>{
+   if(value!=='work')return;
+   if(scenario==='destroy')ctl.destroy();
+   if(scenario==='nested')ctl.select('later');
+   if(scenario==='detach')work.isConnected=false;
+   if(scenario==='disable')work.disabled=true;
+  }});
+  ctl.select('work',{focus:true});
+  assert.equal(work.focused,false,scenario+' must not focus stale choice');
+  if(scenario==='nested')assert.equal(ctl.get(),'later');
+  if(scenario!=='destroy')ctl.destroy();
+ }
+});
