@@ -51,3 +51,77 @@
 }
 
 .gc-visually-hidden{position:absolute!important;inline-size:1px!important;block-size:1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;clip-path:inset(50%)!important}
+
+/* Founder-directed floating-navigation contract, 2026-10-30.
+ * Application chrome and primary navigation stay detached from viewport edges.
+ * These values are local to this experimental shell; downstream token/package
+ * adoption requires a separate tested release.
+ */
+.gc-app-shell{
+  --gc-floating-nav-inset:clamp(12px,2vw,24px);
+  --gc-floating-nav-radius:var(--gc-v1-component-lens-radius,26px);
+  --gc-floating-nav-shadow:0 12px 36px rgba(12,18,40,.13);
+  --gc-floating-nav-surface:var(--gc-v1-color-surface-raised);
+}
+.gc-app-bar{
+  inset-block-start:12px;
+  margin-block-start:12px;
+  margin-inline:var(--gc-floating-nav-inset);
+  border:1px solid var(--gc-v1-color-outline);
+  border-radius:var(--gc-floating-nav-radius);
+  background:var(--gc-floating-nav-surface);
+  box-shadow:var(--gc-floating-nav-shadow);
+}
+.gc-nav-sidebar,.gc-nav-rail,.gc-nav-bottom{
+  border:1px solid var(--gc-v1-color-outline);
+  border-radius:var(--gc-floating-nav-radius);
+  background:var(--gc-floating-nav-surface);
+  box-shadow:var(--gc-floating-nav-shadow);
+}
+.gc-nav-sidebar{
+  inset-block-start:102px;
+  inset-block-end:16px;
+  inset-inline-start:var(--gc-floating-nav-inset);
+  border-inline-end:1px solid var(--gc-v1-color-outline);
+}
+@media(min-width:600px) and (max-width:1199px){
+  .gc-nav-rail{
+    inset-block-start:102px;
+    inset-block-end:16px;
+    inset-inline-start:var(--gc-floating-nav-inset);
+    border-inline-end:1px solid var(--gc-v1-color-outline);
+  }
+}
+@media(max-width:599px){
+  .gc-nav-bottom{
+    inset-inline:12px;
+    inset-block-end:max(12px,env(safe-area-inset-bottom));
+    padding:7px 10px;
+    border-block-start:1px solid var(--gc-v1-color-outline);
+  }
+}
+:root[data-gc-contrast=high] .gc-app-bar,
+:root[data-gc-contrast=high] .gc-nav-sidebar,
+:root[data-gc-contrast=high] .gc-nav-rail,
+:root[data-gc-contrast=high] .gc-nav-bottom,
+:root[data-gc-material=solid] .gc-app-bar,
+:root[data-gc-material=solid] .gc-nav-sidebar,
+:root[data-gc-material=solid] .gc-nav-rail,
+:root[data-gc-material=solid] .gc-nav-bottom{
+  background:var(--gc-v1-color-surface);
+  box-shadow:none;
+}
+@media(prefers-reduced-transparency:reduce){
+  .gc-app-bar,.gc-nav-sidebar,.gc-nav-rail,.gc-nav-bottom{
+    background:var(--gc-v1-color-surface);
+    box-shadow:none;
+  }
+}
+@media(forced-colors:active){
+  .gc-app-bar,.gc-nav-sidebar,.gc-nav-rail,.gc-nav-bottom{
+    background:Canvas;
+    color:CanvasText;
+    border:1px solid CanvasText;
+    box-shadow:none;
+  }
+}
