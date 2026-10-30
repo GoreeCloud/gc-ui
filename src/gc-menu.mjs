@@ -77,8 +77,13 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
     const candidates=enabled();
     if(candidates.length)candidates[((index%candidates.length)+candidates.length)%candidates.length].focus();
   }
+  // ARIA-disabled state on a container also disables its interactive children.
+  // A disabled/hidden trigger group must not open a new action menu.
+  const triggerUnavailable=()=>trigger.disabled||
+    trigger.getAttribute('aria-disabled')==='true'||
+    !!trigger.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]');
   function show(position='first'){
-    if(destroyed||trigger.disabled||trigger.getAttribute('aria-disabled')==='true')return false;
+    if(destroyed||triggerUnavailable())return false;
     if(!enabled().length)return false;
     open=true;
     setHidden(false);

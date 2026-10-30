@@ -385,3 +385,34 @@ test('nested hidden, inert and ARIA-disabled groups never expose their menu acti
  assert.equal(menu.hidden,true);
  api.destroy();
 });
+
+
+test('menu trigger inherits unavailable host groups and recovers when re-enabled',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'grouped-trigger',role:'menu'});
+ const action=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,action])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[action];
+ menu.contains=el=>el===menu||el===action;
+ let blocked='[aria-disabled="true"]';
+ trigger.parentElement={closest:selector=>blocked&&selector.includes(blocked)?{}:null};
+ const api=initMenu(trigger,menu,{document:doc});
+ for(const state of ['[aria-disabled="true"]','[hidden]','[inert]','[aria-hidden="true"]']){
+  blocked=state;
+  assert.equal(api.open(),false,'host ancestor '+state+' blocks direct open');
+  trigger.fire('click');
+  trigger.fire('keydown',{key:'ArrowDown',preventDefault(){}});
+  assert.equal(api.isOpen(),false,'host ancestor '+state+' blocks pointer and keyboard open');
+  assert.equal(menu.hidden,true);
+  assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ }
+ blocked=null;
+ assert.equal(api.open(),true,'restored host enables normal menu operation');
+ assert.equal(menu.hidden,false);
+ assert.equal(doc.activeElement,action);
+ api.close();
+ blocked='[aria-disabled="true"]';
+ trigger.fire('click');
+ assert.equal(api.isOpen(),false,'newly disabled ancestor blocks later reopening');
+ api.destroy();
+});
