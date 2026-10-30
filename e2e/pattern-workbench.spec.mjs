@@ -62,3 +62,34 @@ test('rejected filter callback does not expose an unaccepted choice in native DO
  });
  expect(state).toEqual({rejected:true,current:'all',all:'true',work:'false'});
 });
+
+test('choice controller does not steal real DOM focus on rejection or disposal',async({page})=>{
+ await page.goto('/lab/pattern-workbench.html');
+ const result=await page.evaluate(async()=>{
+  const {initChoiceChips}=await import('/src/gc-patterns.mjs');
+  const scope=document.createElement('div');
+  const original=document.createElement('button');
+  const next=document.createElement('button');
+  const anchor=document.createElement('button');
+  anchor.textContent='Focus anchor';
+  for(const [button,value] of [[original,'original'],[next,'next']]){
+   button.type='button';
+   button.setAttribute('data-gc-choice',value);
+   scope.append(button);
+  }
+  document.body.append(anchor,scope);
+  anchor.focus();
+  let rejectedFocus=false;
+  const rejecting=initChoiceChips(scope,{onChange:()=>{throw Error('rejected')}});
+  try{rejecting.select('next',{focus:true})}catch{}
+  rejectedFocus=document.activeElement===anchor;
+  rejecting.destroy();
+  let disposing;
+  disposing=initChoiceChips(scope,{onChange:()=>disposing.destroy()});
+  disposing.select('next',{focus:true});
+  const disposedFocus=document.activeElement===anchor;
+  scope.remove();anchor.remove();
+  return {rejectedFocus,disposedFocus};
+ });
+ expect(result).toEqual({rejectedFocus:true,disposedFocus:true});
+});
