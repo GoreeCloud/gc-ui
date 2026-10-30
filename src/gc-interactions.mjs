@@ -209,6 +209,7 @@ const pendingAsyncActions=new WeakSet();
 export async function runAsyncAction(button,operation){
  if(pendingAsyncActions.has(button)||button.getAttribute('aria-busy')==='true'||
     button.disabled||button.matches?.(':disabled')===true||
+    button.hidden||button.inert||button.isConnected===false||
     button.getAttribute('aria-disabled')==='true')return null;
  const previousBusy=button.getAttribute('aria-busy');
  pendingAsyncActions.add(button);
