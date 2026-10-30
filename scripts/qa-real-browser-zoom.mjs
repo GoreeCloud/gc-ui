@@ -161,7 +161,7 @@ try{
  const stepper=page.getByRole('button',{name:'Add one collaborator'});
  await activate(stepper);
  assert.equal(await page.getByRole('spinbutton',{name:'Collaborators'}).inputValue(),'4');
- await activate(page.getByRole('button',{name:'Create brief'}));
+ await activate(page.getByRole('button',{name:'Check brief'}));
  assert(await page.locator('#brief-errors').evaluate(el=>el===document.activeElement),
   'Form validation must focus summary at native 400%');
  console.log('PASS '+engineName+' native 400% navigation/dialog/footer/form focus');
