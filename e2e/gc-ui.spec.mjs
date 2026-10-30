@@ -549,6 +549,42 @@ test('borrowed toast live-region semantics survive overlapping controllers and h
  });
 });
 
+
+test('delegated dialog openers do not bypass unavailable native and ARIA states',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initDialog}=await import('/src/gc-interactions.mjs');
+  const opener=document.createElement('button');
+  opener.type='button';
+  const dialog=document.createElement('dialog');
+  dialog.id='native-disabled-dialog-probe';
+  opener.dataset.gcDialogOpen=dialog.id;
+  document.body.append(opener,dialog);
+  const api=initDialog(dialog);
+  const fire=()=>opener.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+  const result={};
+  opener.hidden=true;fire();result.hidden=dialog.open;opener.hidden=false;
+  opener.inert=true;fire();result.inert=dialog.open;opener.inert=false;
+  opener.setAttribute('aria-hidden','true');
+  fire();result.ariaHidden=dialog.open;opener.removeAttribute('aria-hidden');
+  opener.setAttribute('aria-disabled','true');
+  fire();result.ariaDisabled=dialog.open;opener.removeAttribute('aria-disabled');
+  const fieldset=document.createElement('fieldset');
+  fieldset.disabled=true;opener.before(fieldset);fieldset.appendChild(opener);
+  result.fieldsetNative=opener.matches(':disabled');
+  result.fieldsetOwn=opener.disabled;
+  fire();result.fieldsetOpen=dialog.open;
+  fieldset.replaceWith(opener);
+  fire();result.restored=dialog.open;
+  api.close();api.destroy();dialog.remove();opener.remove();
+  return result;
+ });
+ expect(result).toEqual({
+  hidden:false,inert:false,ariaHidden:false,ariaDisabled:false,
+  fieldsetNative:true,fieldsetOwn:false,fieldsetOpen:false,restored:true
+ });
+});
+
 test('dialog teardown preserves native modals opened by the host app',async({page})=>{
  await page.goto('/lab/components.html');
  const result=await page.evaluate(async()=>{
