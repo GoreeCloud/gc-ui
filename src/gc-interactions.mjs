@@ -93,11 +93,19 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
   if(destroyed)return;
   const opener=e.target.closest?.('[data-gc-dialog-open]');
   if(opener?.dataset.gcDialogOpen===dialog.id){
-   if(!dialog.open){dialog.showModal();trigger=opener;ownsOpen=true}
+   if(!dialog.open&&opener.matches?.(':disabled')!==true&&
+      !opener.hidden&&!opener.inert&&opener.isConnected!==false&&
+      opener.getAttribute?.('aria-disabled')!=='true'&&
+      opener.getAttribute?.('aria-hidden')!=='true'){
+    dialog.showModal();trigger=opener;ownsOpen=true
+   }
    return;
   }
   const close=e.target.closest?.('[data-gc-dialog-close]');
-  if(close&&dialog.contains(close)&&dialog.open)dialog.close();
+  if(close&&dialog.contains(close)&&dialog.open&&
+     close.matches?.(':disabled')!==true&&!close.hidden&&!close.inert&&
+     close.getAttribute?.('aria-disabled')!=='true'&&
+     close.getAttribute?.('aria-hidden')!=='true')dialog.close();
  };
  const closed=()=>{ownsOpen=false;if(trigger?.isConnected)trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
