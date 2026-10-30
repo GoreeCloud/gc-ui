@@ -30,3 +30,32 @@ test('adaptive shell uses complementary tonal regions without losing accessible 
  await expect(page.getByRole('navigation',{name:'Primary navigation, mobile'})).toBeVisible();
  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(375);
 });
+
+test('Neutral containers resolve to readable slate and stone colors on live reference surfaces',async({page})=>{
+ await page.goto('/lab/v1.html');
+ const expected={
+  light:{secondary:['rgb(226, 232, 240)','rgb(30, 41, 59)'],tertiary:['rgb(231, 229, 228)','rgb(41, 37, 36)']},
+  dark:{secondary:['rgb(51, 65, 85)','rgb(241, 245, 249)'],tertiary:['rgb(68, 64, 60)','rgb(250, 250, 249)']}
+ };
+ for(const mode of ['light','dark']){
+  await page.locator('[data-mode="'+mode+'"]').click();
+  await page.locator('[data-accent="neutral"]').click();
+  await expect(page.locator('html')).toHaveAttribute('data-gc-mode',mode);
+  const colors=await page.evaluate(()=>{
+   const result={};
+   for(const role of ['secondary','tertiary']){
+    const surface=document.querySelector('.'+role+'-role');
+    surface.style.backgroundColor='var(--gc-v1-color-'+role+'-container)';
+    surface.style.color='var(--gc-v1-color-on-'+role+'-container)';
+    const computed=getComputedStyle(surface);
+    result[role]=[computed.backgroundColor,computed.color];
+   }
+   return result;
+  });
+  expect(colors).toEqual(expected[mode]);
+ }
+ await page.locator('[data-accent="iris"]').click();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-accent','iris');
+ const selected=await page.evaluate(()=>getComputedStyle(document.documentElement).getPropertyValue('--gc-v1-color-secondary-container').trim());
+ expect(selected.toUpperCase()).not.toBe('#334155');
+});
