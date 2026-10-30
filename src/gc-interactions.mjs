@@ -106,7 +106,7 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
   const close=e.target.closest?.('[data-gc-dialog-close]');
   if(close&&dialog.contains(close)&&dialog.open&&!unavailable(close))dialog.close();
  };
- const closed=()=>{ownsOpen=false;if(trigger?.isConnected)trigger.focus();trigger=null};
+ const closed=()=>{ownsOpen=false;if(trigger?.isConnected&&!unavailable(trigger))trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
  return {
   open(){ensureActive();if(!dialog.open){dialog.showModal();ownsOpen=true}},
@@ -118,7 +118,7 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
    dialog.removeEventListener('close',closed);
    // A host-opened modal must survive disposal of this optional controller.
    if(ownsOpen&&dialog.open)dialog.close();
-   if(trigger?.isConnected)trigger.focus();
+   if(trigger?.isConnected&&!unavailable(trigger))trigger.focus();
    trigger=null;ownsOpen=false;
   }
  };
