@@ -145,3 +145,39 @@ test('footer links retain a touch-safe gap above fixed mobile navigation at maxi
   expect(clearance.gap,'Touch clearance above bottom nav at '+width+'px').toBeGreaterThanOrEqual(80);
  }
 });
+
+
+test('floating navigation remains rounded and inset across responsive layouts and RTL',async({page})=>{
+  for(const width of [320,375,840,1199,1200,1440]){
+    await page.setViewportSize({width,height:812});
+    await page.goto('/lab/adaptive.html');
+    for(const direction of ['ltr','rtl']){
+      await page.evaluate(dir=>{document.documentElement.dir=dir},direction);
+      const result=await page.evaluate(()=>{
+        const bars=['.gc-app-bar',...['bottom','rail','sidebar'].map(name=>'.gc-nav-'+name)]
+          .map(selector=>document.querySelector(selector))
+          .filter(el=>getComputedStyle(el).display!=='none');
+        return {
+          width:document.documentElement.clientWidth,
+          scrollWidth:document.documentElement.scrollWidth,
+          bars:bars.map(el=>{
+            const rect=el.getBoundingClientRect(),style=getComputedStyle(el);
+            return {left:rect.left,right:rect.right,top:rect.top,bottom:rect.bottom,
+              radius:parseFloat(style.borderTopLeftRadius),background:style.backgroundColor};
+          })
+        };
+      });
+      expect(result.scrollWidth,'horizontal overflow at '+width+' '+direction).toBeLessThanOrEqual(result.width+1);
+      expect(result.bars).toHaveLength(2);
+      for(const bar of result.bars){
+        expect(bar.left,'inline-start inset at '+width+' '+direction).toBeGreaterThanOrEqual(10);
+        expect(result.width-bar.right,'inline-end inset at '+width+' '+direction).toBeGreaterThanOrEqual(10);
+        expect(bar.radius,'rounded navigation at '+width+' '+direction).toBeGreaterThan(0);
+        expect(bar.background,'opaque floating surface at '+width+' '+direction).not.toBe('rgba(0, 0, 0, 0)');
+      }
+      const nav=result.bars[1];
+      if(width<600)expect(812-nav.bottom,'mobile safe bottom inset').toBeGreaterThanOrEqual(11);
+      else expect(nav.top,'side navigation detachment').toBeGreaterThan(90);
+    }
+  }
+});
