@@ -27,6 +27,8 @@
     .choices button[aria-pressed=true]{background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container);border-color:var(--gc-v1-color-primary)}
     .choices button:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:2px}
     .status{font-size:13px;font-weight:650}.note{margin-top:20px}
+    /* Keep English copy in logical LTR order while independently testing RTL layout and control flow. */
+    html[dir=rtl] .frame :is(h1,h2,p,strong,footer){direction:ltr;text-align:right}
     @media(max-width:700px){.grid{grid-template-columns:minmax(0,1fr)}.header{gap:12px}.logo{width:46px;height:46px;font-size:18px}.frame{padding:20px 16px}.gc-card{padding:18px}}
     @media(forced-colors:active){.logo,.choices button{background:Canvas!important;color:CanvasText!important;border:2px solid CanvasText!important}}
     @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important;animation:none!important}}
