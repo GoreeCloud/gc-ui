@@ -416,3 +416,39 @@ test('menu trigger inherits unavailable host groups and recovers when re-enabled
  assert.equal(api.isOpen(),false,'newly disabled ancestor blocks later reopening');
  api.destroy();
 });
+
+
+test('unavailable trigger itself, detached popup and disabled fieldset block menu activation',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'self-availability',role:'menu'});
+ const action=elem('button',{role:'menuitem'});
+ for(const node of [trigger,menu,action])node.ownerDocument=doc;
+ menu.querySelectorAll=()=>[action];menu.contains=node=>node===menu||node===action;
+ let inheritedNativeDisabled=false;
+ trigger.matches=selector=>selector===':disabled'&&inheritedNativeDisabled;
+ const api=initMenu(trigger,menu,{document:doc});
+ const cases=[
+  ['hidden',()=>{trigger.hidden=true},()=>{trigger.hidden=false}],
+  ['inert',()=>{trigger.inert=true},()=>{trigger.inert=false}],
+  ['aria-hidden',()=>trigger.setAttribute('aria-hidden','true'),
+    ()=>trigger.removeAttribute('aria-hidden')],
+  ['detached trigger',()=>{trigger.isConnected=false},()=>{trigger.isConnected=true}],
+  ['detached menu',()=>{menu.isConnected=false},()=>{menu.isConnected=true}],
+  ['disabled fieldset',()=>{inheritedNativeDisabled=true},()=>{inheritedNativeDisabled=false}]
+ ];
+ for(const [name,disable,enable] of cases){
+  disable();
+  assert.equal(api.open(),false,name+' must block direct controller API');
+  trigger.fire('click');
+  trigger.fire('keydown',{key:'ArrowDown',preventDefault(){}});
+  assert.equal(api.isOpen(),false,name+' must block click and keyboard activation');
+  assert.equal(menu.hidden,true,name+' cannot expose an unavailable popup');
+  assert.equal(trigger.getAttribute('aria-expanded'),'false');
+  enable();
+ }
+ assert.equal(trigger.disabled,false,'fieldset-only disablement does not set disabled attribute');
+ assert.equal(api.open(),true,'menu recovers when host restores trigger and popup');
+ assert.equal(doc.activeElement,action);
+ api.close();
+ api.destroy();
+});
