@@ -600,6 +600,52 @@ test('delegated dialog openers do not bypass unavailable native and ARIA states'
  });
 });
 
+
+test('dialog delegated open and close honor hidden, inert and ARIA-disabled ancestors',async({page})=>{
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {initDialog}=await import('/src/gc-interactions.mjs');
+  const dialog=document.createElement('dialog');
+  dialog.id='ancestor-disabled-dialog-probe';
+  const opener=document.createElement('button');
+  opener.type='button';opener.dataset.gcDialogOpen=dialog.id;
+  const openGroup=document.createElement('div');
+  openGroup.append(opener);document.body.append(openGroup,dialog);
+  const api=initDialog(dialog);
+  const fire=el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+  const states=[
+   [()=>{openGroup.hidden=true},()=>{openGroup.hidden=false}],
+   [()=>{openGroup.inert=true},()=>{openGroup.inert=false}],
+   [()=>openGroup.setAttribute('aria-hidden','true'),()=>openGroup.removeAttribute('aria-hidden')],
+   [()=>openGroup.setAttribute('aria-disabled','true'),()=>openGroup.removeAttribute('aria-disabled')]
+  ];
+  const openBlocked=[];
+  for(const [disable,enable] of states){
+   disable();fire(opener);openBlocked.push(!dialog.open);enable();
+  }
+  fire(opener);const restoredOpen=dialog.open;
+  const closer=document.createElement('button');
+  closer.type='button';closer.setAttribute('data-gc-dialog-close','');
+  const closeGroup=document.createElement('div');
+  closeGroup.append(closer);dialog.append(closeGroup);
+  const closeBlocked=[];
+  for(const type of ['hidden','inert','aria-hidden','aria-disabled']){
+   if(type==='hidden'||type==='inert')closeGroup[type]=true;
+   else closeGroup.setAttribute(type,'true');
+   fire(closer);closeBlocked.push(dialog.open);
+   if(type==='hidden'||type==='inert')closeGroup[type]=false;
+   else closeGroup.removeAttribute(type);
+  }
+  fire(closer);const restoredClose=!dialog.open;
+  api.destroy();dialog.remove();openGroup.remove();
+  return {openBlocked,closeBlocked,restoredOpen,restoredClose};
+ });
+ expect(result).toEqual({
+  openBlocked:[true,true,true,true],closeBlocked:[true,true,true,true],
+  restoredOpen:true,restoredClose:true
+ });
+});
+
 test('dialog teardown preserves native modals opened by the host app',async({page})=>{
  await page.goto('/lab/components.html');
  const result=await page.evaluate(async()=>{
