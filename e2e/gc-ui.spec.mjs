@@ -629,10 +629,6 @@ test('dialog delegated open and close honor hidden, inert and ARIA-disabled ance
   const closeGroup=document.createElement('div');
   closeGroup.append(closer);dialog.append(closeGroup);
   const closeBlocked=[];
-  for(const [disable,enable] of states){
-   disable.call(null); // apply the same ancestor states to the close group below
-   enable.call(null);
-  }
   for(const type of ['hidden','inert','aria-hidden','aria-disabled']){
    if(type==='hidden'||type==='inert')closeGroup[type]=true;
    else closeGroup.setAttribute(type,'true');
