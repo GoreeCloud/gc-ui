@@ -452,3 +452,33 @@ test('unavailable trigger itself, detached popup and disabled fieldset block men
  api.close();
  api.destroy();
 });
+
+
+test('fieldset-disabled menuitem is omitted from keyboard and action selection',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'native-item-disabled',role:'menu'});
+ const blocked=elem('button',{role:'menuitem'}),available=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,blocked,available])el.ownerDocument=doc;
+ let disabledByFieldset=true,selected=0;
+ blocked.matches=selector=>selector===':disabled'&&disabledByFieldset;
+ menu.querySelectorAll=()=>[blocked,available];
+ menu.contains=el=>el===menu||el===blocked||el===available;
+ const api=initMenu(trigger,menu,{document:doc,onSelect:()=>selected++});
+ assert.equal(blocked.disabled,false,'disabled fieldset is not the button disabled property');
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,available,'skip inherited native-disabled item');
+ menu.fire('click',{target:blocked});
+ assert.equal(selected,0,'delegated events cannot select disabled fieldset item');
+ menu.fire('keydown',{key:'ArrowDown',target:available,preventDefault(){}});
+ assert.equal(doc.activeElement,available,'arrow navigation avoids fieldset-disabled item');
+ api.close();
+ available.hidden=true;
+ assert.equal(api.open(),false,'no eligible menu actions remain');
+ assert.equal(menu.hidden,true);
+ disabledByFieldset=false;
+ assert.equal(api.open(),true,'host can enable the item without remount');
+ assert.equal(doc.activeElement,blocked);
+ menu.fire('click',{target:blocked});
+ assert.equal(selected,1);
+ api.destroy();
+});
