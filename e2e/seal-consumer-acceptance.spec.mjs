@@ -69,6 +69,9 @@ for(const scenario of scenarios){
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions')).toBeFocused();
   await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
+  await expect(page.locator('#actions')).toHaveAttribute('aria-controls','actions-menu');
+  await expect(page.locator('#actions-menu')).toHaveAttribute('role','menu');
+  await expect(page.locator('#actions-menu')).toBeHidden();
   await expect(page.locator('#details')).not.toHaveAttribute('open','');
   await page.locator('#details summary').click();
   await expect(page.locator('#details')).toHaveAttribute('open','');
