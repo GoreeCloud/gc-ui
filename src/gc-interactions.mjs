@@ -94,7 +94,9 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
   const opener=e.target.closest?.('[data-gc-dialog-open]');
   if(opener?.dataset.gcDialogOpen===dialog.id){
    if(!dialog.open&&opener.matches?.(':disabled')!==true&&
-      !opener.hidden&&!opener.inert&&opener.isConnected!==false){
+      !opener.hidden&&!opener.inert&&opener.isConnected!==false&&
+      opener.getAttribute?.('aria-disabled')!=='true'&&
+      opener.getAttribute?.('aria-hidden')!=='true'){
     dialog.showModal();trigger=opener;ownsOpen=true
    }
    return;
