@@ -10,7 +10,7 @@ test('brief validation focuses a linked summary and preserves entered values',as
   await expect(page.locator('#'+id)).toBeEnabled();
  await expect(page.locator('#project-results li')).toHaveCount(6);
  await page.getByLabel('Project name').fill('Studio refresh');
- await page.getByRole('button',{name:'Create brief'}).click();
+ await page.getByRole('button',{name:'Check brief'}).click();
  const summary=page.locator('#brief-errors');
  await expect(summary).toBeVisible();
  await expect(summary).toBeFocused();
@@ -23,8 +23,9 @@ test('brief validation focuses a linked summary and preserves entered values',as
  await page.locator('#brief-email').fill('editor@example.org');
  await page.locator('#brief-notes').fill('A thoughtful responsive project');
  await expect(summary).toBeHidden();
- await page.getByRole('button',{name:'Create brief'}).click();
- await expect(page.getByText('Brief ready')).toBeVisible();
+ await page.getByRole('button',{name:'Check brief'}).click();
+ await expect(page.getByText('Brief checks passed')).toBeVisible();
+ await expect(page.locator('#brief-success')).toContainText('No data has been submitted or saved.');
  await expect(page.locator('#brief-email')).not.toHaveAttribute('aria-invalid','true');
 });
 test('textarea count, invalid email and minimum length are fully recoverable',async({page})=>{
@@ -34,7 +35,7 @@ test('textarea count, invalid email and minimum length are fully recoverable',as
  await expect(page.locator('#brief-notes-count')).toHaveText('5 / 280');
  await page.locator('#brief-name').fill('Example brief');
  await page.locator('#brief-email').fill('invalid@');
- await page.getByRole('button',{name:'Create brief'}).click();
+ await page.getByRole('button',{name:'Check brief'}).click();
  await expect(page.locator('#brief-errors-list a')).toHaveCount(2);
  await expect(page.locator('#brief-email-error')).toBeVisible();
  await expect(page.locator('#brief-notes-error')).toBeVisible();
@@ -223,8 +224,9 @@ test('forms lab explicitly disables submission without JavaScript and never puts
  try{
   const page=await context.newPage();
   await page.goto('/lab/forms.html');
-  const submit=page.getByRole('button',{name:'Create brief'});
+  const submit=page.getByRole('button',{name:'Check brief'});
   await expect(submit).toBeDisabled();
+  await expect(submit).toHaveAccessibleName('Check brief');
   await expect(page.locator('#brief-js-required')).toBeVisible();
   await expect(page.getByText('JavaScript is required to validate this local demonstration.',{exact:false})).toBeVisible();
   await expect(page.locator('#search-js-required')).toBeVisible();
