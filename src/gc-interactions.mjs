@@ -210,7 +210,9 @@ export async function runAsyncAction(button,operation){
  if(pendingAsyncActions.has(button)||button.getAttribute('aria-busy')==='true'||
     button.disabled||button.matches?.(':disabled')===true||
     button.hidden||button.inert||button.isConnected===false||
-    button.getAttribute('aria-disabled')==='true')return null;
+    button.getAttribute('aria-disabled')==='true'||
+    button.getAttribute('aria-hidden')==='true'||
+    !!button.parentElement?.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]'))return null;
  const previousBusy=button.getAttribute('aria-busy');
  pendingAsyncActions.add(button);
  try{
