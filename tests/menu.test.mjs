@@ -334,3 +334,54 @@ test('menu skips host-hidden actions and refuses a menu with no available action
  assert.equal(doc.activeElement,third,'host can restore an action dynamically');
  api.destroy();
 });
+
+
+test('nested hidden, inert and ARIA-disabled groups never expose their menu actions',()=>{
+ const doc={activeElement:null,addEventListener(){},removeEventListener(){}};
+ const trigger=elem('button'),menu=elem('div',{id:'group-actions',role:'menu'});
+ const hiddenGroup=elem('div'),inertGroup=elem('div');
+ const hiddenAction=elem('button',{role:'menuitem'});
+ const inertAction=elem('button',{role:'menuitem'});
+ const availableAction=elem('button',{role:'menuitem'});
+ for(const el of [trigger,menu,hiddenGroup,inertGroup,hiddenAction,inertAction,availableAction])
+  el.ownerDocument=doc;
+ hiddenGroup.parentElement=menu;inertGroup.parentElement=menu;
+ hiddenAction.parentElement=hiddenGroup;
+ inertAction.parentElement=inertGroup;
+ availableAction.parentElement=menu;
+ menu.querySelectorAll=()=>[hiddenAction,inertAction,availableAction];
+ menu.contains=el=>[menu,hiddenGroup,inertGroup,hiddenAction,inertAction,availableAction].includes(el);
+ let selected=0;
+ const api=initMenu(trigger,menu,{document:doc,onSelect:()=>selected++});
+ hiddenGroup.hidden=true;
+ inertGroup.inert=true;
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,availableAction,'skip descendants of unavailable groups');
+ menu.fire('click',{target:hiddenAction});
+ menu.fire('click',{target:inertAction});
+ assert.equal(selected,0,'hidden actions cannot be selected by delegated clicks');
+ menu.fire('keydown',{key:'ArrowDown',target:availableAction,preventDefault(){}});
+ assert.equal(doc.activeElement,availableAction,'keyboard cannot enter unavailable groups');
+ api.close();
+
+ hiddenGroup.hidden=false;inertGroup.inert=false;
+ hiddenGroup.setAttribute('aria-hidden','true');
+ inertGroup.setAttribute('aria-disabled','true');
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,availableAction,'ARIA-disabled groups are also unavailable');
+ api.close();
+
+ hiddenGroup.removeAttribute('aria-hidden');inertGroup.removeAttribute('aria-disabled');
+ assert.equal(api.open(),true);
+ assert.equal(doc.activeElement,hiddenAction,'restored group is navigable without reinstalling');
+ menu.fire('keydown',{key:'ArrowDown',target:hiddenAction,preventDefault(){}});
+ assert.equal(doc.activeElement,inertAction,'keyboard follows newly available actions');
+ api.close();
+ availableAction.hidden=true;
+ hiddenGroup.hidden=true;
+ inertGroup.inert=true;
+ assert.equal(api.open(),false,'all unavailable descendants keep popup collapsed');
+ assert.equal(trigger.getAttribute('aria-expanded'),'false');
+ assert.equal(menu.hidden,true);
+ api.destroy();
+});
