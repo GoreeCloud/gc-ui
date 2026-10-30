@@ -129,6 +129,53 @@ test('tab navigation excludes ARIA-disabled ancestor groups and reacts to host r
  assert.equal(handlers.size,0,'controller does not retain delegated listeners');
 });
 
+
+test('native disabled fieldset prevents tab and async action activation',async()=>{
+ const {initTabs}=await import('../src/gc-interactions.mjs');
+ const handlers=new Map(),byId=new Map();
+ for(const id of ['one','two','three'])byId.set(id,{hidden:false,getAttribute:()=> 'tabpanel'});
+ let disabled=true,focused=null;
+ const tabs=['one','two','three'].map((id,index)=>{
+  const attrs=new Map([['aria-controls',id],['role','tab']]);
+  return {disabled:false,tabIndex:0,
+   matches:selector=>selector===':disabled'&&index===1&&disabled,
+   getAttribute:name=>attrs.get(name)??null,
+   setAttribute(name,value){attrs.set(name,String(value))},
+   removeAttribute:name=>attrs.delete(name),
+   closest(){return this},focus(){focused=this}};
+ });
+ const group={ownerDocument:{getElementById:id=>byId.get(id)},
+  getAttribute:name=>name==='role'?'tablist':null,
+  querySelectorAll:()=>tabs,contains:tab=>tabs.includes(tab),
+  addEventListener:(type,fn)=>handlers.set(type,fn),
+  removeEventListener:type=>handlers.delete(type)};
+ const api=initTabs(group);
+ handlers.get('keydown')({target:tabs[0],key:'ArrowRight',preventDefault(){}});
+ assert.equal(focused,tabs[2],'navigation skips fieldset-disabled tab');
+ api.select(tabs[1]);
+ handlers.get('click')({target:tabs[1]});
+ assert.equal(byId.get('three').hidden,false,'disabled tab refuses direct and click selection');
+ disabled=false;
+ api.select(tabs[0]);
+ handlers.get('keydown')({target:tabs[0],key:'ArrowRight',preventDefault(){}});
+ assert.equal(focused,tabs[1],'host can re-enable without remount');
+ api.destroy();
+ assert.equal(handlers.size,0);
+ const attrs=new Map();let calls=0;disabled=true;
+ const button={disabled:false,matches:selector=>selector===':disabled'&&disabled,
+  getAttribute:name=>attrs.get(name)??null,
+  setAttribute(name,value){attrs.set(name,String(value))},
+  removeAttribute:name=>attrs.delete(name)};
+ assert.equal(await runAsyncAction(button,()=>{calls++;return 'unreachable'}),null);
+ assert.equal(calls,0);
+ assert.equal(button.disabled,false);
+ assert.equal(button.getAttribute('aria-busy'),null);
+ disabled=false;
+ assert.equal(await runAsyncAction(button,async()=>{calls++;return 'saved'}),'saved');
+ assert.equal(calls,1);
+ assert.equal(button.disabled,false);
+});
+
 test('vertical tablists use Up/Down arrows and ignore Left/Right',async()=>{
   const panels=['one','two'].map(id=>({hidden:false,getAttribute:()=> 'tabpanel'}));
   const byId=new Map([['one',panels[0]],['two',panels[1]]]);
