@@ -215,6 +215,8 @@ The [Forms Lab](lab/forms.html) demonstrates eight experimental web treatments: 
 
 The [founder-directed eight UX/UI design principles](docs/UX_UI_DESIGN_PRINCIPLES.md) guide semantic color, truthful actions, searchable choices, input help, spacing, feedback, and navigation. The Forms Lab's **Check brief** action only validates locally; it does not create or save a project. Long forms may benefit from steps, but this short example should remain on one page.
 
+The [experimental Workflow Lab](lab/workflow.html) demonstrates a separate, reversible four-step reference and a native locale-aware sample date. See [workflow contract](docs/WORKFLOW_REFERENCE.md). No values are saved.
+
 The [Forms Lab QA checkpoint](docs/QA_FORMS_2026-10-16.md) records the verified 153-test laptop run, successful three-job GitHub Actions check, and remaining manual screen-reader/device gates.
 
 The Forms Lab additionally covers IME-safe search and simulated error/retry behavior. The controller source is experimental demonstration code, not a stable public form API.
