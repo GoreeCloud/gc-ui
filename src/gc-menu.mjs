@@ -58,11 +58,20 @@ export function initMenu(trigger,menu,{onSelect=()=>{},document=trigger?.ownerDo
   setHidden(true);
   items.forEach(item=>{item.tabIndex=-1});
   // Host applications may temporarily remove actions without disposing this
-  // controller. Hidden/inert actions must never enter the keyboard focus ring.
+  // controller. A visible item nested inside a hidden or inert group is
+  // unavailable too. Stop before the menu itself: it is hidden while closed.
+  const blockedByAncestor=item=>{
+    for(let parent=item.parentElement;parent&&parent!==menu;parent=parent.parentElement){
+      if(parent.hidden||parent.inert||
+         parent.getAttribute?.('aria-hidden')==='true'||
+         parent.getAttribute?.('aria-disabled')==='true')return true;
+    }
+    return false;
+  };
   const enabled=()=>items.filter(item=>
     menu.contains(item)&&!item.disabled&&!item.hidden&&!item.inert&&
     item.getAttribute('aria-disabled')!=='true'&&
-    item.getAttribute('aria-hidden')!=='true'
+    item.getAttribute('aria-hidden')!=='true'&&!blockedByAncestor(item)
   );
   function focusItem(index){
     const candidates=enabled();
