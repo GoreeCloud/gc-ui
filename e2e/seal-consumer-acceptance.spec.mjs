@@ -56,6 +56,9 @@ for(const scenario of scenarios){
   await expect(page.locator('#save')).toHaveCSS('min-height','44px');
   await page.locator('#save').click();
   await expect(page.locator('#status')).toContainText('Preview saved locally.');
+  await expect(page.locator('#notifications .gc-toast')).toContainText('Preview saved locally.');
+  await page.getByRole('button',{name:'Dismiss notification'}).click();
+  await expect(page.locator('#notifications .gc-toast')).toHaveCount(0);
   await page.getByRole('button',{name:'Pinned'}).click();
   await expect(page.getByRole('button',{name:'Pinned'})).toHaveAttribute('aria-pressed','true');
   await page.getByRole('tab',{name:'Accessibility'}).click();
