@@ -23,7 +23,7 @@ for(const scenario of [
 test('capture GoreeCloud UI forms validation and retry at compact width',async({page},testInfo)=>{
  await page.setViewportSize({width:375,height:812});
  await page.goto('/lab/forms.html');
- await page.getByRole('button',{name:'Create brief'}).click();
+ await page.getByRole('button',{name:'Check brief'}).click();
  await expect(page.locator('#brief-errors')).toBeVisible();
  await page.locator('#simulate-failure').click();
  await expect(page.locator('#recovery-error')).toBeVisible();
