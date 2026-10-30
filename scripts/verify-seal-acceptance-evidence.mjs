@@ -36,7 +36,8 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  assert.equal(report.revision,process.env.GITHUB_SHA??null,'Unpinned candidate report revision');
  assert.equal(report.screenshotSha256,sha(image),'Candidate screenshot digest mismatch '+name);
  assert.equal(report.screenshotBytes,image.length);
- assert.ok(report.primaryContrast>=4.5,'Primary/on-primary contrast regression '+name);
+ if(forcedColors)assert.equal(report.primaryContrast,null,'System forced colors are not numeric CSS RGB values');
+ else assert.ok(report.primaryContrast>=4.5,'Primary/on-primary contrast regression '+name);
  assert.ok(report.overflow?.content<=report.overflow?.viewport,'Horizontal reflow failure '+name);
  assert.ok(Number.isSafeInteger(report.axe?.passes)&&report.axe.passes>0,'No axe rules run '+name);
  assert.deepEqual(report.axe?.violations,[],'Confirmed axe violation '+name);
