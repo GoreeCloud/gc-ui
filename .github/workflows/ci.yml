@@ -22,6 +22,19 @@ jobs:
         run: npm run release:foundations:verify
       - name: Typecheck the installed Foundations tarball with pinned TypeScript
         run: npm run release:foundations:types
+      - name: Verify unpublished web-controls Seal qualification archive
+        run: npm run release:seal:web:verify
+      - name: Typecheck installed web-controls candidate with pinned TypeScript
+        run: npm run release:seal:web:types
+      - name: Retain unsigned Seal qualification artifact for review (not a release)
+        uses: actions/upload-artifact@v4
+        with:
+          name: gc-ui-seal-web-candidate-qa
+          path: |
+            dist/seal-web-verify/goreecloud-gc-ui-0.2.0-seal.0.tgz
+            dist/seal-web-verify/SHA256SUMS
+          retention-days: 30
+          if-no-files-found: error
       - name: Attach unsigned Foundations candidate tarball (not a public release)
         uses: actions/upload-artifact@v4
         with:
