@@ -104,10 +104,7 @@ export function initDialog(dialog,{document=dialog?.ownerDocument}={}){
    return;
   }
   const close=e.target.closest?.('[data-gc-dialog-close]');
-  if(close&&dialog.contains(close)&&dialog.open&&!unavailable(close)&&
-     close.matches?.(':disabled')!==true&&!close.hidden&&!close.inert&&
-     close.getAttribute?.('aria-disabled')!=='true'&&
-     close.getAttribute?.('aria-hidden')!=='true')dialog.close();
+  if(close&&dialog.contains(close)&&dialog.open&&!unavailable(close))dialog.close();
  };
  const closed=()=>{ownsOpen=false;if(trigger?.isConnected)trigger.focus();trigger=null};
  document.addEventListener('click',click);dialog.addEventListener('close',closed);
