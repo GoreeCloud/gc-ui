@@ -5,7 +5,7 @@
 | **Document type** | Founder-directed UX/UI design principles and review guidance |
 | **Owner and perspective** | Founder of GoreeCloud |
 | **Status** | Documented design guidance; implementation and ecosystem-wide conformance not verified by this document |
-| **Version** | 1.0 |
+| **Version** | 1.1 |
 | **Created / last updated** | October 29, 2026 |
 | **Scope** | GoreeCloud UI and applicable GoreeCloud applications, services, and native-platform interfaces |
 | **Canonical location** | `GoreeCloud/gc-ui/docs/UX_UI_DESIGN_PRINCIPLES.md` |
@@ -166,6 +166,21 @@ Use this checklist for applicable designs, implementations, and release reviews.
 - [ ] Navigation uses recognizable, concise names and indicates the current location.
 - [ ] Responsive, native-platform, light/dark, high-contrast, and relevant assistive-technology experiences have been evaluated.
 - [ ] No interface claims success or functionality without the underlying application confirming it.
+
+## Reference implementation coverage (not release certification)
+
+| Principle | GC UI reference | Current state and verification boundary |
+| --- | --- | --- |
+| 1. Semantic color | [Color and themes](COLOR_THEMES.md), [Components Lab](../lab/components.html) | Semantic danger, success, and contrast roles exist; consumer usage and final accessibility require independent verification. |
+| 2. Manageable multi-step forms | [Forms Lab](../lab/forms.html) | This short example remains one page. An actual long-form stepper with backward navigation and retained state is **not** demonstrated here. |
+| 3. Searchable long lists | [Forms Lab](../lab/forms.html), [form interaction contract](FORMS_CONTRACT.md) | An experimental searchable project combobox has keyboard navigation and result announcements; not a production country selector. |
+| 4. Input guidance | [Forms Lab](../lab/forms.html) | Visible labels, help text, email validation, and a notes counter exist. Locale-sensitive date and phone input is not demonstrated. |
+| 5. Meaningful action labels | [Forms Lab](../lab/forms.html), [form browser tests](../e2e/forms.spec.mjs) | The action is **Check brief**; **Brief checks passed** explains **No data has been submitted or saved.** |
+| 6. Consistent spacing | [Design language](DESIGN_LANGUAGE.md), [Forms Lab styles](../lab/forms.css) | Spacing roles and differentiated field/section gaps exist; visual and mobile review remain necessary. |
+| 7. Clarity and feedback | [Forms Lab](../lab/forms.html), [component contract](COMPONENTS.md) | Validation summaries, search-result counts, and simulated retry feedback are demonstrated. Actual network progress is not claimed. |
+| 8. Familiar navigation | [Adaptive shell](../lab/adaptive.html), [design language](DESIGN_LANGUAGE.md) | Named destinations and route indicators are reference behavior; consumer navigation needs separate checks. |
+
+**Automated coverage:** [UX principle source regressions](../tests/ux-principles.test.mjs), [Forms Lab source checks](../tests/forms-lab.test.mjs), and [Forms Lab browser interactions](../e2e/forms.spec.mjs) guard specific behavior. They do not establish native-device or screen-reader certification.
 
 ## Classification, verification, and change boundary
 

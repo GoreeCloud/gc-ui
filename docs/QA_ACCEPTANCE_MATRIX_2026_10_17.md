@@ -33,7 +33,7 @@ Record environment, date, platform/browser version, assistive-technology version
 
 ## Test 54 — Firefox + Orca, JavaScript disabled
 
-1. At native Firefox 100% zoom, turn off JavaScript for the test session and load a fresh Forms Lab page. **Expected:** semantic headings and links remain traversable, Create brief is disabled, a clear `JavaScript is required` explanation is present, and pressing Enter in sample text inputs never appends values to the URL or submits to a server.
+1. At native Firefox 100% zoom, turn off JavaScript for the test session and load a fresh Forms Lab page. **Expected:** semantic headings and links remain traversable, Check brief is disabled, a clear `JavaScript is required` explanation is present, and pressing Enter in sample text inputs never appends values to the URL or submits to a server.
 2. Navigate by Orca headings/list navigation to **Find the right work**. **Expected:** the six example project names and their types are ordinary semantic list items; the count says `6 projects found`. Search projects is disabled, and its adjacent accessible description explains why filtering is unavailable.
 3. Navigate to **Choose your settings** and **Make errors recoverable**. **Expected:** explanatory fallback text is available, all script-only sample settings, password reveal, stepper buttons and simulated failure are disabled. Ordinary site links still work.
 4. Re-enable JavaScript, refresh, and repeat a keyboard project search (`design`), reset, invalid brief validation and corrected submission. **Expected:** suggestions, error-summary links, local-only success, and recovery actions work; no data is sent.
