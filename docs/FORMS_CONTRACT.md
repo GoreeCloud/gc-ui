@@ -60,6 +60,8 @@ The unit and native-browser regressions exercise disposal with pre-existing
 host-owned invalid state. This extraction does not mark F22 or the whole GC
 UI workspace stable.
 
+**Truthful action and result copy:** The Forms Lab action is **Check brief**, because the specimen validates local fields but creates, submits, and saves no project. The success status is **Brief checks passed**, followed by the explicit statement that no data has been submitted or saved. The disabled, no-JavaScript control and its explanation use the same action label. These are observable UX semantics, not proof of production form submission or persistence.
+
 ## Search keyboard contract
 
 - Typing filters six illustrative project names and updates a `role="status"` result count. The popup is named as a `role="listbox"`, with keyboard-active rows given `role="option"` and `aria-activedescendant`.
