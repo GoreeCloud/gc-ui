@@ -35,8 +35,8 @@ for(const scenario of scenarios){
    const disclosure=gc.initDisclosureGroup(document.querySelector('main'));
    const toast=gc.createToast(document.getElementById('notifications'));
    document.getElementById('save').addEventListener('click',()=>{
-    status.textContent='Preview saved locally.';
-    toast.show('Preview saved locally.',{duration:0});
+    status.textContent='Notification shown.';
+    toast.show('Notification shown.',{duration:0});
    });
    window.__sealControllers=[theme,choices,tabs,menu,disclosure,toast];
    const computed=getComputedStyle(root);
@@ -54,9 +54,10 @@ for(const scenario of scenarios){
   else expect(setup.primaryContrast).toBeGreaterThanOrEqual(4.5);
 
   await expect(page.locator('#save')).toHaveCSS('min-height','44px');
+  await expect(page.locator('#save')).toHaveText('Show notification');
   await page.locator('#save').click();
-  await expect(page.locator('#status')).toContainText('Preview saved locally.');
-  await expect(page.locator('#notifications .gc-toast')).toContainText('Preview saved locally.');
+  await expect(page.locator('#status')).toContainText('Notification shown.');
+  await expect(page.locator('#notifications .gc-toast')).toContainText('Notification shown.');
   await page.getByRole('button',{name:'Dismiss notification'}).click();
   await expect(page.locator('#notifications .gc-toast')).toHaveCount(0);
   await page.getByRole('button',{name:'Pinned'}).click();
