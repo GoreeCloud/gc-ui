@@ -272,12 +272,26 @@ for(const scenario of scenarios){
     opaqueBackground:background!==null,
     ratio:foreground&&background?contrastRatio(foreground,background):null};
   },prefix);
-  if(scenario.forced){
-   expect(menuItemComputedContrast.opaqueBackground).toBe(false);
-   expect(menuItemComputedContrast.ratio).toBeNull();
-  }else{
-   expect(menuItemComputedContrast.opaqueBackground).toBe(true);
+  // Forced-colors computed styles vary across engines: Firefox may resolve
+  // a fully opaque system color where Chromium reports translucent RGBA.
+  // Measure any actual opaque pair; retain null only for unmeasurable blends.
+  if(!scenario.forced)expect(menuItemComputedContrast.opaqueBackground).toBe(true);
+  if(menuItemComputedContrast.opaqueBackground)
    expect(menuItemComputedContrast.ratio).toBeGreaterThanOrEqual(4.5);
+  else{
+   expect(scenario.forced).toBe(true);
+   expect(menuItemComputedContrast.ratio).toBeNull();
+  }
+  // Retain the exact expanded focused-menu appearance on each browser.
+  // It makes forced-color before/after inspection possible without treating
+  // an automated contrast ratio as full visual or AT signoff.
+  if(scenario.forced){
+   await expect(page.getByRole('menu',{name:'More actions'})).toBeVisible();
+   await expect(page.locator('#duplicate')).toBeFocused();
+   const menuImage=await page.locator('#actions-menu').screenshot({animations:'disabled'});
+   const menuFile=testInfo.outputPath(scenario.id+'-menu-open.png');
+   await writeFile(menuFile,menuImage);
+   await testInfo.attach(scenario.id+'-menu-open',{path:menuFile,contentType:'image/png'});
   }
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
