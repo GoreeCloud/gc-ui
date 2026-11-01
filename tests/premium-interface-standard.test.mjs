@@ -41,7 +41,8 @@ test('pull-request template prompts evidence rather than asserting unverified co
   const template = read('.github/PULL_REQUEST_TEMPLATE.md');
   assert.match(template, /Mandatory quality review/);
   assert.match(template, /premium, distinctive, and eye-catching/);
-  assert.match(template, /not independent proof of release readiness/);
+  assert.match(template, /A checked box is a contributor attestation/);
+  assert.match(template, /independent proof of release readiness/);
   assert.match(template, /No UI change/);
   const checks = template.match(/^- \[ \] /gm) ?? [];
   assert.ok(checks.length >= 8, 'The template must retain the core quality-review checklist');
