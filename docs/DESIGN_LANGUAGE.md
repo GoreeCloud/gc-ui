@@ -14,6 +14,20 @@ GC UI is GoreeCloud's **designated permanent successor** to the prior Glaze desi
 
 *Calm information. Expressive personality. Purposeful depth.*
 
+### Mandatory premium interface standard
+
+**Founder directive — mandatory across every GoreeCloud product and platform (October 31, 2026).**
+
+Every GoreeCloud application, website, dashboard, service interface, and other user-facing product **MUST be beautiful, modern, polished, premium, visually engaging, and eye-catching**. GoreeCloud **does not accept plain, basic, boring, generic, dated, amateurish, unfinished, or merely functional user interfaces**. Meeting feature requirements or passing technical tests alone does not satisfy visual acceptance.
+
+Deliver a distinctive and intentional GoreeCloud experience through strong composition and information hierarchy, refined and readable typography, harmonious semantic color, excellent spacing and alignment, purposeful depth and material treatment, consistent iconography, thoughtfully polished controls, and cohesive interaction feedback. Apply the same standard to navigation, onboarding, dialogs, forms, settings, empty/loading/error states, and responsive layouts rather than polishing only a showcase screen.
+
+**Premium does not mean cluttered.** Visual ambition must coexist with accessibility, legibility, performance, discoverability, responsive behavior, reduced-motion and high-contrast support, and applicable native-platform conventions. Avoid excessive ornament, arbitrary gradients, effects without purpose, or visual complexity that impairs use.
+
+**Acceptance and enforcement:** Review complete interfaces against approved GC UI requirements, founder-provided references, and the applicable product brief. Reject weak placeholder styling, generic uncustomized component-library presentations, and screens that look bland or incomplete. Require appropriate visual improvements, functional/accessibility regression checks, and verification across relevant screen sizes, themes, and states before declaring a design accepted or a release visually ready.
+
+This is a **mandatory design and review requirement**, not a claim that existing GoreeCloud applications already comply. Implementation and migration status must be verified product by product.
+
 ### Principles
 
 1. **Content before effect** — legibility and comprehension outlast decoration.
