@@ -318,8 +318,15 @@ for(const scenario of scenarios){
   await writeFile(join(dir,scenario.id+'.png'),png);
   if(focusedMenuImage)
    await writeFile(join(dir,scenario.id+'-menu-open.png'),focusedMenuImage);
+  const runningBrowser=page.context().browser();
+  if(!runningBrowser)throw new Error('Missing actual installed-candidate browser identity');
+  const browserEngine=runningBrowser.browserType().name();
+  const browserVersion=runningBrowser.version();
+  expect(['chromium','firefox']).toContain(browserEngine);
+  expect(browserVersion).toMatch(/^\d+\.\d+(?:\.\d+){0,2}$/);
   const report={
    schema:'gc-ui-seal-web-browser-evidence.v1',revision:process.env.GITHUB_SHA??null,
+   browserEngine,browserVersion,
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,

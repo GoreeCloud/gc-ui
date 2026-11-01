@@ -100,6 +100,14 @@ Following the [Firefox forced-color repair](https://github.com/GoreeCloud/gc-ui/
 
 The other three scenarios explicitly record no focused-menu screenshot and the verifier refuses unexpected additional evidence. Both Chromium and Firefox four-scenario candidate tests and the strict manifest verifier passed locally for this proposal, preserving the original axe inconclusive records, open/closed popup linkage, computed contrast and limitations. Browser-focused image evidence supports human visual inspection, not manual signoff or assistive-technology speech claims. The revised work still requires exact-head CI and merged-main source verification before treating the change as integrated.
 
+## 2026-11-01 browser-build provenance qualification
+
+A new fail-closed **QA-only** test/verifier records the actual browser engine and version per installed-candidate scenario and rejects a mixed browser-engine/version manifest. The reproducible [browser test matrix](QA_SEAL_BROWSER_MATRIX_2026_11_01.md) records local Chromium `156.0.8078.4` and Firefox `157.0`, each with four passing offline-installed candidate scenarios and a passing evidence verifier at source `0499c2af20149ff1a821fccd51880ab0117df8e1`.
+
+The private 15-file tarball SHA-256 is unchanged (`d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`). The owner has explicitly approved the visual direction of six experimental UI areas at `fc95c3e89c14341dc5b685b6bbe7424bdd93b4f8`, with recorded exceptions. This is not candidate Seal release approval and not an accessibility, product, native-host, or deployment authorization.
+
+**Scope caution:** a recorded browser build is an *observed test environment*, not a minimum supported version, full compatibility claim, or a pledge covering untested browsers and OSes. Browser support must still be declared only after supported-platform reviews, applicable human assistive-technology assessment, unresolved axe/composited visual disposition, and a distinct recorded lifecycle decision. The QA change in this section requires exact-head CI and merged-main readback before being described as integrated.
+
 ## Related sources
 
 - [Scoped release policy](STABLE_RELEASE_SCOPE.md)
