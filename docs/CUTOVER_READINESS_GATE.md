@@ -1,7 +1,7 @@
 # GC UI — Evidence-driven consumer cutover readiness
 
-**Owner directive effective 2026-10-19:** `GoreeCloud/gc-ui` is the **mandatory design foundation for all GoreeCloud products and presentation layers**; Glaze and Glaze UI are permanently banned as active design authorities. Existing predecessor-based products require migration. **This does not prove that current deployed applications have switched.**
-GoreeCloud UI is one of the five current Mandatory Integrated Platform Systems and succeeds Glaze UI as GoreeCloud's design and experience authority. Actual consumer integration and migration still require separate verification.
+**Owner directive effective 2026-10-19:** `GoreeCloud/gc-ui` is the **mandatory design foundation for all GoreeCloud products and presentation layers**; no other name is an approved GoreeCloud design authority. Existing predecessor-based products require migration. **This does not prove that current deployed applications have switched.**
+GoreeCloud UI is one of the five current Mandatory Integrated Platform Systems and is GoreeCloud's designated design and experience authority. Actual consumer integration and migration still require separate verification.
 
 The verified public **Foundations 1.0.1 GitHub tarball** is a narrow stable contract;
 the development repository and optional component catalog remain alpha.
