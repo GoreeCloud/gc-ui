@@ -1,5 +1,21 @@
 # GoreeCloud UI — Screenshot-led visual acceptance review, 2026-11-01
 
+## Owner visual-direction approval — explicit, scoped decision (2026-11-01)
+
+**Decision: APPROVED FOR THE REVIEWED VISUAL DESIGN DIRECTION, WITH ALL EXISTING EXCEPTIONS RETAINED.** The GoreeCloud owner explicitly approved the visual design direction for these **six experimental UI areas only**: **Components Lab, Component Catalog, Adaptive Shell, Forms Lab, Material Environment Lab, and Experience Studio**, pinned to the exact reviewed implementation commit `fc95c3e89c14341dc5b685b6bbe7424bdd93b4f8`.
+
+**Approval evidence:** owner instruction in the accompanying GoreeCloud UI conversation, recorded as an immutable dated decision in [GitHub issue #78](https://github.com/GoreeCloud/gc-ui/issues/78#issuecomment-6565510430). The reviewed source had 26/26 browser visual-capture tests and 22/22 revision-pinned screenshot file integrity checks, with nine successful merged-main quality/native-host jobs. These automated checks support evidence integrity, **not** universal visual/AT acceptance.
+
+**Exceptions and unresolved acceptance are preserved, not waived:** 30 experimental axe inconclusive checks affecting 316 node occurrences (25 color-contrast checks / 311 nodes; five ARIA checks / five nodes); four inconclusive installed Seal-candidate nodes; relevant composited contrast, overlay and fixed mobile dock interactions; real assistive-technology and screen-reader assessment; supported browser/OS declarations; and any screens, workflows or states outside the six-area reviewed visual-direction scope.
+
+**Explicitly NOT authorized by this decision:** accessibility certification, WCAG conformance claim, Seal/Stable/Anchor lifecycle promotion, package publication, production deployment, permission changes, consumer migration, all-product visual acceptance or general workspace stabilization. The experimental `0.2.0-alpha.1` workspace and the separate unpublished `0.2.0-seal.0` QA-only candidate retain their earlier statuses; stable Foundations 1.0.1 remains independent.
+
+**Historical readback note:** the conditional/pending statements and references to unmerged visual fixes below document the **earlier engineering review as it stood before the owner's approval and the merge of [PR #151](https://github.com/GoreeCloud/gc-ui/pull/151)**. They are retained for provenance and must not be interpreted as overturning this scoped owner decision. All outstanding nonvisual approval gates still apply.
+
+---
+
+## Earlier screenshot-led engineering assessment (historical)
+
 **Assessment:** **CONDITIONAL / NOT YET APPROVED**. This report is an engineering visual-acceptance checkpoint, **not** founder signoff, WCAG certification, a Seal stage decision, or a downstream product cutover.
 
 **Authoritative requirement:** Drive `GoreeCloud/GoreeCloud-Instructions.md` §§5.4.1 and 16.2.1, plus `docs/DESIGN_LANGUAGE.md`. The requirement is distinctive, premium, rounded, responsive, accessible full-interface composition with usable real states. Testing a rendered screenshot's filename/bytes is not optical acceptance.
