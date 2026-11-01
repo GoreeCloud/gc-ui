@@ -83,13 +83,16 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  assert.equal(typeof item?.foreground,'string','Missing browser menu foreground '+name);
  assert.equal(typeof item?.background,'string','Missing browser menu background '+name);
  assert.equal(typeof item?.opaqueBackground,'boolean','Missing opacity evidence '+name);
- if(forcedColors){
-  assert.equal(item.opaqueBackground,false,'Unexpected opaque forced-color menu '+name);
-  assert.equal(item.ratio,null,'Do not invent forced-color composited contrast '+name);
- }else{
+ // Firefox may resolve forced colors as opaque while Chromium exposes
+ // a translucent system color. Validate whichever real computed case applies.
+ if(!forcedColors)
   assert.equal(item.opaqueBackground,true,'Opaque menu color unavailable '+name);
+ if(item.opaqueBackground)
   assert.ok(Number.isFinite(item.ratio)&&item.ratio>=4.5,
    'Insufficient menu-item text contrast '+name);
+ else{
+  assert.equal(forcedColors,true,'Unexpected translucent standard menu '+name);
+  assert.equal(item.ratio,null,'Do not invent composited contrast '+name);
  }
  const nodeCount=result=>result.incomplete.reduce((sum,x)=>sum+x.nodes.length,0);
  captures.push({scenario:name,width,height:image.readUInt32BE(20),

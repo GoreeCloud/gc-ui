@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Firefox forced-colors menu text contrast (2026-11-01)
+- Corrected the experimental action-menu focused state in forced-colors mode: system `Canvas`/`CanvasText` now provide readable text, while a visible `Highlight` focus outline remains. A real Firefox installed-candidate test exposed a 2.94:1 `Highlight`/`HighlightText` pair before the repair; the targeted browser-computed text/background ratio afterward was 21:1.
+- Candidate acceptance now handles cross-browser opaque versus translucent forced-color computed styles without inventing contrast; Firefox CI also runs the four installed-candidate accessibility scenarios and retains focused-menu screenshot evidence. The broader workspace remains Alpha and the Seal candidate is unpublished.
+
 ## Experimental form-control availability safeguards (2026-11-01)
 - Password-reveal and number-stepper event handlers now ignore synthetic clicks and changes when their native controls or host ancestors are disabled, hidden, inert, inaccessible, or detached. Explicit controller APIs retain their documented behavior.
 - Added Node regressions and real Chromium/Firefox disabled-fieldset and ancestor-state acceptance; this is a scoped Seal-candidate stabilization change, **not** lifecycle approval, publishing, native-host certification, or ecosystem cutover.
