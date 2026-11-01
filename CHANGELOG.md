@@ -2,7 +2,7 @@
 
 ## Forms Lab floating navigation polish (2026-11-01)
 - Replaced the experimental Forms Lab's edge-attached rectangular header with inset, rounded, purposeful-elevation chrome using the existing GC UI semantic surface, outline and shape tokens. Preserved the native three-link navigation, visible focus and minimum 44px link heights.
-- Added an opaque, clearly bordered fallback in high-contrast, reduced-transparency and operating-system forced-colors modes. Browser regressions check layout, RTL, touch targets, navigation and absence of horizontal overflow from 320px to desktop widths. This is a lab-only visual improvement, not a stable Foundations or Seal package promotion.
+- Added an opaque, clearly bordered fallback in high-contrast, reduced-transparency and operating-system forced-colors modes. Compact navigation uses three equal-width tracks rather than wrapping its links onto a second row at 320px. Browser regressions check layout, RTL, touch targets, navigation and absence of horizontal overflow from 320px to desktop widths. This is a lab-only visual improvement, not a stable Foundations or Seal package promotion.
 
 ## Firefox forced-colors menu text contrast (2026-11-01)
 - Corrected the experimental action-menu focused state in forced-colors mode: system `Canvas`/`CanvasText` now provide readable text, while a visible `Highlight` focus outline remains. A real Firefox installed-candidate test exposed a 2.94:1 `Highlight`/`HighlightText` pair before the repair; the targeted browser-computed text/background ratio afterward was 21:1.

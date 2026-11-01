@@ -588,6 +588,7 @@ test('Forms Lab header floats with rounded chrome and navigable links across vie
    expect(result.links.map(x=>x.label)).toEqual(['Components','Adaptive','Registry']);
    for(const link of result.links){
     expect(link.height,'tap target '+link.label+' '+width).toBeGreaterThanOrEqual(44);
+    if(width===320)expect(link.height,'single-line compact label '+link.label).toBeLessThanOrEqual(48);
     expect(link.left,'in-bounds link '+link.label).toBeGreaterThanOrEqual(0);
     expect(link.right,'in-bounds link '+link.label).toBeLessThanOrEqual(result.width);
    }
