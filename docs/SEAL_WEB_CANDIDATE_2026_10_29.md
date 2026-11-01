@@ -72,6 +72,19 @@ open limitations, governing lifecycle standard, date and explicit authorized
 self-review/approval. Preserve provenance of the decision. Do not infer
 approval from an automated CI conclusion.
 
+## 2026-11-01 scoped visual and contrast qualification continuation
+
+The experimental workspace remains `0.2.0-alpha.1`; the opt-in web-controls `0.2.0-seal.0` archive is **unpublished**. This dated update does **not** change the historical pending entries above into blanket release approval.
+
+- Before this qualification continuation, canonical `main` at `89fec9f35f51d34d945751eb74e3df8629ace49a` had passed all nine exact-head [core/browser](https://github.com/GoreeCloud/gc-ui/actions/runs/41343703219) and [native-host](https://github.com/GoreeCloud/gc-ui/actions/runs/41343703209) jobs after a scoped form-control availability fix.
+- At that baseline, local `npm run test:e2e:visual` passed 26 tests and generated 22 full-page screenshots. `qa:visual-evidence:verify` verified 22/22 PNG names, dimensions and hashes. Desktop/light/dark, compact/expanded, high-contrast, environment, forms and Experience Studio views were sampled through contact sheets; this is preliminary visual triage, **not** an exhaustive screen-by-screen optical acceptance.
+- The installed Seal candidate's four browser scenarios (desktop light; mobile dark; RTL at 320px; mobile forced-colors) passed. Both closed and expanded menu `aria-controls` targets were checked for a single connected menu node, while axe retained its inconclusive findings instead of suppressing them.
+- Added **measured opaque menu-item text contrast** to the candidate browser evidence and fail-closed manifest verifier: 14.33:1 in desktop light and mobile RTL, 9.86:1 in mobile dark. These are browser-computed **foreground versus the menu item's own opaque background**, not pixel-sampled overlapping content or full WCAG conformance.
+- **Forced colors remains inconclusive** for that metric: the browser reports a translucent `rgba(..., 0.8)` menu-item background, so no simple two-color text ratio is asserted. The menu overlaps some underlying content in the narrow RTL expanded state; retained stack/geometry samples distinguish occlusion from a proven contrast failure. Human assistive-technology announcement of the related menu ARIA attributes and broader composited/pixel visual acceptance remain unverified.
+- The new contrast evidence and verifier are in development and require **exact-head GitHub checks and merged-main readback** before this checkpoint can be cited as integrated. No runtime CSS, candidate exports, native builds, consumers, production deployment, stable tag or publishing permissions have been changed in this qualification step.
+
+**Still required for a Seal decision:** scoped browser compatibility declaration, complete relevant visual state review and defect disposition, applicable assistive-technology/contrast review, supported package/version and archive digest validation, known limitations, and a separate explicitly recorded authorized lifecycle decision. Do not treat these acceptance records as an approval or silently relax the release gates.
+
 ## Related sources
 
 - [Scoped release policy](STABLE_RELEASE_SCOPE.md)

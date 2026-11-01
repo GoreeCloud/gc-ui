@@ -256,6 +256,29 @@ for(const scenario of scenarios){
    .flatMap(item=>item.nodes.map(node=>node.target[0])).filter(Boolean);
   const inconclusiveContrastSamples=await page.evaluate(browserContrastStack,contrastSelectors);
   expect(inconclusiveContrastSamples.every(sample=>sample.found)).toBe(true);
+  // Axe cannot resolve the expanded menu's composited backdrop. A fully
+  // opaque menu-item background permits a direct browser-computed contrast
+  // measurement; forced-color transparency does not, and stays unresolved.
+  const menuItemComputedContrast=await page.evaluate(async prefix=>{
+   const {contrastRatio}=await import(prefix+'src/index.mjs');
+   const css=getComputedStyle(document.getElementById('duplicate'));
+   const toHex=value=>{
+    const match=/^rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)$/.exec(value);
+    if(!match||match.slice(1).some(n=>Number(n)>255))return null;
+    return '#'+match.slice(1).map(n=>Number(n).toString(16).padStart(2,'0')).join('');
+   };
+   const foreground=toHex(css.color),background=toHex(css.backgroundColor);
+   return {foreground:css.color,background:css.backgroundColor,
+    opaqueBackground:background!==null,
+    ratio:foreground&&background?contrastRatio(foreground,background):null};
+  },prefix);
+  if(scenario.forced){
+   expect(menuItemComputedContrast.opaqueBackground).toBe(false);
+   expect(menuItemComputedContrast.ratio).toBeNull();
+  }else{
+   expect(menuItemComputedContrast.opaqueBackground).toBe(true);
+   expect(menuItemComputedContrast.ratio).toBeGreaterThanOrEqual(4.5);
+  }
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
   await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
@@ -286,7 +309,8 @@ for(const scenario of scenarios){
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,
-   axeOpen,inconclusiveContrastSamples,menuAria:{closed:menuClosed,open:menuOpen},
+   axeOpen,inconclusiveContrastSamples,menuItemComputedContrast,
+   menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };

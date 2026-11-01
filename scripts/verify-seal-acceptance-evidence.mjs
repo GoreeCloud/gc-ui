@@ -77,6 +77,20 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
    'Offscreen elements must not report viewport overlap');
   for(const entry of sample.centerStack)assert.equal(typeof entry.tag,'string');
  }
+ // A concrete opaque foreground/background pair supports a numeric check;
+ // translucent forced-color surfaces still need composited/manual review.
+ const item=report.menuItemComputedContrast;
+ assert.equal(typeof item?.foreground,'string','Missing browser menu foreground '+name);
+ assert.equal(typeof item?.background,'string','Missing browser menu background '+name);
+ assert.equal(typeof item?.opaqueBackground,'boolean','Missing opacity evidence '+name);
+ if(forcedColors){
+  assert.equal(item.opaqueBackground,false,'Unexpected opaque forced-color menu '+name);
+  assert.equal(item.ratio,null,'Do not invent forced-color composited contrast '+name);
+ }else{
+  assert.equal(item.opaqueBackground,true,'Opaque menu color unavailable '+name);
+  assert.ok(Number.isFinite(item.ratio)&&item.ratio>=4.5,
+   'Insufficient menu-item text contrast '+name);
+ }
  const nodeCount=result=>result.incomplete.reduce((sum,x)=>sum+x.nodes.length,0);
  captures.push({scenario:name,width,height:image.readUInt32BE(20),
   sha256:sha(image),bytes:image.length,menuAriaReferenceVerified:true,
@@ -86,13 +100,14 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
   expandedAxePassedRules:report.axeOpen.passes,
   expandedInconclusiveChecks:report.axeOpen.incomplete.length,
   expandedInconclusiveNodes:nodeCount(report.axeOpen),
-  expandedContrastTargetsReviewed:samples.length});
+  expandedContrastTargetsReviewed:samples.length,
+  expandedOpaqueMenuTextContrast:item.opaqueBackground?+item.ratio.toFixed(3):null});
 }
 const manifest={
  schema:'gc-ui-seal-web-acceptance-manifest.v1',revision:process.env.GITHUB_SHA??null,
  candidate:'@goreecloud/gc-ui@0.2.0-seal.0',expected:scenarios.length,captured:captures.length,
- results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, and expanded contrast target CSS/stack evidence',
- limitations:'Axe and screenshot evidence support scoped browser review; computed styles and element stacking are diagnostics, not pixel-composited contrast ratios or human AT acceptance.'
+ results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, expanded target CSS/stack evidence, and opaque menu-item text contrast',
+ limitations:'Opaque menu-item text contrast does not resolve overlay occlusions or translucent forced-color compositing. Axe and screenshots do not establish full visual approval, WCAG certification, or human assistive-technology acceptance.'
 };
 await writeFile(join(root,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
 console.log('PASS installed candidate Seal evidence '+manifest.captured+'/'+manifest.expected+
