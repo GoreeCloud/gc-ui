@@ -17,6 +17,10 @@ main{max-width:1220px;margin:auto;padding:0 28px}.hero{max-width:770px;padding:9
 @media(max-width:900px){.provider-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.topbar nav{display:none}.preview{grid-template-columns:1fr}.side-cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));min-height:175px}.lens{position:static;justify-self:start}.hero-card{min-height:370px}}
 @media(max-width:650px){main{padding-inline:16px}.topbar{padding:14px 16px}.hero{padding:60px 0}.controls{padding:20px}.section-label{display:block}.section-label p:last-child{margin-top:8px}.control-grid{grid-template-columns:1fr}.preview{padding:12px;border-radius:24px}.side-cards{grid-template-columns:1fr}.micro-card{min-height:150px}.provider-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.provider{padding:16px}.lens{flex-wrap:wrap}.hero-card h3{margin-top:22px}}
 @media(max-width:360px){.provider-grid{grid-template-columns:1fr}.hero h1{font-size:43px}.hero-card{padding:20px}}
+/* Octicons inherit black fill; bundled Fluent glyphs explicitly use #212121.
+   Keep licensed source artwork untouched and invert only these monochrome demo
+   glyphs in dark mode so they remain visible on semantic dark surfaces. */
+:root[data-gc-mode=dark] .provider[data-gc-fixed-ink] .icons svg{filter:invert(1)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media(forced-colors:active){.hero-tags span,.progress-track,.mini-icon{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important}.progress-track span{background:Highlight!important}}
 

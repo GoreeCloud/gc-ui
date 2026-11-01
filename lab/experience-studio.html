@@ -9,15 +9,19 @@
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="../styles/gc.v1.depth.css">
 <link rel="stylesheet" href="./experience-studio.css">
+<link rel="stylesheet" href="./floating-topbar.css">
 <script type="module" src="./experience-studio.mjs"></script>
 </head>
 <body>
 <a class="gc-skip" href="#main">Skip to studio</a>
 <div class="gc-environment studio">
- <header class="topbar">
+ <header class="topbar gc-lab-floating-topbar">
   <a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Experience Studio · Alpha</small></span></a>
   <nav aria-label="Other design labs"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
   <button id="appearance" class="mode-button" type="button" aria-label="Switch to dark appearance">Dark mode</button>
+  <details class="gc-lab-mobile-links"><summary>Explore labs</summary>
+   <nav aria-label="Mobile lab destinations"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
+  </details>
  </header>
  <main id="main">
   <section class="intro" aria-labelledby="studio-title">

@@ -1,0 +1,77 @@
+/* Experimental GC UI lab navigation: a single floating, rounded chrome contract.
+ * Shared only by Environment Lab and Experience Studio; no published runtime CSS. */
+.gc-lab-floating-topbar{
+ box-sizing:border-box;
+ width:min(1280px,calc(100% - 24px));
+ margin:12px auto 0;
+ padding:12px clamp(12px,2vw,24px);
+ display:flex;align-items:center;justify-content:space-between;gap:14px;
+ border:1px solid var(--gc-v1-color-outline);
+ border-radius:var(--gc-v1-component-lens-radius,26px);
+ background:var(--gc-v1-color-surface-raised);
+ color:var(--gc-v1-color-on-surface);
+ box-shadow:0 12px 36px rgba(12,18,40,.13)
+}
+.gc-lab-floating-topbar :is(.identity,.brand){color:var(--gc-v1-color-on-surface)}
+.gc-lab-floating-topbar nav a{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-block-size:var(--gc-target,44px);padding-inline:4px;
+ color:var(--gc-v1-color-on-surface);
+ text-underline-offset:4px
+}
+@media(max-width:680px){
+ .gc-lab-floating-topbar{padding:11px 12px;gap:8px}
+ .gc-lab-floating-topbar :is(.identity,.brand){min-inline-size:0}
+ .gc-lab-floating-topbar :is(.identity,.brand) span{min-inline-size:0}
+ .gc-lab-floating-topbar :is(.identity,.brand) small{overflow-wrap:anywhere}
+ .gc-lab-floating-topbar :is(#appearance,.mode-button){min-inline-size:90px;padding-inline:8px;font-size:12px;white-space:nowrap}
+}
+:root[data-gc-contrast=high] .gc-lab-floating-topbar,
+:root[data-gc-material=solid] .gc-lab-floating-topbar{
+ background:var(--gc-v1-color-surface);box-shadow:none
+}
+@media(prefers-reduced-transparency:reduce){
+ .gc-lab-floating-topbar{background:var(--gc-v1-color-surface);box-shadow:none}
+}
+@media(forced-colors:active){
+ .gc-lab-floating-topbar{
+  background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none
+ }
+ .gc-lab-floating-topbar :is(.identity,.brand,.identity small,.brand small,nav a){
+  color:CanvasText
+ }
+}
+
+/* Mobile lab destinations are native details/summary, preserving every desktop
+ * destination without crowding the narrow floating chrome. */
+.gc-lab-mobile-links{display:none;min-inline-size:0}
+.gc-lab-mobile-links summary{
+ display:flex;align-items:center;min-block-size:44px;cursor:pointer;
+ padding:8px 12px;border:1px solid var(--gc-v1-color-outline);
+ border-radius:14px;background:var(--gc-v1-color-surface-tonal);
+ font-size:13px;font-weight:700;color:var(--gc-v1-color-on-surface)
+}
+.gc-lab-mobile-links summary::after{content:'⌄';font-size:19px;margin-inline-start:auto;line-height:1}
+.gc-lab-mobile-links[open] summary::after{transform:rotate(180deg)}
+.gc-lab-mobile-links nav{padding-block:8px 2px;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+.gc-lab-mobile-links nav a{
+ display:flex;align-items:center;justify-content:center;min-inline-size:0;
+ min-block-size:44px;text-align:center;text-decoration:none;padding:8px;
+ border-radius:12px;border:1px solid var(--gc-v1-color-divider);
+ background:var(--gc-v1-color-surface-tonal);font-size:13px;font-weight:650
+}
+@media(max-width:900px){
+ .site .gc-lab-floating-topbar{display:grid;grid-template-columns:minmax(0,1fr) auto}
+ .site .gc-lab-mobile-links{display:block;grid-column:1/-1}
+ .site .gc-lab-mobile-links nav{display:grid}
+}
+@media(max-width:680px){
+ .studio .gc-lab-floating-topbar{display:grid;grid-template-columns:minmax(0,1fr) auto}
+ .studio .gc-lab-mobile-links{display:block;grid-column:1/-1}
+ .studio .gc-lab-mobile-links nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(forced-colors:active){
+ .gc-lab-mobile-links summary,.gc-lab-mobile-links nav a{
+  background:Canvas;color:CanvasText;border:1px solid CanvasText
+ }
+}

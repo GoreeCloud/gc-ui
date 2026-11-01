@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Visual acceptance — experimental lab navigation and glyph clarity (2026-11-01)
+- Harmonized Material Environment and Experience Studio headers with a shared inset, rounded, semantic floating navigation surface. Added compact native `Explore labs` disclosures so all original desktop destinations remain accessible by touch and keyboard when links collapse on smaller viewports.
+- Corrected dark-mode display of locally bundled Octicons and Fluent glyph examples whose original fixed/default black paint was nearly invisible on dark backgrounds. The remedy is limited to the two identified demonstration cards; third-party SVG source, licenses and provenance remain unchanged.
+- Added responsive, RTL, forced-colors, keyboard and icon-visibility regression checks plus a dated screenshot-led acceptance checkpoint. These experimental-lab refinements do not change the published Foundations artifact, the private Seal candidate or the wider alpha lifecycle status.
+
 ## Forms Lab floating navigation polish (2026-11-01)
 - Replaced the experimental Forms Lab's edge-attached rectangular header with inset, rounded, purposeful-elevation chrome using the existing GC UI semantic surface, outline and shape tokens. Preserved the native three-link navigation, visible focus and minimum 44px link heights.
 - Added an opaque, clearly bordered fallback in high-contrast, reduced-transparency and operating-system forced-colors modes. Compact navigation uses three equal-width tracks rather than wrapping its links onto a second row at 320px. Browser regressions check layout, RTL, touch targets, navigation and absence of horizontal overflow from 320px to desktop widths. This is a lab-only visual improvement, not a stable Foundations or Seal package promotion.
