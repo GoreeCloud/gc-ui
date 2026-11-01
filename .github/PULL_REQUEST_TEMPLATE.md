@@ -6,7 +6,9 @@
 
 ## Mandatory quality review
 
-> Every GoreeCloud product must be **beautiful, modern, polished, premium, distinctive, and eye-catching**. Plain, basic, boring, generic, or merely functional interfaces do not meet acceptance. See the [GoreeCloud premium interface standard](../docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) and [visual acceptance gate](../docs/COMPONENTS.md#mandatory-visual-acceptance-gate).
+<!-- If this change does not affect a user-facing interface, state 'No UI change' here and mark UI-specific items N/A with a reason; do not claim a visual review you did not perform. -->
+
+> Every GoreeCloud product must be **beautiful, modern, polished, premium, distinctive, and eye-catching**. Plain, basic, boring, generic, or merely functional interfaces do not meet acceptance. See the [GoreeCloud premium interface standard](https://github.com/GoreeCloud/gc-ui/blob/main/docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) and [visual acceptance gate](https://github.com/GoreeCloud/gc-ui/blob/main/docs/COMPONENTS.md#mandatory-visual-acceptance-gate).
 >
 > A checked box is a contributor attestation, **not** independent proof of release readiness. Do not claim platform-wide compliance from one screen.
 
