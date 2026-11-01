@@ -28,6 +28,21 @@ The experimental `initTabs` controller filters hidden, inert, aria-hidden, disab
 4. It behaves as expected in light and dark modes, at different zoom levels, and without nonessential motion.
 5. Components never import predecessor-system source, themes, tokens or assets; all supported components use the original GC UI contract. See [succession rules](DESIGN_SYSTEM_SUCCESSION.md).
 
+## Mandatory visual acceptance gate
+
+The [GoreeCloud-wide premium UI standard](DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) applies to every component and assembled interface, beyond functional and accessibility acceptance. A technically working but visually generic, flat, unfinished, or boring screen **fails** the design gate.
+
+For each new or materially changed product screen, review and record:
+
+1. **First impression and brand:** Does the screen look modern, premium, distinctive, visually engaging, and unmistakably intentional rather than like an untouched starter template?
+2. **Composition:** Are hierarchy, alignment, whitespace, typography, semantic color, surfaces, and purposeful depth harmonious and refined?
+3. **Complete experience:** Are navigation, dialogs, menus, controls, data views, onboarding, empty states, loading states, errors, and feedback polished—not just the hero or landing page?
+4. **Responsive and theme quality:** Do the relevant phone, tablet, desktop, light, dark, high-contrast, zoomed, and reduced-motion presentations remain coherent and usable?
+5. **Accessible function:** Do controls work, convey state, preserve readable contrast, keyboard focus, assistive-technology semantics, and performance? Visual delight never excuses inaccessible behavior.
+6. **Reference fidelity and evidence:** Compare against founder-provided visual references and applicable GC UI rules, address visible discrepancies, then verify with current rendered screenshots or implementation evidence. Record gaps explicitly rather than claiming an untested pass.
+
+**Decision:** Accept only when the reviewer has evidence for visual finish *and* functional/accessibility behavior. Treat failures as actionable defects. Do not claim that a mockup, component demo, or unrelated screen demonstrates product-wide compliance.
+
 ## Known alpha limitations
 
 - Buttons and inputs aren't exported as framework-level reusable packages yet.
