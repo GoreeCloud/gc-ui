@@ -49,3 +49,23 @@ test('pull-request template prompts evidence rather than asserting unverified co
   assert.match(template, /Screenshots\/rendered evidence/);
   assert.match(template, /Validation commands and results/);
 });
+
+test('authority contract publishes the mandatory premium mandate without inventing adoption', () => {
+  const contract = JSON.parse(read('registry/design-authority.v1.json'));
+  const rule = contract.authority.premiumVisualQualityMandate;
+  assert.equal(rule.effectiveDate, '2026-10-31');
+  assert.equal(rule.mandatory, true);
+  assert.deepEqual(rule.requiredQualities, [
+    'beautiful', 'modern', 'polished', 'premium', 'eye-catching'
+  ]);
+  assert.deepEqual(rule.unacceptableQualities, [
+    'plain', 'basic', 'boring', 'generic', 'unfinished', 'merely-functional'
+  ]);
+  assert.ok(rule.scope.includes('applications'));
+  assert.ok(rule.scope.includes('dashboards'));
+  assert.ok(rule.scope.includes('service-interfaces'));
+  assert.equal(rule.designSpecification, 'docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard');
+  assert.equal(rule.visualAcceptanceCriteria, 'docs/COMPONENTS.md#mandatory-visual-acceptance-gate');
+  assert.equal(rule.pullRequestReviewTemplate, '.github/PULL_REQUEST_TEMPLATE.md');
+  assert.equal(rule.allConsumerVisualAcceptanceVerified, false);
+});
