@@ -70,6 +70,8 @@ tests/                    Dependency-free token contract tests
 
 **Calm information. Expressive personality. Purposeful depth.** Read the [language specification](docs/DESIGN_LANGUAGE.md) and [component contract](docs/COMPONENTS.md) before adding new UI.
 
+**Mandatory visual-quality standard:** Every GoreeCloud interface must be beautiful, modern, polished, premium, and eye-catching; plain, basic, boring, generic, or merely functional UI is not acceptable. Apply the [premium interface directive](docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) and the [component visual-acceptance gate](docs/COMPONENTS.md#mandatory-visual-acceptance-gate) to all products, themes, sizes, and interface states. This is a required target, not a claim that current consumers have passed acceptance.
+
 The founder-provided [web and desktop visual reference atlas](docs/OWNER_VISUAL_REFERENCE_ATLAS_2026_10_27.md) records 18 screenshot references, their design lessons, and proposed product applications. It is inspiration and supporting analysis, not a replacement for GC UI contracts or proof that the depicted functionality has shipped.
 
 ## Balanced Surface Color
