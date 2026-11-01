@@ -507,3 +507,55 @@ test('rapidly changing suggestions clears stale active descendants and keyboard 
  await expect(search).toBeFocused();
  await expect(search).toHaveAttribute('aria-expanded','false');
 });
+
+test('synthetic form-controller events honor disabled fieldsets and unavailable ancestors',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initPasswordReveal,initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const host=document.createElement('section');
+  const group=document.createElement('fieldset');
+  const password=document.createElement('input');
+  password.type='password';password.value='invented-demo-only';
+  const reveal=document.createElement('button');
+  reveal.type='button';reveal.setAttribute('aria-label','Reveal test value');
+  const quantity=document.createElement('input');
+  quantity.type='number';quantity.min='1';quantity.max='12';quantity.step='1';quantity.value='3';
+  const less=document.createElement('button'),more=document.createElement('button');
+  less.type='button';more.type='button';
+  group.append(password,reveal,quantity,less,more);
+  host.append(group);document.body.append(host);
+  const secret=initPasswordReveal(password,reveal);
+  const steps=initNumberStepper(quantity,less,more);
+  const click=control=>control.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+  try{
+   group.disabled=true;
+   const nativeInherited=reveal.matches(':disabled')&&more.matches(':disabled');
+   click(reveal);click(more);
+   const disabledIgnored=password.type==='password'&&steps.get()===3;
+   group.disabled=false;
+   group.setAttribute('aria-disabled','true');
+   click(reveal);click(more);
+   const ariaIgnored=password.type==='password'&&steps.get()===3;
+   group.removeAttribute('aria-disabled');
+   host.hidden=true;
+   click(reveal);click(more);
+   const hiddenIgnored=password.type==='password'&&steps.get()===3;
+   host.hidden=false;
+   click(reveal);click(more);
+   const recovered=password.type==='text'&&steps.get()===4;
+   quantity.disabled=true;
+   click(less);
+   const inputDisabledIgnored=steps.get()===4;
+   quantity.disabled=false;
+   click(less);
+   const inputRecovered=steps.get()===3;
+   return {nativeInherited,disabledIgnored,ariaIgnored,hiddenIgnored,recovered,inputDisabledIgnored,inputRecovered};
+  }finally{
+   secret.destroy();steps.destroy();host.remove();
+  }
+ });
+ expect(result).toEqual({
+  nativeInherited:true,disabledIgnored:true,ariaIgnored:true,hiddenIgnored:true,
+  recovered:true,inputDisabledIgnored:true,inputRecovered:true
+ });
+});

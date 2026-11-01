@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Experimental form-control availability safeguards (2026-11-01)
+- Password-reveal and number-stepper event handlers now ignore synthetic clicks and changes when their native controls or host ancestors are disabled, hidden, inert, inaccessible, or detached. Explicit controller APIs retain their documented behavior.
+- Added Node regressions and real Chromium/Firefox disabled-fieldset and ancestor-state acceptance; this is a scoped Seal-candidate stabilization change, **not** lifecycle approval, publishing, native-host certification, or ecosystem cutover.
+
 ## Bounded public npm registry readback (2026-10-19)
 - Cap read-only npm metadata and tarball responses at 128 KiB, with early declared-length rejection, incremental streaming limits, and stream cancellation on error.
 - Added fail-before-fix rejection tests for oversized tarballs and metadata, malformed lengths, and segmented-stream success; no npm credentials, publishing actions or registry state modified.
