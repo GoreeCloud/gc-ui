@@ -285,13 +285,11 @@ for(const scenario of scenarios){
   // Retain the exact expanded focused-menu appearance on each browser.
   // It makes forced-color before/after inspection possible without treating
   // an automated contrast ratio as full visual or AT signoff.
+  let focusedMenuImage=null;
   if(scenario.forced){
    await expect(page.getByRole('menu',{name:'More actions'})).toBeVisible();
    await expect(page.locator('#duplicate')).toBeFocused();
-   const menuImage=await page.locator('#actions-menu').screenshot({animations:'disabled'});
-   const menuFile=testInfo.outputPath(scenario.id+'-menu-open.png');
-   await writeFile(menuFile,menuImage);
-   await testInfo.attach(scenario.id+'-menu-open',{path:menuFile,contentType:'image/png'});
+   focusedMenuImage=await page.locator('#actions-menu').screenshot({animations:'disabled'});
   }
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
@@ -318,6 +316,8 @@ for(const scenario of scenarios){
   const dir=resolve(testInfo.project.outputDir,'seal-review');
   await mkdir(dir,{recursive:true});
   await writeFile(join(dir,scenario.id+'.png'),png);
+  if(focusedMenuImage)
+   await writeFile(join(dir,scenario.id+'-menu-open.png'),focusedMenuImage);
   const report={
    schema:'gc-ui-seal-web-browser-evidence.v1',revision:process.env.GITHUB_SHA??null,
    scenario:scenario.id,width:scenario.width,height:scenario.height,
@@ -326,10 +326,15 @@ for(const scenario of scenarios){
    axeOpen,inconclusiveContrastSamples,menuItemComputedContrast,
    menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
+   focusedMenuScreenshotSha256:focusedMenuImage?sha(focusedMenuImage):null,
+   focusedMenuScreenshotBytes:focusedMenuImage?.length??null,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };
   await writeFile(join(dir,scenario.id+'.json'),JSON.stringify(report,null,2)+'\n');
   await testInfo.attach(scenario.id,{path:join(dir,scenario.id+'.png'),contentType:'image/png'});
+  if(focusedMenuImage)await testInfo.attach(scenario.id+'-menu-open',{
+   path:join(dir,scenario.id+'-menu-open.png'),contentType:'image/png'
+  });
   await page.evaluate(()=>{for(const c of window.__sealControllers)c.destroy();});
  });
 }
