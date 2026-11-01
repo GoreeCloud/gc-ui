@@ -2,17 +2,17 @@
 
 **Owner direction:** 2026-10-17, reaffirmed and strengthened 2026-10-19. **Design authority:** [GoreeCloud/gc-ui](https://github.com/GoreeCloud/gc-ui). **Decision status:** effective immediately and permanent. **Decision:** permanent replacement of Glaze. **Implementation status:** ecosystem cutover **not yet complete**; migration and verification remain outstanding.
 
-## GoreeCloud UI as an Integral Platform System
+## GoreeCloud UI as a Mandatory Integrated Platform System
 
-**Owner classification — October 19, 2026:** GoreeCloud UI (GC UI) is an **Integral Platform System**, directly replacing **Glaze and Glaze UI** in GoreeCloud's established nine-system architecture. GC UI takes the **fifth position** formerly occupied by Glaze UI. This is a replacement, **not a tenth Integral Platform System** and not two concurrent experience authorities.
+**Current classification:** GoreeCloud UI is one of the five Mandatory Integrated Platform Systems (MIPS), replacing Glaze and Glaze UI as the sole shared design and experience authority.
 
-The nine systems are: (1) GoreeCloud Manager, (2) Privacy Shield, (3) Wardveil Security, (4) Everkeep, (5) **GoreeCloud UI**, (6) GoreeCloud Mesh, (7) GoreeCloud Identity, (8) GoreeCloud Policy, and (9) GoreeCloud Observability. GoreeCloud Sync remains a separate specialized capability.
+The current five MIPS are GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh.
 
 GC UI's authority covers cross-product design and experience: visual and interaction language, design tokens, typography, color, iconography, components, navigation, layouts, motion, accessibility, adaptive/native interfaces, and truthful representation of platform state. GC UI does **not** assume the factual, security, privacy, identity, management, policy, recovery, coordination, or observability authority of the other systems simply because it displays their states.
 
-Every in-scope GoreeCloud component must evaluate the nine systems and implement those architecturally applicable to its runtime; a genuinely headless component may document presentation integration as not applicable. Using a GC UI name, icon, package or badge is not sufficient evidence of actual conformance.
+Every in-scope GoreeCloud component must evaluate the five current MIPS according to applicability and verify any required integration. A headless component may document why graphical presentation is not applicable; a name, package, or badge alone does not establish conformance.
 
-This **classification decision is effective now**. The governing Google Drive `Instructions — Integral Platform Systems.md`, the system-wide platform contract, other Glaze-bearing standards, and existing consumers still require verified amendment or migration in their owning systems. Do not claim that every deployed product is migrated, that old dependencies have been physically removed, or that the experimental full GC UI workspace is Stable.
+GC UI's designation as the design and experience authority is effective. Applicable documents and consumers still require verified migration in their owning systems. Do not claim that every deployed product is migrated or that the full GC UI workspace is Stable.
 
 ## 0. Mandatory GoreeCloud-wide design mandate — effective 2026-10-19
 
