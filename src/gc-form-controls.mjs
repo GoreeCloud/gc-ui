@@ -1,6 +1,17 @@
 /** Experimental, framework-neutral bindings for native form controls.
  * These helpers never persist field values or submit network requests. */
 
+// Synthetic events can bypass the browser's normal disabled-control behavior.
+// Respect native and host-owned availability before handling user-like events;
+// explicit controller methods remain available to the integrating application.
+function controlUnavailable(control){
+ return control.disabled===true||control.matches?.(':disabled')===true||
+  control.isConnected===false||control.hidden===true||control.inert===true||
+  control.getAttribute?.('aria-disabled')==='true'||
+  control.getAttribute?.('aria-hidden')==='true'||
+  !!control.closest?.('[hidden], [inert], [aria-hidden="true"], [aria-disabled="true"]');
+}
+
 /** Maintain a stable accessible button name while exposing the pressed state. */
 export function initPasswordReveal(input,button){
  if(input?.localName!=='input'||input.type!=='password')
@@ -33,7 +44,10 @@ export function initPasswordReveal(input,button){
   return visible;
  };
  setPressed('false');
- const toggle=()=>setVisible(input.type==='password');
+ const toggle=()=>{
+  if(controlUnavailable(button)||controlUnavailable(input))return;
+  setVisible(input.type==='password');
+ };
  button.addEventListener('click',toggle);
  return {
   isRevealed:()=>input.type==='text',
@@ -119,14 +133,16 @@ export function initNumberStepper(input,decrease,increase,{onChange=()=>{}}={}){
   acceptedInputValue=input.value;
   return next;
  };
- const onInputChange=()=>update(input.value);
+ const onInputChange=()=>{if(!controlUnavailable(input))update(input.value)};
  const decrement=()=>{
+  if(controlUnavailable(decrease)||controlUnavailable(input))return;
   update(normalize(input.value)-step);
   // Host callbacks can synchronously retire or detach this controller.
   // Do not reclaim focus from the replacement screen after teardown.
   if(!destroyed&&input.isConnected!==false)input.focus();
  };
  const increment=()=>{
+  if(controlUnavailable(increase)||controlUnavailable(input))return;
   update(normalize(input.value)+step);
   if(!destroyed&&input.isConnected!==false)input.focus();
  };

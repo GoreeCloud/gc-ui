@@ -286,3 +286,68 @@ test('stepper does not focus a field detached during its change callback',()=>{
  assert.equal(field.focusCount,0);
  api.destroy();
 });
+
+test('password reveal ignores unavailable controls, including synthetic host-disabled clicks',()=>{
+ const field=pass(),button=reveal(),api=initPasswordReveal(field,button);
+ const cases=[
+  [()=>button.disabled=true,()=>button.disabled=false],
+  [()=>button.hidden=true,()=>button.hidden=false],
+  [()=>button.inert=true,()=>button.inert=false],
+  [()=>button.setAttribute('aria-disabled','true'),()=>button.removeAttribute('aria-disabled')],
+  [()=>button.setAttribute('aria-hidden','true'),()=>button.removeAttribute('aria-hidden')],
+  [()=>button.matches=()=>true,()=>delete button.matches],
+  [()=>button.closest=()=>({}),()=>delete button.closest],
+  [()=>button.isConnected=false,()=>button.isConnected=true],
+  [()=>field.disabled=true,()=>field.disabled=false]
+ ];
+ for(const [disable,enable] of cases){
+  disable();button.dispatch('click');
+  assert.equal(field.type,'password','unavailable control cannot reveal the value');
+  assert.equal(button.getAttribute('aria-pressed'),'false');
+  enable();
+ }
+ button.dispatch('click');
+ assert.equal(field.type,'text','available button recovers');
+ button.hidden=true;
+ api.hide(); // Explicit API remains usable for security-sensitive masking.
+ assert.equal(field.type,'password');
+ api.destroy();
+});
+
+test('number stepper ignores synthetic events from disabled, hidden or host-disabled controls',()=>{
+ const field=number(),dec=btn(),inc=btn(),changes=[];
+ const api=initNumberStepper(field,dec,inc,{onChange:n=>changes.push(n)});
+ const cases=[
+  [()=>inc.disabled=true,()=>inc.disabled=false],
+  [()=>inc.hidden=true,()=>inc.hidden=false],
+  [()=>inc.inert=true,()=>inc.inert=false],
+  [()=>inc.setAttribute('aria-disabled','true'),()=>inc.removeAttribute('aria-disabled')],
+  [()=>inc.setAttribute('aria-hidden','true'),()=>inc.removeAttribute('aria-hidden')],
+  [()=>inc.matches=()=>true,()=>delete inc.matches],
+  [()=>inc.closest=()=>({}),()=>delete inc.closest],
+  [()=>inc.isConnected=false,()=>inc.isConnected=true],
+  [()=>field.disabled=true,()=>field.disabled=false]
+ ];
+ for(const [disable,enable] of cases){
+  disable();
+  inc.dispatch('click');
+  assert.equal(api.get(),3,'no unavailable increment');
+  assert.deepEqual(changes,[3],'no callbacks for unavailable controls');
+  enable();
+ }
+ field.hidden=true;
+ field.value='8';
+ field.dispatch('change');
+ assert.deepEqual(changes,[3],'hidden input ignores synthetic change');
+ field.hidden=false;
+ api.set(3);
+ inc.dispatch('click');
+ assert.equal(api.get(),4,'re-enabled increment works');
+ dec.setAttribute('aria-disabled','true');
+ dec.dispatch('click');
+ assert.equal(api.get(),4,'host-disabled decrement is ignored');
+ dec.removeAttribute('aria-disabled');
+ dec.dispatch('click');
+ assert.equal(api.get(),3);
+ api.destroy();
+});
