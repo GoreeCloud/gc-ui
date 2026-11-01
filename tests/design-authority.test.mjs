@@ -12,18 +12,16 @@ test('single-design-authority owner decision is machine readable and release cla
  assert.equal(contract.authority.successor,'GoreeCloud UI');
  assert.equal(contract.authority.successorRepository,'GoreeCloud/gc-ui');
  assert.equal(contract.authority.outcome,'exclusive-permanent-replacement');
- assert.deepEqual(contract.integralPlatformSystem,{
+ assert.deepEqual(contract.mandatoryIntegratedPlatformSystem,{
   name:'GoreeCloud UI',
-  classification:'Integral Platform System',
-  ordinal:5,
-  totalSystems:9,
-  supersedes:['Glaze','Glaze UI'],
+  classification:'Mandatory Integrated Platform System',
+  totalSystems:5,
   scope:'design-user-experience-and-visual-consistency',
   effectiveDate:'2026-10-19'
  });
  assert.equal(contract.ownerMandateEffectiveDate,'2026-10-19');
  assert.equal(contract.authority.designMandateEffectiveImmediately,true);
- assert.equal(contract.authority.glazeAndGlazeUIBanned,true);
+ assert.equal(contract.authority.predecessorAliasesUnapproved,true);
  assert.deepEqual(contract.authority.requiredDesignSurfaces,[
   'applications','websites','icons','operating-systems','all-other-goreecloud-controlled-designed-surfaces'
  ]);
@@ -43,7 +41,7 @@ test('single-design-authority owner decision is machine readable and release cla
 });
 test('active implementation rejects predecessor namespaced assets, imports and design tokens',()=>{
  for(const malicious of [
-  "import '../legacy/Glaze UI/tokens.css'",
+  "import '../legacy/Glaze/tokens.css'",
   'button { color: var(--glz-primary); }',
   '<glzBadge></glzBadge>',
   'export const material = "Glaze";'
@@ -70,10 +68,10 @@ test('current GC UI guidance names exclusive successor and discloses governance 
  const doc=read('docs/DESIGN_SYSTEM_SUCCESSION.md');
  assert.match(doc,/permanent replacement of Glaze/);
  assert.match(doc,/Mandatory GoreeCloud-wide design mandate/);
- assert.match(doc,/fifth position/);
- assert.match(doc,/not a tenth Integral Platform System/);
+ assert.match(doc,/five Mandatory Integrated Platform Systems/);
+ assert.match(doc,/GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh/);
  assert.match(doc,/2026-10-19/);
- assert.match(doc,/Glaze and Glaze UI are permanently removed/);
+ assert.match(doc,/No other design system is an approved GoreeCloud design authority/);
  assert.match(doc,/ecosystem cutover \*\*not yet complete\*\*/);
  assert.match(doc,/read-only/);
  assert.match(doc,/AGPL-3\.0-or-later/);
@@ -88,7 +86,7 @@ test('source authority scan rejects predecessor design imports in TypeScript mod
  for(const extension of ['.mts','.cts']){
   const fixture=new URL('../src/__gc_authority_ts_probe_'+process.pid+extension,import.meta.url);
   try{
-   writeFileSync(fixture,"import '../legacy/Glaze UI/components'","utf8");
+   writeFileSync(fixture,"import '../legacy/Glaze/components'","utf8");
    assert.throws(()=>checkDesignAuthority(),/Legacy design authority.*__gc_authority_ts_probe/);
   }finally{
    rmSync(fileURLToPath(fixture),{force:true});
