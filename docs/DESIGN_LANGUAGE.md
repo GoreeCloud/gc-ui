@@ -6,7 +6,7 @@
 
 **Name:** GoreeCloud UI (short form: GC UI). This is the canonical public full name; "GoreeCloud User Interface" may explain the acronym but is not the preferred full product name.
 
-**Integral Platform System:** GC UI replaces Glaze and Glaze UI as position five of GoreeCloud's established nine Integral Platform Systems, not an additional tenth system. Its domain is shared design and experience, not the authorities of the other platform systems. See [platform classification](DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-an-integral-platform-system).
+**Mandatory Integrated Platform System:** GC UI succeeds Glaze and Glaze UI as the shared design and experience authority. The current founder requirement has five MIPS: GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh. See [MIPS classification](DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-an-integral-platform-system).
 
 GC UI is GoreeCloud's **designated permanent successor** to the prior Glaze design system. The target is **one authoritative design language**, never two long-term systems. This implementation remains original: predecessor source, tokens and assets must not be renamed or embedded. The [succession plan](DESIGN_SYSTEM_SUCCESSION.md) tracks still-pending platform-governance and consumer migrations; it does not claim those cutovers have happened.
 
