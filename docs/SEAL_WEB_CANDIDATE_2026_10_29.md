@@ -94,6 +94,12 @@ The first expanded-menu opaque contrast check was introduced in [PR #146](https:
 - Regression containment: include the installed-candidate four-scenario acceptance suite and its evidence verifier in the pinned Firefox CI job, with `axe-core` as a test-only dependency. Retain separate Chromium evidence, screenshots, assertions and before/after failure provenance.
 - A targeted Firefox forced-colors test passed after the CSS correction. **Full exact-head CI, post-merge acceptance, visual review, supported environment declaration and Seal decision are still separate gates.** The candidate archive hash necessarily changes when the candidate CSS changes. Do not reuse the pre-remediation tarball checksum as the revised candidate digest.
 
+## 2026-11-01 focused menu screenshot provenance hardening
+
+Following the [Firefox forced-color repair](https://github.com/GoreeCloud/gc-ui/pull/147) merged on `main` at `74244053f81d57bcb0d2b34defa0f9e6774e31d2`, the installed-candidate acceptance fixture captures the **actual open, focused, forced-colors menu surface** separately from its closed-page screenshot. A retained image alone is not proof of origin or visual acceptance; the deterministic verifier now requires this fifth PNG by exact filename, checks its PNG header/dimensions, checks its byte length and SHA-256 against the same browser scenario JSON, and copies its digest/dimensions into the revision-labeled Seal acceptance manifest.
+
+The other three scenarios explicitly record no focused-menu screenshot and the verifier refuses unexpected additional evidence. Both Chromium and Firefox four-scenario candidate tests and the strict manifest verifier passed locally for this proposal, preserving the original axe inconclusive records, open/closed popup linkage, computed contrast and limitations. Browser-focused image evidence supports human visual inspection, not manual signoff or assistive-technology speech claims. The revised work still requires exact-head CI and merged-main source verification before treating the change as integrated.
+
 ## Related sources
 
 - [Scoped release policy](STABLE_RELEASE_SCOPE.md)

@@ -13,7 +13,9 @@ const scenarios=Object.freeze([
  ['seal-web-mobile-rtl-320',320,720,'light',true,false],
  ['seal-web-mobile-forced-colors',375,812,'light',false,true]
 ]);
-const expected=scenarios.flatMap(([name])=>[name+'.png',name+'.json']).sort();
+const expected=scenarios.flatMap(([name,,,,,forced])=>[
+ name+'.png',name+'.json',...(forced?[name+'-menu-open.png']:[])
+]).sort();
 const actual=(await readdir(root)).filter(name=>name!=='manifest.json').sort();
 assert.deepEqual(actual,expected,'Missing or unexpected candidate QA evidence');
 const sha=bytes=>createHash('sha256').update(bytes).digest('hex');
@@ -21,6 +23,7 @@ const captures=[];
 for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  const image=await readFile(join(root,name+'.png'));
  const report=JSON.parse(await readFile(join(root,name+'.json'),'utf8'));
+ const focusedMenu=forcedColors?await readFile(join(root,name+'-menu-open.png')):null;
  assert.equal(image.subarray(0,8).toString('hex'),'89504e470d0a1a0a','Invalid PNG '+name);
  assert.equal(image.subarray(12,16).toString('ascii'),'IHDR','Missing PNG IHDR '+name);
  assert.equal(image.readUInt32BE(16),width,'Wrong PNG viewport width '+name);
@@ -36,6 +39,20 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  assert.equal(report.revision,process.env.GITHUB_SHA??null,'Unpinned candidate report revision');
  assert.equal(report.screenshotSha256,sha(image),'Candidate screenshot digest mismatch '+name);
  assert.equal(report.screenshotBytes,image.length);
+ assert.equal(report.focusedMenuScreenshotSha256,focusedMenu?sha(focusedMenu):null,
+  'Focused-menu image checksum mismatch '+name);
+ assert.equal(report.focusedMenuScreenshotBytes,focusedMenu?.length??null,
+  'Focused-menu screenshot byte count mismatch '+name);
+ if(focusedMenu){
+  assert.equal(focusedMenu.subarray(0,8).toString('hex'),'89504e470d0a1a0a',
+   'Invalid focused-menu PNG '+name);
+  assert.equal(focusedMenu.subarray(12,16).toString('ascii'),'IHDR',
+   'Missing focused-menu dimensions '+name);
+  assert.ok(focusedMenu.readUInt32BE(16)>=100&&focusedMenu.readUInt32BE(16)<=width,
+   'Unexpected focused-menu screenshot width '+name);
+  assert.ok(focusedMenu.readUInt32BE(20)>=44,
+   'Unexpected focused-menu screenshot height '+name);
+ }
  if(forcedColors)assert.equal(report.primaryContrast,null,'System forced colors are not numeric CSS RGB values');
  else assert.ok(report.primaryContrast>=4.5,'Primary/on-primary contrast regression '+name);
  assert.ok(report.overflow?.content<=report.overflow?.viewport,'Horizontal reflow failure '+name);
@@ -104,12 +121,16 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
   expandedInconclusiveChecks:report.axeOpen.incomplete.length,
   expandedInconclusiveNodes:nodeCount(report.axeOpen),
   expandedContrastTargetsReviewed:samples.length,
-  expandedOpaqueMenuTextContrast:item.opaqueBackground?+item.ratio.toFixed(3):null});
+  expandedOpaqueMenuTextContrast:item.opaqueBackground?+item.ratio.toFixed(3):null,
+  focusedMenuScreenshot:focusedMenu?{
+   sha256:sha(focusedMenu),bytes:focusedMenu.length,
+   width:focusedMenu.readUInt32BE(16),height:focusedMenu.readUInt32BE(20)
+  }:null});
 }
 const manifest={
  schema:'gc-ui-seal-web-acceptance-manifest.v1',revision:process.env.GITHUB_SHA??null,
  candidate:'@goreecloud/gc-ui@0.2.0-seal.0',expected:scenarios.length,captured:captures.length,
- results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, expanded target CSS/stack evidence, and opaque menu-item text contrast',
+ results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, expanded target CSS/stack evidence, opaque menu-item text contrast, and SHA-256-linked focused forced-colors menu screenshot',
  limitations:'Opaque menu-item text contrast does not resolve overlay occlusions or translucent forced-color compositing. Axe and screenshots do not establish full visual approval, WCAG certification, or human assistive-technology acceptance.'
 };
 await writeFile(join(root,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
