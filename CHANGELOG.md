@@ -1,5 +1,9 @@
 # GC UI Changelog
 
+## Seal candidate browser-build provenance (2026-11-01)
+- Record the actual running Chromium/Firefox engine and browser version in every installed-candidate acceptance report. The fail-closed verifier rejects missing or mixed provenance across scenarios while preserving all previously recorded axe inconclusives, screenshot hashes and menu state checks.
+- Add a dated browser evidence matrix distinguishing the two locally tested Playwright engine builds from any future declared support policy. This is QA-only: it changes neither the unpublished 15-file web candidate nor the owner-approved experimental UI direction or any lifecycle/deployment authorization.
+
 ## Visual acceptance — experimental lab navigation and glyph clarity (2026-11-01)
 - Harmonized Material Environment and Experience Studio headers with a shared inset, rounded, semantic floating navigation surface. Added compact native `Explore labs` disclosures so all original desktop destinations remain accessible by touch and keyboard when links collapse on smaller viewports.
 - Corrected dark-mode display of locally bundled Octicons and Fluent glyph examples whose original fixed/default black paint was nearly invisible on dark backgrounds. The remedy is limited to the two identified demonstration cards; third-party SVG source, licenses and provenance remain unchanged.

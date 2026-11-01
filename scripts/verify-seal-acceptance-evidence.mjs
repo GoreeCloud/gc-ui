@@ -29,6 +29,10 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
  assert.equal(image.readUInt32BE(16),width,'Wrong PNG viewport width '+name);
  assert.ok(image.readUInt32BE(20)>=minHeight,'Clipped candidate screenshot '+name);
  assert.equal(report.schema,'gc-ui-seal-web-browser-evidence.v1');
+ assert.ok(['chromium','firefox'].includes(report.browserEngine),
+  'Missing actual browser engine in candidate evidence '+name);
+ assert.match(report.browserVersion,/^\d+\.\d+(?:\.\d+){0,2}$/,
+  'Missing actual browser version in candidate evidence '+name);
  assert.equal(report.scenario,name);
  assert.equal(report.width,width);
  assert.equal(report.height,minHeight);
@@ -112,7 +116,8 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
   assert.equal(item.ratio,null,'Do not invent composited contrast '+name);
  }
  const nodeCount=result=>result.incomplete.reduce((sum,x)=>sum+x.nodes.length,0);
- captures.push({scenario:name,width,height:image.readUInt32BE(20),
+ captures.push({scenario:name,browserEngine:report.browserEngine,browserVersion:report.browserVersion,
+  width,height:image.readUInt32BE(20),
   sha256:sha(image),bytes:image.length,menuAriaReferenceVerified:true,
   axePassedRules:report.axe.passes,
   inconclusiveChecks:report.axe.incomplete.length,
@@ -127,10 +132,16 @@ for(const [name,width,minHeight,mode,rtl,forcedColors] of scenarios){
    width:focusedMenu.readUInt32BE(16),height:focusedMenu.readUInt32BE(20)
   }:null});
 }
+// Prohibit mixed engine/version artifacts in a single acceptance manifest.
+const engines=new Set(captures.map(result=>result.browserEngine));
+const versions=new Set(captures.map(result=>result.browserVersion));
+assert.equal(engines.size,1,'Mixed browser engines in candidate QA evidence');
+assert.equal(versions.size,1,'Mixed browser versions in candidate QA evidence');
 const manifest={
  schema:'gc-ui-seal-web-acceptance-manifest.v1',revision:process.env.GITHUB_SHA??null,
+ browserEngine:captures[0].browserEngine,browserVersion:captures[0].browserVersion,
  candidate:'@goreecloud/gc-ui@0.2.0-seal.0',expected:scenarios.length,captured:captures.length,
- results:captures,checks:'Exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, expanded target CSS/stack evidence, opaque menu-item text contrast, and SHA-256-linked focused forced-colors menu screenshot',
+ results:captures,checks:'Actual uniform browser engine/version provenance, exact scenario inventory, browser states, PNG IHDR/size, SHA-256, closed/expanded menu ARIA reference integrity, dual-state axe screening, preserved incomplete targets, expanded target CSS/stack evidence, opaque menu-item text contrast, and SHA-256-linked focused forced-colors menu screenshot',
  limitations:'Opaque menu-item text contrast does not resolve overlay occlusions or translucent forced-color compositing. Axe and screenshots do not establish full visual approval, WCAG certification, or human assistive-technology acceptance.'
 };
 await writeFile(join(root,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');
