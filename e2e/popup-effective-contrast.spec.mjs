@@ -56,7 +56,7 @@ for(const mode of ['light','dark']){
 }
 
 for(const control of ['forms','menu']){
- test('Forced-colors popup text contrast '+control,async({page})=>{
+ test('Forced-colors popup text contrast '+control,async({page},testInfo)=>{
   await page.emulateMedia({forcedColors:'active'});
   await page.setViewportSize({width:375,height:812});
   if(control==='forms'){
@@ -83,5 +83,8 @@ for(const control of ['forms','menu']){
   expect(metrics).toHaveLength(control==='forms'?3:4);
   for(const item of metrics)if(!item.disabled)
    expect(item.minRatio,'forced '+item.label).toBeGreaterThanOrEqual(4.5);
+  await testInfo.attach(control+'-forced-popup.png',{
+   body:await page.screenshot({animations:'disabled'}),contentType:'image/png'
+  });
  });
 }
