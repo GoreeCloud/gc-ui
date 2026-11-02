@@ -48,8 +48,10 @@ body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-ca
 :root[data-gc-contrast=high] .gc-form-header{background:var(--gc-v1-color-surface);box-shadow:none}
 @media(prefers-reduced-transparency:reduce){.gc-form-header{background:var(--gc-v1-color-surface);box-shadow:none}}
 @media(forced-colors:active){.gc-form-header{background:Canvas;color:CanvasText;border-color:CanvasText;box-shadow:none}}
-/* Avoid broken labels when the floating inset reduces available phone width. */
-@media(max-width:360px){.gc-form-header{padding-inline:12px}.gc-form-header nav{gap:4px}.gc-form-header nav a{padding-inline:4px;font-size:12px;overflow-wrap:normal}}
+/* Phone chrome: the three complete labels must not break at 375px (dark/reduced-motion included). */
+@media(max-width:430px){.gc-form-header{padding-inline:12px}.gc-form-header nav{gap:4px}.gc-form-header nav a{padding-inline:2px;font-size:12px;letter-spacing:-.01em;white-space:nowrap;overflow-wrap:normal}}
+/* Preserve the existing three-link row at >=320px. Reflow only below the supported phone width. */
+@media(max-width:319px){.gc-form-header nav{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important}}
 
 
