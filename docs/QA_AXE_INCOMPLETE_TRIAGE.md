@@ -25,3 +25,11 @@ The existing menu `#gc-file-actions` is present in markup and open/close keyboar
 5. Capture before/after screenshots and direct runtime results for confirmed defects. Retain evidence and re-run the full QA gates. Do not declare WCAG conformance or the experimental GC UI workspace Stable from a green automated manifest.
 
 The manifest now includes `incompleteChecks`, `incompleteNodes` and a sorted `incompleteByRule` array with scenario membership; this makes it possible to prioritize while keeping every original report unchanged. The node totals may change as UI states and axe itself change. No fixed thresholds or automatic suppression are introduced.
+
+## 2026-11-01 current-main evidence expansion
+
+At main d66b0dde31ced73ab7e8027ec43ff7c18966959d, **27/27** axe scenario reports were verified with no confirmed violations, while **30 checks / 316 node occurrences remain inconclusive**: 25 color-contrast checks (311 nodes) and five ARIA attribute-value checks (five nodes). Counts were neither suppressed nor considered automatic passes.
+
+All five ARIA checks relate to the Components action-menu trigger and its existing menu target. In a local isolated Chromium/Orca/AT-SPI session, browser roles and names were exposed, and real Orca generated the expected menu and Forms fixture speech. The added diagnostics and three parser tests reproduce the bounded check. This is additional evidence for the tested Linux browser/Orca configuration, **not** a universal resolution of the axe incompletes or a human-heard acceptance.
+
+The 311 contrast node occurrences remain open for pixel/composited-color and manual evaluation. See [expanded QA checkpoint](QA_EXPANDED_VISUAL_AT_RELEASE_2026_11_01.md). The original October 28 figures above remain historical.
