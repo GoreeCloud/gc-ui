@@ -59,22 +59,20 @@ export function checkDesignAuthority(){
     manifest.authority.legacyNameAsNewBrandAllowed!==false||
     manifest.ownerMandateEffectiveDate!=='2026-10-19'||
     manifest.authority.designMandateEffectiveImmediately!==true||
-    manifest.authority.glazeAndGlazeUIBanned!==true||
+    manifest.authority.predecessorAliasesUnapproved!==true||
     !Array.isArray(manifest.authority.requiredDesignSurfaces)||
     !['applications','websites','icons','operating-systems','all-other-goreecloud-controlled-designed-surfaces']
       .every(surface=>manifest.authority.requiredDesignSurfaces.includes(surface))){
   throw new Error('GC UI authority registry is inconsistent with owner decision or package');
  }
- const platform=manifest.integralPlatformSystem;
+ const platform=manifest.mandatoryIntegratedPlatformSystem;
  if(!platform||
     platform.name!=='GoreeCloud UI'||
-    platform.classification!=='Integral Platform System'||
-    platform.ordinal!==5||
-    platform.totalSystems!==9||
+    platform.classification!=='Mandatory Integrated Platform System'||
+    platform.totalSystems!==5||
     platform.scope!=='design-user-experience-and-visual-consistency'||
-    platform.effectiveDate!=='2026-10-19'||
-    JSON.stringify(platform.supersedes)!==JSON.stringify(['Glaze','Glaze UI'])){
-  throw new Error('GC UI must be Integral Platform System 5 of nine, replacing predecessor experience authorities');
+    platform.effectiveDate!=='2026-10-19'){
+  throw new Error('GC UI must be one of the five current Mandatory Integrated Platform Systems');
  }
  if(manifest.verified.exclusiveCutoverCompleted &&
     (!manifest.verified.governanceDocumentsAmended||

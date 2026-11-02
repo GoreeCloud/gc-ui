@@ -1,0 +1,36 @@
+/** Immutable QA inventory independent of Playwright fixture's selector list.
+ * This validates reported metadata, not contrast remeasurement from PNG bytes.
+ */
+import assert from 'node:assert/strict';
+
+export const expectedNontextSelectors=Object.freeze({
+ adaptive:Object.freeze([
+  '.gc-metric-card:nth-child(1) .gc-metric-icon',
+  '.gc-metric-card:nth-child(3) .gc-metric-icon',
+  '.gc-activity-list li:nth-child(1) .gc-activity-symbol',
+  '.gc-activity-list li:nth-child(2) .gc-activity-symbol'
+ ]),
+ forms:Object.freeze(['.gc-recovery-symbol'])
+});
+
+export function verifyNontextEvidenceRecord(record,{lab,width,mode,rtl}){
+ assert.ok(record&&typeof record==='object'&&!Array.isArray(record),'Non-text evidence must be an object');
+ assert.equal(record.schema,'gc-ui-nontext-visual.v1');
+ assert.equal(record.lab,lab);
+ assert.equal(record.width,width);
+ assert.equal(record.mode,mode);
+ assert.equal(record.rtl,rtl);
+ const selectors=expectedNontextSelectors[lab];
+ assert.ok(selectors,'Unknown non-text evidence lab '+lab);
+ assert.ok(Array.isArray(record.measurements),'Non-text measurements must be an array');
+ assert.deepEqual(record.measurements.map(p=>p?.selector),selectors,
+  lab+' must retain each canonical glyph once in the expected order');
+ for(const point of record.measurements){
+  assert.equal(point.lab,lab);
+  assert.ok(Number.isSafeInteger(point.samples)&&point.samples>30,
+   lab+' '+point.selector+' must have a valid actual pixel-sample count');
+  assert.ok(Number.isFinite(point.min)&&point.min>=3,
+   lab+' '+point.selector+' recorded sampled ratio must meet 3:1');
+  assert.equal(point.decorative,true,lab+' '+point.selector+' decorative role must be true');
+ }
+}

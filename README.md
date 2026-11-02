@@ -5,7 +5,8 @@
 
 **License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. The versioned Foundations 1.0.1 release has a separate, narrow supported export contract, verified independently.
 
-**GoreeCloud UI (GC UI) is the fifth of GoreeCloud's nine Integral Platform Systems, replacing Glaze and Glaze UI as the platform-wide experience authority.** GC UI is GoreeCloud's original adaptive interface design language. See [platform-system classification](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-an-integral-platform-system).
+**GoreeCloud UI (GC UI) is one of the five Mandatory Integrated Platform Systems (MIPS) and GoreeCloud's sole design and experience authority.** GC UI is GoreeCloud's original adaptive interface design language. See [current platform-system classification](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-a-mandatory-integrated-platform-system).
+The five-MIPS integration requirement is separate from the historical "fifth Integral Platform System" wording in the canonical Drive instructions; the [classification note](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-a-mandatory-integrated-platform-system) preserves both without claiming the historical category has been formally retired.
 
 **GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
 
@@ -21,7 +22,7 @@ The [consumer migration audit](docs/CONSUMER_MIGRATION_AUDIT.md) adds an explici
 
 ## Exclusive design-system succession
 
-**Mandatory GoreeCloud-wide directive (2026-10-19):** All GoreeCloud applications, websites, icons, operating systems, interfaces and other designed products **must be built and designed based on `GoreeCloud/gc-ui`**. **Glaze and Glaze UI are permanently banned as active GoreeCloud design or development authorities**, including for new work. Remaining predecessor-based products are noncompliant and must migrate through verified, controlled updates. See the [governing GC UI succession and enforcement record](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). This decision is effective now; previous Google Drive requirements and deployed consumers have **not all been amended or migrated**, and this repository makes no false implementation-completion claim. Release stage and licensing remain separately governed.
+**Mandatory GoreeCloud-wide directive (2026-10-19):** All GoreeCloud applications, websites, icons, operating systems, interfaces and other designed products **must be built and designed based on `GoreeCloud/gc-ui`**. **No other design system is approved as a GoreeCloud design or development authority**, including for new work. Remaining predecessor-based products are noncompliant and must migrate through verified, controlled updates. See the [governing GC UI succession and enforcement record](docs/DESIGN_SYSTEM_SUCCESSION.md) and the [machine-readable authority decision](registry/design-authority.v1.json). This decision is effective now; previous Google Drive requirements and deployed consumers have **not all been amended or migrated**, and this repository makes no false implementation-completion claim. Release stage and licensing remain separately governed.
 
 ## Version
 

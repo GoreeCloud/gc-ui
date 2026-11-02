@@ -11,7 +11,6 @@
     "newPredecessorDependenciesAllowed": false,
     "legacyNameAsNewBrandAllowed": false,
     "designMandateEffectiveImmediately": true,
-    "glazeAndGlazeUIBanned": true,
     "requiredDesignSurfaces": [
       "applications",
       "websites",
@@ -19,6 +18,7 @@
       "operating-systems",
       "all-other-goreecloud-controlled-designed-surfaces"
     ],
+    "predecessorAliasesUnapproved": true,
     "premiumVisualQualityMandate": {
       "effectiveDate": "2026-10-31",
       "mandatory": true,
@@ -74,15 +74,10 @@
   },
   "relatedSpecification": "docs/DESIGN_SYSTEM_SUCCESSION.md",
   "ownerMandateEffectiveDate": "2026-10-19",
-  "integralPlatformSystem": {
+  "mandatoryIntegratedPlatformSystem": {
     "name": "GoreeCloud UI",
-    "classification": "Integral Platform System",
-    "ordinal": 5,
-    "totalSystems": 9,
-    "supersedes": [
-      "Glaze",
-      "Glaze UI"
-    ],
+    "classification": "Mandatory Integrated Platform System",
+    "totalSystems": 5,
     "scope": "design-user-experience-and-visual-consistency",
     "effectiveDate": "2026-10-19"
   }
