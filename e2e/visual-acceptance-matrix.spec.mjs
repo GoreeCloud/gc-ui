@@ -103,3 +103,30 @@ for(const width of [280,320,340,341,375,430,440]){
   expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+2);
  });
 }
+
+// The 320px Experience Studio screenshot originally clipped "environments."
+// inside an otherwise in-bounds h1 container. Measure actual rendered text.
+for(const width of [280,320,375,440]){
+ test('Experience Studio: full hero text visible at '+width,async({page})=>{
+  await page.setViewportSize({width,height:812});
+  await page.emulateMedia({colorScheme:width===375?'dark':'light',reducedMotion:'reduce'});
+  await page.goto('/lab/experience-studio.html');
+  await page.evaluate(()=>document.fonts.ready);
+  const segments=await page.locator('#studio-title bdi').evaluateAll(nodes=>nodes.map(node=>{
+   const range=document.createRange();range.selectNodeContents(node);
+   const spans=Array.from(range.getClientRects());
+   return {text:node.textContent.trim(),spans:spans.map(r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}))};
+  }));
+  expect(segments.map(s=>s.text)).toEqual(['One language.','Many environments.']);
+  for(const segment of segments){
+   expect(segment.spans.length,segment.text+' rendered span exists').toBeGreaterThan(0);
+   for(const span of segment.spans){
+    expect(span.left,segment.text+' clipped left').toBeGreaterThanOrEqual(-1);
+    expect(span.right,segment.text+' clipped right').toBeLessThanOrEqual(width+1);
+    expect(span.bottom,segment.text+' visible layout height').toBeGreaterThan(span.top);
+   }
+  }
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth);
+  expect(overflow).toBeLessThanOrEqual(width+2);
+ });
+}
