@@ -104,6 +104,8 @@ jobs:
         run: npm run qa:visual:matrix:verify
       - name: Verify 12 open interactive-state visual screenshots and geometry records
         run: npm run qa:visual:interactive:verify
+      - name: Verify ten rendered non-text glyph screenshots and contrast measurements
+        run: npm run qa:visual:nontext:verify
       - name: Verify genuine 200% and 400% Chromium browser zoom
         run: |
           sudo apt-get update
@@ -144,6 +146,8 @@ jobs:
         run: npm run qa:visual:matrix:verify
       - name: Verify 12 Firefox interactive-state screenshot pairs
         run: npm run qa:visual:interactive:verify
+      - name: Verify ten rendered non-text glyph screenshots and contrast measurements
+        run: npm run qa:visual:nontext:verify
       - name: Verify installed candidate contrast and accessibility evidence in Firefox
         run: npm run qa:seal-evidence:verify
       - name: Verify genuine 200% and 400% Firefox browser zoom
