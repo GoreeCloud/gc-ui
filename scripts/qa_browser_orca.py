@@ -44,7 +44,7 @@ def parse_speech(log: str) -> dict[str, bool]:
 
 
 def visit(node, found: set[tuple[str, str]], depth=0):
-    if depth > 13:
+    if node is None or depth > 13:
         return
     try:
         name = node.get_name() or ""
@@ -62,6 +62,8 @@ def collect_atspi(atspi) -> set[tuple[str, str]]:
     desktop = atspi.get_desktop(0)
     for index in range(min(desktop.get_child_count(), 60)):
         app = desktop.get_child_at_index(index)
+        if app is None:
+            continue
         try:
             if any(token in (app.get_name() or "").lower()
                    for token in ("chrome for testing", "chromium")):

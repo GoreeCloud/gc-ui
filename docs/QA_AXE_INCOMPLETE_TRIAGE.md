@@ -33,3 +33,28 @@ At main d66b0dde31ced73ab7e8027ec43ff7c18966959d, **27/27** axe scenario reports
 All five ARIA checks relate to the Components action-menu trigger and its existing menu target. In a local isolated Chromium/Orca/AT-SPI session, browser roles and names were exposed, and real Orca generated the expected menu and Forms fixture speech. The added diagnostics and three parser tests reproduce the bounded check. This is additional evidence for the tested Linux browser/Orca configuration, **not** a universal resolution of the axe incompletes or a human-heard acceptance.
 
 The 311 contrast node occurrences remain open for pixel/composited-color and manual evaluation. See [expanded QA checkpoint](QA_EXPANDED_VISUAL_AT_RELEASE_2026_11_01.md). The original October 28 figures above remain historical.
+
+## 2026-11-01 follow-up: evidence-preserving manual-review priorities
+
+On unchanged main baseline a62c6e156158aed0354b3a76ad97e17ef15f0d86, 27 axe scenarios produced **30 inconclusive checks / 316 node occurrences across 179 distinct review targets**. The new npm script qa:accessibility:triage generates a report at dist/qa/accessibility-triage/manual-review.json from the verified axe manifest, validates unchanged totals, and marks **every target manual-review-required**.
+
+| Review category | Unique targets | Node occurrences | Next review |
+| --- | ---: | ---: | --- |
+| Possible obstruction | 13 | 21 | Scroll and hit-test live controls; inspect composited text background |
+| Composited/complex background | 147 | 234 | Inspect gradient, image and transparent surfaces in actual pixels |
+| ARIA relationship | 1 | 5 | Browser accessibility tree and real assistive-technology corroboration |
+| Non-text symbols | 17 | 55 | Review actual non-text contrast and semantics; aria-hidden is not an automatic waiver |
+| Other unresolved text/control | 1 | 1 | Inspect the actual content and foreground |
+| **Total still open** | **179** | **316** | **No suppression or accessibility certification** |
+
+The initial high-priority overlap review targeted the repeated Forms #brief-notes textarea. **4/4 Chromium plus 4/4 Firefox tests passed** at 320, 375, 768 and 1440 px with light, dark and RTL states. At three sample points, the scroll-into-view editable surface was reachable by browser hit-testing; filling the textarea succeeded. This rebuts a simple obstruction hypothesis for those exact scroll states, but **does not resolve effective color contrast or axe incompletes**, including that textarea's five repeated occurrences. Other overlapping targets remain open.
+
+Review order is operational only; it is not a determination of severity or a substitute for pixel-level measurement, human AT testing, or full product signoff. The triage tool produces a separate CI artifact and never edits original axe evidence. Regenerate the verified axe manifest immediately before running triage because subsequent Playwright suites reset the test-results directory.
+
+## 2026-11-01 second independent review: Adaptive rendered gradient text
+
+The existing Components real-pixel contrast suite was refactored to share its original pixel-backdrop sampler with a new Adaptive Shell test. This avoids duplicating approximate screenshot math and now restores any original inline color value **and CSS priority** after temporary screenshot-only hiding of text.
+
+The new test samples **six actual Adaptive text elements** (#page-title, #page-subtitle, .gc-page-header .gc-eyebrow, #content-title, #feed-title and .gc-shell-note) in **320px compact and 1440px desktop**, each in **light and dark** modes. For each text element it temporarily hides only that element's text color, captures the actual element-sized rendered backdrop, computes foreground-versus-sampled pixel contrast, and requires at least 4.5:1. In Chromium, **4/4 new Adaptive scenarios and the combined 22/22 Components+Adaptive pixel tests passed**. In Firefox, **4/4 new Adaptive scenarios and the combined 22/22 Components+Adaptive pixel tests also passed**. Observed Firefox Adaptive minimum sampled ratios were about 5.01:1 (320px light), 5.06:1 (1440px light), 9.17:1 (320px dark) and 9.42:1 (1440px dark).
+
+**Limit:** These are 24 selected element/state pairs, not 234 separately resolved axe occurrences. The sampler evaluates every third screenshot pixel, sRGB computed foreground, and a temporarily text-free backdrop; it does not certify subpixel antialiasing, composited OS effects, all gradients, disabled controls, image classes, or full WCAG. No axe incomplete disposition or design language release status changes from this evidence.
