@@ -50,3 +50,10 @@ References: [Issue #78](https://github.com/GoreeCloud/gc-ui/issues/78), [Visual 
 The Adaptive Shell English reference phrases are now wrapped in native bdi dir=auto isolating spans while the surrounding navigation/shell remains RTL. This corrects the verified forced-RTL English punctuation-direction mismatch without hardcoding every label as LTR or changing platform language declarations. The renderRoute function updates those existing isolated spans rather than replacing their parent headings and focus targets. A translated Arabic sample is verified to choose RTL automatically; **real translated builds and localization quality remain untested**.
 
 Added repeatable Playwright RTL route/focus/punctuation tests at 320, 375, 768 and 1440 px, with overview/activity/library route changes plus one Arabic-direction probe. On the isolated implementation branch, the five cases passed in Chromium and Firefox. This is a bounded Adaptive Shell fix, not general RTL acceptance for all six labs, and it does not approve the root alpha workspace.
+
+
+## 2026-11-01 other reference labs: scoped English bidi-isolation follow-up
+
+After the Adaptive route-label correction, five other static GC UI reference labs were inspected for the same forced-RTL English punctuation problem: Components, Catalog, Forms, Material Environment and Experience Studio. Their hero heading segments, introductory sentence and static section headings now use native bdi dir=auto spans, preserving their existing emphasis, line breaks and semantic heading levels while keeping mirrored page layout under RTL. The text remains plain English fixture content; no claim of completed Arabic translation or full locale support is made.
+
+Eleven browser scenarios verify these heading/lead isolates at 320px and 1440px in RTL, punctuation visual order, inherited RTL layout, horizontal reflow, and one Arabic-direction sample. This test is included in the Chromium and Firefox interaction suites. Existing visual, axe and screenshots must remain independently verified, and any future translated copy needs real speaker/assistive-technology review before release.
