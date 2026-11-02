@@ -58,3 +58,34 @@ The existing Components real-pixel contrast suite was refactored to share its or
 The new test samples **six actual Adaptive text elements** (#page-title, #page-subtitle, .gc-page-header .gc-eyebrow, #content-title, #feed-title and .gc-shell-note) in **320px compact and 1440px desktop**, each in **light and dark** modes. For each text element it temporarily hides only that element's text color, captures the actual element-sized rendered backdrop, computes foreground-versus-sampled pixel contrast, and requires at least 4.5:1. In Chromium, **4/4 new Adaptive scenarios and the combined 22/22 Components+Adaptive pixel tests passed**. In Firefox, **4/4 new Adaptive scenarios and the combined 22/22 Components+Adaptive pixel tests also passed**. Observed Firefox Adaptive minimum sampled ratios were about 5.01:1 (320px light), 5.06:1 (1440px light), 9.17:1 (320px dark) and 9.42:1 (1440px dark).
 
 **Limit:** These are 24 selected element/state pairs, not 234 separately resolved axe occurrences. The sampler evaluates every third screenshot pixel, sRGB computed foreground, and a temporarily text-free backdrop; it does not certify subpixel antialiasing, composited OS effects, all gradients, disabled controls, image classes, or full WCAG. No axe incomplete disposition or design language release status changes from this evidence.
+
+
+## 2026-11-01 real-browser ambient-text contrast review (Catalog repair)
+
+A new selected-element rendered-pixel sampler uses the existing shared screenshot backdrop helper against six text selectors each in Catalog, Material Environment and Experience Studio, at 320px/1440px and actual light/dark color-scheme preferences. The browser OS preference **must** drive the real GC theme controller; merely changing the root dark-mode attribute leaves semantic color roles out of sync and creates false dark-mode failures.
+
+On the valid original light-mode configuration, Catalog hero lead and registry-section description returned approximate minimum sampled ratios of **4.236:1** (320px) and **4.207:1** (1440px), below the conservative 4.5:1 review threshold. Both texts sit directly over the ambient canvas gradient, not an opaque surface. Their two local CSS roles were changed from on-surface-muted to the matching semantic on-canvas foreground. Repeated browser tests then passed all **12/12 Chromium scenarios** with a lowest sampled Catalog ratio of approximately **5.059:1 light / 9.487:1 dark**. The independent Firefox suite also passed **12/12** with the same Catalog minima of approximately **5.059:1 light / 9.487:1 dark**. Real-browser mobile/desktop light/dark screenshots were inspected for visible layout and readability; no new clipping or hierarchy regression was found in the inspected frames.
+
+This validates the selected 18 text-bearing selectors under four tested combinations per lab. It does **not** resolve or suppress axe's broader manual-review incompletes, certify every image/blur compositor, or declare human accessibility/visual signoff.
+
+## 2026-11-02 cross-revision axe evidence reconciliation
+
+The experimental lab accessibility run was regenerated on three exact revisions with the same local browser toolchain. Each passed **27/27 scenarios** with **zero confirmed axe violations** and **30 inconclusive rule checks**; no rule was suppressed or treated as automatically resolved:
+
+| Revision | Distinct incomplete review targets | Incomplete node occurrences | Scope |
+| --- | ---: | ---: | --- |
+| `a62c6e156158` | 179 | 316 | Before the new bidi-isolation markup |
+| `77ef77525826` | 180 | 318 | After the RTL heading/section bidi changes, before Catalog contrast CSS repair |
+| `ae1d8b7df65` | 180 | 318 | After Catalog contrast repair |
+
+A source-manifest comparison between the first and last revisions shows that most changed selectors are the same phrases re-targeted to new semantic `bdi[dir=auto]` children rather than their former parent headings/paragraphs. The **net +2 occurrences / +1 distinct review target** are from the Material Environment hero's nested bidi-isolation/emphasis structure: its bold/italic line now presents both a text-isolation span and an emphasized child for which axe cannot determine a gradient backdrop. The previous heading and emphasis nodes were already inconclusive. This is an **axe element-level counting/targeting change**, not evidence of a confirmed new contrast defect, nor permission to waive either node.
+
+This comparison also proves the increase **precedes PR #162**, since the pre-Catalog and post-Catalog revisions both have the same 318/180 inventory. The separately tested Catalog foreground-token correction passed sampled real-pixel contrast checks, but axe still cannot automatically decide many actual gradient backdrops. Keep all 318 occurrences marked for targeted/manual review and distinguish this latest baseline from the historical 316-node checkpoints above. Human-readable text, emphasized text, contrast, RTL semantics and screen-reader announcements remain subject to their respective independent acceptance gates.
+
+## 2026-11-02 non-text symbol semantic corroboration
+
+The current 17 non-text-symbol targets / 55 occurrences still appear in the fresh 27/27 axe evidence after a single semantic markup repair. The v1 Materials demo decorative Lens glyph now has `aria-hidden="true"`, matching its adjacent visible LENS label and Apply button. Four Chromium and four Firefox browser cases verify the changed decoration plus representative labeled Components, Forms and Adaptive controls across light/dark, compact, RTL and forced colors. The source triage remains **30 inconclusive checks / 318 node occurrences / 180 targets** and no axe rule was suppressed. This confirms only sampled redundant-symbol relationships; it does not prove 3:1 visual contrast for any essential non-text icon or waive the remaining manual obligations. See [dated semantic review](QA_NONTEXT_SYMBOL_SEMANTICS_2026_11_02.md).
+
+## 2026-11-02 selected non-text actual-pixel backdrop review
+
+Five selected decorative symbol backgrounds in Adaptive Shell and Forms were independently sampled in Chromium/Firefox at 320px/1440px light/dark and 768px RTL light. The 5/5 browser states passed per engine with a conservative 3:1 sampled foreground/backdrop threshold, and 10/10 PNG/JSON records were verified per browser. **This is only partial source evidence**: five tested symbols are not all 17 distinct non-text-symbol targets, and the original axe incomplete counts must not be reduced, suppressed, or recategorized. Human or other-platform conformance assessment still needs representative essential controls, disabled states, forced colors, and image/compositor conditions. See [dated report](QA_NONTEXT_RENDERED_PIXEL_2026_11_02.md).
