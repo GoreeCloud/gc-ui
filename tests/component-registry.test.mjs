@@ -49,3 +49,13 @@ test('every experimental component points to a real lab page and implemented CSS
   }
  }
 });
+
+// The catalog counts stable *web demos*, not separately released Foundations tokens.
+test('catalog stable count is scoped to web demos and discloses Foundations release',()=>{
+ const catalog=readFileSync(new URL('../lab/catalog.html',import.meta.url),'utf8');
+ assert.match(catalog,/<strong id="catalog-stable">0<\/strong><span>Stable component demos<\/span>/);
+ assert.doesNotMatch(catalog,/>Stable releases</);
+ assert.match(catalog,/foundations-v1\.0\.1/);
+ assert.match(catalog,/catalog component demos are experimental and are not included in that stable scope/);
+ assert.equal(registry.components.filter(c=>c.webStatus==='stable').length,0);
+});
