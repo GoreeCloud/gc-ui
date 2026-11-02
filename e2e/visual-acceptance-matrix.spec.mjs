@@ -70,7 +70,7 @@ for(const target of pages){
 // Screenshot-led regression: 375px dark mode used to orphan the final "s" in
 // "Components"; 320px worked only because a narrower breakpoint reduced text.
 // Preserve complete navigation labels at both standard and zoom-narrow sizes.
-for(const width of [280,320,340,341,375,430,440]){
+for(const width of [280,319,320,340,341,375,430,440]){
  test('Forms Lab: floating phone navigation does not wrap or clip '+width,async({page})=>{
   await page.setViewportSize({width,height:812});
   await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});
