@@ -100,6 +100,8 @@ jobs:
         run: npm run test:e2e
       - name: Verify all 22 actual-build full-page visual evidence files
         run: npm run qa:visual-evidence:verify
+      - name: Verify all 24 expanded viewport screenshots and geometry records
+        run: npm run qa:visual:matrix:verify
       - name: Verify genuine 200% and 400% Chromium browser zoom
         run: |
           sudo apt-get update

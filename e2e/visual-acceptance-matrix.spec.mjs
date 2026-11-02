@@ -1,4 +1,6 @@
 import {test,expect} from '@playwright/test';
+import {mkdir,writeFile} from 'node:fs/promises';
+import {join,resolve} from 'node:path';
 
 // Browser geometry and screen-state evidence, not pixel-level design signoff.
 const pages=[
@@ -50,13 +52,16 @@ for(const target of pages){
    expect(geometry.heading.left,target.id+' heading clipped left').toBeGreaterThanOrEqual(-2);
    expect(geometry.heading.right,target.id+' heading clipped right').toBeLessThanOrEqual(variant.width+2);
    expect(geometry.visibleHeading).toBe(true);
-   const png=await page.screenshot({animations:'disabled'});
-   await testInfo.attach(target.id+'-'+variant.id+'.png',{body:png,contentType:'image/png'});
-   await testInfo.attach(target.id+'-'+variant.id+'.json',{
-    body:Buffer.from(JSON.stringify({path:target.path,variant,geometry,
-     scope:'Browser reflow and screenshot evidence; manual appearance and human AT acceptance remain separate.'},null,2)),
-    contentType:'application/json'
-   });
+   const name=target.id+'-'+variant.id;
+   const folder=resolve(testInfo.project.outputDir,'acceptance-matrix');
+   await mkdir(folder,{recursive:true});
+   const pngPath=join(folder,name+'.png');
+   const jsonPath=join(folder,name+'.json');
+   await writeFile(pngPath,await page.screenshot({animations:'disabled'}));
+   await writeFile(jsonPath,JSON.stringify({path:target.path,variant,geometry,
+    scope:'Browser reflow and screenshot evidence; manual appearance and human AT acceptance remain separate.'},null,2)+'\n');
+   await testInfo.attach(name+'.png',{path:pngPath,contentType:'image/png'});
+   await testInfo.attach(name+'.json',{path:jsonPath,contentType:'application/json'});
   });
  }
 }

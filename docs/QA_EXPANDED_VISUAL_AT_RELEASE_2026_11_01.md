@@ -6,9 +6,9 @@
 
 ## Visual evidence
 
-The current review branch ran the combined **50/50 Playwright visual tests**: 26 existing reference and consumer tests plus **24 new viewport/theme scenarios** in e2e/visual-acceptance-matrix.spec.mjs. The existing full-page screenshot manifest verifier passed **22/22** files with dimensions and SHA-256 integrity. The 24 new cases retain separate viewport screenshot and geometry attachments without silently altering the established 22-file capture contract.
+The current review branch ran the combined **50/50 Playwright visual tests**: 26 existing reference and consumer tests plus **24 new viewport/theme scenarios** in e2e/visual-acceptance-matrix.spec.mjs. The existing full-page screenshot manifest verifier passed **22/22** files with dimensions and SHA-256 integrity. The expanded verifier checks **24/24** new screenshot/geometry pairs against PNG dimensions and checksums. The 24 new cases retain separate PNG and JSON files in a dedicated acceptance-matrix artifact folder, with an independent SHA-256/dimensions verifier, without altering the established 22-file capture contract.
 
-Each of the six reference areas (Components, Catalog, Adaptive Shell, Forms, Environment and Experience Studio) was tested in four states: **320px light**, **375px dark with reduced motion**, **768px RTL**, and **1440px forced colors**. Actual browser assertions checked a visible heading, no root/body horizontal overflow and no clipped heading bounds. Contact sheets from the fresh full-page screenshots were visually inspected for desktop and mobile; the full-page Components light screenshot was separately inspected. The reviewed regions showed coherent composition and no newly confirmed clipping defect. Downsampled sheets are not sufficient to certify every control, pixel or state.
+Each of the six reference areas (Components, Catalog, Adaptive Shell, Forms, Environment and Experience Studio) was tested in four states: **320px light**, **375px dark with reduced motion**, **768px RTL**, and **1440px forced colors**. Actual browser assertions checked a visible heading, no root/body horizontal overflow and no clipped heading bounds. Contact sheets from the fresh full-page screenshots were visually inspected for desktop and mobile; the full-page Components light screenshot was separately inspected. The reviewed regions showed coherent composition and no newly confirmed heading clipping defect. **An RTL caveat remains:** forcing RTL on the untranslated English fixtures visibly shifts some sentence-final punctuation to the leading edge; real localized copy, semantic per-span direction and bidi acceptance have not been verified. The compact Adaptive fixed navigation also overlays lower content within initial full-page/screen captures; prior footer hit tests do not certify every scroll position. Downsampled sheets are not sufficient to certify every control, pixel or state.
 
 The founder's recorded *visual-direction* approval covers the six specific experimental areas at fc95c3e89c14341dc5b685b6bbe7424bdd93b4f8 with earlier exceptions retained. This is not a new founder approval, all-screen pixel signoff or whole-product acceptance. Full-size inspection of every workflow and operating-system state, dialogs, translated content, zoomed inputs and changed screens remains open.
 
@@ -29,7 +29,7 @@ The new reproducible Linux diagnostic, scripts/qa_browser_orca.py with scripts/q
 | Unpublished Seal candidate verification | PASS | Fifteen files, integrity and offline consumer contract; not lifecycle approval |
 | Native-host contract tests | PASS | Programmatic contracts, not real device acceptance |
 | Desktop portability on local Linux laptop | BLOCKED | Optional locked Electron runtime absent; no dependency installation or gate bypass |
-| Expanded visual suite and screenshot verifier | 50/50 and 22/22 PASS | Actual-browser geometry, image integrity and bounded visual review |
+| Expanded visual suite and screenshot verifiers | 50/50, 22/22 and 24/24 PASS | Actual-browser geometry, image integrity and bounded visual review |
 | Hosted source-baseline quality/native CI | PASS | Both workflows on main d66b0dde; new-branch CI still requires verification |
 
 The publicly released **Foundations 1.0.1 subset** is separate from the root **0.2.0-alpha.1 experimental workspace**. The **0.2.0-seal.0 candidate remains unpublished**. A successful local artifact rebuild must not be confused with the released artifact checksum or a new public browser support claim.
@@ -38,7 +38,7 @@ The publicly released **Foundations 1.0.1 subset** is separate from the root **0
 
 1. Inspect composited/background-dependent contrast of the 311 inconclusive nodes, prioritizing Components, Catalog, Adaptive and Environment, and preserve per-node manual review.
 2. Conduct human-heard Orca navigation through expanded menus, disabled commands, Escape, Forms suggestion changes and error recovery. Add further screen readers only for supported platform release claims.
-3. Review complete interactive screens at the requested screen sizes, states and zoom levels, retaining before/after image evidence for any confirmed defects.
+3. Review complete interactive screens at the requested sizes, states and zoom levels. Prioritize real localized RTL typography/punctuation and every compact fixed-dock scroll position; preserve before/after evidence for confirmed defects.
 4. Retest optional desktop portability only with an appropriately reviewed, pinned Electron installation in a controlled environment; preserve the existing successful hosted native check independently.
 5. Require exact-head PR and post-merge CI plus separate owner release acceptance before any Stable/Seal promotion or publishing.
 
