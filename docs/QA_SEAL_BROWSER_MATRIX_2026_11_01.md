@@ -24,6 +24,10 @@ Each scenario verifies the real offline-installed package, viewport and RTL stat
 
 **Proposed future support policy:** establish minimum/browser/OS versions only after explicit cross-environment testing, documented accessibility exceptions, support lifecycle commitments and authorized lifecycle approval. Do **not** infer Safari/WebKit, mobile browser, Windows/macOS native host, screen reader, browser extensions, custom high-contrast palette, or release distribution support from this test matrix.
 
+## Revised private candidate build (2026-11-01)
+
+A confirmed Firefox forced-colors selected suggestion text-contrast defect was corrected. The unpublished 15-file QA build now has SHA-256 `84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`. This differs from the earlier `d4e33010` build above. Do not reuse historical four-scenario browser results for the changed archive: rerun installed-candidate browser acceptance and verifier at the exact revision. See [focused contrast review](QA_POPUP_CONTRAST_2026_11_01.md). No Seal release or public browser-support approval follows from this change.
+
 ## Outstanding release gates
 
 - The wider experimental workspace remains `0.2.0-alpha.1`. The `0.2.0-seal.0` package is **unpublished QA only**, not a Seal lifecycle release. Foundations 1.0.1 remains separately scoped.

@@ -108,6 +108,12 @@ The private 15-file tarball SHA-256 is unchanged (`d4e33010e56f8a0383a299bd159ae
 
 **Scope caution:** a recorded browser build is an *observed test environment*, not a minimum supported version, full compatibility claim, or a pledge covering untested browsers and OSes. Browser support must still be declared only after supported-platform reviews, applicable human assistive-technology assessment, unresolved axe/composited visual disposition, and a distinct recorded lifecycle decision. The QA change in this section requires exact-head CI and merged-main readback before being described as integrated.
 
+## 2026-11-01 — Firefox forced-color popup contrast correction (QA candidate revision)
+
+A targeted expanded Forms suggestion test found the native Firefox 157 forced-colors `Highlight`/`HighlightText` pair at **2.94:1** on the selected option. Changed the selected state to `Canvas`/`CanvasText` with an outlined `Highlight` indicator, retaining keyboard and ARIA behavior. The dated [popup contrast evidence](QA_POPUP_CONTRAST_2026_11_01.md) covers Forms suggestions and Components action-menu enabled text in real browser light/dark/forced-color states, including conservative black/white underlay composition.
+
+The offline-built **unpublished** QA package remains 15 files but its exact archive changed to SHA-256 **`84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`** from the earlier `d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`. The prior archive's historic test evidence remains tied to that prior SHA; no test report may be silently reused as proof for the changed archive. The candidate remains QA-only and the workspace remains Alpha. Revalidate installed-package acceptance, browser provenance, source/pack, and CI at the exact correction revision before treating the new SHA as qualified. No package publication, production deployment, stable classification, or owner Seal approval is authorized by this fix.
+
 ## Related sources
 
 - [Scoped release policy](STABLE_RELEASE_SCOPE.md)
