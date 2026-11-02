@@ -4,7 +4,7 @@
 
 ## Covered artifact
 
-Only the offline-installed private `@goreecloud/gc-ui@0.2.0-seal.0` 15-file package, SHA-256 `d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`. This contract does not apply to the wider `0.2.0-alpha.1` lab workspace, native hosts, downstream apps, or separately stable Foundations v1.0.1.
+Only the offline-installed private `@goreecloud/gc-ui@0.2.0-seal.0` 15-file QA package. The latest **unpublished candidate build** including the Firefox forced-colors selected-suggestion correction has archive SHA-256 `84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`. The earlier independently tested build had SHA-256 `d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`; its historic browser evidence remains valid **only for that earlier package**. The updated candidate must pass its own source-pinned installed-package and browser QA before a support or release conclusion. This contract does not apply to the wider `0.2.0-alpha.1` lab workspace, native hosts, downstream apps, or separately stable Foundations v1.0.1.
 
 ## Verified QA browser builds
 

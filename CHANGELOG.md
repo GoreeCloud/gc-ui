@@ -1,5 +1,10 @@
 # GC UI Changelog
 
+## Experimental popup contrast and forced-colors correction (2026-11-01)
+- Corrected a confirmed Firefox forced-colors autocomplete selected-item text ratio of 2.94:1 by using the readable system Canvas/CanvasText pair and preserving a 3px Highlight selection outline. No experimental runtime-controller or published stable Foundations behavior changed.
+- Added cross-browser light, dark and forced-colors regression coverage for enabled Forms suggestions and Components menu text. The test conservatively composes actual browser-resolved foreground/background colors against black/white underlays and preserves untested pixel, screen-reader, gradient and glyph exceptions.
+- Rebuilt the **unpublished** private 15-file Seal QA candidate after the shared CSS change, with a new archive SHA-256 `84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`. This does not constitute Seal approval, publication, production deployment or all-product visual acceptance.
+
 ## Seal candidate browser-build provenance (2026-11-01)
 - Record the actual running Chromium/Firefox engine and browser version in every installed-candidate acceptance report. The fail-closed verifier rejects missing or mixed provenance across scenarios while preserving all previously recorded axe inconclusives, screenshot hashes and menu state checks.
 - Add a dated browser evidence matrix distinguishing the two locally tested Playwright engine builds from any future declared support policy. This is QA-only: it changes neither the unpublished 15-file web candidate nor the owner-approved experimental UI direction or any lifecycle/deployment authorization.
