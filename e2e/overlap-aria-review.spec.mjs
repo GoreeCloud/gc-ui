@@ -44,6 +44,7 @@ for (const variant of [
   const input=page.getByRole('combobox',{name:'Search projects'});
   await input.fill('d');
   await expect(page.locator('#project-suggestions')).toBeVisible();
+  await page.locator('#project-suggestions').scrollIntoViewIfNeeded();
   await expect(input).toHaveAttribute('aria-controls','project-suggestions');
   await expect(input).toHaveAttribute('aria-expanded','true');
   await input.press('ArrowDown');
@@ -83,6 +84,7 @@ for(const variant of [
   await expect(trigger).toHaveAttribute('aria-controls','gc-file-actions');
   const menu=page.getByRole('menu',{name:'Workspace actions'});
   await expect(menu).toBeVisible();
+  await menu.scrollIntoViewIfNeeded();
   await expect(menu.getByRole('menuitem',{name:'Duplicate workspace'})).toBeFocused();
   const result=await sample(page);
   expect(result.popupFound).toBe(true);
