@@ -56,6 +56,8 @@ test('catalog stable count is scoped to web demos and discloses Foundations rele
  assert.match(catalog,/<strong id="catalog-stable">0<\/strong><span>Stable component demos<\/span>/);
  assert.doesNotMatch(catalog,/>Stable releases</);
  assert.match(catalog,/foundations-v1\.0\.1/);
+ assert.match(catalog,/<aside class="release-scope-note" aria-label="Foundations release scope">/);
+ assert.match(catalog,/<p><bdi dir="auto">The full GC UI component architecture/);
  assert.match(catalog,/catalog component demos are experimental and are not included in that stable scope/);
  assert.equal(registry.components.filter(c=>c.webStatus==='stable').length,0);
 });
