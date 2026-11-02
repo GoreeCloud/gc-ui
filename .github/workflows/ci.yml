@@ -117,6 +117,7 @@ jobs:
             test-results/
             playwright-report/
             dist/qa/accessibility-review/
+            dist/qa/accessibility-triage/
           retention-days: 7
           if-no-files-found: ignore
 
