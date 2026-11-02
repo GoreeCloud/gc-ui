@@ -67,3 +67,17 @@ A new selected-element rendered-pixel sampler uses the existing shared screensho
 On the valid original light-mode configuration, Catalog hero lead and registry-section description returned approximate minimum sampled ratios of **4.236:1** (320px) and **4.207:1** (1440px), below the conservative 4.5:1 review threshold. Both texts sit directly over the ambient canvas gradient, not an opaque surface. Their two local CSS roles were changed from on-surface-muted to the matching semantic on-canvas foreground. Repeated browser tests then passed all **12/12 Chromium scenarios** with a lowest sampled Catalog ratio of approximately **5.059:1 light / 9.487:1 dark**. The independent Firefox suite also passed **12/12** with the same Catalog minima of approximately **5.059:1 light / 9.487:1 dark**. Real-browser mobile/desktop light/dark screenshots were inspected for visible layout and readability; no new clipping or hierarchy regression was found in the inspected frames.
 
 This validates the selected 18 text-bearing selectors under four tested combinations per lab. It does **not** resolve or suppress axe's broader manual-review incompletes, certify every image/blur compositor, or declare human accessibility/visual signoff.
+
+## 2026-11-02 cross-revision axe evidence reconciliation
+
+The experimental lab accessibility run was regenerated on three exact revisions with the same local browser toolchain. Each passed **27/27 scenarios** with **zero confirmed axe violations** and **30 inconclusive rule checks**; no rule was suppressed or treated as automatically resolved:
+
+| Revision | Distinct incomplete review targets | Incomplete node occurrences | Scope |
+| --- | ---: | ---: | --- |
+| `a62c6e156158` | 179 | 316 | Before the new bidi-isolation markup |
+| `77ef77525826` | 180 | 318 | After the RTL heading/section bidi changes, before Catalog contrast CSS repair |
+| `ae1d8b7df65` | 180 | 318 | After Catalog contrast repair |
+
+A source-manifest comparison between the first and last revisions shows that most changed selectors are the same phrases re-targeted to new semantic `bdi[dir=auto]` children rather than their former parent headings/paragraphs. The **net +2 occurrences / +1 distinct review target** are from the Material Environment hero's nested bidi-isolation/emphasis structure: its bold/italic line now presents both a text-isolation span and an emphasized child for which axe cannot determine a gradient backdrop. The previous heading and emphasis nodes were already inconclusive. This is an **axe element-level counting/targeting change**, not evidence of a confirmed new contrast defect, nor permission to waive either node.
+
+This comparison also proves the increase **precedes PR #162**, since the pre-Catalog and post-Catalog revisions both have the same 318/180 inventory. The separately tested Catalog foreground-token correction passed sampled real-pixel contrast checks, but axe still cannot automatically decide many actual gradient backdrops. Keep all 318 occurrences marked for targeted/manual review and distinguish this latest baseline from the historical 316-node checkpoints above. Human-readable text, emphasized text, contrast, RTL semantics and screen-reader announcements remain subject to their respective independent acceptance gates.
