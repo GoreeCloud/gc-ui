@@ -137,6 +137,8 @@ jobs:
         run: npm run release:foundations:verify
       - name: Verify keyboard, theme and adaptive navigation in Firefox
         run: npm run test:e2e:firefox
+      - name: Verify all 24 Firefox expanded viewport screenshot pairs
+        run: npm run qa:visual:matrix:verify
       - name: Verify installed candidate contrast and accessibility evidence in Firefox
         run: npm run qa:seal-evidence:verify
       - name: Verify genuine 200% and 400% Firefox browser zoom
