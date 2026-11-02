@@ -6,6 +6,7 @@
 **License:** Original GoreeCloud UI source is Apache-2.0 (see [LICENSE](LICENSE)). Third-party assets under `assets/third-party/` retain their own upstream licenses and attribution; they are not part of the scoped Foundations package. The full source workspace remains an experimental alpha. The versioned Foundations 1.0.1 release has a separate, narrow supported export contract, verified independently.
 
 **GoreeCloud UI (GC UI) is one of the five Mandatory Integrated Platform Systems (MIPS) and GoreeCloud's sole design and experience authority.** GC UI is GoreeCloud's original adaptive interface design language. See [current platform-system classification](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-a-mandatory-integrated-platform-system).
+The five-MIPS integration requirement is separate from the historical "fifth Integral Platform System" wording in the canonical Drive instructions; the [classification note](docs/DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-a-mandatory-integrated-platform-system) preserves both without claiming the historical category has been formally retired.
 
 **GoreeCloud UI** is the full public product name; **GC UI** is its short form. See [Brand naming](docs/BRAND_NAMING.md) for usage rules.
 
@@ -69,6 +70,8 @@ tests/                    Dependency-free token contract tests
 ## Design direction
 
 **Calm information. Expressive personality. Purposeful depth.** Read the [language specification](docs/DESIGN_LANGUAGE.md) and [component contract](docs/COMPONENTS.md) before adding new UI.
+
+**Mandatory visual-quality standard:** Every GoreeCloud interface must be beautiful, modern, polished, premium, and eye-catching; plain, basic, boring, generic, or merely functional UI is not acceptable. Apply the [premium interface directive](docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) and the [component visual-acceptance gate](docs/COMPONENTS.md#mandatory-visual-acceptance-gate) to all products, themes, sizes, and interface states. This is a required target, not a claim that current consumers have passed acceptance.
 
 The founder-provided [web and desktop visual reference atlas](docs/OWNER_VISUAL_REFERENCE_ATLAS_2026_10_27.md) records 18 screenshot references, their design lessons, and proposed product applications. It is inspiration and supporting analysis, not a replacement for GC UI contracts or proof that the depicted functionality has shipped.
 

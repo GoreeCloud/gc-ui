@@ -8,6 +8,8 @@
 
 The current five MIPS are GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh.
 
+**Classification and provenance boundary:** My current MIPS requirement names five **Mandatory Integrated Platform Systems** for the Anchor applicability gate. My canonical `GoreeCloud/GoreeCloud-Instructions.md` also calls GC UI the fifth **Integral Platform System** in an older classification. Those two labels and counts must not be treated as interchangeable or used to declare the older classification nonexistent. This repository records the five-MIPS requirement while preserving historical terminology and provenance; any governance terminology reconciliation must occur in the authoritative Drive record, not by changing this repository alone.
+
 GC UI's authority covers cross-product design and experience: visual and interaction language, design tokens, typography, color, iconography, components, navigation, layouts, motion, accessibility, adaptive/native interfaces, and truthful representation of platform state. GC UI does **not** assume the factual, security, privacy, identity, management, policy, recovery, coordination, or observability authority of the other systems simply because it displays their states.
 
 Every in-scope GoreeCloud component must evaluate the five current MIPS according to applicability and verify any required integration. A headless component may document why graphical presentation is not applicable; a name, package, or badge alone does not establish conformance.

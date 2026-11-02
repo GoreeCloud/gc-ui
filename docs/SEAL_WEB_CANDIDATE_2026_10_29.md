@@ -72,6 +72,48 @@ open limitations, governing lifecycle standard, date and explicit authorized
 self-review/approval. Preserve provenance of the decision. Do not infer
 approval from an automated CI conclusion.
 
+## 2026-11-01 scoped visual and contrast qualification continuation
+
+The experimental workspace remains `0.2.0-alpha.1`; the opt-in web-controls `0.2.0-seal.0` archive is **unpublished**. This dated update does **not** change the historical pending entries above into blanket release approval.
+
+- Before this qualification continuation, canonical `main` at `89fec9f35f51d34d945751eb74e3df8629ace49a` had passed all nine exact-head [core/browser](https://github.com/GoreeCloud/gc-ui/actions/runs/41343703219) and [native-host](https://github.com/GoreeCloud/gc-ui/actions/runs/41343703209) jobs after a scoped form-control availability fix.
+- At that baseline, local `npm run test:e2e:visual` passed 26 tests and generated 22 full-page screenshots. `qa:visual-evidence:verify` verified 22/22 PNG names, dimensions and hashes. Desktop/light/dark, compact/expanded, high-contrast, environment, forms and Experience Studio views were sampled through contact sheets; this is preliminary visual triage, **not** an exhaustive screen-by-screen optical acceptance.
+- The installed Seal candidate's four browser scenarios (desktop light; mobile dark; RTL at 320px; mobile forced-colors) passed. Both closed and expanded menu `aria-controls` targets were checked for a single connected menu node, while axe retained its inconclusive findings instead of suppressing them.
+- Added **measured opaque menu-item text contrast** to the candidate browser evidence and fail-closed manifest verifier: 14.33:1 in desktop light and mobile RTL, 9.86:1 in mobile dark. These are browser-computed **foreground versus the menu item's own opaque background**, not pixel-sampled overlapping content or full WCAG conformance.
+- **Forced-color evidence is browser-specific.** Chromium reports a translucent `rgba(..., 0.8)` menu-item background, so no simple two-color text ratio is asserted in that case. Firefox can expose opaque computed system colors; such results must be measured against the same 4.5:1 threshold rather than rejected because they differ from Chromium. The menu overlaps some underlying content in the narrow RTL expanded state; retained stack/geometry samples distinguish occlusion from a proven contrast failure. Human assistive-technology announcement of the related menu ARIA attributes and broader composited/pixel visual acceptance remain unverified.
+- The new contrast evidence and verifier are in development and require **exact-head GitHub checks and merged-main readback** before this checkpoint can be cited as integrated. No runtime CSS, candidate exports, native builds, consumers, production deployment, stable tag or publishing permissions have been changed in this qualification step.
+
+**Still required for a Seal decision:** scoped browser compatibility declaration, complete relevant visual state review and defect disposition, applicable assistive-technology/contrast review, supported package/version and archive digest validation, known limitations, and a separate explicitly recorded authorized lifecycle decision. Do not treat these acceptance records as an approval or silently relax the release gates.
+
+## 2026-11-01 Firefox forced-colors accessibility correction
+
+The first expanded-menu opaque contrast check was introduced in [PR #146](https://github.com/GoreeCloud/gc-ui/pull/146), with all nine exact-head checks passing and merged source `f7e1b0eeae50b144390189fc5d13a10bd96bf580`. The additional *Firefox* installed-candidate acceptance run exposed a real browser-specific issue: the focused menu item rendered with **2.94:1 foreground/background contrast**, despite the earlier Chromium case reporting a translucent computed value for which no simple ratio could be asserted.
+
+- Root cause: the shared component CSS forced the focused menu item to system `Highlight` plus `HighlightText`; the browser's resolved pair did not guarantee 4.5:1.
+- Remediation under review: render focused menu text over system `Canvas` using `CanvasText`, with a visible `Highlight` outline. Other themes continue using the existing semantic palette. The revised logic tests every browser-computed **opaque** pair against 4.5:1 and retains `null` only for actual transparent values.
+- Regression containment: include the installed-candidate four-scenario acceptance suite and its evidence verifier in the pinned Firefox CI job, with `axe-core` as a test-only dependency. Retain separate Chromium evidence, screenshots, assertions and before/after failure provenance.
+- A targeted Firefox forced-colors test passed after the CSS correction. **Full exact-head CI, post-merge acceptance, visual review, supported environment declaration and Seal decision are still separate gates.** The candidate archive hash necessarily changes when the candidate CSS changes. Do not reuse the pre-remediation tarball checksum as the revised candidate digest.
+
+## 2026-11-01 focused menu screenshot provenance hardening
+
+Following the [Firefox forced-color repair](https://github.com/GoreeCloud/gc-ui/pull/147) merged on `main` at `74244053f81d57bcb0d2b34defa0f9e6774e31d2`, the installed-candidate acceptance fixture captures the **actual open, focused, forced-colors menu surface** separately from its closed-page screenshot. A retained image alone is not proof of origin or visual acceptance; the deterministic verifier now requires this fifth PNG by exact filename, checks its PNG header/dimensions, checks its byte length and SHA-256 against the same browser scenario JSON, and copies its digest/dimensions into the revision-labeled Seal acceptance manifest.
+
+The other three scenarios explicitly record no focused-menu screenshot and the verifier refuses unexpected additional evidence. Both Chromium and Firefox four-scenario candidate tests and the strict manifest verifier passed locally for this proposal, preserving the original axe inconclusive records, open/closed popup linkage, computed contrast and limitations. Browser-focused image evidence supports human visual inspection, not manual signoff or assistive-technology speech claims. The revised work still requires exact-head CI and merged-main source verification before treating the change as integrated.
+
+## 2026-11-01 browser-build provenance qualification
+
+A new fail-closed **QA-only** test/verifier records the actual browser engine and version per installed-candidate scenario and rejects a mixed browser-engine/version manifest. The reproducible [browser test matrix](QA_SEAL_BROWSER_MATRIX_2026_11_01.md) records local Chromium `156.0.8078.4` and Firefox `157.0`, each with four passing offline-installed candidate scenarios and a passing evidence verifier at source `0499c2af20149ff1a821fccd51880ab0117df8e1`.
+
+The private 15-file tarball SHA-256 is unchanged (`d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`). The owner has explicitly approved the visual direction of six experimental UI areas at `fc95c3e89c14341dc5b685b6bbe7424bdd93b4f8`, with recorded exceptions. This is not candidate Seal release approval and not an accessibility, product, native-host, or deployment authorization.
+
+**Scope caution:** a recorded browser build is an *observed test environment*, not a minimum supported version, full compatibility claim, or a pledge covering untested browsers and OSes. Browser support must still be declared only after supported-platform reviews, applicable human assistive-technology assessment, unresolved axe/composited visual disposition, and a distinct recorded lifecycle decision. The QA change in this section requires exact-head CI and merged-main readback before being described as integrated.
+
+## 2026-11-01 — Firefox forced-color popup contrast correction (QA candidate revision)
+
+A targeted expanded Forms suggestion test found the native Firefox 157 forced-colors `Highlight`/`HighlightText` pair at **2.94:1** on the selected option. Changed the selected state to `Canvas`/`CanvasText` with an outlined `Highlight` indicator, retaining keyboard and ARIA behavior. The dated [popup contrast evidence](QA_POPUP_CONTRAST_2026_11_01.md) covers Forms suggestions and Components action-menu enabled text in real browser light/dark/forced-color states, including conservative black/white underlay composition.
+
+The offline-built **unpublished** QA package remains 15 files but its exact archive changed to SHA-256 **`84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`** from the earlier `d4e33010e56f8a0383a299bd159ae86b6ac1610825abe309f679497ac4ee9ea3`. The prior archive's historic test evidence remains tied to that prior SHA; no test report may be silently reused as proof for the changed archive. The candidate remains QA-only and the workspace remains Alpha. Revalidate installed-package acceptance, browser provenance, source/pack, and CI at the exact correction revision before treating the new SHA as qualified. No package publication, production deployment, stable classification, or owner Seal approval is authorized by this fix.
+
 ## Related sources
 
 - [Scoped release policy](STABLE_RELEASE_SCOPE.md)

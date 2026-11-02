@@ -53,3 +53,18 @@ test('light direction follows RTL logical leading/trailing axes',async({page})=>
  expect(before).toBe('12%');
  expect(after).toBe('88%');
 });
+
+test('licensed fixed-ink glyphs remain legible in dark mode without editing their sprites',async({page})=>{
+ await page.goto('/lab/environment.html');
+ const icons=page.locator('.provider[data-gc-fixed-ink] .icons svg');
+ await expect(page.locator('.provider[data-gc-fixed-ink]')).toHaveCount(2);
+ await expect(icons).toHaveCount(6);
+ await expect(icons.first()).toHaveCSS('filter','none');
+ const sourceBefore=await icons.evaluateAll(els=>els.map(el=>el.querySelector('use')?.getAttribute('href')));
+ await page.getByRole('button',{name:'Switch to dark appearance'}).click();
+ await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
+ for(const icon of await icons.all())await expect(icon).toHaveCSS('filter','invert(1)');
+ await expect(page.locator('.provider').first().locator('.icons svg').first()).toHaveCSS('filter','none');
+ const sourceAfter=await icons.evaluateAll(els=>els.map(el=>el.querySelector('use')?.getAttribute('href')));
+ expect(sourceAfter).toEqual(sourceBefore);
+});

@@ -256,6 +256,41 @@ for(const scenario of scenarios){
    .flatMap(item=>item.nodes.map(node=>node.target[0])).filter(Boolean);
   const inconclusiveContrastSamples=await page.evaluate(browserContrastStack,contrastSelectors);
   expect(inconclusiveContrastSamples.every(sample=>sample.found)).toBe(true);
+  // Axe cannot resolve the expanded menu's composited backdrop. A fully
+  // opaque menu-item background permits a direct browser-computed contrast
+  // measurement; forced-color transparency does not, and stays unresolved.
+  const menuItemComputedContrast=await page.evaluate(async prefix=>{
+   const {contrastRatio}=await import(prefix+'src/index.mjs');
+   const css=getComputedStyle(document.getElementById('duplicate'));
+   const toHex=value=>{
+    const match=/^rgb\(\s*(\d+),\s*(\d+),\s*(\d+)\s*\)$/.exec(value);
+    if(!match||match.slice(1).some(n=>Number(n)>255))return null;
+    return '#'+match.slice(1).map(n=>Number(n).toString(16).padStart(2,'0')).join('');
+   };
+   const foreground=toHex(css.color),background=toHex(css.backgroundColor);
+   return {foreground:css.color,background:css.backgroundColor,
+    opaqueBackground:background!==null,
+    ratio:foreground&&background?contrastRatio(foreground,background):null};
+  },prefix);
+  // Forced-colors computed styles vary across engines: Firefox may resolve
+  // a fully opaque system color where Chromium reports translucent RGBA.
+  // Measure any actual opaque pair; retain null only for unmeasurable blends.
+  if(!scenario.forced)expect(menuItemComputedContrast.opaqueBackground).toBe(true);
+  if(menuItemComputedContrast.opaqueBackground)
+   expect(menuItemComputedContrast.ratio).toBeGreaterThanOrEqual(4.5);
+  else{
+   expect(scenario.forced).toBe(true);
+   expect(menuItemComputedContrast.ratio).toBeNull();
+  }
+  // Retain the exact expanded focused-menu appearance on each browser.
+  // It makes forced-color before/after inspection possible without treating
+  // an automated contrast ratio as full visual or AT signoff.
+  let focusedMenuImage=null;
+  if(scenario.forced){
+   await expect(page.getByRole('menu',{name:'More actions'})).toBeVisible();
+   await expect(page.locator('#duplicate')).toBeFocused();
+   focusedMenuImage=await page.locator('#actions-menu').screenshot({animations:'disabled'});
+  }
   await page.keyboard.press('Escape');
   await expect(page.locator('#actions-menu')).toBeHidden();
   await expect(page.locator('#actions')).toHaveAttribute('aria-expanded','false');
@@ -281,17 +316,32 @@ for(const scenario of scenarios){
   const dir=resolve(testInfo.project.outputDir,'seal-review');
   await mkdir(dir,{recursive:true});
   await writeFile(join(dir,scenario.id+'.png'),png);
+  if(focusedMenuImage)
+   await writeFile(join(dir,scenario.id+'-menu-open.png'),focusedMenuImage);
+  const runningBrowser=page.context().browser();
+  if(!runningBrowser)throw new Error('Missing actual installed-candidate browser identity');
+  const browserEngine=runningBrowser.browserType().name();
+  const browserVersion=runningBrowser.version();
+  expect(['chromium','firefox']).toContain(browserEngine);
+  expect(browserVersion).toMatch(/^\d+\.\d+(?:\.\d+){0,2}$/);
   const report={
    schema:'gc-ui-seal-web-browser-evidence.v1',revision:process.env.GITHUB_SHA??null,
+   browserEngine,browserVersion,
    scenario:scenario.id,width:scenario.width,height:scenario.height,
    candidateVersion:setup.version,mode:scenario.mode,rtl:scenario.rtl,
    forcedColors:scenario.forced,primaryContrast:setup.primaryContrast,overflow,axe,
-   axeOpen,inconclusiveContrastSamples,menuAria:{closed:menuClosed,open:menuOpen},
+   axeOpen,inconclusiveContrastSamples,menuItemComputedContrast,
+   menuAria:{closed:menuClosed,open:menuOpen},
    screenshotSha256:sha(png),screenshotBytes:png.length,
+   focusedMenuScreenshotSha256:focusedMenuImage?sha(focusedMenuImage):null,
+   focusedMenuScreenshotBytes:focusedMenuImage?.length??null,
    limitations:'Browser QA of an installed candidate fixture; not production-consumer, manual visual, or human AT certification.'
   };
   await writeFile(join(dir,scenario.id+'.json'),JSON.stringify(report,null,2)+'\n');
   await testInfo.attach(scenario.id,{path:join(dir,scenario.id+'.png'),contentType:'image/png'});
+  if(focusedMenuImage)await testInfo.attach(scenario.id+'-menu-open',{
+   path:join(dir,scenario.id+'-menu-open.png'),contentType:'image/png'
+  });
   await page.evaluate(()=>{for(const c of window.__sealControllers)c.destroy();});
  });
 }

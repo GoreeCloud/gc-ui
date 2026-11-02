@@ -1,5 +1,31 @@
 # GC UI Changelog
 
+## Experimental popup contrast and forced-colors correction (2026-11-01)
+- Corrected a confirmed Firefox forced-colors autocomplete selected-item text ratio of 2.94:1 by using the readable system Canvas/CanvasText pair and preserving a 3px Highlight selection outline. No experimental runtime-controller or published stable Foundations behavior changed.
+- Added cross-browser light, dark and forced-colors regression coverage for enabled Forms suggestions and Components menu text. The test conservatively composes actual browser-resolved foreground/background colors against black/white underlays and preserves untested pixel, screen-reader, gradient and glyph exceptions.
+- Rebuilt the **unpublished** private 15-file Seal QA candidate after the shared CSS change, with a new archive SHA-256 `84f1295b1a4e0857373ccce606a7e0a4502e9f11ebae07533811869d47aa9319`. This does not constitute Seal approval, publication, production deployment or all-product visual acceptance.
+
+## Seal candidate browser-build provenance (2026-11-01)
+- Record the actual running Chromium/Firefox engine and browser version in every installed-candidate acceptance report. The fail-closed verifier rejects missing or mixed provenance across scenarios while preserving all previously recorded axe inconclusives, screenshot hashes and menu state checks.
+- Add a dated browser evidence matrix distinguishing the two locally tested Playwright engine builds from any future declared support policy. This is QA-only: it changes neither the unpublished 15-file web candidate nor the owner-approved experimental UI direction or any lifecycle/deployment authorization.
+
+## Visual acceptance — experimental lab navigation and glyph clarity (2026-11-01)
+- Harmonized Material Environment and Experience Studio headers with a shared inset, rounded, semantic floating navigation surface. Added compact native `Explore labs` disclosures so all original desktop destinations remain accessible by touch and keyboard when links collapse on smaller viewports.
+- Corrected dark-mode display of locally bundled Octicons and Fluent glyph examples whose original fixed/default black paint was nearly invisible on dark backgrounds. The remedy is limited to the two identified demonstration cards; third-party SVG source, licenses and provenance remain unchanged.
+- Added responsive, RTL, forced-colors, keyboard and icon-visibility regression checks plus a dated screenshot-led acceptance checkpoint. These experimental-lab refinements do not change the published Foundations artifact, the private Seal candidate or the wider alpha lifecycle status.
+
+## Forms Lab floating navigation polish (2026-11-01)
+- Replaced the experimental Forms Lab's edge-attached rectangular header with inset, rounded, purposeful-elevation chrome using the existing GC UI semantic surface, outline and shape tokens. Preserved the native three-link navigation, visible focus and minimum 44px link heights.
+- Added an opaque, clearly bordered fallback in high-contrast, reduced-transparency and operating-system forced-colors modes. Compact navigation uses three equal-width tracks rather than wrapping its links onto a second row at 320px. Browser regressions check layout, RTL, touch targets, navigation and absence of horizontal overflow from 320px to desktop widths. This is a lab-only visual improvement, not a stable Foundations or Seal package promotion.
+
+## Firefox forced-colors menu text contrast (2026-11-01)
+- Corrected the experimental action-menu focused state in forced-colors mode: system `Canvas`/`CanvasText` now provide readable text, while a visible `Highlight` focus outline remains. A real Firefox installed-candidate test exposed a 2.94:1 `Highlight`/`HighlightText` pair before the repair; the targeted browser-computed text/background ratio afterward was 21:1.
+- Candidate acceptance now handles cross-browser opaque versus translucent forced-color computed styles without inventing contrast; Firefox CI also runs the four installed-candidate accessibility scenarios and retains focused-menu screenshot evidence. The broader workspace remains Alpha and the Seal candidate is unpublished.
+
+## Experimental form-control availability safeguards (2026-11-01)
+- Password-reveal and number-stepper event handlers now ignore synthetic clicks and changes when their native controls or host ancestors are disabled, hidden, inert, inaccessible, or detached. Explicit controller APIs retain their documented behavior.
+- Added Node regressions and real Chromium/Firefox disabled-fieldset and ancestor-state acceptance; this is a scoped Seal-candidate stabilization change, **not** lifecycle approval, publishing, native-host certification, or ecosystem cutover.
+
 ## Bounded public npm registry readback (2026-10-19)
 - Cap read-only npm metadata and tarball responses at 128 KiB, with early declared-length rejection, incremental streaming limits, and stream cancellation on error.
 - Added fail-before-fix rejection tests for oversized tarballs and metadata, malformed lengths, and segmented-stream success; no npm credentials, publishing actions or registry state modified.

@@ -14,6 +14,13 @@ const title=document.getElementById('page-title');
 const subtitle=document.getElementById('page-subtitle');
 const contentTitle=document.getElementById('content-title');
 const crumb=document.getElementById('crumb-current');
+// Keep labels in bidi-isolated inline spans. The shell may be RTL even while
+// the English demo fixtures are LTR; translated RTL labels resolve naturally.
+function setIsolatedLabel(container,value){
+ const isolated=container.querySelector(':scope > bdi[dir="auto"]');
+ if(!isolated)throw new Error('Adaptive route label is missing its bidi isolate');
+ isolated.textContent=value;
+}
 const links=[...document.querySelectorAll('[data-gc-route]')];
 const themeToggle=document.getElementById('appearance-toggle');
 function routeFromHash(){const route=location.hash.slice(1);return Object.hasOwn(labels,route)?route:'overview'}
@@ -21,10 +28,10 @@ function renderRoute(){
  const route=routeFromHash(),current=labels[route];
  environment.set({context:route==='library'?'reading':route==='activity'?'analysis':'workspace'});
  document.title='GoreeCloud UI · '+route[0].toUpperCase()+route.slice(1);
- title.textContent=current.title;
- subtitle.textContent=current.subtitle;
- contentTitle.textContent=current.heading;
- crumb.textContent=route[0].toUpperCase()+route.slice(1);
+ setIsolatedLabel(title,current.title);
+ setIsolatedLabel(subtitle,current.subtitle);
+ setIsolatedLabel(contentTitle,current.heading);
+ setIsolatedLabel(crumb,route[0].toUpperCase()+route.slice(1));
  for(const link of links){
   if(link.dataset.gcRoute===route)link.setAttribute('aria-current','page');
   else link.removeAttribute('aria-current');

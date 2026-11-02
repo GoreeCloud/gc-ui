@@ -9,24 +9,28 @@
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="../styles/gc.v1.depth.css">
 <link rel="stylesheet" href="./experience-studio.css">
+<link rel="stylesheet" href="./floating-topbar.css">
 <script type="module" src="./experience-studio.mjs"></script>
 </head>
 <body>
 <a class="gc-skip" href="#main">Skip to studio</a>
 <div class="gc-environment studio">
- <header class="topbar">
+ <header class="topbar gc-lab-floating-topbar">
   <a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Experience Studio · Alpha</small></span></a>
   <nav aria-label="Other design labs"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
   <button id="appearance" class="mode-button" type="button" aria-label="Switch to dark appearance">Dark mode</button>
+  <details class="gc-lab-mobile-links"><summary>Explore labs</summary>
+   <nav aria-label="Mobile lab destinations"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
+  </details>
  </header>
  <main id="main">
   <section class="intro" aria-labelledby="studio-title">
    <p class="eyebrow">SEMANTIC DEPTH / ORIGINAL SCENES / ADAPTIVE PROFILES</p>
-   <h1 id="studio-title">One language.<br><em>Many environments.</em></h1>
-   <p>Illustrations add context, depth explains hierarchy, and transitions show continuity. Every layer remains legible when motion, glass, or atmosphere is turned off.</p>
+   <h1 id="studio-title"><bdi dir="auto">One language.</bdi><br><em><bdi dir="auto">Many environments.</bdi></em></h1>
+   <p><bdi dir="auto">Illustrations add context, depth explains hierarchy, and transitions show continuity. Every layer remains legible when motion, glass, or atmosphere is turned off.</bdi></p>
   </section>
   <section class="controls gc-depth-surface" data-gc-depth="e1" aria-labelledby="controls-title">
-   <div class="section-heading"><div><p class="eyebrow">EXPERIMENTAL CONTROLS</p><h2 id="controls-title">Tune the experience.</h2></div><p>These are explicit design profiles, not hardware detection or native SDK integration.</p></div>
+   <div class="section-heading"><div><p class="eyebrow">EXPERIMENTAL CONTROLS</p><h2 id="controls-title"><bdi dir="auto">Tune the experience.</bdi></h2></div><p>These are explicit design profiles, not hardware detection or native SDK integration.</p></div>
    <div class="fields">
     <label for="scene">Content context<select id="scene"><option value="workspace">Workspace</option><option value="reading">Reading</option><option value="analysis">Analysis</option></select></label>
     <label for="platform">Platform profile<select id="platform"><option value="web">Responsive web</option><option value="phone">Phone</option><option value="tablet">Tablet</option><option value="desktop">Desktop</option><option value="tv">Television</option><option value="wearable">Wearable</option><option value="spatial">Spatial computing</option></select></label>
@@ -42,7 +46,7 @@
    </div>
   </section>
   <section class="demo" aria-labelledby="demo-heading">
-   <div class="section-heading"><div><p class="eyebrow">THE COMPOSED MATERIAL</p><h2 id="demo-heading">Content drives the scene.</h2></div><p>Illustrations are original GC UI vector geometry, tinted by semantic color roles.</p></div>
+   <div class="section-heading"><div><p class="eyebrow">THE COMPOSED MATERIAL</p><h2 id="demo-heading"><bdi dir="auto">Content drives the scene.</bdi></h2></div><p>Illustrations are original GC UI vector geometry, tinted by semantic color roles.</p></div>
    <div class="composition">
     <article id="feature" class="feature gc-depth-surface" data-gc-depth="e2">
      <div class="scene-art" aria-hidden="true"><svg class="gc-scene" viewBox="0 0 280 176"><use id="scene-use" href="../assets/gc-scenes.svg#gc-scene-workspace"></use></svg></div>
@@ -62,7 +66,7 @@
    <p class="footnote">The browser preview does not claim native rendering. High contrast, forced colors, reduced transparency, reduced data and reduced motion remain authoritative.</p>
   </section>
   <section class="scene-index" aria-labelledby="scene-index-title">
-   <div class="section-heading"><div><p class="eyebrow">ORIGINAL GC UI VISUALS</p><h2 id="scene-index-title">Three purposeful scenes.</h2></div><p>Each works without photography, icon fonts, or third-party artwork.</p></div>
+   <div class="section-heading"><div><p class="eyebrow">ORIGINAL GC UI VISUALS</p><h2 id="scene-index-title"><bdi dir="auto">Three purposeful scenes.</bdi></h2></div><p>Each works without photography, icon fonts, or third-party artwork.</p></div>
    <div class="scene-list">
     <article class="gc-depth-surface scene-tile" data-gc-depth="e0"><svg class="gc-scene" aria-hidden="true" viewBox="0 0 280 176"><use href="../assets/gc-scenes.svg#gc-scene-workspace"></use></svg><h3>Workspace</h3><p>Creation and multitasking</p></article>
     <article class="gc-depth-surface scene-tile" data-gc-depth="e0"><svg class="gc-scene" aria-hidden="true" viewBox="0 0 280 176"><use href="../assets/gc-scenes.svg#gc-scene-reading"></use></svg><h3>Reading</h3><p>Quiet focus and legibility</p></article>

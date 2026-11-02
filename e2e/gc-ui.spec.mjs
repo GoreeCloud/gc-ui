@@ -896,3 +896,37 @@ test('tab keyboard navigation ignores host-hidden and detached actions',async({p
  await overview.press('ArrowRight');
  await expect(details).toHaveAttribute('aria-selected','true');
 });
+
+test('compact Components Lab uses a balanced section rhythm with visible anchors',async({page})=>{
+ for(const width of [320,375,520,600]){
+  await page.setViewportSize({width,height:760});
+  await page.goto('/lab/components.html');
+  const values=await page.evaluate(()=>{
+   const intro=getComputedStyle(document.querySelector('.intro'));
+   const section=getComputedStyle(document.querySelector('.lab-section'));
+   const root=document.documentElement;
+   return {heroTop:parseFloat(intro.paddingTop),heroBottom:parseFloat(intro.paddingBottom),
+    sectionTop:parseFloat(section.paddingTop),sectionBottom:parseFloat(section.paddingBottom),
+    content:root.scrollWidth,viewport:root.clientWidth};
+  });
+  expect(values.content,'reflow at '+width).toBeLessThanOrEqual(values.viewport+1);
+  if(width<=520){
+   expect(values.heroTop,'hero top at '+width).toBeLessThanOrEqual(72);
+   expect(values.heroBottom,'hero bottom at '+width).toBeLessThanOrEqual(54);
+   expect(values.sectionTop,'section start at '+width).toBeLessThanOrEqual(30);
+   expect(values.sectionBottom,'section end at '+width).toBeLessThanOrEqual(56);
+  }else{
+   expect(values.heroTop).toBeGreaterThanOrEqual(100);
+   expect(values.sectionBottom).toBeGreaterThanOrEqual(80);
+  }
+  const section=page.locator('.lab-section').first();
+  await section.evaluate(el=>el.scrollIntoView({behavior:'instant',block:'start'}));
+  await expect(section.getByRole('heading').first()).toBeInViewport();
+  const anchored=await page.evaluate(()=>{
+   const heading=document.querySelector('.lab-section h2').getBoundingClientRect();
+   const header=document.querySelector('.masthead').getBoundingClientRect();
+   return {headingTop:heading.top,headerBottom:header.bottom};
+  });
+  expect(anchored.headingTop,'header clearance at '+width).toBeGreaterThanOrEqual(anchored.headerBottom-1);
+ }
+});

@@ -87,7 +87,9 @@
 .gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio]):focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:-3px;background:var(--gc-v1-color-primary-container);color:var(--gc-v1-color-on-primary-container)}
 .gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio])[aria-disabled=true]{opacity:.55;cursor:not-allowed}
 .gc-menu-divider{height:1px;background:var(--gc-v1-color-outline);margin:6px 8px}
-@media(forced-colors:active){.gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio]):focus-visible{background:Highlight;color:HighlightText;outline-color:Highlight}}
+/* Some browser/system forced-color Highlight/HighlightText pairs fall below 4.5:1.
+   Preserve OS-controlled readable Canvas text and use Highlight for the focus outline. */
+@media(forced-colors:active){.gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio]):focus-visible{background:Canvas;color:CanvasText;outline-color:Highlight}}
 @media(forced-colors:active){.gc-menu :is([role=menuitem],[role=menuitemcheckbox],[role=menuitemradio])[aria-disabled=true]{color:GrayText;opacity:1}.gc-menu-divider{background:CanvasText}}
 
 
@@ -117,7 +119,7 @@
 .gc-empty-state h3{font-size:20px;margin:18px 0 8px}
 .gc-empty-state p{color:var(--gc-v1-color-on-surface-muted);font-size:14px;margin:0 0 20px}
 .gc-validation-summary[hidden],.gc-search-suggestions[hidden],.gc-search-clear[hidden],.gc-empty-state[hidden],.gc-banner[hidden]{display:none!important}
-@media(forced-colors:active){.gc-textarea,.gc-search-input,.gc-search-suggestions,.gc-empty-state,.gc-validation-summary{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important}.gc-search-suggestions [aria-selected=true]{background:Highlight;color:HighlightText}.gc-search-clear{color:ButtonText}.gc-validation-summary a{color:LinkText}}
+@media(forced-colors:active){.gc-textarea,.gc-search-input,.gc-search-suggestions,.gc-empty-state,.gc-validation-summary{background:Canvas!important;color:CanvasText!important;border:1px solid CanvasText!important}.gc-search-suggestions [aria-selected=true]{background:Canvas;color:CanvasText;outline:3px solid Highlight;outline-offset:-3px}.gc-search-clear{color:ButtonText}.gc-validation-summary a{color:LinkText}}
 
 /* Skip navigation is a common component utility, not exclusive to application shells. */
 .gc-skip-link{position:absolute;z-index:100;inset-inline-start:12px;inset-block-start:-100px;background:var(--gc-v1-color-surface);color:var(--gc-v1-color-on-surface);padding:10px 14px;border-radius:12px;text-decoration:underline}

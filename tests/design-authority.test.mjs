@@ -69,6 +69,8 @@ test('current GC UI guidance names exclusive successor and discloses governance 
  assert.match(doc,/permanent replacement of Glaze/);
  assert.match(doc,/Mandatory GoreeCloud-wide design mandate/);
  assert.match(doc,/five Mandatory Integrated Platform Systems/);
+ assert.match(doc,/must not be treated as interchangeable/);
+ assert.match(doc,/older classification/);
  assert.match(doc,/GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh/);
  assert.match(doc,/2026-10-19/);
  assert.match(doc,/No other design system is an approved GoreeCloud design authority/);

@@ -507,3 +507,112 @@ test('rapidly changing suggestions clears stale active descendants and keyboard 
  await expect(search).toBeFocused();
  await expect(search).toHaveAttribute('aria-expanded','false');
 });
+
+test('synthetic form-controller events honor disabled fieldsets and unavailable ancestors',async({page})=>{
+ await page.goto('/lab/forms.html');
+ const result=await page.evaluate(async()=>{
+  const {initPasswordReveal,initNumberStepper}=await import('/src/gc-form-controls.mjs');
+  const host=document.createElement('section');
+  const group=document.createElement('fieldset');
+  const password=document.createElement('input');
+  password.type='password';password.value='invented-demo-only';
+  const reveal=document.createElement('button');
+  reveal.type='button';reveal.setAttribute('aria-label','Reveal test value');
+  const quantity=document.createElement('input');
+  quantity.type='number';quantity.min='1';quantity.max='12';quantity.step='1';quantity.value='3';
+  const less=document.createElement('button'),more=document.createElement('button');
+  less.type='button';more.type='button';
+  group.append(password,reveal,quantity,less,more);
+  host.append(group);document.body.append(host);
+  const secret=initPasswordReveal(password,reveal);
+  const steps=initNumberStepper(quantity,less,more);
+  const click=control=>control.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+  try{
+   group.disabled=true;
+   const nativeInherited=reveal.matches(':disabled')&&more.matches(':disabled');
+   click(reveal);click(more);
+   const disabledIgnored=password.type==='password'&&steps.get()===3;
+   group.disabled=false;
+   group.setAttribute('aria-disabled','true');
+   click(reveal);click(more);
+   const ariaIgnored=password.type==='password'&&steps.get()===3;
+   group.removeAttribute('aria-disabled');
+   host.hidden=true;
+   click(reveal);click(more);
+   const hiddenIgnored=password.type==='password'&&steps.get()===3;
+   host.hidden=false;
+   click(reveal);click(more);
+   const recovered=password.type==='text'&&steps.get()===4;
+   quantity.disabled=true;
+   click(less);
+   const inputDisabledIgnored=steps.get()===4;
+   quantity.disabled=false;
+   click(less);
+   const inputRecovered=steps.get()===3;
+   return {nativeInherited,disabledIgnored,ariaIgnored,hiddenIgnored,recovered,inputDisabledIgnored,inputRecovered};
+  }finally{
+   secret.destroy();steps.destroy();host.remove();
+  }
+ });
+ expect(result).toEqual({
+  nativeInherited:true,disabledIgnored:true,ariaIgnored:true,hiddenIgnored:true,
+  recovered:true,inputDisabledIgnored:true,inputRecovered:true
+ });
+});
+
+test('Forms Lab header floats with rounded chrome and navigable links across viewports and RTL',async({page})=>{
+ for(const width of [320,375,520,760,1440]){
+  await page.setViewportSize({width,height:812});
+  await page.goto('/lab/forms.html');
+  for(const dir of ['ltr','rtl']){
+   await page.evaluate(dir=>{document.documentElement.dir=dir},dir);
+   const result=await page.evaluate(()=>{
+    const header=document.querySelector('.gc-form-header'),style=getComputedStyle(header);
+    const bounds=header.getBoundingClientRect();
+    const links=[...header.querySelectorAll('nav a')].map(a=>{
+     const b=a.getBoundingClientRect();
+     return {label:a.textContent.trim(),height:b.height,left:b.left,right:b.right};
+    });
+    const content=document.querySelector('.gc-form-layout').getBoundingClientRect();
+    return {left:bounds.left,right:bounds.right,bottom:bounds.bottom,
+     width:document.documentElement.clientWidth,
+     scrollWidth:document.documentElement.scrollWidth,
+     radius:parseFloat(style.borderTopLeftRadius),
+     mainTop:content.top,links};
+   });
+   expect(result.left,'header inset '+width+' '+dir).toBeGreaterThanOrEqual(10);
+   expect(result.width-result.right,'header end inset '+width+' '+dir).toBeGreaterThanOrEqual(10);
+   expect(result.radius,'header radius '+width+' '+dir).toBeGreaterThanOrEqual(20);
+   expect(result.scrollWidth,'overflow '+width+' '+dir).toBeLessThanOrEqual(result.width+1);
+   expect(result.mainTop,'content clearance '+width+' '+dir).toBeGreaterThanOrEqual(result.bottom);
+   expect(result.links.map(x=>x.label)).toEqual(['Components','Adaptive','Registry']);
+   for(const link of result.links){
+    expect(link.height,'tap target '+link.label+' '+width).toBeGreaterThanOrEqual(44);
+    if(width===320)expect(link.height,'single-line compact label '+link.label).toBeLessThanOrEqual(48);
+    expect(link.left,'in-bounds link '+link.label).toBeGreaterThanOrEqual(0);
+    expect(link.right,'in-bounds link '+link.label).toBeLessThanOrEqual(result.width);
+   }
+  }
+ }
+ await page.evaluate(()=>{document.documentElement.dir='ltr'});
+ const components=page.getByRole('navigation',{name:'Lab navigation'}).getByRole('link',{name:'Components'});
+ await components.focus();
+ await expect(components).toBeFocused();
+ await page.keyboard.press('Enter');
+ await expect(page).toHaveURL(/\/lab\/components\.html$/);
+});
+
+test('Forms Lab floating header keeps an opaque boundary in forced colors',async({page})=>{
+ await page.setViewportSize({width:320,height:760});
+ await page.emulateMedia({forcedColors:'active'});
+ await page.goto('/lab/forms.html');
+ const state=await page.locator('.gc-form-header').evaluate(el=>{
+  const s=getComputedStyle(el),b=el.getBoundingClientRect();
+  return {radius:parseFloat(s.borderTopLeftRadius),background:s.backgroundColor,border:s.borderTopColor,
+   shadow:s.boxShadow,width:b.width};
+ });
+ expect(state.radius).toBeGreaterThanOrEqual(20);
+ expect(state.background).not.toBe('rgba(0, 0, 0, 0)');
+ expect(state.shadow).toBe('none');
+ await expect(page.getByRole('navigation',{name:'Lab navigation'}).getByRole('link',{name:'Registry'})).toBeVisible();
+});

@@ -22,7 +22,7 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
 .candidate-note{font-size:13px;color:var(--gc-v1-color-on-surface-muted);margin:22px 0 66px}footer{text-align:center;color:var(--gc-v1-color-on-surface-muted);font-size:13px;padding:30px 20px 54px}
 @media(max-width:860px){.setting-surface{grid-template-columns:1fr 1fr}.component-grid{grid-template-columns:1fr}.section-head{display:block}.masthead nav{display:none}}
 @media(max-width:520px){:root[data-gc-mode=light] .intro>.summary{color:color-mix(in srgb,var(--gc-v1-color-on-surface-muted) 75%,var(--gc-v1-color-on-canvas))}}
-@media(max-width:520px){main{width:calc(100% - 28px)}.intro{padding:92px 0 66px}.intro h1{font-size:52px}.setting-surface{grid-template-columns:1fr;padding:20px}.specimen{padding:20px}.repo{display:none}.material-scene{padding:14px;min-height:390px}.material-card{padding:20px}.floating-control{inset-inline-end:14px;inset-block-end:18px}.gc-button{white-space:normal}}
+@media(max-width:520px){main{width:calc(100% - 28px)}.intro{padding:68px 0 50px}.intro h1{font-size:52px}.lab-section{padding:28px 0 54px}.setting-surface{grid-template-columns:1fr;padding:20px}.specimen{padding:20px}.repo{display:none}.material-scene{padding:14px;min-height:390px}.material-card{padding:20px}.floating-control{inset-inline-end:14px;inset-block-end:18px}.gc-button{white-space:normal}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 
 .glyph-grid{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:12px}

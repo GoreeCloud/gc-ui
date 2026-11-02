@@ -18,7 +18,37 @@
       "operating-systems",
       "all-other-goreecloud-controlled-designed-surfaces"
     ],
-    "predecessorAliasesUnapproved": true
+    "predecessorAliasesUnapproved": true,
+    "premiumVisualQualityMandate": {
+      "effectiveDate": "2026-10-31",
+      "mandatory": true,
+      "scope": [
+        "applications",
+        "websites",
+        "dashboards",
+        "service-interfaces",
+        "all-other-user-facing-goreecloud-surfaces"
+      ],
+      "requiredQualities": [
+        "beautiful",
+        "modern",
+        "polished",
+        "premium",
+        "eye-catching"
+      ],
+      "unacceptableQualities": [
+        "plain",
+        "basic",
+        "boring",
+        "generic",
+        "unfinished",
+        "merely-functional"
+      ],
+      "designSpecification": "docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard",
+      "visualAcceptanceCriteria": "docs/COMPONENTS.md#mandatory-visual-acceptance-gate",
+      "pullRequestReviewTemplate": ".github/PULL_REQUEST_TEMPLATE.md",
+      "allConsumerVisualAcceptanceVerified": false
+    }
   },
   "verified": {
     "currentSourceVersion": "0.2.0-alpha.1",

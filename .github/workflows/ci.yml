@@ -98,8 +98,14 @@ jobs:
         run: npm run release:foundations:verify
       - name: Test responsive browser behaviors
         run: npm run test:e2e
-      - name: Verify all 21 actual-build full-page visual evidence files
+      - name: Verify all 22 actual-build full-page visual evidence files
         run: npm run qa:visual-evidence:verify
+      - name: Verify all 24 expanded viewport screenshots and geometry records
+        run: npm run qa:visual:matrix:verify
+      - name: Verify 12 open interactive-state visual screenshots and geometry records
+        run: npm run qa:visual:interactive:verify
+      - name: Verify ten rendered non-text glyph screenshots and contrast measurements
+        run: npm run qa:visual:nontext:verify
       - name: Verify genuine 200% and 400% Chromium browser zoom
         run: |
           sudo apt-get update
@@ -115,6 +121,7 @@ jobs:
             test-results/
             playwright-report/
             dist/qa/accessibility-review/
+            dist/qa/accessibility-triage/
           retention-days: 7
           if-no-files-found: ignore
 
@@ -127,14 +134,22 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Install pinned Playwright runner
-        run: npm install --no-save --no-package-lock @playwright/test@1.64.1
+      - name: Install pinned Playwright and axe runner
+        run: npm install --no-save --no-package-lock @playwright/test@1.64.1 axe-core@4.10.3
       - name: Install Firefox browser and dependencies
         run: npx playwright install --with-deps firefox
       - name: Install Foundations fixture from tarball
         run: npm run release:foundations:verify
       - name: Verify keyboard, theme and adaptive navigation in Firefox
         run: npm run test:e2e:firefox
+      - name: Verify all 24 Firefox expanded viewport screenshot pairs
+        run: npm run qa:visual:matrix:verify
+      - name: Verify 12 Firefox interactive-state screenshot pairs
+        run: npm run qa:visual:interactive:verify
+      - name: Verify ten rendered non-text glyph screenshots and contrast measurements
+        run: npm run qa:visual:nontext:verify
+      - name: Verify installed candidate contrast and accessibility evidence in Firefox
+        run: npm run qa:seal-evidence:verify
       - name: Verify genuine 200% and 400% Firefox browser zoom
         run: |
           sudo apt-get update

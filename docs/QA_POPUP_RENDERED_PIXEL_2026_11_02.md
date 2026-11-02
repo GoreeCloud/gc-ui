@@ -1,0 +1,11 @@
+# GC UI — Rendered-pixel popup backdrop checkpoint (2026-11-02)
+
+This bounded QA check expands existing theoretical popup contrast calculations by sampling actual rendered and composited backdrop pixels in the experimental Components menu and Forms autocomplete. The established sampleBackdrop() helper temporarily makes the tested item's text color transparent, captures its own real browser screenshot, computes minimum sRGB contrast against the computed foreground, and restores the original inline color/CSS priority afterward.
+
+Tested configurations: 375px light, 375px dark, and 768px RTL, in Chromium and Firefox. The test covers two nonfocused enabled Components menu items and one nonfocused Forms suggestion in each configuration. For all these tested sample regions, the minimum ratio remained above 4.5:1; the local browser runs passed 6/6 Chromium and 6/6 Firefox.
+
+Important measurement limit: the initial experimental scan of the focused first menu item and selected suggestion included the focus outline or selected-item neighboring backgrounds within the screenshot rectangle, giving a false minimum unrelated to text. A Firefox dark suggestion also showed this boundary-contamination behavior for an adjacent item. The final regression therefore deliberately samples only nonfocused ordinary-text item regions; focused/selected cases remain covered by the existing popup-effective-contrast calculated/background checks and real-browser interaction/forced-colors tests. The new test does not waive or settle those cases, nor does it claim a whole-surface minimum for all states.
+
+This is actual screenshot backdrop evidence for a small set of ordinary text items, not pixel-perfect individual glyph contrast or an all-browser WCAG audit. All 30 axe inconclusive checks (318 node occurrences/180 targets), human visual signoff, native/platform AT acceptance, genuine localization and experimental Stable/Seal release gates remain separate. No UI runtime style, production system or release changes were made.
+
+Related: [interactive-state visual checks](QA_INTERACTIVE_STATES_2026_11_02.md), [axe triage](QA_AXE_INCOMPLETE_TRIAGE.md), [stabilization issue #78](https://github.com/GoreeCloud/gc-ui/issues/78).
