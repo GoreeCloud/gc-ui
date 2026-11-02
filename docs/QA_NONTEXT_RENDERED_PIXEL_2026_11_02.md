@@ -24,3 +24,7 @@ The full axe incomplete inventory (historically 30 checks / 318 occurrences / 18
 No production deployment, package publication, security review approval or experimental Stable/Seal promotion.
 
 Related: [Non-text semantics](QA_NONTEXT_SYMBOL_SEMANTICS_2026_11_02.md), [axe manual triage](QA_AXE_INCOMPLETE_TRIAGE.md), [stabilization tracker](https://github.com/GoreeCloud/gc-ui/issues/78).
+
+## 2026-11-02 QA evidence identity hardening
+
+The independent screenshot-metadata verifier now requires the **exact five expected symbol selectors**, including their lab and order, instead of accepting any selector starting with a dot. Five pure unit tests exercise valid records, duplicates, substitutions, reordering, omissions, invalid sample data and mismatched metadata. Screenshot integrity and the recorded sampled ratios remain scoped evidence: the verifier **does not independently remeasure foreground/background contrast from the PNG bytes**, resolve the remaining axe incompletes, or replace human visual acceptance.
