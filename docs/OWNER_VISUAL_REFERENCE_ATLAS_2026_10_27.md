@@ -235,7 +235,7 @@ For screen readers, announce meaningful status changes in a nonspammy live regio
 
 ## Addendum — Liquid glass material reference (November 3, 2026)
 
-**Source and status.** I supplied the image \`Screenshot_20261103-162733_TikTok_1.png\` on November 3, 2026, with the instruction “Document this.” The visible design-demo text says **“Liquid glass”**, **“Blur, light edges, depth.”**, and **“Use it for: cards, nav bars, buttons.”** This is a founder-supplied aesthetic reference for evaluation, not a directive to copy another product’s implementation or an assertion that the depicted effect has already shipped in GC UI. The source image bytes are **not** part of this repository. Its creator, licensing, ownership and right to redistribute have not been verified; do not commit or redistribute them without clearance.
+**Source and status.** I supplied the image `Screenshot_20261103-162733_TikTok_1.png` on November 3, 2026, with the instruction “Document this.” The visible design-demo text says **“Liquid glass”**, **“Blur, light edges, depth.”**, and **“Use it for: cards, nav bars, buttons.”** This is a founder-supplied aesthetic reference for evaluation, not a directive to copy another product’s implementation or an assertion that the depicted effect has already shipped in GC UI. The source image bytes are **not** part of this repository. Its creator, licensing, ownership and right to redistribute have not been verified; do not commit or redistribute them without clearance.
 
 ### Visible reference anatomy — observation, not measured specifications
 
@@ -256,24 +256,24 @@ Use GC UI's existing **Canvas → Surface → Lens** architecture. Canvas carrie
 
 **Recommended applications.** Consider a floating bottom navigation dock, compact overlay toolbar, small contextual popover, or carefully scoped primary control area. A selected hero/promo demonstration may use the treatment where the effect contributes clear hierarchy. Standard cards, data tables, file lists, forms, dashboards, long text, security alerts and critical workflows should normally use the existing opaque/tonal Surface treatments. Avoid glass-on-glass stacking and making the background itself a control-state indicator.
 
-**Existing implementation surfaces to reuse, not fork:** \`styles/gc.v1.materials.css\`, \`src/gc-surface-runtime.mjs\`, and the \`data-gc-treatment="lens"\` contract documented in [Surface & Environment](SURFACES_ENVIRONMENT.md); respect [Token Implementation](TOKENS_IMPLEMENTATION.md) and active semantic foreground/background roles. These paths are references to the repository's documented implementation surface, **not evidence that this screenshot's precise appearance is implemented or approved**. No new palette, token namespace, component API or dependency is approved by this addendum.
+**Existing implementation surfaces to reuse, not fork:** `styles/gc.v1.materials.css`, `src/gc-surface-runtime.mjs`, and the `data-gc-treatment="lens"` contract documented in [Surface & Environment](SURFACES_ENVIRONMENT.md); respect [Token Implementation](TOKENS_IMPLEMENTATION.md) and active semantic foreground/background roles. These paths are references to the repository's documented implementation surface, **not evidence that this screenshot's precise appearance is implemented or approved**. No new palette, token namespace, component API or dependency is approved by this addendum.
 
 **Suggested web implementation approach for future evaluation (conceptual):**
 
 1. Render a stable, opaque Canvas first. Apply only approved semantic environmental washes when illumination is enabled; keep them static, diffuse and spatially restrained.
-2. Create the Lens using the existing GC UI treatment/token path. Progressive \`backdrop-filter\` blur/saturation may enhance it where supported, but must never be the only reason the text or controls are readable.
+2. Create the Lens using the existing GC UI treatment/token path. Progressive `backdrop-filter` blur/saturation may enhance it where supported, but must never be the only reason the text or controls are readable.
 3. Use a restrained light edge, semantic outline and grounded shadow; retain the GC UI corner scale and visual focus state independently of translucency.
 4. Place short labels and actionable controls on Lens. Prefer a stable inset or solid backing for longer copy, numerals or dense metadata.
-5. Preserve identical essential meaning and interaction when material effects are off; in \`forced-colors\`, elevated-contrast, reduced-transparency, low-performance and data-saving conditions, favor the opaque semantic fallback. Motion is not required for this reference.
+5. Preserve identical essential meaning and interaction when material effects are off; in `forced-colors`, elevated-contrast, reduced-transparency, low-performance and data-saving conditions, favor the opaque semantic fallback. Motion is not required for this reference.
 6. Apply native platform materials and accessibility behavior when appropriate. Do not claim simulated CSS blur reproduces proprietary native optical behavior.
 
 ### Design acceptance and verification checklist
 
 - **Composition:** Does the entire screen remain premium, purposeful and calm without overwhelming the content with gradient decoration?
 - **Legibility:** Verify *rendered/composited* foreground/background contrast (target WCAG 2.2 AA: normally **4.5:1** for body text, **3:1** for qualifying large text and non-text UI boundaries); avoid assuming white text over a pink/blue scene is safe.
-- **States:** Verify current, selected, pressed, hover, disabled, loading, open/closed and \`:focus-visible\` states where applicable. Do not rely on blur, color or light alone to communicate state.
+- **States:** Verify current, selected, pressed, hover, disabled, loading, open/closed and `:focus-visible` states where applicable. Do not rely on blur, color or light alone to communicate state.
 - **Platforms:** Check narrow mobile widths, tablet and desktop layout, system text scaling, 200–400% zoom/reflow, touch targets, keyboard order, screen-reader names/states and RTL where supported.
-- **Preferences:** Test light and dark appearance, high contrast and \`forced-colors\`, reduced transparency, reduced motion and illumination-off fallback.
+- **Preferences:** Test light and dark appearance, high contrast and `forced-colors`, reduced transparency, reduced motion and illumination-off fallback.
 - **Performance:** Compare GPU/frame behavior and memory usage on representative supported hardware; blur must degrade to an opaque treatment without losing navigation or tasks.
 - **Fidelity:** Compare screenshots from the *running GC UI build* against this founder reference, while honoring semantic token constraints; record deviations and actual browser/device results.
 
