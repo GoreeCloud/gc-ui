@@ -63,6 +63,7 @@ for(const appearance of ['light','dark','high-contrast','forced-colors']){
    expect(pixels.geometryUnchanged,appearance+' '+selector+' layout preserved').toBe(true);
    expect(pixels.samples,appearance+' '+selector+' interior pixels').toBeGreaterThan(30);
    expect(pixels.min,appearance+' '+selector+' interior backdrop ratio').toBeGreaterThanOrEqual(3);
+   console.log('STEPPER_INTERIOR_BACKDROP',JSON.stringify({appearance,selector,min:pixels.min,samples:pixels.samples}));
   }
   // Disabled boundary states may legitimately be lower contrast: ensure
   // the control state is exposed rather than applying enabled requirements.
