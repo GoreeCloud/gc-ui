@@ -9,7 +9,7 @@ const desktop=join(root,'native','desktop');
 const p=JSON.parse(readFileSync(join(desktop,'package.json'),'utf8'));
 const lock=JSON.parse(readFileSync(join(desktop,'package-lock.json'),'utf8'));
 assert.equal(p.private,true,'Preview must remain private');
-assert.equal(p.devDependencies.electron,'44.9.0','Electron version drift');
+assert.equal(p.devDependencies.electron,'44.10.1','Electron version drift');
 assert.equal(lock.packages['node_modules/electron'].version,p.devDependencies.electron);
 assert.equal(lock.packages['node_modules/playwright'].version,p.devDependencies.playwright);
 const included=[

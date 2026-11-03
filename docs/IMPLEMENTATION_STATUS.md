@@ -1,5 +1,7 @@
 # GC UI — Implementation Status & Production Readiness
 
+**2026-11-01 optional desktop dependency security candidate:** native/desktop Electron 44.9.0 was flagged by npm audit as **High / GHSA-jr5w-w6x2-84p9** (compromised eMudhra intermediate CA trust). The separate patch candidate pins Electron **44.10.1**, updates its lock and portability assertion, and adds a full native dependency audit gate. This is a reviewable security candidate only until exact-head CI and integration are verified; the experimental workspace and Seal are not promoted. See [native host security scope](NATIVE_HOSTS.md).
+
 **2026-11-02 actual Linux Orca diagnostic checkpoint:** On merged main 7a662876c5e8, two independent actual Orca/Chromium/AT-SPI runs each passed all 4/4 expected speech classes, 6/6 exposed named roles, 2/2 browser phases and browser exit, following an owner-reported "Orca PASS". This closes the prior *automated isolated fixture* failure for those sessions, **not** human-heard AT, other platforms, broad visual or alpha/Seal approval. Earlier Orca failures remain historical evidence. See [dated Orca acceptance note](QA_ORCA_FOCUS_REVIEW_2026_11_01.md).
 
 **2026-11-01 targeted accessibility manual-review checkpoint:** The new axe triage groups 316 inconclusive node occurrences across 179 unique review targets without changing disposition; targeted Forms editable hit tests pass in Chromium and Firefox at four viewport/theme states. See [axe manual triage](QA_AXE_INCOMPLETE_TRIAGE.md). This is not whole-product visual or human AT acceptance.

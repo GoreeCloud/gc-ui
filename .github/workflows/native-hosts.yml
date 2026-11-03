@@ -139,6 +139,8 @@ jobs:
           node-version: '22'
       - name: Install locked optional Electron desktop runtime
         run: npm ci --prefix native/desktop --no-audit --no-fund
+      - name: Audit locked Electron preview dependencies (including runtime devDependency)
+        run: npm audit --prefix native/desktop --audit-level=high --no-fund
       - name: Verify actual native desktop launch, profile and appearance
         run: npm run qa:native:desktop
 
