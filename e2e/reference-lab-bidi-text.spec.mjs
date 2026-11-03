@@ -107,3 +107,27 @@ for(const width of [320,375,768,1440]){
   expect(overflow,'Catalog browse helper RTL horizontal overflow').toBeLessThanOrEqual(2);
  });
 }
+
+for(const width of [320,375,768,1440]){
+ test('Components personality helper retains LTR punctuation at '+width+'px RTL',async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await page.goto('/lab/components.html');
+  await page.evaluate(()=>{document.documentElement.dir='rtl'});
+  const sections=[
+   {heading:'settings-title',text:'Modify the experience without changing the meaning.'},
+   {heading:'components-title',text:'Buttons, states, tabs, inputs, dialogs and feedback.'},
+   {heading:'materials-title',text:'Canvas sets the scene. Surface carries information. Lens holds temporary interaction.'},
+   {heading:'glyphs-title',text:"Original 24-unit outline glyphs, sized and aligned to GC UI's optical grid."}
+  ];
+  for(const section of sections){
+   const description=page.locator('.section-head:has(#'+section.heading+') > p');
+   await expect(description).toHaveCSS('direction','rtl');
+   const isolated=description.locator(':scope > bdi[dir=auto]');
+   await expect(isolated).toHaveCount(1);
+   await expect(isolated).toHaveCSS('direction','ltr');
+   await expect(isolated).toHaveText(section.text);
+  }
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow,'Components personality RTL horizontal overflow').toBeLessThanOrEqual(2);
+ });
+}
