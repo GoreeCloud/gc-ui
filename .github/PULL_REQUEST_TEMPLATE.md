@@ -21,6 +21,22 @@
 - [ ] I reviewed current rendered screenshots or other reproducible UI evidence and corrected visible quality issues; untested states and deviations are documented.
 - [ ] I ran relevant build, test, lint, accessibility, and regression checks, or disclosed why each could not run.
 
+## Mobile-screen review (only if the PR changes a mobile screen or journey)
+
+Use the [GC UI mobile screen design and QA workflow](https://github.com/GoreeCloud/gc-ui/blob/main/docs/MOBILE_SCREEN_DESIGN_QA.md). For a non-mobile or non-UI PR, write **N/A — no mobile UI change** and skip this subsection.
+
+- [ ] I checked the full changed journey, including Back/Up, overlays, system keyboard, interruption/recovery, and applicable platform navigation semantics.
+- [ ] I reviewed applicable empty/loading/error/offline/unsaved/permission states and recorded those not exercised.
+- [ ] I assessed native controls, GC UI token/component usage, theme and text-scale behavior, and real rendered mobile UI.
+- [ ] I recorded any available full-motion walkthrough or explicitly marked motion/device evidence **Not tested**.
+- [ ] I documented actual accessibility, performance and privacy checks without inferring unmeasured or untested compliance.
+
+**Mobile journey and tested platform/device (or N/A):**
+
+**Back/Up, input, lifecycle and state evidence (or Not tested):**
+
+**Motion/video and performance measurements (or Not tested):**
+
 ## Evidence
 
 <!-- Attach or link before/after screenshots from actual builds, relevant devices and viewport sizes, tests, and accessibility results. Do not include credentials or private user data. -->
