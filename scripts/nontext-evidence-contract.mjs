@@ -4,6 +4,9 @@
 import assert from 'node:assert/strict';
 
 export const expectedNontextSelectors=Object.freeze({
+ v1:Object.freeze(['.status-pill span[aria-hidden=true]']),
+ environment:Object.freeze(['.lens.gc-material-surface[data-gc-treatment="lens"] > span[aria-hidden=true]']),
+ components:Object.freeze(['.floating-control > span[aria-hidden=true]']),
  adaptive:Object.freeze([
   '.gc-metric-card:nth-child(1) .gc-metric-icon',
   '.gc-metric-card:nth-child(3) .gc-metric-icon',

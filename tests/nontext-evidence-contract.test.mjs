@@ -9,7 +9,9 @@ const recordFor=lab=>({
 });
 const verify=record=>verifyNontextEvidenceRecord(record,{lab:record.lab,...variant});
 
-test('exact selector inventory accepts five original glyph records',()=>{
+test('exact selector inventory accepts eight selected glyphs across five labs',()=>{
+ assert.deepEqual(Object.keys(expectedNontextSelectors),['v1','environment','components','adaptive','forms']);
+ assert.equal(Object.values(expectedNontextSelectors).reduce((n,s)=>n+s.length,0),8);
  for(const lab of Object.keys(expectedNontextSelectors))assert.doesNotThrow(()=>verify(recordFor(lab)));
 });
 test('duplicate or substituted glyph cannot satisfy counts',()=>{
