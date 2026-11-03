@@ -91,3 +91,19 @@ for(const width of [320,375,768,1440]){
   expect(overflow,'Catalog release note RTL horizontal overflow').toBeLessThanOrEqual(2);
  });
 }
+
+for(const width of [320,375,768,1440]){
+ test('Catalog browse helper remains LTR in RTL shell at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await page.goto('/lab/catalog.html');
+  await page.evaluate(()=>document.documentElement.dir='rtl');
+  const helper=page.locator('.registry-section .heading > p');
+  await expect(helper).toHaveCSS('direction','rtl');
+  const isolated=helper.locator(':scope > bdi[dir=auto]');
+  await expect(isolated).toHaveCount(1);
+  await expect(isolated).toHaveCSS('direction','ltr');
+  await expect(isolated).toHaveText('Find components by category, name, code or behavior.');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow,'Catalog browse helper RTL horizontal overflow').toBeLessThanOrEqual(2);
+ });
+}
