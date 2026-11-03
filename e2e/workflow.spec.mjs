@@ -143,3 +143,34 @@ test('without JavaScript navigation is disabled, and no form submission is possi
   await expect(page).toHaveURL(/\/lab\/workflow\.html$/);
  }finally{await context.close()}
 });
+
+for(const {width,rtl,forced} of [
+ {width:320,rtl:true,forced:false},
+ {width:320,rtl:true,forced:true},
+ {width:375,rtl:false,forced:false}
+]){
+ test('workflow step labels remain legible in narrow RTL layout '+width+' '+(forced?'forced':'regular'),async({page})=>{
+  await page.setViewportSize({width,height:850});
+  await page.emulateMedia({forcedColors:forced?'active':'none',reducedMotion:'reduce'});
+  await page.goto('/lab/workflow.html');
+  await page.evaluate(rtl=>{document.documentElement.dir=rtl?'rtl':'ltr'},rtl);
+  const layout=await page.locator('.gc-workflow-steps').evaluate(el=>{
+   const boxes=[...el.querySelectorAll('li')].map(li=>{const r=li.getBoundingClientRect();return{top:r.top,height:r.height,width:r.width}});
+   return {boxes,overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,active:el.querySelectorAll('[aria-current=step]').length};
+  });
+  expect(layout.overflow).toBeLessThanOrEqual(1);
+  expect(layout.active).toBe(1);
+  if(width<=360){
+   expect(new Set(layout.boxes.map(b=>Math.round(b.top))).size).toBe(4);
+   expect(layout.boxes.every(b=>b.width>=200&&b.height<=60)).toBe(true);
+  }else{
+   expect(new Set(layout.boxes.map(b=>Math.round(b.top))).size).toBe(2);
+  }
+  await expect(page.locator('.gc-workflow-steps li').nth(1)).toContainText('Preferences');
+  await fillBasics(page);
+  await page.getByRole('button',{name:'Next: Preferences'}).focus();
+  await page.keyboard.press('Enter');
+  await expect(page.locator('.gc-workflow-steps [aria-current=step]')).toHaveText('Preferences');
+  await expect(page.getByRole('heading',{name:'2. Organize your preferences'})).toBeFocused();
+ });
+}
