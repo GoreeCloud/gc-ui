@@ -130,3 +130,34 @@ for(const width of [280,320,375,440]){
   expect(overflow).toBeLessThanOrEqual(width+2);
  });
 }
+
+// Real 320px/375px screenshots left "for." alone on a third or fourth
+// heading line. Preserve the authored two-part visual hierarchy at phone widths.
+for(const {width,dark,rtl} of [
+ {width:280,dark:false,rtl:false},
+ {width:320,dark:false,rtl:false},
+ {width:375,dark:true,rtl:false},
+ {width:440,dark:false,rtl:true},
+ {width:520,dark:true,rtl:false}
+]){
+ test('Catalog: full hero phrase stays on deliberate lines '+width,async({page})=>{
+  await page.setViewportSize({width,height:812});
+  await page.emulateMedia({colorScheme:dark?'dark':'light',reducedMotion:'reduce'});
+  await page.goto('/lab/catalog.html');
+  if(rtl)await page.evaluate(()=>document.documentElement.dir='rtl');
+  await page.evaluate(()=>document.fonts.ready);
+  const segments=await page.locator('.hero h1 bdi').evaluateAll(nodes=>nodes.map(node=>{
+   const range=document.createRange();range.selectNodeContents(node);
+   return {text:node.textContent.trim(),rects:Array.from(range.getClientRects(),r=>({left:r.left,right:r.right,top:r.top,bottom:r.bottom}))};
+  }));
+  expect(segments.map(s=>s.text)).toEqual(['Every detail,','accounted for.']);
+  for(const segment of segments){
+   expect(segment.rects.length,segment.text+' must occupy one complete line').toBe(1);
+   const rect=segment.rects[0];
+   expect(rect.left,segment.text+' left clipped').toBeGreaterThanOrEqual(-1);
+   expect(rect.right,segment.text+' right clipped').toBeLessThanOrEqual(width+1);
+   expect(rect.bottom,segment.text+' height').toBeGreaterThan(rect.top);
+  }
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width+2);
+ });
+}
