@@ -6,6 +6,11 @@ import {join,resolve} from 'node:path';
 // Focused, non-text glyph-background pixels for representative axe
 // inconclusives. Conservative 3:1 review threshold; no axe suppression.
 const labs=[
+ // Decorative symbols paired with visible labels, selected from the
+ // unresolved axe non-text inventory; sampled ratios are bounded evidence.
+ {name:'v1',selectors:['.status-pill span[aria-hidden=true]']},
+ {name:'environment',selectors:['.lens.gc-material-surface[data-gc-treatment="lens"] > span[aria-hidden=true]']},
+ {name:'components',selectors:['.floating-control > span[aria-hidden=true]']},
  {name:'adaptive',selectors:['.gc-metric-card:nth-child(1) .gc-metric-icon','.gc-metric-card:nth-child(3) .gc-metric-icon','.gc-activity-list li:nth-child(1) .gc-activity-symbol','.gc-activity-list li:nth-child(2) .gc-activity-symbol']},
  {name:'forms',selectors:['.gc-recovery-symbol']}
 ];
