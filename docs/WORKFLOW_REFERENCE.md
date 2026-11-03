@@ -15,7 +15,7 @@ The preview **never creates or saves an account, workspace, reminder, or backup*
 
 ## Verification and follow-up
 
-Node source checks and Playwright scenarios cover retained answers, keyboard/focus navigation, invalid-field recovery, a native date in US and French locales, 320px forced-colors layout, and no-JavaScript safety. These are bounded automated checks, not a claim of WCAG certification or finished native support. Manual screen-reader experience, real mobile date pickers, RTL, larger translations, and production data-backed flows still require relevant evidence.
+Node source checks and Playwright scenarios cover retained answers, keyboard/focus navigation, invalid-field recovery, a native date in U.S., French, Arabic (Egypt, RTL), and Japanese browser locales, 320px forced-colors layout, and no-JavaScript safety. These are bounded automated checks, not a claim of WCAG certification or finished native support. Manual screen-reader experience, real mobile date pickers, RTL, larger translations, and production data-backed flows still require relevant evidence.
 
 This lab does not promote the maturity of any component in the registry. See [Forms contract](FORMS_CONTRACT.md) and [accessibility release gates](ACCESSIBILITY_RELEASE.md).
 
@@ -28,3 +28,9 @@ A single targeted `max-width:360px` rule switches the four existing progress ste
 The expanded browser regression checks 320px RTL standard and forced-colors/reduced-motion contexts plus 375px LTR, verifies one active marker, no root overflow, readable per-step geometry, keyboard Enter progression and focus on the next step heading. **Local verification:** full `e2e/workflow.spec.mjs` passed **9/9 Chromium and 9/9 Firefox**; repository `npm run check` passed. Hosted CI and current-main readback remain separate requirements for the eventual pull request.
 
 **Limits:** Synthetic RTL rendering with English labels and emulated high-contrast is not an Arabic linguistic review, real 400% browser zoom measurement, native screen reader evaluation or whole-workspace Stable/Seal acceptance. A wider real translated-label and native date-picker audit remains open under [#126](https://github.com/GoreeCloud/gc-ui/issues/126).
+
+### November 3, 2026 — broader local browser date-locale regression
+
+The Workflow Lab's existing calendar-day review contract was exercised in Chromium and Firefox using **en-US, fr-FR, ar-EG and ja-JP** browser locale contexts. The Arabic case additionally mirrors the document `dir=rtl`, verifies the active `navigator.language`, and continues to use native `input[type=date]` rather than a fixed-format text mask. The same browser's `Intl.DateTimeFormat` produces the expected date-only summary in each context. Local focused Playwright test passed in both browsers with no simulated network submission. The test uses fictional form values and checks the no-storage/no-submit behavior already enforced for all locale cases.
+
+This validates local browser formatting and the existing date-only UTC representation, **not** a translated Arabic or Japanese interface, regional numeral entry by a real person, voice or IME evaluation, iOS/Android native date picker operation, or production locale completeness. Issue [#126](https://github.com/GoreeCloud/gc-ui/issues/126) remains open for those obligations.

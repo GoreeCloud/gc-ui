@@ -69,11 +69,14 @@ test('invalid values are explained and corrected without losing other fields',as
 });
 
 test('date is a calendar day and review uses actual browser locale',async({browser})=>{
- for(const locale of ['en-US','fr-FR']){
+ for(const locale of ['en-US','fr-FR','ar-EG','ja-JP']){
   const context=await browser.newContext({locale});
   try{
    const page=await context.newPage();
    await page.goto('/lab/workflow.html');
+   if(locale==='ar-EG')await page.evaluate(()=>{document.documentElement.dir='rtl'});
+   await expect.poll(()=>page.evaluate(()=>navigator.language)).toBe(locale);
+   await expect(page.locator('#workspace-date')).toHaveAttribute('type','date');
    await advanceToReview(page);
    const expected=await page.evaluate(()=>{
     const day=new Date('2031-12-10T12:00:00Z');
