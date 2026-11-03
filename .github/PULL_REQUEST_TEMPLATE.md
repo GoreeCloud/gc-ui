@@ -23,7 +23,7 @@
 
 ## Mobile-screen review (only if the PR changes a mobile screen or journey)
 
-Use the [GC UI mobile screen design and QA workflow](../docs/MOBILE_SCREEN_DESIGN_QA.md). For a non-mobile or non-UI PR, write **N/A — no mobile UI change** and skip this subsection.
+Use the [GC UI mobile screen design and QA workflow](https://github.com/GoreeCloud/gc-ui/blob/main/docs/MOBILE_SCREEN_DESIGN_QA.md). For a non-mobile or non-UI PR, write **N/A — no mobile UI change** and skip this subsection.
 
 - [ ] I checked the full changed journey, including Back/Up, overlays, system keyboard, interruption/recovery, and applicable platform navigation semantics.
 - [ ] I reviewed applicable empty/loading/error/offline/unsaved/permission states and recorded those not exercised.
