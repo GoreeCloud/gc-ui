@@ -73,3 +73,21 @@ test('RTL text direction remains automatic for non-Latin content',async({page})=
  await expect(heading).toHaveCSS('direction','rtl');
  await expect(page.locator('.gc-form-intro h1')).toHaveCSS('direction','rtl');
 });
+
+for(const width of [320,375,768,1440]){
+ test('Catalog release note stays LTR inside RTL page at '+width+'px',async({page})=>{
+  await page.setViewportSize({width,height:900});
+  await page.goto('/lab/catalog.html');
+  await page.evaluate(()=>{document.documentElement.dir='rtl';});
+  const note=page.locator('.release-scope-note');
+  await expect(note).toHaveCSS('direction','rtl');
+  const isolated=note.locator(':scope > bdi[dir=auto]');
+  await expect(isolated).toHaveCount(1);
+  await expect(isolated).toHaveCSS('direction','ltr');
+  await expect(isolated).toContainText('These catalog component demos');
+  const release=isolated.getByRole('link',{name:'Stable Foundations 1.0.1'});
+  await expect(release).toHaveAttribute('href','https://github.com/GoreeCloud/gc-ui/releases/tag/foundations-v1.0.1');
+  const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-document.documentElement.clientWidth);
+  expect(overflow,'Catalog release note RTL horizontal overflow').toBeLessThanOrEqual(2);
+ });
+}
