@@ -4,15 +4,15 @@
 | --- | --- |
 | Document type | Owner-supplied visual reference analysis and proposed design guidance |
 | Owner and perspective | GoreeCloud founder |
-| Recorded | October 27, 2026; extended November 2, 2026 |
+| Recorded | October 27, 2026; extended November 2 and November 3, 2026 |
 | Scope | GoreeCloud UI (GC UI) and relevant GoreeCloud application interfaces |
 | Status | Visual references documented; design interpretations proposed; implementation and adoption not established by these screenshots |
-| Source | Eighteen reference screenshots supplied October 27, 2026; eight UX-pattern screenshots supplied November 2, 2026 (26 total, source images not committed) |
+| Source | Eighteen reference screenshots supplied October 27, 2026; eight UX-pattern screenshots supplied November 2, 2026; one liquid-glass visual reference supplied November 3, 2026 (27 total, source images not committed) |
 | Repository | `GoreeCloud/gc-ui`, `docs/OWNER_VISUAL_REFERENCE_ATLAS_2026_10_27.md` |
 
 ## My intent and the status of these references
 
-I supplied two groups of screenshots as **examples of beautiful web-app and desktop-app user interfaces**, followed by eight mobile screenshots illustrating UX laws and responsive interaction feedback. I want GoreeCloud's interfaces to reach this level of craft: sophisticated and organized yet inviting, visually expressive but practical, with clear navigation, readable information, richly functional screens, and details that feel intentionally designed.
+I supplied two groups of screenshots as **examples of beautiful web-app and desktop-app user interfaces**, followed by eight mobile screenshots illustrating UX laws and responsive interaction feedback, and a further screenshot demonstrating a liquid-glass surface treatment. I want GoreeCloud's interfaces to reach this level of craft: sophisticated and organized yet inviting, visually expressive but practical, with clear navigation, readable information, richly functional screens, and details that feel intentionally designed.
 
 These screenshots communicate aesthetic and experiential aspirations, **not approval to copy another company's product**, its identity, illustrations, proprietary assets, interface markup, or code. They are reference evidence of my tastes, not proof that GoreeCloud already provides any illustrated feature. The analyses and product applications below are expressly **proposed interpretations** of my examples, except where they quote or accurately restate existing GC UI standards.
 
@@ -130,7 +130,7 @@ These mappings are **recommendations**, not assertions that any named consumer i
 
 ## Reference limitations and reuse rights
 
-- The 18 initial screenshots were presented in the founder's GoreeCloud project conversation on October 27, 2026, and eight additional screenshots were supplied November 2, 2026. The new group is documented in the addendum below. This Markdown file preserves their **identifiers, observations and design insights**, **not the original image bytes**. The source images may not be independently accessible from this repository.
+- The 18 initial screenshots were presented in the founder's GoreeCloud project conversation on October 27, 2026; eight additional screenshots were supplied November 2, 2026; and one liquid-glass screenshot was supplied November 3, 2026. The later references are documented in the addenda below. This Markdown file preserves their **identifiers, observations and design insights**, **not the original image bytes**. The source images may not be independently accessible from this repository.
 - Branding visible in the images is identifying context, not product endorsement or authorization to reproduce third-party graphics, text, logos, data or compositions. The provenance and licensing of the supplied screenshots have not been verified; **do not publish or redistribute the images as repository assets without verifying rights**.
 - Some source images are marketing mockups, historical designs, cropped previews or stylized renders. They do **not** prove responsive behavior, accessibility, working interactions, current vendor features or runtime performance.
 - The atlas is qualitative and does not assert verified competitor capabilities. A product comparison requires separate research and source checks.
@@ -229,3 +229,54 @@ For screen readers, announce meaningful status changes in a nonspammy live regio
 - Canonical design system and component contracts: [GC UI specification](GC_UI_1_0_SPECIFICATION.md), [component guidance](COMPONENTS.md), [interaction and motion](MOTION_INPUT.md), [accessibility and release](ACCESSIBILITY_RELEASE.md), and [theme specification](COLOR_THEMES.md).
 - Existing founder standards are authoritative in Google Drive: [Universal Rounded UI Elements](https://drive.google.com/file/d/1JXamkBbF9T1EZIMDhcthmQV6ewLSQmTZ/view) and [Universal Floating Navigation Bars](https://drive.google.com/file/d/1Sh4JTGPM49gWk0VrqVDQN1qJ7ZkBJl0k/view). This addendum proposes interpretations and does not amend either standard.
 - **Status:** Visual educational references reviewed and documented. Source screenshots not committed. No production code, design tokens, APIs, releases, integrations or consumer apps changed or verified through this documentation-only update.
+
+
+---
+
+## Addendum — Liquid glass material reference (November 3, 2026)
+
+**Source and status.** I supplied the image \`Screenshot_20261103-162733_TikTok_1.png\` on November 3, 2026, with the instruction “Document this.” The visible design-demo text says **“Liquid glass”**, **“Blur, light edges, depth.”**, and **“Use it for: cards, nav bars, buttons.”** This is a founder-supplied aesthetic reference for evaluation, not a directive to copy another product’s implementation or an assertion that the depicted effect has already shipped in GC UI. The source image bytes are **not** part of this repository. Its creator, licensing, ownership and right to redistribute have not been verified; do not commit or redistribute them without clearance.
+
+### Visible reference anatomy — observation, not measured specifications
+
+| Element | What the supplied screenshot visibly shows | Implication for GC UI (proposed) |
+| --- | --- | --- |
+| Ambient background | White or near-white canvas with broad, soft-focus blue light at left, orange toward upper right, and pink/magenta toward lower right | Study restrained, semantic environmental light; do not elevate the screenshot's exact colors to brand tokens |
+| Material panel | A large centered horizontal rectangle with generously rounded corners and partially visible color through the fill | Use a bounded **Lens** region above a distinct Canvas; maintain hierarchy with surrounding opaque Surface content |
+| Translucency | Diffused color behind the panel remains perceptible, without sharp detail | Prefer progressive backdrop blur and a clearly legible solid fallback; alpha/blur values are implementation choices, not verified screenshot measurements |
+| Edge and elevation | Thin bright hairline outline, modest soft shadow, softly illuminated edges | A subtle outline and local elevation can separate the floating panel without heavy borders, nested glass or excessive glow |
+| Content | Large white bold heading and a smaller white supporting sentence aligned to the left near the lower portion of the panel | Ensure foreground pairing and real composited contrast; the screenshot alone does not establish that these white letters pass contrast |
+| Intended examples | The demo caption suggests cards, navigation bars and buttons | Treat that caption as *source guidance*, not blanket GC UI permission: existing GC UI places Lens primarily on floating navigation and short-lived controls |
+
+The screenshot is a **static promotional demonstration**. It cannot substantiate an actual backdrop-filter implementation, CSS values, hardware blur support, motion behavior, accessibility, responsive behavior, dark-mode appearance or functional controls. No pixel-exact palette, opacity, radius or shadow was sampled or approved.
+
+### Translation into GoreeCloud UI — proposed pattern, not a new authority
+
+Use GC UI's existing **Canvas → Surface → Lens** architecture. Canvas carries calm, optional ambient color; opaque or tonal Surface carries ordinary data and reading content; Lens differentiates selected foreground navigation, toolbars, compact action clusters or transient UI. The hierarchy follows [Design Language](DESIGN_LANGUAGE.md), [Component Contract](COMPONENTS.md), and [Contextual Surface & Environmental Light](SURFACES_ENVIRONMENT.md). In particular, the existing material specification limits environmental illumination to two static, diffuse, semantic container-color washes and budgets **one dominant Lens and up to two auxiliary Lens regions per viewport**. A literal recreation with three conspicuous colored glows is not the current recommended default.
+
+**Recommended applications.** Consider a floating bottom navigation dock, compact overlay toolbar, small contextual popover, or carefully scoped primary control area. A selected hero/promo demonstration may use the treatment where the effect contributes clear hierarchy. Standard cards, data tables, file lists, forms, dashboards, long text, security alerts and critical workflows should normally use the existing opaque/tonal Surface treatments. Avoid glass-on-glass stacking and making the background itself a control-state indicator.
+
+**Existing implementation surfaces to reuse, not fork:** \`styles/gc.v1.materials.css\`, \`src/gc-surface-runtime.mjs\`, and the \`data-gc-treatment="lens"\` contract documented in [Surface & Environment](SURFACES_ENVIRONMENT.md); respect [Token Implementation](TOKENS_IMPLEMENTATION.md) and active semantic foreground/background roles. These paths are references to the repository's documented implementation surface, **not evidence that this screenshot's precise appearance is implemented or approved**. No new palette, token namespace, component API or dependency is approved by this addendum.
+
+**Suggested web implementation approach for future evaluation (conceptual):**
+
+1. Render a stable, opaque Canvas first. Apply only approved semantic environmental washes when illumination is enabled; keep them static, diffuse and spatially restrained.
+2. Create the Lens using the existing GC UI treatment/token path. Progressive \`backdrop-filter\` blur/saturation may enhance it where supported, but must never be the only reason the text or controls are readable.
+3. Use a restrained light edge, semantic outline and grounded shadow; retain the GC UI corner scale and visual focus state independently of translucency.
+4. Place short labels and actionable controls on Lens. Prefer a stable inset or solid backing for longer copy, numerals or dense metadata.
+5. Preserve identical essential meaning and interaction when material effects are off; in \`forced-colors\`, elevated-contrast, reduced-transparency, low-performance and data-saving conditions, favor the opaque semantic fallback. Motion is not required for this reference.
+6. Apply native platform materials and accessibility behavior when appropriate. Do not claim simulated CSS blur reproduces proprietary native optical behavior.
+
+### Design acceptance and verification checklist
+
+- **Composition:** Does the entire screen remain premium, purposeful and calm without overwhelming the content with gradient decoration?
+- **Legibility:** Verify *rendered/composited* foreground/background contrast (target WCAG 2.2 AA: normally **4.5:1** for body text, **3:1** for qualifying large text and non-text UI boundaries); avoid assuming white text over a pink/blue scene is safe.
+- **States:** Verify current, selected, pressed, hover, disabled, loading, open/closed and \`:focus-visible\` states where applicable. Do not rely on blur, color or light alone to communicate state.
+- **Platforms:** Check narrow mobile widths, tablet and desktop layout, system text scaling, 200–400% zoom/reflow, touch targets, keyboard order, screen-reader names/states and RTL where supported.
+- **Preferences:** Test light and dark appearance, high contrast and \`forced-colors\`, reduced transparency, reduced motion and illumination-off fallback.
+- **Performance:** Compare GPU/frame behavior and memory usage on representative supported hardware; blur must degrade to an opaque treatment without losing navigation or tasks.
+- **Fidelity:** Compare screenshots from the *running GC UI build* against this founder reference, while honoring semantic token constraints; record deviations and actual browser/device results.
+
+**Acceptance state (November 3, 2026):** Reference interpretation documented only. No GC UI source component, token, repository asset, browser build, device deployment, customer interface, accessibility matrix or production release was changed, tested, approved or certified as a result of this visual documentation request.
+
+**Governing cross-references:** [Design Language](DESIGN_LANGUAGE.md), [Surface & Environment](SURFACES_ENVIRONMENT.md), [Component Contract](COMPONENTS.md), [Token Implementation](TOKENS_IMPLEMENTATION.md), [Accessibility](ACCESSIBILITY.md), and the canonical GoreeCloud master instructions in Google Drive.
