@@ -29,8 +29,8 @@ for(const lab of labs)for(const variant of variants){
  entries.push({id:key,width,height,sha256:createHash('sha256').update(png).digest('hex')});
 }
 for(const name of await readdir(folder))assert.ok(expected.has(name),'Unexpected nontext screenshot record '+name);
-assert.equal(entries.length,10);
+assert.equal(entries.length,25);
 await writeFile(join(folder,'manifest.json'),JSON.stringify({
  schema:'gc-ui-nontext-visual-evidence.v1',cases:entries,
  scope:'Selected decorative symbol backdrops, not all WCAG or human visual approval'},null,2)+'\n');
-console.log('PASS 10/10 glyph PNG dimensions, exact selectors, sampled ratios, semantics and hashes');
+console.log('PASS 25/25 glyph PNG dimensions, exact selectors, sampled ratios, semantics and hashes');
