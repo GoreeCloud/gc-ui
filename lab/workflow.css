@@ -45,6 +45,8 @@ body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-ca
  .gc-workflow-review>div{grid-template-columns:minmax(0,1fr);gap:2px}
  .gc-workflow-actions .gc-button{flex:1 1 125px}
 }
+/* Preserve whole step labels on very narrow screens and at high browser zoom. */
+@media(max-width:360px){.gc-workflow-steps{grid-template-columns:minmax(0,1fr)}}
 @media(forced-colors:active){
  .gc-workflow-steps li,.gc-workflow-steps li::before,.gc-workflow-steps li[aria-current=step],.gc-workflow-steps li[aria-current=step]::before,.gc-workflow-alert,.gc-workflow-review>div{background:Canvas!important;color:CanvasText!important;border-color:CanvasText!important}
  .gc-workflow-steps li[aria-current=step]{outline:3px solid Highlight;outline-offset:-3px}
