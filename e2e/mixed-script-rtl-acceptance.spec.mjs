@@ -57,7 +57,10 @@ for(const layout of layouts){
   },translations);
   const target=page.locator(navSelectors[layout.nav]+'[data-gc-route="activity"]');
   await expect(target).toBeVisible();
-  await target.click();
+  // Exercise keyboard activation on the actually visible translated navigation.
+  await target.focus();
+  await expect(target).toBeFocused();
+  await page.keyboard.press('Enter');
   await expect(target).toHaveAttribute('aria-current','page');
   await expect(page.locator('#page-title')).toBeFocused();
   await page.evaluate(copy=>{
@@ -92,6 +95,15 @@ for(const layout of layouts){
   expect(overflow,'RTL mixed-script horizontal overflow').toBeLessThanOrEqual(2);
   await expect(page.locator('#route-announcement')).toContainText('Your activity.');
   await capture(page,testInfo,'adaptive-'+layout.width);
+  // Repeated keyboard navigation must restore heading focus and current route.
+  const library=page.locator(navSelectors[layout.nav]+'[data-gc-route="library"]');
+  await library.focus();
+  await expect(library).toBeFocused();
+  await page.keyboard.press('Enter');
+  await expect(library).toHaveAttribute('aria-current','page');
+  await expect(page.locator('#page-title')).toBeFocused();
+  await expect(target).not.toHaveAttribute('aria-current','page');
+  await expect(page.locator('#route-announcement')).toContainText('Your library.');
  });
  test('Forms mixed-script RTL validation recovery '+layout.width,async({page},testInfo)=>{
   await page.setViewportSize({width:layout.width,height:layout.height});
@@ -108,7 +120,9 @@ for(const layout of layouts){
   });
   await expect(page.locator('.gc-form-intro h1 > bdi')).toHaveCSS('direction','rtl');
   const submit=page.getByRole('button',{name:'Check brief'});
-  await submit.click();
+  await submit.focus();
+  await expect(submit).toBeFocused();
+  await page.keyboard.press('Enter');
   const summary=page.locator('#brief-errors');
   await expect(summary).toBeFocused();
   const links=summary.locator('#brief-errors-list a');
@@ -129,10 +143,15 @@ for(const layout of layouts){
    expect(hit,'Bilingual wrapped error link unobstructed').toBe(true);
   }
   await capture(page,testInfo,'forms-errors-'+layout.width);
-  await links.first().click();
+  await links.first().focus();
+  await expect(links.first()).toBeFocused();
+  await page.keyboard.press('Enter');
   await expect(page.locator('#brief-name')).toBeFocused();
   await page.locator('#brief-name').fill('مشروع واجهة GC UI 2026');
   await page.locator('#brief-email').fill('team+rtl@example.org');
+  // Email identifiers keep their LTR token order inside an otherwise RTL form.
+  await expect(page.locator('#brief-email')).toHaveAttribute('dir','ltr');
+  await expect(page.locator('#brief-email')).toHaveCSS('direction','ltr');
   await page.locator('#brief-notes').fill('مراجعة مشروع واجهة عربية وإنجليزية في GC UI 2026.');
   await expect(summary).toBeHidden();
   await submit.click();
