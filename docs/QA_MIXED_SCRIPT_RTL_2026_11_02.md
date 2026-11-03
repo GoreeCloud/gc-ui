@@ -57,3 +57,15 @@ After adding the bilingual form-recovery round trip, the combined legacy + new R
 **Verification:** A new four-viewport (320, 375, 768, 1440px) browser test failed **4/4 Chromium** cases before the fix because the English supporting description lacked a bidi isolate. After the change, the complete reference-lab bidi suite (including the already merged release-note test) passed **19/19 Chromium** and **19/19 Firefox** locally. `npm run check` completed successfully (exit 0). A fresh 768px RTL screenshot of the helper was examined and shows naturally ordered English text with the final period at the end. The existing accessibility and link semantics were not changed.
 
 **Limits:** This is an English experimental reference viewed within an RTL test shell, not a true Arabic translation, manual linguistic review, physical-device validation, or broader Stable/Seal acceptance. Exact-head GitHub CI and current-main integration remain separate checks.
+
+## November 3, 2026 — Components Lab section helper isolation in RTL
+
+**Screenshot-backed finding:** The 768px RTL Components reference captured in [the archived PR #179 browser QA run](https://github.com/GoreeCloud/gc-ui/actions/runs/41721850133) showed the first English section description (`Modify the experience without changing the meaning.`) with a displaced terminal period. Source inspection found that **four** `section-head > p` descriptions—Personality, Primitives, Layers and Iconography—were plain English descendants of an RTL layout, unlike the already bidi-isolated adjacent headings.
+
+**Bounded correction:** Wrap the existing English text in each of those four paragraphs in its own `<bdi dir="auto">`. Keep the original paragraph and all text, order, headings, component behaviors, CSS, links, tokens and parent RTL direction unchanged.
+
+**Reproduction:** A new four-viewport test initially failed **4/4 Chromium** scenarios on unmodified `main` because the first helper had no bidi isolate. After the correction, the test covers all four paragraphs at 320, 375, 768 and 1440px and asserts RTL paragraph parent, LTR isolated English content, unchanged copy and absence of horizontal overflow.
+
+**Local validation:** In an isolated checkout of `main` commit `3638588b32015db228c75b017ce09ddbe2423c96` with the limited corrections, the combined reference-lab bidi suite passed **23/23 Chromium** and **23/23 Firefox**; `npm run check` exited **0**. A freshly rendered 768px RTL Personality section was inspected: English paragraph punctuation followed LTR reading order while the section remained mirrored.
+
+**Limits:** These are English experimental reference strings in an artificial RTL browser shell, not approved Arabic translations, native platform localization, assistive-technology speech evidence, full visual acceptance, security certification or Stable/Seal promotion. Current GitHub branch/head CI and integration require separate verification.
