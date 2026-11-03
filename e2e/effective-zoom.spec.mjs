@@ -11,7 +11,7 @@ const equivalents=[
  {label:'200%',width:640,height:400},
  {label:'400%',width:320,height:200}
 ];
-const labs=['v1','components','catalog','adaptive','forms'];
+const labs=['v1','components','catalog','adaptive','forms','workflow'];
 
 for(const lab of labs){
  test('effective zoom viewport reflow — '+lab,async({page})=>{
@@ -99,4 +99,27 @@ test('400%-equivalent component actions and catalog search remain usable',async(
  await page.goto('/lab/catalog.html');
  await page.getByRole('searchbox',{name:'Search components'}).fill('button');
  await expect(page.locator('#result-message')).not.toHaveText('63 of 63 patterns shown');
+});
+
+test('400%-equivalent workflow step navigation preserves focus and no overflow',async({page})=>{
+ await page.setViewportSize({width:320,height:200});
+ await page.emulateMedia({reducedMotion:'reduce',forcedColors:'active'});
+ await page.goto('/lab/workflow.html');
+ await page.evaluate(()=>{document.documentElement.dir='rtl';});
+ await page.getByLabel('Workspace name (required)').fill('Fictional archive');
+ await page.getByLabel('Sample owner label (required)').fill('Home team');
+ await page.getByLabel('Workspace type (required)').selectOption('family');
+ const next=page.getByRole('button',{name:'Next: Preferences'});
+ await next.focus();
+ await page.keyboard.press('Enter');
+ await expect(page.locator('#workflow-progress')).toHaveText('Step 2 of 4: Preferences');
+ await expect(page.getByRole('heading',{name:'2. Organize your preferences'})).toBeFocused();
+ const size=await page.evaluate(()=>({
+  root:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+  body:document.body.scrollWidth-document.body.clientWidth,
+  marker:document.querySelectorAll('.gc-workflow-steps [aria-current=step]').length
+ }));
+ expect(size.root).toBeLessThanOrEqual(1);
+ expect(size.body).toBeLessThanOrEqual(1);
+ expect(size.marker).toBe(1);
 });
