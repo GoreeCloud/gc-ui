@@ -75,7 +75,7 @@ try{
 
  for(const scale of [2,4]){
   await setNativeZoom(scale);
-  for(const lab of ['v1','components','catalog','adaptive','forms']){
+  for(const lab of ['v1','components','catalog','adaptive','forms','workflow']){
    await page.goto(baseURL+'/lab/'+lab+'.html');
    await page.waitForTimeout(90);
    for(const direction of ['ltr','rtl']){
@@ -172,7 +172,7 @@ try{
  assert(Math.abs(reset.dpr-1)<0.025,'Native browser zoom failed to reset');
  await writeFile(resolve(out,'metrics.json'),JSON.stringify({
   engine:engineName,windowId,initial,reset,observations,
-  screenshotCount,screenshotExpected:11,screenshotFailures,
+  screenshotCount,screenshotExpected:13,screenshotFailures,
   interaction:'PASS',method:'XTest Ctrl+= in isolated Xvfb browser window',
   limitations:'Not manual screen-reader speech, Safari, OS text scaling or visual certification'
  },null,2)+'\n');

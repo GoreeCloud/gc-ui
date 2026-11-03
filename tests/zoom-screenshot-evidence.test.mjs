@@ -44,5 +44,6 @@ test('retry limits reject malformed or unbounded invocation parameters',async()=
 
 test('native zoom metrics declare expected count alongside actual captures and failures',()=>{
  const script=readFileSync(new URL('../scripts/qa-real-browser-zoom.mjs',import.meta.url),'utf8');
- assert.match(script,/screenshotCount,screenshotExpected:11,screenshotFailures/);
+ assert.match(script,/screenshotCount,screenshotExpected:13,screenshotFailures/);
+ assert.match(script,/\['v1','components','catalog','adaptive','forms','workflow'\]/);
 });
