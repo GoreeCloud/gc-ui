@@ -1,9 +1,12 @@
 import {test,expect} from '@playwright/test';
+import {sampleTextControlInteriorBackdrop} from './support/sample-backdrop.mjs';
 
 /** Axe marks a stepper's “−” as non-text/indeterminate.
  * A named, enabled icon control still needs identifiable 3:1 visible ink.
- * Compare live browser-computed opaque foreground and control background; this
- * is not a photographic/composited pixel or optical glyph-rasterization audit.
+ * Compare computed opaque foreground/background colors and independently
+ * sample the rendered button interior beneath temporarily hidden glyph ink.
+ * Excluding borders and forced-color substitutions prevents misleading minima;
+ * this does not measure rasterized antialiasing or every UI state.
  */
 for(const appearance of ['light','dark','high-contrast','forced-colors']){
  test('active collaborator glyphs are named, reachable and at least 3:1 in '+appearance,async({page})=>{
@@ -51,6 +54,16 @@ for(const appearance of ['light','dark','high-contrast','forced-colors']){
    expect(result.height).toBeGreaterThanOrEqual(44);
    expect(result.ratio,appearance+' '+await button.getAttribute('aria-label')+
     ' '+result.foreground+' on '+result.background).toBeGreaterThanOrEqual(3);
+  }
+  // Confirm actual composited button interior pixels under the ink, without
+  // counting borders or forced-colors overrides as glyph/background pixels.
+  for(const button of buttons){
+   const selector='#'+await button.getAttribute('id');
+   const pixels=await sampleTextControlInteriorBackdrop(page,selector);
+   expect(pixels.geometryUnchanged,appearance+' '+selector+' layout preserved').toBe(true);
+   expect(pixels.samples,appearance+' '+selector+' interior pixels').toBeGreaterThan(30);
+   expect(pixels.min,appearance+' '+selector+' interior backdrop ratio').toBeGreaterThanOrEqual(3);
+   console.log('STEPPER_INTERIOR_BACKDROP',JSON.stringify({appearance,selector,min:pixels.min,samples:pixels.samples}));
   }
   // Disabled boundary states may legitimately be lower contrast: ensure
   // the control state is exposed rather than applying enabled requirements.

@@ -21,6 +21,9 @@ for(const variant of variants){
   const lens=page.locator('.material-lens');
   await expect(lens).toContainText('LENS');
   await expect(lens.locator('span').first()).toHaveAttribute('aria-hidden','true');
+  const status=page.locator('.status-pill');
+  await expect(status).toContainText('Foundation ready');
+  await expect(status.locator('span[aria-hidden=true]')).toHaveText('✓');
   await expect(page.getByRole('button',{name:'Apply'})).toBeVisible();
 
   await open('components');
@@ -34,6 +37,9 @@ for(const variant of variants){
   await expect(page.getByRole('button',{name:'Remove one collaborator'})).toHaveCount(1);
   await expect(page.locator('.gc-recovery-preview')).toHaveAttribute('aria-hidden','true');
   await expect(page.locator('.gc-recovery-symbol')).toHaveText('↻');
+  const decrease=page.getByRole('button',{name:'Remove one collaborator'});
+  await expect(decrease).toHaveText('−');
+  await expect(decrease).toBeEnabled();
 
   await open('adaptive');
   for(const [route,label] of Object.entries({overview:'Overview',activity:'Activity',library:'Library'})){
@@ -46,5 +52,12 @@ for(const variant of variants){
   }
   await expect(page.locator('.gc-metric-icon[aria-hidden=true]')).toHaveCount(3);
   await expect(page.locator('.gc-activity-symbol[aria-hidden=true]')).toHaveCount(3);
+
+  await open('environment');
+  const environmentLens=page.locator('.lens.gc-material-surface[data-gc-treatment="lens"]');
+  await expect(environmentLens).toBeVisible();
+  await expect(environmentLens).toContainText('Temporary lens');
+  await expect(environmentLens).toContainText('Adaptive material');
+  await expect(environmentLens.locator(':scope > span[aria-hidden=true]')).toHaveText('◈');
  });
 }
