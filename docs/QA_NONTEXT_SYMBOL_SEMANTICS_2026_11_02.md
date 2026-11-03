@@ -15,3 +15,17 @@ A new Chromium/Firefox test covers four display and viewport environments (320px
 **Remaining:** The whole 17-target/55-occurrence historical group is **not** marked resolved by these tests. Any informational/interactive icon without an equivalent accessible indicator needs actual rendered/composited contrast review (typically 3:1 where applicable), including target OS/theme/forced colors and zoom. Keep source axe incompletes intact, do not suppress or waive targets, and retain owner visual, localized RTL, other-platform assistive-technology, and experimental Stable/Seal gates.
 
 Related: [Axe triage](QA_AXE_INCOMPLETE_TRIAGE.md), [GoreeCloud UI stabilization #78](https://github.com/GoreeCloud/gc-ui/issues/78).
+
+## November 3, 2026 — refreshed inventory and broadened semantic regression
+
+From the downloaded [PR #178 Chromium QA archive](https://github.com/GoreeCloud/gc-ui/actions/runs/41718140521/artifacts/13271012823), the generated manual-triage report recorded **30 inconclusive checks, 321 node occurrences and 183 unique review targets**. These are scoped to that archived CI run's merge-test revision, not a universal or immutable count. The **non-text-symbol** category remained **17 distinct targets / 55 occurrences**, despite changes in other categories. All 55 remain inconclusive; the test does not suppress or reclassify axe results.
+
+The existing semantic browser review already covered Components' labeled controls, Forms' recovery preview and icon-only stepper, Adaptive's labeled routes/metrics/activity symbols, and the v1 Lens reference. The review now additionally asserts that:
+
+- The v1 status pill's visible `Foundation ready` text accompanies its hidden decorative check glyph.
+- The Material Environment Lens contains visible `Temporary lens` and `Adaptive material` labels next to its hidden decorative diamond.
+- The functional Forms stepper's minus glyph retains the explicit accessible name `Remove one collaborator` and is enabled in its normal state.
+
+The extended `e2e/nontext-symbol-semantics.spec.mjs` passed **4/4 Chromium and 4/4 Firefox** targeted local browser scenarios against a temporary checkout of main commit `57b34be354097a555cde974354fcd717dc33f01f`, across compact light, mobile dark, RTL and forced-colors fixture variants. This broadens bounded **semantic redundancy and accessible-name** verification; it is **not** a 3:1 pixel-level acceptance of all 17 targets, a human screen-reader judgment or a release gate completion.
+
+The separate `forms-stepper-contrast.spec.mjs` already checks accessible control names, at-least-44px targets and computed opaque foreground/background ratios. A generic full-button pixel minimum can also include borders and forced-color substitutions, so it must not be mistaken for a validated measurement of the minus glyph ink without a fit-for-purpose sampling method. Retain the remaining effective-pixel review and owner visual acceptance obligations without fabricating passes or modifying GC UI theme tokens.
