@@ -1,18 +1,18 @@
-# GoreeCloud UI — Owner-Provided Web and Desktop Visual Reference Atlas
+# GoreeCloud UI — Owner-Provided Visual Reference Atlas (Web, Desktop and Mobile)
 
 | Document control | Details |
 | --- | --- |
 | Document type | Owner-supplied visual reference analysis and proposed design guidance |
 | Owner and perspective | GoreeCloud founder |
-| Recorded | October 27, 2026 |
+| Recorded | October 27, 2026; extended November 2, 2026 |
 | Scope | GoreeCloud UI (GC UI) and relevant GoreeCloud application interfaces |
 | Status | Visual references documented; design interpretations proposed; implementation and adoption not established by these screenshots |
-| Source | Eighteen screenshots supplied by the founder in two GoreeCloud project conversation messages, October 27, 2026 |
+| Source | Eighteen reference screenshots supplied October 27, 2026; eight UX-pattern screenshots supplied November 2, 2026 (26 total, source images not committed) |
 | Repository | `GoreeCloud/gc-ui`, `docs/OWNER_VISUAL_REFERENCE_ATLAS_2026_10_27.md` |
 
 ## My intent and the status of these references
 
-I supplied two groups of screenshots as **examples of beautiful web-app and desktop-app user interfaces**. I want GoreeCloud's interfaces to reach this level of craft: sophisticated and organized yet inviting, visually expressive but practical, with clear navigation, readable information, richly functional screens, and details that feel intentionally designed.
+I supplied two groups of screenshots as **examples of beautiful web-app and desktop-app user interfaces**, followed by eight mobile screenshots illustrating UX laws and responsive interaction feedback. I want GoreeCloud's interfaces to reach this level of craft: sophisticated and organized yet inviting, visually expressive but practical, with clear navigation, readable information, richly functional screens, and details that feel intentionally designed.
 
 These screenshots communicate aesthetic and experiential aspirations, **not approval to copy another company's product**, its identity, illustrations, proprietary assets, interface markup, or code. They are reference evidence of my tastes, not proof that GoreeCloud already provides any illustrated feature. The analyses and product applications below are expressly **proposed interpretations** of my examples, except where they quote or accurately restate existing GC UI standards.
 
@@ -130,7 +130,7 @@ These mappings are **recommendations**, not assertions that any named consumer i
 
 ## Reference limitations and reuse rights
 
-- The 18 screenshots were presented as images in the founder's GoreeCloud project conversation on October 27, 2026. This Markdown file preserves their **identifiers, observations and design insights**, **not the original image bytes**. The source images may not be independently accessible from this repository.
+- The 18 initial screenshots were presented in the founder's GoreeCloud project conversation on October 27, 2026, and eight additional screenshots were supplied November 2, 2026. The new group is documented in the addendum below. This Markdown file preserves their **identifiers, observations and design insights**, **not the original image bytes**. The source images may not be independently accessible from this repository.
 - Branding visible in the images is identifying context, not product endorsement or authorization to reproduce third-party graphics, text, logos, data or compositions. The provenance and licensing of the supplied screenshots have not been verified; **do not publish or redistribute the images as repository assets without verifying rights**.
 - Some source images are marketing mockups, historical designs, cropped previews or stylized renders. They do **not** prove responsive behavior, accessibility, working interactions, current vendor features or runtime performance.
 - The atlas is qualitative and does not assert verified competitor capabilities. A product comparison requires separate research and source checks.
@@ -146,3 +146,86 @@ These mappings are **recommendations**, not assertions that any named consumer i
 - GoreeCloud Google Drive: `GoreeCloud/GoreeCloud-Instructions.md` (governance); `GoreeCloud/Strategy/GoreeCloud-UI-Founders-Vision-and-Architectural-Standards.md` (founder vision); `GoreeCloud/Memory.md` (project memory). These external records retain their own identity and authority.
 
 **Verification scope:** The user-supplied conversation screenshots, current master instructions, existing GC UI founder-vision record, and listed repository design documents informed this atlas. This document records **design reference analysis only**; it does not claim that any UI was modified, screenshot assets archived, test run, native app rebuilt, external vendor audited or feature shipped.
+
+---
+
+## Addendum — Five UX laws and three loading/feedback patterns (November 2, 2026)
+
+**Provenance and classification.** I supplied eight smartphone screenshots of carousel-style UX educational posts on November 2, 2026. Five are attributed in the visible media to *Wadhah Aloui | UX/UI Designer*; the remaining three show *UX Dose* and a visible @UXBRAINY handle. These names identify the on-screen source attribution, not the creator or legal owner of underlying design rights. The screenshots were displayed within a TikTok-style mobile feed. **Only the educational slide content is the reference; the social-media shell, branding, avatars, social counters and interface chrome are not GC UI design targets.** File references below identify conversation uploads only; image bytes are not committed or licensed as repository assets.
+
+These examples communicate usability concepts, not exhaustive scientific laws, an instruction to duplicate a third-party screenshot, or verified evidence that GoreeCloud currently implements the illustrated patterns. The founder supplied them for documentation. Proposed GC UI interpretations below must be reconciled with GC UI's existing specifications, the canonical Drive standards for rounded controls and floating navigation, actual product needs, and accessibility constraints before implementation.
+
+### Third visual reference inventory (8 screenshots)
+
+| Source screenshot | Visible lesson | Illustrated weak pattern | Illustrated stronger pattern | GC UI interpretation (proposed) |
+| --- | --- | --- | --- | --- |
+| `1225.png` | **Miller's Law** — manage cognitive load | Long unstructured application form | Form fields grouped into labeled sections | Chunk large forms into coherent, task-relevant groups; keep progress, current context and the ability to revisit earlier answers; do not impose a rigid seven-item limit |
+| `1224.png` | **Law of Proximity** — spacing communicates relationships | Repetitive list content without clear item grouping | Each avatar and its metadata visually form a row, with larger gaps between groups | Place strongly related labels, values and actions closer together; increase spacing between unrelated records and sections; reinforce proximity semantically |
+| `1223.png` | **Jakob's Law** — familiar conventions support comprehension | Ambiguous / unfamiliar navigation pictograms | Familiar home, search, bookmark/save and profile icons with labels | Reuse well-understood patterns and platform conventions while retaining original GC UI visual styling; label critical or potentially ambiguous actions |
+| `1222.png` | **Fitts's Law** — target acquisition | Small Submit button high on a mobile form | Larger Submit action close to the bottom task flow | Make primary actions comfortably large, visually prominent and easy to reach; align bottom actions with safe-area and keyboard behavior rather than blindly placing every action at the edge |
+| `1221.png` | **Hick–Hyman Law** — choice complexity | Six narrowly divided experience choices | Four broader, meaningfully differentiated ranges | Reduce unnecessary decisions and overlapping options; preserve legally/operationally necessary choices, explain consequences, and test category clarity rather than maximizing reduction |
+| `1218.png` | **Immediate/optimistic feedback** — update first, sync later | User taps Like and waits while a spinner blocks feedback | Like state updates immediately, with network synchronization following | For safe reversible operations, update the local interaction state promptly and reconcile asynchronously; communicate queued/pending/failed state and allow rollback or retry; never fake irreversible or security-sensitive success |
+| `1217.png` | **Show useful progress** — long operations | Uninformative "Uploading..." spinner | "Uploading 3 of 8", progress indicator and contextual time estimate | Prefer measured progress units (bytes, files or steps) and a realistic estimate **only when supported by actual measurements**; show indeterminate progress if no reliable denominator or ETA exists |
+| `1216.png` | **Skeleton loading** — preserve perceived layout | Blank feed with centered spinner | Placeholder circles and lines approximating actual feed rows | Use shape-matched skeletons for predictably structured pending content; reserve loaded layout to avoid shift; show error/empty/offline states and never leave an indefinite skeleton without recovery |
+
+**Attribution note:** The visible slides state simplified educational descriptions. The underlying laws are design heuristics, not universal equations for every interface or direct evidence that a specific arrangement is fastest. For example, reducing options is not inherently beneficial when it hides a needed answer; an optimistic update is inappropriate where a server-confirmed operation must precede the user-visible result.
+
+### Proposed GC UI behavior contracts
+
+#### 1. Information architecture, content grouping and decision quality
+
+- Prefer one clear primary task per major screen, with related information grouped using proximity, headings, surfaces, alignment and appropriate nested spacing. Do not substitute arbitrary card walls for meaningful grouping.
+- For longer forms, provide logical sections with persistent field labels, optional steps only where complexity warrants them, clear validation and preserved values. Grouping alone does not imply a wizard is better than a single-page form.
+- Use the existing GC UI spacing scale and Canvas / Surface / Lens hierarchy; do **not** copy the example slides' violet, black or light-blue color scheme as normative GC UI tokens.
+- Reduce redundant or nonfunctional actions while preserving user agency, accessibility and task completeness. Prefer progressive disclosure of advanced controls to silently removing essential choices.
+- Keep navigation recognizable: consistent metaphors, textual or accessible labels, active states, focus order and native platform affordances. Apply the separate founder mandates for **rounded elements** and **floating GoreeCloud-controlled navigation bars**; do not copy the TikTok bottom bar.
+
+#### 2. Reachability and accessible action placement
+
+- Honor the current GC UI control contract: default controls are approximately 44 logical/CSS units high, touch-comfortable controls approximately 48, and target hit areas should generally be at least **44 × 44 logical/CSS units**, without treating these as a single universal legal accessibility threshold.
+- Place the primary action near the task's conclusion when appropriate. On mobile, respect safe areas, browser/OS chrome, virtual keyboards, scroll endpoints and reachability; use sticky bottom actions only when they do not obscure content or compete with the floating navigation.
+- Maintain visible focus, useful labels, selected/pressed/disabled states and full keyboard/screen-reader operability. Large visual targets do not excuse ambiguous meaning or poor contrast.
+
+#### 3. Loading, progress and synchronization state models
+
+Use explicit, testable states rather than a decorative spinner.
+
+| Pattern | Minimum states | Preferred user communication | Required failure behavior |
+| --- | --- | --- | --- |
+| Skeleton-backed content | Initial, loading, loaded, empty, error, offline where applicable | Placeholder closely matches final layout; avoid excessive shimmering and announcements | Replace with accurate error/retry or offline explanation; no endless placeholder |
+| Determinate job | Queued, running with measured progress, paused/cancelled where supported, completed, failed | `3 of 8 files` and progress bar, or bytes/steps with real denominator; optional ETA only if credible | Explain which work failed, what remains, and what retry/cancel/resume can actually do |
+| Indeterminate job | Requested, in progress, complete, error/timeout | Honest status copy, activity indicator, optional stage or elapsed-time information | Escalate prolonged waiting to useful status, cancellation or recovery when technically supported |
+| Optimistic reversible action | Initial, locally pending, server-confirmed, reconciliation failed, reverted or retried | Immediate visual reaction with a distinct pending state when relevant; live acknowledgment after confirmation | Roll back or clearly mark unsynced state and offer retry/undo without losing data or fabricating confirmation |
+
+**Constraints and exceptions.** Prefer measured progress over artificial percentages; never invent elapsed-time-to-completion values. Do not equate a client-side visual toggle with a durable remote write. Treat payments, account deletion, permissions, credential changes, sensitive message delivery, and other security-critical or irreversible operations as server-validated workflows; do not optimistically announce completion. Offline-first queued actions may show local success *only when it is explicitly labeled as local/queued*, not as server confirmed.
+
+For screen readers, announce meaningful status changes in a nonspammy live region; use `progressbar` semantics and real `aria-valuenow` values when determinate. Keep decorative skeleton elements out of the accessibility tree while presenting a concise loading status. Respect reduced motion and avoid shimmer-only feedback.
+
+### Illustrative product-level applications — proposed, not shipped
+
+- **GoreeCloud Messenger:** Familiar conversation/navigation controls, readable groupings, immediate draft/local actions, explicit queued/sending/sent/delivered/failed distinctions based on actual protocol and backend evidence, bounded skeletons for history loading.
+- **GoreeCloud Drive/Sync:** File rows grouped by name and metadata; uploads with actual bytes/items completed and actionable retry; local queue status clearly differentiated from remote sync completion.
+- **GoreeCloud Notepad:** Content-first editor, familiar Save/search actions, immediate locally persisted response where implemented, durable-save and cross-device-sync states clearly separated, meaningful loading/error recovery.
+- **GoreeCloud Tasks:** Grouped work by project/date, reachable action controls, reduced redundant choices, clearly labeled completion pending/synced states, and progress when a multi-item operation is measurable.
+- **GoreeCloud UI components:** Reusable FormSection, NavigationItem, ReachableAction, Skeleton, ProgressStatus and AsyncAction patterns may be evaluated against existing component catalog before adding anything new; names here are **conceptual**, not confirmed exports.
+
+### Proposed acceptance and verification matrix
+
+1. **Grouping / Miller / proximity:** Can a new user locate a field/record and recognize its related controls without scanning unrelated groups? Verify at phone, tablet, desktop, 200%/400% zoom, and enlarged text.
+2. **Familiarity / Jakob:** Can an icon's meaning be identified without guesswork? Test accessible names, platform navigation, selected state, clear Back behavior, and alternate text where needed.
+3. **Reachability / Fitts:** Can the primary action be activated reliably with touch, mouse and keyboard without overlap by floating navigation, keyboard or system gesture areas?
+4. **Choice quality / Hick–Hyman:** Can the user select an accurate answer with no missing/overlapping ranges, misleading defaults or hidden requirements? Compare actual task outcomes rather than relying on number of options alone.
+5. **Skeleton:** Does placeholder geometry resemble actual content, preserve layout, announce a useful loading status once, and terminate into loaded/empty/error/offline behavior?
+6. **Progress:** Do visible fractions/percentages reconcile with real operation metrics? Is ETA omitted when not defensible? Are partial failures and cancellation/retry correctly represented?
+7. **Optimistic action:** Is provisional UI state distinguishable where needed? Does reconciliation either confirm or recover correctly under offline, timeout, duplicate-request and server-rejection tests?
+8. **Visual compliance:** Confirm current GC UI semantic roles, rounded geometry, floating navigation, high contrast, reduced motion, themes and platform-native interaction conventions in actual rendered builds.
+
+**Evidence required before adopting as implemented:** Relevant source-code paths and contract tests, integration traces for server operations, accessibility checks, and before/after screenshots from the actual GoreeCloud application. None of those verification steps were performed for these reference images.
+
+### Source-handling and governing references
+
+- The eight uploaded files are `1225.png`, `1224.png`, `1223.png`, `1222.png`, `1221.png`, `1218.png`, `1217.png`, and `1216.png` in the November 2, 2026 conversation. They are not archived in this repository or the canonical GoreeCloud Drive; their identifiers are retained as provenance pointers, not assumed permanent URLs.
+- Visible TikTok-style surrounding controls are incidental context. No image/copy/brand asset licensing, attribution permission, or permission to republish the source media was verified.
+- Canonical design system and component contracts: [GC UI specification](GC_UI_1_0_SPECIFICATION.md), [component guidance](COMPONENTS.md), [interaction and motion](MOTION_INPUT.md), [accessibility and release](ACCESSIBILITY_RELEASE.md), and [theme specification](COLOR_THEMES.md).
+- Existing founder standards are authoritative in Google Drive: [Universal Rounded UI Elements](https://drive.google.com/file/d/1JXamkBbF9T1EZIMDhcthmQV6ewLSQmTZ/view) and [Universal Floating Navigation Bars](https://drive.google.com/file/d/1Sh4JTGPM49gWk0VrqVDQN1qJ7ZkBJl0k/view). This addendum proposes interpretations and does not amend either standard.
+- **Status:** Visual educational references reviewed and documented. Source screenshots not committed. No production code, design tokens, APIs, releases, integrations or consumer apps changed or verified through this documentation-only update.
