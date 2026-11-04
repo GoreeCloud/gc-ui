@@ -92,7 +92,7 @@ try{
    const capture=await captureZoomScreenshot(page,{
     path:resolve(out,lab+'-'+scale*100+'.png'),
     animations:'disabled',timeout:15000
-   });
+   },{validateContent:true});
    if(capture.captured){
     screenshotCount++;
     if(capture.attempts>1)console.log('RECOVERED screenshot '+engineName+' '+lab+' '+scale*100+'% on retry');
@@ -119,7 +119,7 @@ try{
  console.log('400% geometry '+engineName+' '+JSON.stringify(geometry));
  const interactionCapture=await captureZoomScreenshot(page,{
   path:resolve(out,'adaptive-interaction-400.png'),animations:'disabled',timeout:15000
- });
+ },{validateContent:true});
  if(interactionCapture.captured){
   screenshotCount++;
   if(interactionCapture.attempts>1)console.log('RECOVERED interaction screenshot on retry');
