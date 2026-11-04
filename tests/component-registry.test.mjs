@@ -23,7 +23,7 @@ test('all catalog rows are uniquely mirrored in the machine-readable component r
 });
 test('implementation claims are specific, experimental, and traceable to source files',()=>{
  const implemented=registry.components.filter(c=>c.webStatus==='experimental');
- assert.equal(implemented.length,32);
+ assert.equal(implemented.length,34);
  assert.equal(registry.components.filter(c=>c.webStatus==='stable').length,0);
  for(const component of registry.components){
   assert.equal(component.nativeStatus,'specified');
@@ -60,4 +60,23 @@ test('catalog stable count is scoped to web demos and discloses Foundations rele
  assert.match(catalog,/<p><bdi dir="auto">The full GC UI component architecture/);
  assert.match(catalog,/catalog component demos are experimental and are not included in that stable scope/);
  assert.equal(registry.components.filter(c=>c.webStatus==='stable').length,0);
+});
+
+test('Workflow Lab date and wizard are experimental web references, not stable/native components',()=>{
+ const html=readFileSync(new URL('../lab/workflow.html',import.meta.url),'utf8');
+ const css=readFileSync(new URL('../lab/workflow.css',import.meta.url),'utf8');
+ const shared=readFileSync(new URL('../styles/gc.v1.components.css',import.meta.url),'utf8');
+ const date=registry.components.find(c=>c.id==='F19');
+ const wizard=registry.components.find(c=>c.id==='N45');
+ for(const component of [date,wizard]){
+  assert.equal(component.webStatus,'experimental');
+  assert.equal(component.nativeStatus,'specified');
+  assert.equal(component.web.example,'lab/workflow.html');
+ }
+ assert.deepEqual(date.web.sources,['styles/gc.v1.components.css','lab/workflow.mjs']);
+ assert.deepEqual(wizard.web.sources,['lab/workflow.css','lab/workflow.mjs']);
+ assert.match(html,/id="workspace-date" type="date"/);
+ assert.match(html,/class="gc-workflow-steps"/);
+ assert.match(shared,/\.gc-input/);
+ assert.match(css,/\.gc-workflow-steps/);
 });
