@@ -298,8 +298,18 @@
       "category": "Input",
       "anatomy": "editable display and calendar/grid or native system picker",
       "behavior": "locale format, timezone and DST explicit; no color-only date availability",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-input"
+        ],
+        "sources": [
+          "styles/gc.v1.components.css",
+          "lab/workflow.mjs"
+        ],
+        "example": "lab/workflow.html"
+      }
     },
     {
       "id": "F20",
@@ -651,8 +661,18 @@
       "category": "Navigation",
       "anatomy": "step labels, current, completed, blocked",
       "behavior": "current step announced; users can review; do not lose entered data",
-      "webStatus": "specified",
-      "nativeStatus": "specified"
+      "webStatus": "experimental",
+      "nativeStatus": "specified",
+      "web": {
+        "classNames": [
+          "gc-workflow-steps"
+        ],
+        "sources": [
+          "lab/workflow.css",
+          "lab/workflow.mjs"
+        ],
+        "example": "lab/workflow.html"
+      }
     },
     {
       "id": "O46",
