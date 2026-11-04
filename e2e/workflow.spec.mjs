@@ -177,3 +177,67 @@ for(const {width,rtl,forced} of [
   await expect(page.getByRole('heading',{name:'2. Organize your preferences'})).toBeFocused();
  });
 }
+
+test('IME composition does not prematurely clear a field error',async({page})=>{
+ await page.goto('/lab/workflow.html');
+ await page.getByRole('button',{name:'Next: Preferences'}).click();
+ const name=page.locator('#workspace-name');
+ const error=page.locator('#workspace-name-error');
+ await expect(name).toHaveAttribute('aria-invalid','true');
+ await expect(error).toBeVisible();
+ await name.evaluate(el=>{
+  el.dispatchEvent(new CompositionEvent('compositionstart',{bubbles:true,data:''}));
+  el.value='Temporary workspace name';
+  el.dispatchEvent(new InputEvent('input',{bubbles:true,isComposing:true,data:'Temporary workspace name',inputType:'insertCompositionText'}));
+ });
+ await expect(name).toHaveAttribute('aria-invalid','true');
+ await expect(error).toBeVisible();
+ await name.evaluate(el=>{
+  el.value='X';
+  el.dispatchEvent(new CompositionEvent('compositionend',{bubbles:true,data:'X'}));
+  el.dispatchEvent(new InputEvent('input',{bubbles:true,isComposing:false,data:'X',inputType:'insertText'}));
+ });
+ await expect(name).toHaveAttribute('aria-invalid','true');
+ await expect(error).toBeVisible();
+ await name.fill('Sample workspace');
+ await expect(name).not.toHaveAttribute('aria-invalid','true');
+ await expect(error).toBeHidden();
+});
+
+for(const {width,locale,rtl,label} of [
+ {width:320,locale:'ar-EG',rtl:true,label:'إعدادات وتفضيلات تهيئة مساحة العمل للأرشيف العائلي الطويلة والواضحة'},
+ {width:375,locale:'ja-JP',rtl:false,label:'作業スペースの長い翻訳された設定と個人の環境設定を確認してください'}
+]){
+ test('long localized labels remain readable without clipped steps '+locale,async({browser})=>{
+  const context=await browser.newContext({locale,viewport:{width,height:700}});
+  try{
+   const page=await context.newPage();
+   await page.goto('/lab/workflow.html');
+   await page.evaluate(({rtl,label,locale})=>{
+    document.documentElement.dir=rtl?'rtl':'ltr';
+    document.documentElement.lang=locale.split('-')[0];
+    document.querySelectorAll('.gc-workflow-steps li').forEach((element,i)=>{element.textContent=label+' '+(i+1)});
+    document.querySelector('label[for="workspace-name"]').textContent=label+label;
+   },{rtl,label,locale});
+   const measurements=await page.evaluate(()=>({
+    overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+    steps:[...document.querySelectorAll('.gc-workflow-steps li')].map(element=>({
+     width:element.clientWidth,scrollWidth:element.scrollWidth,
+     height:element.clientHeight,scrollHeight:element.scrollHeight
+    })),
+    active:document.querySelectorAll('.gc-workflow-steps [aria-current=step]').length
+   }));
+   expect(measurements.overflow).toBeLessThanOrEqual(1);
+   expect(measurements.active).toBe(1);
+   expect(measurements.steps).toHaveLength(4);
+   expect(measurements.steps.every(step=>
+    step.scrollWidth<=step.width+1&&step.scrollHeight<=step.height+1)).toBe(true);
+   // The first label was localized above, so use its stable input ID.
+   await page.locator('#workspace-name').fill('Family archive');
+   await page.locator('#workspace-owner').fill('Home team');
+   await page.locator('#workspace-purpose').selectOption('family');
+   await page.getByRole('button',{name:'Next: Preferences'}).click();
+   await expect(page.getByRole('heading',{name:'2. Organize your preferences'})).toBeFocused();
+  }finally{await context.close()}
+ });
+}
