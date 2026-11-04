@@ -1,6 +1,8 @@
 # GoreeCloud UI (GC UI) — Design Language v0.1
 
-**Status:** Working alpha foundation (16 October 2026)
+**Design-standard status:** **Active founder-approved GoreeCloud UI design and UX standard**, effective November 3, 2026. The canonical GoreeCloud Drive `GoreeCloud/Projects/GoreeCloud UI/DESIGN-LANGUAGE-AND-100-UI-UX-PRINCIPLES.md` is the authoritative full 100-principle reference; this repository page is a compact implementation-facing guide, not a replacement for that standard.
+
+**Implementation maturity:** The current `0.2.0-alpha.1` workspace and experimental component demos remain alpha. Separately released **Stable Foundations 1.0.1** covers only its explicitly shipped token, color and theme-control contract. An active design standard does not certify consumer migration, production readiness or accessibility acceptance. Verified repository tokens, component APIs and governance controls remain the code-level contract until formally reconciled.
 
 ## 1. Identity
 
@@ -9,6 +11,10 @@
 **Mandatory Integrated Platform System:** GC UI is GoreeCloud's sole designated design and experience authority. The current founder requirement has five MIPS: GoreeCloud UI, GoreeShield, Wardveil, GoreeCloud Identity and GoreeCloud Mesh. See [MIPS classification](DESIGN_SYSTEM_SUCCESSION.md#goreecloud-ui-as-a-mandatory-integrated-platform-system).
 
 GC UI is GoreeCloud's **designated permanent successor** to the prior Glaze design system. The target is **one authoritative design language**, never two long-term systems. This implementation remains original: predecessor source, tokens and assets must not be renamed or embedded. The [succession plan](DESIGN_SYSTEM_SUCCESSION.md) tracks still-pending platform-governance and consumer migrations; it does not claim those cutovers have happened.
+
+### Design philosophy
+
+*Clear by default. Consistent by nature. Fluid by design.*
 
 ### Promise
 
@@ -29,6 +35,8 @@ Deliver a distinctive and intentional GoreeCloud experience through strong compo
 This is a **mandatory design and review requirement**, not a claim that existing GoreeCloud applications already comply. Implementation and migration status must be verified product by product.
 
 ### Principles
+
+The following six implementation-facing summaries complement, but do **not** replace, the active founder-approved **100 essential UI/UX principles**. Apply the complete standard to layout, readability, responsive interaction, visual refinement, accessibility, feedback, performance and relevant light/dark/high-contrast and reduced-motion states. The 100 principles are requirements for review and design decisions, **not** a claim that all 100 have been implemented or audited across products.
 
 1. **Content before effect** — legibility and comprehension outlast decoration.
 2. **Personal, not random** — a chosen color is translated into stable semantic roles.
