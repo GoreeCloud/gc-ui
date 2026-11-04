@@ -31,6 +31,6 @@ for(const lab of labs)for(const variant of variants){
 for(const name of await readdir(folder))assert.ok(expected.has(name),'Unexpected nontext screenshot record '+name);
 assert.equal(entries.length,25);
 await writeFile(join(folder,'manifest.json'),JSON.stringify({
- schema:'gc-ui-nontext-visual-evidence.v1',cases:entries,
+ schema:'gc-ui-nontext-visual-evidence.v2',cases:entries,
  scope:'Selected decorative symbol backdrops, not all WCAG or human visual approval'},null,2)+'\n');
 console.log('PASS 25/25 glyph PNG dimensions, exact selectors, sampled ratios, semantics and hashes');

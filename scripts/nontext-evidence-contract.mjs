@@ -18,11 +18,13 @@ export const expectedNontextSelectors=Object.freeze({
 
 export function verifyNontextEvidenceRecord(record,{lab,width,mode,rtl}){
  assert.ok(record&&typeof record==='object'&&!Array.isArray(record),'Non-text evidence must be an object');
- assert.equal(record.schema,'gc-ui-nontext-visual.v1');
+ assert.equal(record.schema,'gc-ui-nontext-visual.v2');
  assert.equal(record.lab,lab);
  assert.equal(record.width,width);
  assert.equal(record.mode,mode);
  assert.equal(record.rtl,rtl);
+ assert.deepEqual(record.captureOrigin,{x:0,y:0},
+  lab+' screenshot capture origin must match the document top');
  const selectors=expectedNontextSelectors[lab];
  assert.ok(selectors,'Unknown non-text evidence lab '+lab);
  assert.ok(Array.isArray(record.measurements),'Non-text measurements must be an array');

@@ -49,13 +49,28 @@ for(const {width,mode,rtl} of variants){
     expect(result.min,lab.name+' '+selector+' '+width+' '+mode+' composited pixel ratio').toBeGreaterThanOrEqual(3);
     measures.push({lab:lab.name,selector,decorative:before.decorative,...result});
    }
+   // The preceding glyph sampling can scroll far into a long lab page.
+   // Normalize top-of-document before full-page screenshot export so sticky
+   // chrome is not misrepresented halfway down the archived screenshot.
+   const captureOrigin=await page.evaluate(()=>{
+    const root=document.documentElement;
+    const original=root.style.getPropertyValue('scroll-behavior');
+    const priority=root.style.getPropertyPriority('scroll-behavior');
+    root.style.setProperty('scroll-behavior','auto','important');
+    try{window.scrollTo(0,0)}finally{
+     if(original)root.style.setProperty('scroll-behavior',original,priority);
+     else root.style.removeProperty('scroll-behavior');
+    }
+    return {x:window.scrollX,y:window.scrollY};
+   });
+   expect(captureOrigin,lab.name+' screenshot starts at page origin').toEqual({x:0,y:0});
    const key=lab.name+'-'+width+'-'+mode+(rtl?'-rtl':'');
    const folder=resolve(testInfo.project.outputDir,'nontext-visual');
    await mkdir(folder,{recursive:true});
    const png=join(folder,key+'.png'),json=join(folder,key+'.json');
    await writeFile(png,await page.screenshot({fullPage:true,animations:'disabled'}));
-   await writeFile(json,JSON.stringify({schema:'gc-ui-nontext-visual.v1',lab:lab.name,
-    width,mode,rtl,measurements:measures.filter(x=>x.lab===lab.name),
+   await writeFile(json,JSON.stringify({schema:'gc-ui-nontext-visual.v2',lab:lab.name,
+    width,mode,rtl,captureOrigin,measurements:measures.filter(x=>x.lab===lab.name),
     scope:'Selected non-text pixel samples; not universal WCAG or human visual signoff'},null,2)+'\n');
    await testInfo.attach(key+'.png',{path:png,contentType:'image/png'});
    await testInfo.attach(key+'.json',{path:json,contentType:'application/json'});
