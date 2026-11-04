@@ -4,7 +4,7 @@ import {expectedNontextSelectors,adaptiveNavigationGlyphs,expectedNontextSelecto
 
 const variant={width:320,mode:'light',rtl:false};
 const recordFor=(lab,options=variant)=>({
- schema:'gc-ui-nontext-visual.v1',lab,...options,
+ schema:'gc-ui-nontext-visual.v2',lab,...options,captureOrigin:{x:0,y:0},
  measurements:expectedNontextSelectorsForViewport(lab,options.width).map(selector=>({lab,selector,samples:160,min:5.1,decorative:true}))
 });
 const verify=(record,expected=variant)=>verifyNontextEvidenceRecord(record,{lab:record.lab,...expected});
@@ -79,4 +79,16 @@ test('mobile, desktop and tablet evidence cannot substitute or omit navigation g
   tabletRecord.measurements.push(disguised.measurements[4]);
   assert.throws(()=>verify(tabletRecord,{...variant,width:768}),/canonical glyph/);
  }
+});
+
+test('screenshot records must prove their capture started at the document origin',()=>{
+ const recorded=recordFor('adaptive');
+ assert.doesNotThrow(()=>verify(recorded));
+ for(const origin of [undefined,{x:0,y:200},{x:1,y:0},{x:0,y:0,extra:true}]){
+  const invalid=recordFor('adaptive');
+  invalid.captureOrigin=origin;
+  assert.throws(()=>verify(invalid),/screenshot capture origin/);
+ }
+ const obsolete=recordFor('forms');obsolete.schema='gc-ui-nontext-visual.v1';
+ assert.throws(()=>verify(obsolete));
 });
