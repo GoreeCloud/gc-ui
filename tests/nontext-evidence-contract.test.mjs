@@ -9,9 +9,9 @@ const recordFor=lab=>({
 });
 const verify=record=>verifyNontextEvidenceRecord(record,{lab:record.lab,...variant});
 
-test('exact selector inventory accepts eight selected glyphs across five labs',()=>{
+test('exact selector inventory accepts nine selected glyphs across five labs',()=>{
  assert.deepEqual(Object.keys(expectedNontextSelectors),['v1','environment','components','adaptive','forms']);
- assert.equal(Object.values(expectedNontextSelectors).reduce((n,s)=>n+s.length,0),8);
+ assert.equal(Object.values(expectedNontextSelectors).reduce((n,s)=>n+s.length,0),9);
  for(const lab of Object.keys(expectedNontextSelectors))assert.doesNotThrow(()=>verify(recordFor(lab)));
 });
 test('duplicate or substituted glyph cannot satisfy counts',()=>{
@@ -46,4 +46,13 @@ test('rejects mismatched lab or viewport metadata',()=>{
  assert.throws(()=>verify(incorrect));
  const unknown=recordFor('forms');unknown.lab='not-a-lab';
  assert.throws(()=>verify(unknown),/Unknown non-text evidence lab/);
+});
+
+test('Components file-action chevron must remain independently evidenced',()=>{
+ const omitted=recordFor('components');
+ omitted.measurements.pop();
+ assert.throws(()=>verify(omitted),/canonical glyph/);
+ const altered=recordFor('components');
+ altered.measurements[1]={...altered.measurements[1],decorative:false};
+ assert.throws(()=>verify(altered),/decorative role/);
 });
