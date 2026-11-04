@@ -5,6 +5,12 @@
 **Source:** [workflow.html](../lab/workflow.html), [workflow.mjs](../lab/workflow.mjs), [workflow.css](../lab/workflow.css).  
 **Checks:** [browser](../e2e/workflow.spec.mjs) and [source](../tests/workflow-lab.test.mjs).
 
+## Current verification status (November 3, 2026)
+
+The Workflow Lab remains an experimental, fictional local specimen. In addition to the locale/320px evidence below, [PR #188](https://github.com/GoreeCloud/gc-ui/pull/188) corrected narrow RTL step-label wrapping, [PR #189](https://github.com/GoreeCloud/gc-ui/pull/189) added 200%/400%-equivalent CSS-viewport checks, [PR #190](https://github.com/GoreeCloud/gc-ui/pull/190) exercised Arabic (Egypt, RTL) and Japanese browser date formatting, and [PRs #191–#193](https://github.com/GoreeCloud/gc-ui/pull/193) added and strengthened *actual browser 200%/400% zoom* evidence under isolated Linux Xvfb.
+
+The latest native zoom QA verifies 24 LTR/RTL layout combinations per browser and 13 screenshot contexts across Chromium and Firefox. At true 400% zoom, manually inspected screenshots show the first active Basics step and Preferences. Chromium uses a controlled test-only CDP view-backed capture because its ordinary post-scroll Playwright screenshot can be blank; the PNG validator rejects blank evidence. These capabilities are **merged and verified on `main`**, most recently at `349a650ab0fba478509470cbfd39261a635600fa`, following successful exact-head hosted gates. This supersedes only dated assertions below that native toolbar zoom had not been measured; it does **not** convert any earlier tests into physical-device, real IME, translated UI, Safari, screen-reader, all-step visual or release acceptance.
+
 ## Founder intent and scope
 
 This separate example demonstrates the founder's [eight UX/UI principles](UX_UI_DESIGN_PRINCIPLES.md) without turning the existing short [Forms Lab](../lab/forms.html) into a gratuitous wizard. The four phases are Basics, Preferences, Schedule, and Review. Back and Next preserve the in-memory values, validation identifies a field in error, and moving between steps focuses the new heading. Progress is textual and marks the current step with `aria-current="step"`.

@@ -4,6 +4,14 @@
 **Repository:** `GoreeCloud/gc-ui` only
 **Maturity:** unpublished `0.2.0-alpha.1`; 32 experimental, 31 specified, zero stable
 
+## Current scope (November 3, 2026)
+
+**This file preserves an October 16 historical baseline below.** Its original *five labs / 20 CSS-viewport observations* and “actual browser zoom unverified” statements describe that earlier wave, **not** the latest repository capabilities.
+
+The current isolated Linux Xvfb runner in `scripts/qa-real-browser-zoom.mjs` tests **six reference labs**, including Workflow, at genuine browser **200% and 400% zoom** in Chromium and Firefox, LTR and RTL (**24 geometry observations per browser**), while retaining mandatory interaction checks and reset to 100%. [PR #191](https://github.com/GoreeCloud/gc-ui/pull/191) expanded that scope; [PR #192](https://github.com/GoreeCloud/gc-ui/pull/192) rejects uniformly blank PNG evidence; [PR #193](https://github.com/GoreeCloud/gc-ui/pull/193) provides first-step-focused Workflow evidence at native 400%, including a transient CDP viewport readback only in Chromium. All three are merged on `main`, most recently `349a650ab0fba478509470cbfd39261a635600fa`. Their exact-head hosted browser/core, native-host and editorial checks passed, and source readback verified the merged changes. Post-merge `main` workflows are tracked separately from those exact-head pull-request gates.
+
+The **CSS-viewport-equivalent tests** in `e2e/effective-zoom.spec.mjs` remain distinct from the **genuine desktop native-zoom tests**. Neither establishes real iOS/Android/Safari zoom parity, translated labels, human assistive-technology experience, all-step visual inspection or full product visual acceptance. Experimental/reference maturity remains unchanged.
+
 ## Why this wave
 
 The earlier RTL and doubled-text `e2e/reflow.spec.mjs` gate checks 320, 375, 600 and 768 CSS px at a fixed 700px height. It does not exercise the very short viewport produced when a 1280×800 window is enlarged to approximately 400%, nor interactive access beneath fixed navigation.
