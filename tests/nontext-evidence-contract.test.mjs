@@ -1,13 +1,13 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {expectedNontextSelectors,verifyNontextEvidenceRecord} from '../scripts/nontext-evidence-contract.mjs';
+import {expectedNontextSelectors,adaptiveNavigationGlyphs,expectedNontextSelectorsForViewport,verifyNontextEvidenceRecord} from '../scripts/nontext-evidence-contract.mjs';
 
 const variant={width:320,mode:'light',rtl:false};
-const recordFor=lab=>({
- schema:'gc-ui-nontext-visual.v2',lab,...variant,captureOrigin:{x:0,y:0},
- measurements:expectedNontextSelectors[lab].map(selector=>({lab,selector,samples:160,min:5.1,decorative:true}))
+const recordFor=(lab,options=variant)=>({
+ schema:'gc-ui-nontext-visual.v2',lab,...options,captureOrigin:{x:0,y:0},
+ measurements:expectedNontextSelectorsForViewport(lab,options.width).map(selector=>({lab,selector,samples:160,min:5.1,decorative:true}))
 });
-const verify=record=>verifyNontextEvidenceRecord(record,{lab:record.lab,...variant});
+const verify=(record,expected=variant)=>verifyNontextEvidenceRecord(record,{lab:record.lab,...expected});
 
 test('exact selector inventory accepts nine selected glyphs across five labs',()=>{
  assert.deepEqual(Object.keys(expectedNontextSelectors),['v1','environment','components','adaptive','forms']);
@@ -55,6 +55,30 @@ test('Components file-action chevron must remain independently evidenced',()=>{
  const altered=recordFor('components');
  altered.measurements[1]={...altered.measurements[1],decorative:false};
  assert.throws(()=>verify(altered),/decorative role/);
+});
+
+test('six Adaptive navigation glyph identities are gated by actual shell viewport',()=>{
+ assert.equal(adaptiveNavigationGlyphs.phone.length,3);
+ assert.equal(adaptiveNavigationGlyphs.desktop.length,3);
+ assert.equal(new Set([...adaptiveNavigationGlyphs.phone,...adaptiveNavigationGlyphs.desktop]).size,6);
+ for(const [width,extras] of [[320,adaptiveNavigationGlyphs.phone],[768,[]],[1440,adaptiveNavigationGlyphs.desktop]]){
+  const expected=[...expectedNontextSelectors.adaptive,...extras];
+  assert.deepEqual(expectedNontextSelectorsForViewport('adaptive',width),expected);
+  assert.doesNotThrow(()=>verify(recordFor('adaptive',{...variant,width}),{...variant,width}));
+ }
+});
+test('mobile, desktop and tablet evidence cannot substitute or omit navigation glyphs',()=>{
+ for(const width of [320,1440]){
+  const omitted=recordFor('adaptive',{...variant,width});
+  omitted.measurements.pop();
+  assert.throws(()=>verify(omitted,{...variant,width}),/canonical glyph/);
+  const disguised=recordFor('adaptive',{...variant,width});
+  disguised.measurements[4].decorative=false;
+  assert.throws(()=>verify(disguised,{...variant,width}),/decorative role/);
+  const tabletRecord=recordFor('adaptive',{...variant,width:768});
+  tabletRecord.measurements.push(disguised.measurements[4]);
+  assert.throws(()=>verify(tabletRecord,{...variant,width:768}),/canonical glyph/);
+ }
 });
 
 test('screenshot records must prove their capture started at the document origin',()=>{
