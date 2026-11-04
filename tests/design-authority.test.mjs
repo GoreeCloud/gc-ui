@@ -39,6 +39,21 @@ test('single-design-authority owner decision is machine readable and release cla
  assert.match(contract.verified.foundationsStableSourceCommit,/^[a-f0-9]{40}$/);
  assert.match(contract.verified.foundationsStableArchiveSha256,/^[a-f0-9]{64}$/);
 });
+test('active founder-approved design language is distinct from alpha implementation maturity',()=>{
+ const guide=read('docs/DESIGN_LANGUAGE.md');
+ const overview=read('README.md');
+ assert.match(guide,/Active founder-approved GoreeCloud UI design and UX standard/);
+ assert.match(guide,/effective November 3, 2026/);
+ assert.match(guide,/100 essential UI\/UX principles/);
+ assert.match(guide,/Clear by default\. Consistent by nature\. Fluid by design\./);
+ assert.match(guide,/Calm information\. Expressive personality\. Purposeful depth\./);
+ assert.match(guide,/0\.2\.0-alpha\.1/);
+ assert.match(guide,/Stable Foundations 1\.0\.1/);
+ assert.match(guide,/\*\*not\*\* a claim that all 100 have been implemented/);
+ assert.match(overview,/Active design standard/);
+ assert.match(overview,/experimental source workspace/);
+});
+
 test('active implementation rejects predecessor namespaced assets, imports and design tokens',()=>{
  for(const malicious of [
   "import '../legacy/Glaze/tokens.css'",
