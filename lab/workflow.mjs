@@ -102,11 +102,16 @@ function showStep(index){
 for(const ids of fieldIds){
  for(const id of ids){
   const input=element(id);
-  // Only revalidate a field as it changes after an error has been shown.
-  function onChange(){
+  // Preserve existing error context while an IME composition is provisional.
+  // Revalidate on commit, not on intermediate preedit text.
+  let composing=false;
+  function onChange(event){
    success.hidden=true;
+   if(composing||event?.isComposing)return;
    if(input.hasAttribute('aria-invalid'))setError(id,!isValid(id));
   }
+  input.addEventListener('compositionstart',()=>{composing=true});
+  input.addEventListener('compositionend',()=>{composing=false;onChange()});
   input.addEventListener('input',onChange);
   input.addEventListener('change',onChange);
  }
