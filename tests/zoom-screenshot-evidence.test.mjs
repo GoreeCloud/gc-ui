@@ -93,3 +93,12 @@ test('repeated uniform captures remain explicitly failed evidence',async()=>{
  assert.equal(result.captured,false);assert.equal(result.attempts,2);
  assert.match(result.error.message,/visually uniform/);assert.equal(f.calls.length,2);
 });
+
+test('400%-zoom Workflow evidence is focused and Chromium uses viewport readback',()=>{
+ const script=readFileSync(new URL('../scripts/qa-real-browser-zoom.mjs',import.meta.url),'utf8');
+ assert.match(script,/lab==='workflow'&&scale===4/);
+ assert.match(script,/\.gc-workflow-steps \[aria-current=step\]/);
+ assert.match(script,/Page\.captureScreenshot/);
+ assert.match(script,/fromSurface:false,captureBeyondViewport:false/);
+ assert.match(script,/await captureZoomScreenshot\(screenshotPage,options,\{validateContent:true\}\)/);
+});

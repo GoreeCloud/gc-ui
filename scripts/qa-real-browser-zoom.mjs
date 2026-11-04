@@ -89,10 +89,42 @@ try{
     observations.push({lab,scale,direction,...current});
    }
    await page.evaluate(()=>document.documentElement.dir='ltr');
-   const capture=await captureZoomScreenshot(page,{
-    path:resolve(out,lab+'-'+scale*100+'.png'),
-    animations:'disabled',timeout:15000
-   },{validateContent:true});
+   const options={path:resolve(out,lab+'-'+scale*100+'.png'),
+    animations:'disabled',timeout:15000};
+   let screenshotPage=page,session=null,setupError=null;
+   if(lab==='workflow'&&scale===4){
+    try{
+     const step=page.locator('.gc-workflow-steps [aria-current=step]');
+     assert.equal(await step.count(),1,'Expected exactly one active Workflow step');
+     await step.scrollIntoViewIfNeeded();
+     await page.waitForTimeout(200);
+     const rect=await step.boundingBox();
+     assert(rect&&rect.y>=0&&rect.y+rect.height<=initial.cssHeight/scale,
+      'Workflow active step is outside the native zoom viewport');
+     if(engineName==='chromium'){
+      // Native 400% Chromium Playwright viewport captures can go blank after
+      // scrolling. Read the trusted isolated-Xvfb viewport instead.
+      session=await context.newCDPSession(page);
+      screenshotPage={
+       waitForTimeout:ms=>page.waitForTimeout(ms),
+       async screenshot(screenshotOptions){
+        const {data}=await session.send('Page.captureScreenshot',
+         {format:'png',fromSurface:false,captureBeyondViewport:false});
+        const bytes=Buffer.from(data,'base64');
+        await writeFile(screenshotOptions.path,bytes);
+        return bytes;
+       }
+      };
+     }
+     console.log('FOCUSED Workflow 400% step evidence '+engineName+' '+JSON.stringify(rect));
+    }catch(error){setupError=error;}
+   }
+   let capture;
+   try{
+    capture=setupError?{captured:false,attempts:0,error:setupError}:
+     await captureZoomScreenshot(screenshotPage,options,{validateContent:true});
+   }finally{if(session)await session.detach();}
+
    if(capture.captured){
     screenshotCount++;
     if(capture.attempts>1)console.log('RECOVERED screenshot '+engineName+' '+lab+' '+scale*100+'% on retry');
