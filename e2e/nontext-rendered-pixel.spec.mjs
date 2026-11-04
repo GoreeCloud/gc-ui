@@ -14,6 +14,20 @@ const labs=[
  {name:'adaptive',selectors:['.gc-metric-card:nth-child(1) .gc-metric-icon','.gc-metric-card:nth-child(3) .gc-metric-icon','.gc-activity-list li:nth-child(1) .gc-activity-symbol','.gc-activity-list li:nth-child(2) .gc-activity-symbol']},
  {name:'forms',selectors:['.gc-recovery-symbol']}
 ];
+// Independent from the evidence verifier: six additional historical
+// axe-incomplete targets are visible only in mobile or desktop navigation.
+const responsiveAdaptiveGlyphs={
+ phone:[
+  '.gc-bottom-link[href$="#overview"][data-gc-route="overview"] > span[aria-hidden="true"]',
+  '.gc-bottom-link[href$="#activity"][data-gc-route="activity"] > span[aria-hidden="true"]',
+  '.gc-bottom-link[href$="#library"][data-gc-route="library"] > span[aria-hidden="true"]'
+ ],
+ desktop:[
+  '.gc-nav-link[href$="#overview"][data-gc-route="overview"] > .gc-nav-glyph[aria-hidden="true"]',
+  '.gc-nav-link[href$="#activity"][data-gc-route="activity"] > .gc-nav-glyph[aria-hidden="true"]',
+  '.gc-nav-link[href$="#library"][data-gc-route="library"] > .gc-nav-glyph[aria-hidden="true"]'
+ ]
+};
 const variants=[
  {width:320,mode:'light',rtl:false},
  {width:320,mode:'dark',rtl:false},
@@ -30,10 +44,18 @@ for(const {width,mode,rtl} of variants){
    await page.goto('/lab/'+lab.name+'.html');
    if(rtl)await page.evaluate(()=>document.documentElement.dir='rtl');
    await expect(page.locator('html')).toHaveAttribute('data-gc-mode',mode);
-   for(const selector of lab.selectors){
+   const navigationGlyphs=lab.name!=='adaptive'?[]:
+    width<600?responsiveAdaptiveGlyphs.phone:
+    width>=1200?responsiveAdaptiveGlyphs.desktop:[];
+   for(const selector of [...lab.selectors,...navigationGlyphs]){
     const element=page.locator(selector);
     await expect(element).toHaveCount(1);
     await element.scrollIntoViewIfNeeded();
+    if(navigationGlyphs.includes(selector)){
+     await expect(element).toBeVisible();
+     const link=element.locator('..');
+     await expect(link).toContainText(/Overview|Activity|Library/);
+    }
     const before=await element.evaluate(el=>({
      value:el.style.getPropertyValue('color'),
      priority:el.style.getPropertyPriority('color'),
