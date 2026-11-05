@@ -34,7 +34,11 @@
         "modern",
         "polished",
         "premium",
-        "eye-catching"
+        "eye-catching",
+        "elegant",
+        "well-aligned",
+        "uncluttered",
+        "cohesive-semantic-color"
       ],
       "unacceptableQualities": [
         "plain",
@@ -42,12 +46,17 @@
         "boring",
         "generic",
         "unfinished",
-        "merely-functional"
+        "merely-functional",
+        "overcrowded",
+        "colorless",
+        "misaligned",
+        "ugly"
       ],
       "designSpecification": "docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard",
       "visualAcceptanceCriteria": "docs/COMPONENTS.md#mandatory-visual-acceptance-gate",
       "pullRequestReviewTemplate": ".github/PULL_REQUEST_TEMPLATE.md",
-      "allConsumerVisualAcceptanceVerified": false
+      "allConsumerVisualAcceptanceVerified": false,
+      "founderClarificationDate": "2026-11-05"
     }
   },
   "verified": {
