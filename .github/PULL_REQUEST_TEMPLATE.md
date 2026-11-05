@@ -10,6 +10,7 @@
 
 > Every GoreeCloud product must be **beautiful, modern, polished, premium, distinctive, and eye-catching**. Plain, basic, boring, generic, or merely functional interfaces do not meet acceptance. See the [GoreeCloud premium interface standard](https://github.com/GoreeCloud/gc-ui/blob/main/docs/DESIGN_LANGUAGE.md#mandatory-premium-interface-standard) and [visual acceptance gate](https://github.com/GoreeCloud/gc-ui/blob/main/docs/COMPONENTS.md#mandatory-visual-acceptance-gate).
 >
+> **Mandatory founder clarification (November 5, 2026):** Reject overcrowded, basic, boring, plain, colorless, misaligned, or ugly interfaces. Require polished, eye-catching, premium, modern, beautiful, and elegant presentation across all affected states, without sacrificing readability or accessibility.
 > A checked box is a contributor attestation, **not** independent proof of release readiness. Do not claim platform-wide compliance from one screen.
 
 - [ ] I assessed the changed UI against founder-provided visual references, the product brief, and the approved GoreeCloud UI design language.
@@ -19,6 +20,7 @@
 - [ ] I checked keyboard operation, focus visibility, accessible labels, screen-reader semantics where applicable, contrast, loading behavior, and basic performance.
 - [ ] All visible controls perform meaningful actions. I did not present placeholders, mockups, or previews as implemented functionality.
 - [ ] I reviewed current rendered screenshots or other reproducible UI evidence and corrected visible quality issues; untested states and deviations are documented.
+- [ ] I explicitly checked for cramped information density, misalignment, overly plain or colorless styling, visual clutter, and unfinished aesthetics; I addressed each issue with cohesive color and refined, accessible composition.
 - [ ] I ran relevant build, test, lint, accessibility, and regression checks, or disclosed why each could not run.
 
 ## Mobile-screen review (only if the PR changes a mobile screen or journey)
