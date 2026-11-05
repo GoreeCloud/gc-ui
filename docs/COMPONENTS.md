@@ -41,6 +41,8 @@ For each new or materially changed product screen, review and record:
 5. **Accessible function:** Do controls work, convey state, preserve readable contrast, keyboard focus, assistive-technology semantics, and performance? Visual delight never excuses inaccessible behavior.
 6. **Reference fidelity and evidence:** Compare against founder-provided visual references and applicable GC UI rules, address visible discrepancies, then verify with current rendered screenshots or implementation evidence. Record gaps explicitly rather than claiming an untested pass.
 
+7. **Founder visual-quality exclusions (November 5, 2026):** Confirm from actual rendered screens that nothing is overcrowded, basic, boring, plain, colorless, misaligned, or ugly. Confirm the complete experience is polished, eye-catching, premium, modern, beautiful, and elegant, with cohesive color, precise alignment, comfortable density, and accessible readability.
+
 **Decision:** Accept only when the reviewer has evidence for visual finish *and* functional/accessibility behavior. Treat failures as actionable defects. Do not claim that a mockup, component demo, or unrelated screen demonstrates product-wide compliance.
 
 ## Known alpha limitations
