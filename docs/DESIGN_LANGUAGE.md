@@ -22,21 +22,49 @@ GC UI is GoreeCloud's **designated permanent successor** to the prior Glaze desi
 
 ### Mandatory premium interface standard
 
-**Founder directive — mandatory across every GoreeCloud product and platform (October 31, 2026).**
+**GoreeCloud UI — Mandatory Premium Visual Excellence Standard**  
+**Status:** Mandatory founder directive  
+**Effective:** November 5, 2026  
+**Scope:** All GoreeCloud applications, websites, dashboards, and user-facing interfaces.
 
-Every GoreeCloud application, website, dashboard, service interface, and other user-facing product **MUST be beautiful, modern, polished, premium, visually engaging, and eye-catching**. GoreeCloud **does not accept plain, basic, boring, generic, dated, amateurish, unfinished, or merely functional user interfaces**. Meeting feature requirements or passing technical tests alone does not satisfy visual acceptance.
+**Background:** This November 5 founder directive reinforces the existing mandatory October 31, 2026 premium-interface requirement. It establishes a visual-design acceptance condition; it does not certify current application compliance or change implementation-level token and component contracts.
 
-**Founder reinforcement — November 5, 2026 (mandatory).** Every GoreeCloud application must **never** look **overcrowded, basic, boring, plain, colorless, misaligned, or ugly**. Every application **must** look **polished, eye-catching, premium, modern, beautiful, and elegant** throughout its complete user experience. This founder clarification strengthens the existing October 31 premium-interface standard; it is a non-optional design and review requirement, not a claim of existing product compliance.
+#### Non-negotiable design requirement
 
-**Practical interpretation.** Use harmonious, purposeful semantic color rather than colorless austerity or indiscriminate saturation; precise alignment and balanced, breathable spacing rather than cramped layouts; distinct yet readable hierarchy, thoughtfully crafted surfaces, refined typography, and tasteful interaction polish rather than generic default styling. Visually rich must not mean visually busy. Achieve beauty and distinctiveness without sacrificing accessibility, clear navigation, contrast, native-platform fit, responsiveness, security, or performance.
+As the founder of GoreeCloud, **I require every GoreeCloud application to always present a polished, eye-catching, premium, modern, beautiful, and elegant user interface.** A merely functional, technically correct screen does not satisfy this requirement.
 
-Deliver a distinctive and intentional GoreeCloud experience through strong composition and information hierarchy, refined and readable typography, harmonious semantic color, excellent spacing and alignment, purposeful depth and material treatment, consistent iconography, thoughtfully polished controls, and cohesive interaction feedback. Apply the same standard to navigation, onboarding, dialogs, forms, settings, empty/loading/error states, and responsive layouts rather than polishing only a showcase screen.
+GoreeCloud interfaces **must never appear**:
 
-**Premium does not mean cluttered.** Visual ambition must coexist with accessibility, legibility, performance, discoverability, responsive behavior, reduced-motion and high-contrast support, and applicable native-platform conventions. Avoid excessive ornament, arbitrary gradients, effects without purpose, or visual complexity that impairs use.
+- Overcrowded, cramped, or visually overwhelming.
+- Basic, boring, plain, or generic.
+- Colorless, lifeless, or visually unappealing.
+- Misaligned, inconsistent, or poorly organized.
+- Ugly, amateurish, unfinished, or outdated.
 
-**Acceptance and enforcement:** Review complete interfaces against approved GC UI requirements, founder-provided references, and the applicable product brief. Reject weak placeholder styling, generic uncustomized component-library presentations, and screens that look bland or incomplete. Require appropriate visual improvements, functional/accessibility regression checks, and verification across relevant screen sizes, themes, and states before declaring a design accepted or a release visually ready.
+#### Mandatory design expectations
 
-This is a **mandatory design and review requirement**, not a claim that existing GoreeCloud applications already comply. Implementation and migration status must be verified product by product.
+Every interface **must demonstrate**:
+
+- Intentional visual composition and a clear, compelling information hierarchy.
+- Harmonious, expressive, purposeful semantic color, including accessible theme variants.
+- Precise alignment, balanced and breathable spacing, and controlled content density.
+- Refined, readable typography and attractive, purposeful surfaces.
+- Cohesive components, consistent iconography, distinctive but restrained visual character, and thoughtfully polished interactions.
+- Appropriate states throughout navigation, onboarding, forms, dialogs, settings, empty/loading/error views, and responsive layouts.
+
+**Visual richness must never become clutter. Elegant simplicity must never become blandness.** Avoid both indiscriminate effects and sterile defaults. Premium aesthetics must coexist with **usability, accessibility, responsiveness, readability, performance, and native-platform conventions**. Approved GC UI semantic tokens and components remain the implementation contract; use purposeful gradients, depth, translucency, and motion only where they improve the experience.
+
+#### Enforcement and visual acceptance
+
+This standard is **mandatory throughout design, development, review, and visual acceptance**. For each affected interface, reviewers and implementers must:
+
+1. Assess the actual rendered interface against the founder's directions, relevant product references, and current GoreeCloud UI requirements; inspect entire screens, not only isolated components or mockups.
+2. Check composition, color, typography, alignment, spacing, density, surfaces, component coherence, and interaction states, including relevant viewport sizes, light/dark themes, and platform contexts.
+3. Check usability, readability, accessibility, keyboard and touch operation, responsive behavior, and performance alongside aesthetics.
+4. **Withhold visual-design acceptance** when any material expectation is unmet; improve the actual interface and re-evaluate it before acceptance.
+5. Retain proportionate rendered before-and-after evidence and the required functional, regression, and accessibility verification. Documentation, mockups, source code, or an untested visual description alone do **not** establish compliance.
+
+This is a mandatory requirement for all GoreeCloud-controlled user experiences, **not a statement that existing products are already visually accepted, deployed, or compliant**. Product-by-product acceptance remains evidence-based.
 
 ### Principles
 
