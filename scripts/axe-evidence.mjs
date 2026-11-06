@@ -42,6 +42,15 @@ export async function retainAxeEvidence(testInfo,report){
  return file;
 }
 
+// These exact five source-run scenarios retain the repeatedly inconclusive
+// aria-controls result. Inspect DOM relationship in every one, without
+// recategorizing any original axe incomplete outcome.
+export const menuRelationshipScenarios=Object.freeze([
+ 'components','components-forced-colors',
+ 'components-menu-open','components-menu-open-forced-colors',
+ 'components-high-contrast-dark'
+]);
+
 export async function verifyAxeEvidence(folder,names,{revision=null}={}){
  if(!Array.isArray(names)||!names.length||names.some(x=>!safeName.test(x))||
     new Set(names).size!==names.length)throw new TypeError('Invalid expected accessibility inventory');
@@ -62,6 +71,17 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
   if(data.violations.length)throw new Error('Unresolved axe violations: '+scenario);
   const needsMenuTree=scenario==='components-menu-open'||
     scenario==='components-menu-open-forced-colors';
+  const needsMenuRelationship=menuRelationshipScenarios.includes(scenario);
+  if(needsMenuRelationship){
+   const e=data.menuRelationshipEvidence;
+   if(data.pagePath!=='/lab/components.html'||!e||
+      e.triggerId!=='gc-file-action-trigger'||e.reference!=='gc-file-actions'||
+      e.matchedIds!==1||e.controlledId!=='gc-file-actions'||e.connected!==true||
+      e.role!=='menu'||e.labelledBy!=='gc-file-action-trigger'||
+      e.hasPopup!=='menu'||e.expanded!==String(needsMenuTree)||
+      e.hidden!==!needsMenuTree||e.visible!==needsMenuTree)
+    throw new Error('Missing or invalid menu ID/visibility relationship evidence: '+scenario);
+  }
   if(needsMenuTree){
    const evidence=data.semanticEvidence;
    if(!evidence||typeof evidence.engine!=='string'||
@@ -104,12 +124,14 @@ export async function verifyAxeEvidence(folder,names,{revision=null}={}){
   }
   reports.push({scenario,pagePath:data.pagePath,rulesPassed:data.rulesPassed,incompleteChecks:data.incomplete.length,
    incompleteNodes,semanticTreeCaptured:needsMenuTree,
+   menuRelationshipCaptured:needsMenuRelationship,
    bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')});
  }
  const manifest={revision,expected:names.length,captured:reports.length,
   incompleteChecks:reports.reduce((total,x)=>total+x.incompleteChecks,0),
   incompleteNodes:reports.reduce((total,x)=>total+x.incompleteNodes,0),
   menuSemanticTrees:reports.filter(x=>x.semanticTreeCaptured).map(x=>x.scenario),
+  menuRelationships:reports.filter(x=>x.menuRelationshipCaptured).map(x=>x.scenario),
   incompleteByRule:[...incompleteByRule.values()].sort((a,b)=>b.nodes-a.nodes||a.id.localeCompare(b.id)),
   incompleteByReason:[...incompleteByReason.values()].sort((a,b)=>b.nodes-a.nodes||
    a.rule.localeCompare(b.rule)||a.reason.localeCompare(b.reason)),
