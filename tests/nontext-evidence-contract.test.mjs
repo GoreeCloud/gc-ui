@@ -5,13 +5,13 @@ import {expectedNontextSelectors,adaptiveNavigationGlyphs,expectedNontextSelecto
 const variant={width:320,mode:'light',rtl:false};
 const recordFor=(lab,options=variant)=>({
  schema:'gc-ui-nontext-visual.v2',lab,...options,captureOrigin:{x:0,y:0},
- measurements:expectedNontextSelectorsForViewport(lab,options.width).map(selector=>({lab,selector,samples:160,min:5.1,decorative:true}))
+ measurements:expectedNontextSelectorsForViewport(lab,options.width).map(selector=>({lab,selector,samples:160,min:5.1,...(selector==='#demo-decrease'?{decorative:false,interactive:true,accessibleName:'Remove one collaborator'}:{decorative:true})}))
 });
 const verify=(record,expected=variant)=>verifyNontextEvidenceRecord(record,{lab:record.lab,...expected});
 
-test('exact selector inventory accepts nine selected glyphs across five labs',()=>{
+test('exact selector inventory accepts eleven selected glyphs across five labs',()=>{
  assert.deepEqual(Object.keys(expectedNontextSelectors),['v1','environment','components','adaptive','forms']);
- assert.equal(Object.values(expectedNontextSelectors).reduce((n,s)=>n+s.length,0),9);
+ assert.equal(Object.values(expectedNontextSelectors).reduce((n,s)=>n+s.length,0),11);
  for(const lab of Object.keys(expectedNontextSelectors))assert.doesNotThrow(()=>verify(recordFor(lab)));
 });
 test('duplicate or substituted glyph cannot satisfy counts',()=>{
@@ -91,4 +91,22 @@ test('screenshot records must prove their capture started at the document origin
  }
  const obsolete=recordFor('forms');obsolete.schema='gc-ui-nontext-visual.v1';
  assert.throws(()=>verify(obsolete));
+});
+
+test('the last two historical axe glyph identities cannot be omitted or misclassified',()=>{
+ assert.ok(expectedNontextSelectors.v1.includes('.material-lens > span[aria-hidden=true]'));
+ assert.ok(expectedNontextSelectors.forms.includes('#demo-decrease'));
+ for(const lab of ['v1','forms']){
+  const missing=recordFor(lab);missing.measurements.pop();
+  assert.throws(()=>verify(missing),/canonical glyph/);
+ }
+ const v1=recordFor('v1');v1.measurements[1].decorative=false;
+ assert.throws(()=>verify(v1),/decorative role/);
+ for(const change of [
+  {decorative:true}, {interactive:false},{accessibleName:'−'},
+  {accessibleName:null},{interactive:undefined}
+ ]){
+  const forms=recordFor('forms');Object.assign(forms.measurements[1],change);
+  assert.throws(()=>verify(forms),/not decorative|interactive control|accessible name/);
+ }
 });

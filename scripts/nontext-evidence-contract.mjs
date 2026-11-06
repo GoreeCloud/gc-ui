@@ -4,7 +4,7 @@
 import assert from 'node:assert/strict';
 
 export const expectedNontextSelectors=Object.freeze({
- v1:Object.freeze(['.status-pill span[aria-hidden=true]']),
+ v1:Object.freeze(['.status-pill span[aria-hidden=true]','.material-lens > span[aria-hidden=true]']),
  environment:Object.freeze(['.lens.gc-material-surface[data-gc-treatment="lens"] > span[aria-hidden=true]']),
  components:Object.freeze(['.floating-control > span[aria-hidden=true]','#gc-file-action-trigger > span[aria-hidden=true]']),
  adaptive:Object.freeze([
@@ -13,7 +13,7 @@ export const expectedNontextSelectors=Object.freeze({
   '.gc-activity-list li:nth-child(1) .gc-activity-symbol',
   '.gc-activity-list li:nth-child(2) .gc-activity-symbol'
  ]),
- forms:Object.freeze(['.gc-recovery-symbol'])
+ forms:Object.freeze(['.gc-recovery-symbol','#demo-decrease'])
 });
 
 
@@ -62,6 +62,11 @@ export function verifyNontextEvidenceRecord(record,{lab,width,mode,rtl}){
    lab+' '+point.selector+' must have a valid actual pixel-sample count');
   assert.ok(Number.isFinite(point.min)&&point.min>=3,
    lab+' '+point.selector+' recorded sampled ratio must meet 3:1');
-  assert.equal(point.decorative,true,lab+' '+point.selector+' decorative role must be true');
+  if(lab==='forms'&&point.selector==='#demo-decrease'){
+   assert.equal(point.decorative,false,'Interactive decrement button is not decorative');
+   assert.equal(point.interactive,true,'Decrement button must be an enabled interactive control');
+   assert.equal(point.accessibleName,'Remove one collaborator',
+    'Decrement action must have a full accessible name');
+  }else assert.equal(point.decorative,true,lab+' '+point.selector+' decorative role must be true');
  }
 }
