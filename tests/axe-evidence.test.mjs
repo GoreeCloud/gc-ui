@@ -8,7 +8,20 @@ import {expectedAxeScenarios,retainAxeEvidence,verifyAxeEvidence,normalizeIncomp
 
 const scenarioSource=readFileSync(new URL('../e2e/accessibility.spec.mjs',import.meta.url),'utf8');
 const names=expectedAxeScenarios(scenarioSource);
+// Independent fixture mapping: do not obtain expected scenario names from the
+// code under test or the verifier could silently miss a broken state.
+const menuCases=new Set([
+ 'components','components-forced-colors','components-menu-open',
+ 'components-menu-open-forced-colors','components-high-contrast-dark'
+]);
+const openMenu=name=>name==='components-menu-open'||name==='components-menu-open-forced-colors';
 const report=name=>({scenario:name,pagePath:'/lab/'+(name.startsWith('components')?'components':name.startsWith('forms')?'forms':name)+'.html',violations:[],incomplete:[],rulesPassed:90,
+ ...(menuCases.has(name)?{menuRelationshipEvidence:{
+  triggerId:'gc-file-action-trigger',reference:'gc-file-actions',matchedIds:1,
+  controlledId:'gc-file-actions',connected:true,role:'menu',
+  labelledBy:'gc-file-action-trigger',hasPopup:'menu',
+  expanded:String(openMenu(name)),hidden:!openMenu(name),visible:openMenu(name)
+ }}:{}),
  ...(name.startsWith('components-menu-open')?{semanticEvidence:{
   engine:'Playwright browser-computed ARIA snapshot; not screen-reader speech',
   triggerTree:'- button "Workspace actions" [expanded]',
@@ -43,6 +56,7 @@ test('complete source-derived report inventory produces manifest showing inconcl
   assert.equal(manifest.expected,27);
   assert.equal(manifest.captured,27);
   assert.deepEqual(manifest.menuSemanticTrees,['components-menu-open','components-menu-open-forced-colors']);
+  assert.deepEqual(manifest.menuRelationships,[...menuCases]);
   assert.equal(manifest.incompleteChecks,1);
   assert.equal(manifest.incompleteNodes,1);
   assert.deepEqual(manifest.incompleteByRule,[{
@@ -115,6 +129,7 @@ test('open-menu evidence must include real browser-computed ARIA tree snapshots'
   await writeFile(join(dir,'components-menu-open.json'),JSON.stringify(report('components-menu-open')));
   const manifest=await verifyAxeEvidence(dir,names);
   assert.deepEqual(manifest.menuSemanticTrees,['components-menu-open','components-menu-open-forced-colors']);
+  assert.deepEqual(manifest.menuRelationships,[...menuCases]);
  }finally{await rm(dir,{recursive:true,force:true})}
 });
 
@@ -176,5 +191,31 @@ test('review evidence fails closed when page origin or target selector is malfor
    ...report('forms'),incomplete:[{id:'color-contrast',nodes:[{summary:'Unknown selector'}]}]
   }));
   await assert.rejects(verifyAxeEvidence(dir,names),/Missing or invalid axe CSS target/);
+ }finally{await rm(dir,{recursive:true,force:true})}
+});
+
+test('all five axe-inconclusive menu relationships require complete state-specific DOM evidence',async()=>{
+ const dir=await mkdtemp(join(tmpdir(),'gc-ui-menu-relation-'));
+ try{
+  for(const name of names)await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  const valid=await verifyAxeEvidence(dir,names);
+  assert.deepEqual(valid.menuRelationships,[...menuCases]);
+  for(const name of menuCases){
+   for(const [key,value] of [
+    ['matchedIds',0],['connected',false],['labelledBy','wrong-trigger'],
+    ['hasPopup','dialog'],['expanded',openMenu(name)?'false':'true'],
+    ['hidden',openMenu(name)],['visible',!openMenu(name)]
+   ]){
+    const broken=report(name);
+    broken.menuRelationshipEvidence[key]=value;
+    await writeFile(join(dir,name+'.json'),JSON.stringify(broken));
+    await assert.rejects(verifyAxeEvidence(dir,names),/menu ID\/visibility relationship evidence/);
+    await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+   }
+   const missing=report(name);delete missing.menuRelationshipEvidence;
+   await writeFile(join(dir,name+'.json'),JSON.stringify(missing));
+   await assert.rejects(verifyAxeEvidence(dir,names),/menu ID\/visibility relationship evidence/);
+   await writeFile(join(dir,name+'.json'),JSON.stringify(report(name)));
+  }
  }finally{await rm(dir,{recursive:true,force:true})}
 });

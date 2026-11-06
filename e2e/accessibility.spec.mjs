@@ -32,16 +32,50 @@ async function menuSemanticEvidence(page){
  return {engine:'Playwright browser-computed ARIA snapshot; not assistive-technology speech',
   triggerTree,menuTree,expanded:true,focusedItem:'Duplicate workspace'};
 }
+// Record real browser DOM identity and visibility for every state in which axe
+// calls the Components menu ARIA relationship inconclusive. These facts are
+// supplementary evidence, not native screen-reader speech or a waiver.
+const menuRelationshipScenarios=new Set([
+ 'components','components-forced-colors','components-menu-open',
+ 'components-menu-open-forced-colors','components-high-contrast-dark'
+]);
+async function menuRelationshipEvidence(page,open){
+ const trigger=page.locator('#gc-file-action-trigger');
+ const menu=page.locator('#gc-file-actions');
+ const relation=await trigger.evaluate(el=>{
+  const reference=el.getAttribute('aria-controls');
+  const matching=[...document.querySelectorAll('[id]')].filter(node=>node.id===reference);
+  const target=matching[0];
+  return {
+   triggerId:el.id,reference,matchedIds:matching.length,
+   controlledId:target?.id??null,connected:target?.isConnected??false,
+   role:target?.getAttribute('role')??null,
+   labelledBy:target?.getAttribute('aria-labelledby')??null,
+   hasPopup:el.getAttribute('aria-haspopup'),expanded:el.getAttribute('aria-expanded'),
+   hidden:target?.hidden??null
+  };
+ });
+ relation.visible=await menu.isVisible();
+ expect(relation,'Browser DOM ARIA relationship in '+(open?'open':'closed')+' state').toEqual({
+  triggerId:'gc-file-action-trigger',reference:'gc-file-actions',matchedIds:1,
+  controlledId:'gc-file-actions',connected:true,role:'menu',
+  labelledBy:'gc-file-action-trigger',hasPopup:'menu',
+  expanded:String(open),hidden:!open,visible:open
+ });
+ return relation;
+}
 async function audit(page,testInfo,label){
  await page.addScriptTag({path:axePath});
  const results=await page.evaluate(async values=>
   await window.axe.run(document,{runOnly:{type:'tag',values}})
  ,tags);
  const menuEvidence=label.startsWith('components-menu-open')?await menuSemanticEvidence(page):null;
+ const menuRelation=menuRelationshipScenarios.has(label)?await menuRelationshipEvidence(page,Boolean(menuEvidence)):null;
  await retainAxeEvidence(testInfo,{
   scenario:label,pagePath:new URL(page.url()).pathname,violations:results.violations.map(format),
   incomplete:results.incomplete.map(format),rulesPassed:results.passes.length,
   ...(menuEvidence?{semanticEvidence:menuEvidence}:{}),
+  ...(menuRelation?{menuRelationshipEvidence:menuRelation}:{}),
   note:'Incomplete checks and browser accessibility trees require manual review; not WCAG certification.'
  });
  expect(results.violations.map(result=>
