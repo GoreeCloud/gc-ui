@@ -7,10 +7,21 @@ const read = path => readFileSync(new URL('../' + path, import.meta.url), 'utf8'
 test('GC UI design language preserves the mandatory premium visual standard', () => {
   const guide = read('docs/DESIGN_LANGUAGE.md');
   assert.match(guide, /### Mandatory premium interface standard/);
-  assert.match(guide, /MUST be beautiful, modern, polished, premium/);
-  assert.match(guide, /does not accept plain, basic, boring/);
-  assert.match(guide, /mandatory design and review requirement/);
-  assert.match(guide, /not a claim that existing GoreeCloud applications already comply/);
+  // November 5 broadens, rather than repeals, October 31 requirements.
+  assert.match(guide, /October 31, 2026 premium-interface requirement/);
+  assert.match(guide, /\*\*Effective:\*\* November 5, 2026/);
+  assert.match(guide, /I require every GoreeCloud application to always present a polished, eye-catching, premium, modern, beautiful, and elegant user interface/);
+  for (const rejected of [
+    'Overcrowded, cramped, or visually overwhelming',
+    'Basic, boring, plain, or generic',
+    'Colorless, lifeless, or visually unappealing',
+    'Misaligned, inconsistent, or poorly organized',
+    'Ugly, amateurish, unfinished, or outdated'
+  ]) assert.ok(guide.includes(rejected), 'Missing prohibited visual quality: ' + rejected);
+  assert.match(guide, /Visual richness must never become clutter\. Elegant simplicity must never become blandness/);
+  assert.match(guide, /mandatory throughout design, development, review, and visual acceptance/);
+  assert.match(guide, /Withhold visual-design acceptance/);
+  assert.match(guide, /not a statement that existing products are already visually accepted, deployed, or compliant/);
 });
 
 test('developer documentation links to premium and visual acceptance rules', () => {
@@ -55,12 +66,16 @@ test('authority contract publishes the mandatory premium mandate without inventi
   const rule = contract.authority.premiumVisualQualityMandate;
   assert.equal(rule.effectiveDate, '2026-10-31');
   assert.equal(rule.mandatory, true);
+  // Fail closed if any original or November 5 premium requirement disappears.
   assert.deepEqual(rule.requiredQualities, [
-    'beautiful', 'modern', 'polished', 'premium', 'eye-catching'
+    'beautiful', 'modern', 'polished', 'premium', 'eye-catching',
+    'elegant', 'well-aligned', 'uncluttered', 'cohesive-semantic-color'
   ]);
   assert.deepEqual(rule.unacceptableQualities, [
-    'plain', 'basic', 'boring', 'generic', 'unfinished', 'merely-functional'
+    'plain', 'basic', 'boring', 'generic', 'unfinished', 'merely-functional',
+    'overcrowded', 'colorless', 'misaligned', 'ugly'
   ]);
+  assert.equal(rule.founderClarificationDate, '2026-11-05');
   assert.ok(rule.scope.includes('applications'));
   assert.ok(rule.scope.includes('dashboards'));
   assert.ok(rule.scope.includes('service-interfaces'));
