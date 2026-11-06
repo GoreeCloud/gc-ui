@@ -8,11 +8,11 @@ import {join,resolve} from 'node:path';
 const labs=[
  // Decorative symbols paired with visible labels, selected from the
  // unresolved axe non-text inventory; sampled ratios are bounded evidence.
- {name:'v1',selectors:['.status-pill span[aria-hidden=true]']},
+ {name:'v1',selectors:['.status-pill span[aria-hidden=true]','.material-lens > span[aria-hidden=true]']},
  {name:'environment',selectors:['.lens.gc-material-surface[data-gc-treatment="lens"] > span[aria-hidden=true]']},
  {name:'components',selectors:['.floating-control > span[aria-hidden=true]','#gc-file-action-trigger > span[aria-hidden=true]']},
  {name:'adaptive',selectors:['.gc-metric-card:nth-child(1) .gc-metric-icon','.gc-metric-card:nth-child(3) .gc-metric-icon','.gc-activity-list li:nth-child(1) .gc-activity-symbol','.gc-activity-list li:nth-child(2) .gc-activity-symbol']},
- {name:'forms',selectors:['.gc-recovery-symbol']}
+ {name:'forms',selectors:['.gc-recovery-symbol','#demo-decrease']}
 ];
 // Independent from the evidence verifier: six additional historical
 // axe-incomplete targets are visible only in mobile or desktop navigation.
@@ -48,9 +48,14 @@ for(const {width,mode,rtl} of variants){
     width<600?responsiveAdaptiveGlyphs.phone:
     width>=1200?responsiveAdaptiveGlyphs.desktop:[];
    for(const selector of [...lab.selectors,...navigationGlyphs]){
+    const interactive=lab.name==='forms'&&selector==='#demo-decrease';
     const element=page.locator(selector);
     await expect(element).toHaveCount(1);
     await element.scrollIntoViewIfNeeded();
+    if(interactive){
+     await expect(element).toBeEnabled();
+     await expect(element).toHaveAccessibleName('Remove one collaborator');
+    }
     if(navigationGlyphs.includes(selector)){
      await expect(element).toBeVisible();
      const link=element.locator('..');
@@ -69,7 +74,9 @@ for(const {width,mode,rtl} of variants){
     expect(after,selector+' restores original color').toEqual({value:before.value,priority:before.priority});
     expect(result.samples,selector+' actual pixels').toBeGreaterThan(30);
     expect(result.min,lab.name+' '+selector+' '+width+' '+mode+' composited pixel ratio').toBeGreaterThanOrEqual(3);
-    measures.push({lab:lab.name,selector,decorative:before.decorative,...result});
+    measures.push({lab:lab.name,selector,decorative:before.decorative,
+     ...(interactive?{interactive:true,accessibleName:await element.getAttribute('aria-label')}:{}),
+     ...result});
    }
    // The preceding glyph sampling can scroll far into a long lab page.
    // Normalize top-of-document before full-page screenshot export so sticky
