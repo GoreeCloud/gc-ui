@@ -94,7 +94,13 @@ export interface GCPasswordRevealController {
   hide():boolean;
   destroy():void;
 }
-export declare function initPasswordReveal(input:HTMLInputElement,button:HTMLButtonElement):GCPasswordRevealController;
+export interface GCPasswordRevealOptions {
+  /** Complete localized visible label pair, rendered as text, not markup. */
+  labels?:{show:string;hide:string};
+}
+export declare function initPasswordReveal(
+  input:HTMLInputElement,button:HTMLButtonElement,options?:GCPasswordRevealOptions
+):GCPasswordRevealController;
 
 export interface GCNumberStepperController {
   get():number;
