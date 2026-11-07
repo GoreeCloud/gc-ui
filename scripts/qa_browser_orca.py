@@ -24,6 +24,7 @@ SPEECH_CHECKS = {
     "menu_first_action": r"Duplicate workspace",
     "forms_combobox": r"Search projects.*combo box",
     "forms_suggestion": r"Studio refresh",
+    "password_reveal_control": r"Reveal sample passphrase",
 }
 AT_TARGETS = {
     ("Workspace actions", "push button"),
@@ -32,6 +33,7 @@ AT_TARGETS = {
     ("Archive (unavailable)", "menu item"),
     ("Search projects", "combo box"),
     ("Studio refresh", "list item"),
+    ("Reveal sample passphrase", "toggle button"),
 }
 
 
@@ -43,7 +45,8 @@ def parse_speech(log: str) -> dict[str, bool]:
     }
 
 
-def visit(node, found: set[tuple[str, str]], depth=0):
+def visit(node, found: set[tuple[str, str]], depth=0,
+          pressed_states: set[bool] | None = None, pressed_state=None):
     if node is None or depth > 13:
         return
     try:
@@ -51,15 +54,23 @@ def visit(node, found: set[tuple[str, str]], depth=0):
         role = node.get_role_name() or ""
         if (name, role) in AT_TARGETS:
             found.add((name, role))
+        if ((name, role) == ("Reveal sample passphrase", "toggle button")
+                and pressed_states is not None and pressed_state is not None):
+            # Inspect the real AT-SPI exposure, not only DOM aria-pressed.
+            pressed_states.add(bool(node.get_state_set().contains(pressed_state)))
         for index in range(min(node.get_child_count(), 150)):
-            visit(node.get_child_at_index(index), found, depth + 1)
+            visit(node.get_child_at_index(index), found, depth + 1,
+                  pressed_states, pressed_state)
     except (LookupError, RuntimeError):
         return
 
 
-def collect_atspi(atspi) -> set[tuple[str, str]]:
+def collect_atspi(atspi, pressed_states: set[bool] | None = None
+                  ) -> set[tuple[str, str]]:
     found: set[tuple[str, str]] = set()
     desktop = atspi.get_desktop(0)
+    pressed_state = (atspi.StateType.PRESSED if pressed_states is not None
+                     else None)
     for index in range(min(desktop.get_child_count(), 60)):
         app = desktop.get_child_at_index(index)
         if app is None:
@@ -67,7 +78,8 @@ def collect_atspi(atspi) -> set[tuple[str, str]]:
         try:
             if any(token in (app.get_name() or "").lower()
                    for token in ("chrome for testing", "chromium")):
-                visit(app, found)
+                visit(app, found, pressed_states=pressed_states,
+                      pressed_state=pressed_state)
         except (LookupError, RuntimeError):
             continue
     return found
@@ -101,6 +113,7 @@ def run() -> dict:
                 "PLAYWRIGHT_BROWSERS_PATH", str(Path.home() / ".cache" / "ms-playwright")
             ),
             GC_UI_AT_PORT=str(port),
+            GC_UI_AT_PRESSED_GATE=str(work / "password-pressed-observed.flag"),
         )
         procs: list[subprocess.Popen] = []
         handles = []
@@ -132,10 +145,14 @@ def run() -> dict:
                 raise RuntimeError("Orca exited before test browser launch")
             browser = launch(["node", "scripts/qa-browser-orca.mjs"], "browser.log")
             found: set[tuple[str, str]] = set()
-            deadline = time.monotonic() + 26
+            reveal_pressed_states: set[bool] = set()
+            gate = work / "password-pressed-observed.flag"
+            deadline = time.monotonic() + 44
             while time.monotonic() < deadline and browser.poll() is None:
-                found.update(collect_atspi(Atspi))
-                time.sleep(0.75)
+                found.update(collect_atspi(Atspi, reveal_pressed_states))
+                if True in reveal_pressed_states and not gate.exists():
+                    gate.write_text("AT-SPI pressed state observed\n")
+                time.sleep(0.4)
             browser.wait(timeout=10)
             for handle in handles:
                 handle.flush()
@@ -147,6 +164,9 @@ def run() -> dict:
             phases = {
                 "components_menu": "PHASE_COMPONENTS_MENU_OPEN" in output,
                 "forms_suggestion": "PHASE_FORMS_SUGGESTION_OPEN" in output,
+                "password_focused": "PHASE_PASSWORD_REVEAL_FOCUSED" in output,
+                "password_revealed": "PHASE_PASSWORD_REVEAL_ON" in output,
+                "password_masked": "PHASE_PASSWORD_REVEAL_OFF" in output,
             }
             targets = {name + " / " + role: (name, role) in found
                        for name, role in sorted(AT_TARGETS)}
@@ -155,12 +175,17 @@ def run() -> dict:
                 "browser_exit_zero": browser.returncode == 0,
                 "orca_generated_speech": speech,
                 "atspi_named_roles": targets,
+                "atspi_password_reveal_states": {
+                    "masked": False in reveal_pressed_states,
+                    "revealed": True in reveal_pressed_states,
+                },
                 "browser_interaction_phases": phases,
                 "human_heard_audio": False,
                 "scope": "Isolated Linux Chromium + Orca fixture, no NVDA/VoiceOver claim",
             }
             if not (result["browser_exit_zero"] and all(speech.values())
-                    and all(targets.values()) and all(phases.values())):
+                    and all(targets.values()) and all(phases.values())
+                    and all(result["atspi_password_reveal_states"].values())):
                 raise RuntimeError("Browser/Orca acceptance incomplete: " +
                                    json.dumps(result, sort_keys=True))
             return result
