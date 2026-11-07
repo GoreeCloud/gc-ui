@@ -30,3 +30,28 @@ The five immutable design source SVGs, including decorative interface artwork, a
 The brand-assets identity/Raster CI verifies source Git objects, metadata and hash manifests. GC UI tests/branding.test.mjs guards the canonical four SVG SHA-1 object IDs; tests/premium-identity-preview.test.mjs guards the original design SHA-256 pins, lab adoption and founder approval labels. Real Chromium/Firefox browser test matrices check light/dark, phone/tablet/desktop, reduced motion and forced colors.
 
 Historical records previously referred to inaccessible GoreeCloud/branding-assets commits 29ea759c and dd13aad. They remain historical claims, not independently reverified provenance. The verified current authority is GoreeCloud/brand-assets.
+
+## Optional Electron desktop-preview icon (source-only development)
+
+The optional Electron host uses the **exact published, founder-approved
+Aperture Weave 512px PNG** checked into
+native/desktop/resources/aperture-weave-512.png, with the window icon
+property referencing that file relative to the source module. This keeps the
+developer preview's window/task-switcher identity locally available without
+runtime requests to GitHub, third-party image services, or the network.
+
+Canonical source: GoreeCloud/brand-assets/products/gc-ui/raster/icon-512.png.
+Expected SHA-256:
+12f77149579508284e85c56033d6fe9a93b664db18887dccbf4f3f3f99081880
+(75,236 bytes; 512 × 512). The source manifest binds that PNG to the approved
+products/gc-ui/app-icon.svg Git blob. The regression in
+tests/native-desktop-icon.test.mjs verifies the checked-in bytes, dimensions,
+source reference and preservation of Electron sandbox settings.
+
+This is a **source-level optional desktop-preview adoption**, not a signed or
+installed Linux/Windows/macOS app icon or a new native package release.
+macOS application bundle icons, Windows packaging, Linux launcher metadata,
+taskbar/dock acceptance and physical platform testing are still separately gated.
+Android adaptive launcher treatment also remains a separate design/packaging
+acceptance task; do not use the legacy tile raster as an unreviewed adaptive
+foreground.
