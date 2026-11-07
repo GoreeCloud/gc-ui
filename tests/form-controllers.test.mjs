@@ -49,6 +49,50 @@ test('reveal controller does not let an unlabeled control masquerade as accessib
  assert.throws(()=>initPasswordReveal(pass(),control('button','submit')),/type=button/);
 });
 
+test('localized reveal labels replace only controller-owned visible text and restore host text',()=>{
+ const field=pass(),button=reveal();
+ const api=initPasswordReveal(field,button,{labels:{show:'Mostrar',hide:'Ocultar'}});
+ assert.equal(button.textContent,'Mostrar','localization applies before the first click');
+ assert.equal(button.getAttribute('aria-label'),'Reveal sample passphrase');
+ button.dispatch('click');
+ assert.equal(field.type,'text');
+ assert.equal(button.textContent,'Ocultar');
+ assert.equal(button.getAttribute('aria-pressed'),'true');
+ api.hide();
+ assert.equal(field.type,'password');
+ assert.equal(button.textContent,'Mostrar');
+ api.destroy();
+ assert.equal(button.textContent,'Show','teardown restores the host label');
+ assert.equal(field.value,'invented-sample');
+});
+
+test('localized password reveal preserves icon children and later host labels',()=>{
+ const field=pass(),button=reveal(),visible={textContent:'Show'};
+ button.childElementCount=2;
+ button.querySelector=selector=>selector==='[data-gc-password-reveal-label]'?visible:null;
+ const api=initPasswordReveal(field,button,{labels:{show:'Vis',hide:'Skjul'}});
+ assert.equal(visible.textContent,'Vis');
+ button.dispatch('click');
+ assert.equal(visible.textContent,'Skjul');
+ visible.textContent='Host override';
+ api.destroy();
+ assert.equal(visible.textContent,'Host override');
+ assert.equal(field.type,'password');
+ assert.equal(button.textContent,'Show','icon-containing host markup stays untouched');
+});
+
+test('localized reveal rejects incomplete, whitespace-only or non-string labels before mounting',()=>{
+ for(const labels of [null,{}, {show:'',hide:'Hide'}, {show:'Show',hide:'  '},
+   {show:'Show'}, {hide:'Hide'}, {show:4,hide:'Hide'}]){
+  const field=pass(),button=reveal();
+  assert.throws(()=>initPasswordReveal(field,button,{labels}),/nonempty show and hide/);
+  assert.equal(button.listenerCount('click'),0);
+  assert.equal(button.getAttribute('aria-pressed'),null);
+  assert.equal(button.textContent,'Show');
+  assert.equal(field.type,'password');
+ }
+});
+
 test('integer stepper clamps manual edits and disables controls at real boundaries',()=>{
  const field=number(),dec=btn(),inc=btn(),events=[];
  const api=initNumberStepper(field,dec,inc,{onChange:n=>events.push(n)});
