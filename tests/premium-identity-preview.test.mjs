@@ -22,7 +22,7 @@ test('identity preview sources are pinned, distinct, and self-contained',()=>{
  }
 });
 
-test('premium preview uses new candidate artwork but retains official nav branding',()=>{
+test('founder-approved Aperture Weave uses canonical nav branding and original artwork',()=>{
  const components=readFileSync(new URL('components.html',root),'utf8');
  const experience=readFileSync(new URL('experience-studio.html',root),'utf8');
  for(const html of [components,experience]){
@@ -36,4 +36,6 @@ test('premium preview uses new candidate artwork but retains official nav brandi
  assert.match(components,/aperture-logo\.svg/);
  assert.match(components,/aperture-logo-dark\.svg/);
  assert.match(components,/App distribution requires platform validation/);
+ assert.match(components,/Official GC UI identity/);
+ assert.match(experience,/Founder-approved/);
 });
