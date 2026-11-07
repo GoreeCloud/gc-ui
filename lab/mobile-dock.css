@@ -34,7 +34,7 @@
   padding:7px 2px;border-radius:21px;border:1px solid transparent;
   font:700 clamp(9px,2.7vw,11px)/1.12 system-ui,-apple-system,"Segoe UI",sans-serif;
   letter-spacing:-.01em;white-space:nowrap;text-decoration:none;
-  color:var(--gc-v1-color-on-surface-muted);background:transparent;
+  color:var(--gc-v1-color-on-surface);background:transparent;
   transition:background 180ms ease,transform 180ms ease,color 180ms ease;
  }
  .gc-mobile-dock a svg{inline-size:21px;block-size:21px;flex:none;stroke:currentColor;fill:none}
@@ -61,8 +61,8 @@
  .gc-app-shell .gc-main-content{margin-inline-start:auto;margin-inline-end:auto}
 }
 @media(max-width:319px){
- .gc-mobile-dock{inset-inline:8px;width:calc(100vw - 16px);padding:5px;gap:1px}
- .gc-mobile-dock a{font-size:9px}
+ .gc-mobile-dock{inset-inline:4px;width:calc(100vw - 8px);padding:3px;gap:0}
+ .gc-mobile-dock a{font-size:8.5px;letter-spacing:-.035em;padding-inline:0}
 }
 @media(prefers-reduced-motion:reduce){
  .gc-mobile-dock a{transition:none}

@@ -2,16 +2,16 @@
  * Decorative layers never carry content or set a mandatory identity hue.
  * Applied only to experimental Components and Experience reference screens.
  */
-.environment,.studio{
- background:
-  radial-gradient(ellipse 58% 48% at 92% 6%,color-mix(in srgb,var(--gc-v1-color-primary) 10%,transparent),transparent),
-  radial-gradient(ellipse 54% 55% at 4% 25%,color-mix(in srgb,var(--gc-v1-color-secondary-container) 36%,transparent),transparent),
-  var(--gc-v1-color-canvas);
+/* Typography remains readable behind decorative gradients in every
+ * optional accent; on-canvas foreground is independent of hue. */
+.gc-premium-intro>.eyebrow{
+ color:var(--gc-v1-color-on-canvas);
+ font-weight:780;
+ letter-spacing:.065em;
 }
-.gc-premium-intro>.eyebrow:before{
- content:"";display:inline-block;inline-size:24px;block-size:2px;flex:none;
- background:var(--gc-v1-color-primary);border-radius:999px;
- box-shadow:0 0 0 4px color-mix(in srgb,var(--gc-v1-color-primary) 8%,transparent);
+.gc-premium-intro>.summary,
+.gc-premium-intro>.gc-premium-intro-desc{
+ color:var(--gc-v1-color-on-canvas);
 }
 .gc-premium-intro h1{font-weight:790;letter-spacing:-.07em;text-wrap:balance}
 .gc-premium-intro h1 em{color:var(--gc-v1-color-primary)}
@@ -38,7 +38,6 @@
 .environment .section-head h2,.studio .section-heading h2{letter-spacing:-.055em}
 @media(max-width:540px){
  .gc-premium-intro h1{font-weight:780;letter-spacing:-.059em}
- .gc-premium-intro>.eyebrow:before{display:none}
  .gc-premium-visual{box-shadow:0 16px 42px -25px color-mix(in srgb,var(--gc-v1-color-on-canvas) 32%,transparent)}
  .environment .setting-surface,.studio .controls{border-radius:24px}
 }
@@ -48,7 +47,6 @@
 }
 @media(forced-colors:active){
  .environment,.studio{background:Canvas;color:CanvasText}
- .gc-premium-intro>.eyebrow:before{background:CanvasText;box-shadow:none}
  .gc-premium-intro h1 em{color:CanvasText}
  .gc-premium-visual,.gc-premium-identity-panel,
  .environment .setting-surface,.studio .controls{background:Canvas;color:CanvasText;box-shadow:none;border-color:CanvasText}
