@@ -127,6 +127,10 @@ function openSuggestions(){
  });
  suggestionList.hidden=false;
  search.setAttribute('aria-expanded','true');
+ // A visual listbox can be entirely below a compact viewport after typing.
+ // Nearest scrolling preserves the focused input and the available context;
+ // instant behavior avoids forcing animated scrolling on reduced-motion users.
+ suggestionList.scrollIntoView({block:'nearest',inline:'nearest',behavior:'instant'});
  active=-1;
  search.removeAttribute('aria-activedescendant');
 }

@@ -616,3 +616,58 @@ test('Forms Lab floating header keeps an opaque boundary in forced colors',async
  expect(state.shadow).toBe('none');
  await expect(page.getByRole('navigation',{name:'Lab navigation'}).getByRole('link',{name:'Registry'})).toBeVisible();
 });
+
+// Regression: a visually open listbox was entirely below the viewport when a
+// user typed near the bottom of a phone screen. Role-based isVisible() alone
+// did not catch it. Preserve both caret and actual suggestion visibility.
+for(const state of [
+ {name:'compact-320',width:320,height:568},
+ {name:'phone-375',width:375,height:812},
+ {name:'short-phone-dark',width:375,height:600,dark:true},
+ {name:'tablet-rtl',width:768,height:768,rtl:true},
+ {name:'desktop',width:1440,height:900},
+ {name:'forced-colors',width:375,height:812,forced:true}
+]){
+ test('autocomplete suggestions stay in the visual viewport — '+state.name,async({page},testInfo)=>{
+  await page.setViewportSize({width:state.width,height:state.height});
+  await page.emulateMedia({colorScheme:state.dark?'dark':'light',forcedColors:state.forced?'active':'none'});
+  await page.goto('/lab/forms.html');
+  if(state.rtl)await page.evaluate(()=>document.documentElement.dir='rtl');
+  const search=page.getByRole('combobox',{name:'Search projects'});
+  const popup=page.getByRole('listbox',{name:'Project suggestions'});
+  await search.fill('d');
+  await expect(popup).toBeVisible();
+  await expect(search).toBeFocused();
+  await expect(search).toHaveAttribute('aria-expanded','true');
+  await expect(popup.getByRole('option')).toHaveCount(3);
+  const geometry=await page.evaluate(()=>{
+   const input=document.getElementById('project-search').getBoundingClientRect();
+   const menu=document.getElementById('project-suggestions').getBoundingClientRect();
+   const vis=window.visualViewport;
+   return {viewport:{top:vis?.offsetTop??0,height:vis?.height??innerHeight,width:vis?.width??innerWidth},
+    input:{top:input.top,bottom:input.bottom,left:input.left,right:input.right},
+    popup:{top:menu.top,bottom:menu.bottom,left:menu.left,right:menu.right},
+    scrollY,documentWidth:document.documentElement.scrollWidth};
+  });
+  expect(geometry.input.top,state.name+' input visible').toBeGreaterThanOrEqual(geometry.viewport.top);
+  expect(geometry.input.bottom,state.name+' input bottom visible').toBeLessThanOrEqual(geometry.viewport.height+geometry.viewport.top-8);
+  expect(geometry.popup.top,state.name+' list starts below input').toBeGreaterThanOrEqual(geometry.input.bottom+4);
+  expect(geometry.popup.bottom,state.name+' list fits with breathing room').toBeLessThanOrEqual(geometry.viewport.height+geometry.viewport.top-8);
+  expect(geometry.popup.left).toBeGreaterThanOrEqual(-1);
+  expect(geometry.popup.right).toBeLessThanOrEqual(geometry.viewport.width+1);
+  expect(geometry.documentWidth).toBeLessThanOrEqual(state.width+1);
+  // Keep a screenshot of the actual *open* listbox, not a dismissed state.
+  await testInfo.attach('autocomplete-visible-geometry.json',{
+   body:Buffer.from(JSON.stringify({state,geometry,scope:'Browser visual viewport and keyboard relationship only; no virtual keyboard or real AT certification.'},null,2)),
+   contentType:'application/json'
+  });
+  await testInfo.attach('autocomplete-open-viewport.png',{
+   body:await page.screenshot({animations:'disabled'}),contentType:'image/png'
+  });
+  await search.press('ArrowDown');
+  await expect(search).toHaveAttribute('aria-activedescendant','project-suggestion-0');
+  await search.press('Escape');
+  await expect(popup).toBeHidden();
+  await expect(search).toBeFocused();
+ });
+}
