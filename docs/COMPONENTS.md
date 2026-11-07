@@ -16,9 +16,15 @@ The alpha provides **visual reference implementations** in HTML/CSS/JS, not vers
 | Status | `.gc-status` | success, neutral, danger | text status, not color alone |
 | Toast | `.gc-toast` | shown / disappears | polite live region; no focus theft |
 | Dialog | `.gc-dialog` | open / closed | native `<dialog>` with name and description |
-| Navigation | `.gc-nav`, `.mobile-nav` | current, default, focus | named navigation, active page in `aria-current` |
+| Navigation | GC UI nav, mobile-nav and experimental floating dock | current, default, focus | named navigation, active aria-current; primary mobile nav floats at the bottom with safe-area and content clearance |
 
 The experimental `initTabs` controller filters hidden, inert, aria-hidden, disabled and removed tabs from selection and keyboard navigation. When a host inserts new tab and panel nodes, it must remount the controller; when it hides an active tab, it should select an available replacement.
+
+## Founder-owned 2026-11-06 mobile and color contract
+
+All supported mobile apps must have **floating bottom primary navigation**, with detached edges, safe-area and keyboard considerations, and no competing primary top navigation. Each product must independently verify implementation. Breadcrumbs and in-content tabs are not another app navigation bar.
+
+**No mandatory GoreeCloud system, brand or default colors exist.** Every product, service, wallpaper and icon may choose independent colors. Named palettes and CSS fallbacks remain optional examples and backward-compatible implementation values, not mandatory branding. Derive on-colors and safeguard contrast for any chosen hue.
 
 ## A working component must meet these criteria
 

@@ -442,13 +442,16 @@ for(const width of [320,375,1440]){
  test('Forms lab navigation has readable, reachable touch and keyboard targets at '+width+'px',async({page})=>{
   await page.setViewportSize({width,height:812});
   await page.goto('/lab/forms.html');
-  const nav=page.getByRole('navigation',{name:'Lab navigation'});
+  const isMobile=width<=767;
+  const nav=page.getByRole('navigation',{name:isMobile?'Primary mobile navigation':'Lab navigation'});
   const links=nav.getByRole('link');
-  await expect(links).toHaveCount(3);
+  await expect(links).toHaveCount(isMobile?4:3);
+  if(isMobile)await expect(page.getByRole('navigation',{name:'Lab navigation'})).toBeHidden();
   const geometry=await nav.evaluate(el=>{
    const targets=[...el.querySelectorAll('a')];
    return {
     overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
+    background:getComputedStyle(el).backgroundColor,
     boxes:targets.map(a=>{
      const rect=a.getBoundingClientRect(),style=getComputedStyle(a);
      return {height:rect.height,left:rect.left,right:rect.right,
@@ -461,17 +464,19 @@ for(const width of [320,375,1440]){
    expect(box.height).toBeGreaterThanOrEqual(44);
    expect(box.left).toBeGreaterThanOrEqual(0);
    expect(box.right).toBeLessThanOrEqual(width+1);
-   expect(box.background).not.toBe('rgba(0, 0, 0, 0)');
+   if(!isMobile)expect(box.background).not.toBe('rgba(0, 0, 0, 0)');
    expect(box.decoration).toBe('none');
   }
-  if(width<760){
+  if(isMobile){
+   expect(geometry.background,'floating bottom chrome is opaque').not.toBe('rgba(0, 0, 0, 0)');
    const ys=await links.evaluateAll(all=>all.map(el=>Math.round(el.getBoundingClientRect().top)));
    expect(new Set(ys).size).toBe(1,'compact navigation stays on one aligned row');
   }
   await page.keyboard.press('Tab');
-  await links.first().focus();
-  await expect(links.first()).toBeFocused();
-  await links.first().click();
+  const components=nav.getByRole('link',{name:'Components'});
+  await components.focus();
+  await expect(components).toBeFocused();
+  await components.click();
   await expect(page).toHaveURL(/\/lab\/components\.html$/);
  });
 }
@@ -589,7 +594,9 @@ test('Forms Lab header floats with rounded chrome and navigable links across vie
    const result=await page.evaluate(()=>{
     const header=document.querySelector('.gc-form-header'),style=getComputedStyle(header);
     const bounds=header.getBoundingClientRect();
-    const links=[...header.querySelectorAll('nav a')].map(a=>{
+    const isMobile=innerWidth<=767;
+    const activeNav=isMobile?document.querySelector('.gc-mobile-dock'):header.querySelector('nav');
+    const links=[...activeNav.querySelectorAll('a')].map(a=>{
      const b=a.getBoundingClientRect();
      return {label:a.textContent.trim(),height:b.height,left:b.left,right:b.right};
     });
@@ -598,17 +605,18 @@ test('Forms Lab header floats with rounded chrome and navigable links across vie
      width:document.documentElement.clientWidth,
      scrollWidth:document.documentElement.scrollWidth,
      radius:parseFloat(style.borderTopLeftRadius),
-     mainTop:content.top,links};
+     mainTop:content.top,isMobile,links};
    });
    expect(result.left,'header inset '+width+' '+dir).toBeGreaterThanOrEqual(10);
    expect(result.width-result.right,'header end inset '+width+' '+dir).toBeGreaterThanOrEqual(10);
    expect(result.radius,'header radius '+width+' '+dir).toBeGreaterThanOrEqual(20);
    expect(result.scrollWidth,'overflow '+width+' '+dir).toBeLessThanOrEqual(result.width+1);
    expect(result.mainTop,'content clearance '+width+' '+dir).toBeGreaterThanOrEqual(result.bottom);
-   expect(result.links.map(x=>x.label)).toEqual(['Components','Adaptive','Registry']);
+   expect(result.links.map(x=>x.label)).toEqual(result.isMobile?
+    ['Foundation','Components','Library','Studio']:['Components','Adaptive','Registry']);
    for(const link of result.links){
     expect(link.height,'tap target '+link.label+' '+width).toBeGreaterThanOrEqual(44);
-    if(width===320)expect(link.height,'single-line compact label '+link.label).toBeLessThanOrEqual(48);
+    if(width===320)expect(link.height,'compact dock target height '+link.label).toBeLessThanOrEqual(80);
     expect(link.left,'in-bounds link '+link.label).toBeGreaterThanOrEqual(0);
     expect(link.right,'in-bounds link '+link.label).toBeLessThanOrEqual(result.width);
    }
@@ -634,7 +642,8 @@ test('Forms Lab floating header keeps an opaque boundary in forced colors',async
  expect(state.radius).toBeGreaterThanOrEqual(20);
  expect(state.background).not.toBe('rgba(0, 0, 0, 0)');
  expect(state.shadow).toBe('none');
- await expect(page.getByRole('navigation',{name:'Lab navigation'}).getByRole('link',{name:'Registry'})).toBeVisible();
+ await expect(page.getByRole('navigation',{name:'Lab navigation'})).toBeHidden();
+ await expect(page.getByRole('navigation',{name:'Primary mobile navigation'}).getByRole('link',{name:'Library'})).toBeVisible();
 });
 
 // Regression: a visually open listbox was entirely below the viewport when a

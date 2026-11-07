@@ -11,8 +11,9 @@
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="./adaptive.css">
 <script type="module" src="./adaptive.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a href="#main-content" class="gc-skip-link">Skip to main content</a>
 <div class="gc-app-shell gc-environment" id="adaptive-demo">
  <header class="gc-app-bar" aria-label="Workspace toolbar">
@@ -62,7 +63,7 @@
   </section>
   <p class="gc-shell-note"><bdi dir="auto">All data shown here is illustrative. Navigation changes the demo state locally and does not access accounts.</bdi></p>
  </main>
- <nav class="gc-navigation gc-nav-bottom" aria-label="Primary navigation, mobile">
+ <nav class="gc-navigation gc-nav-bottom gc-mobile-dock" aria-label="Primary navigation, mobile">
   <a class="gc-bottom-link" href="#overview" data-gc-route="overview" aria-current="page"><span aria-hidden="true">◈</span><span>Overview</span></a>
   <a class="gc-bottom-link" href="#activity" data-gc-route="activity"><span aria-hidden="true">◷</span><span>Activity</span></a>
   <a class="gc-bottom-link" href="#library" data-gc-route="library"><span aria-hidden="true">▦</span><span>Library</span></a>

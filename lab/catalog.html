@@ -9,13 +9,14 @@
 <link rel="stylesheet" href="../styles/gc.v1.components.css">
 <link rel="stylesheet" href="./catalog.css">
 <script type="module" src="./catalog.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="skip" href="#main">Skip to component catalog</a>
 <div class="environment">
 <header class="gc-lens masthead">
  <div class="identity"><img class="logo" src="../assets/gc-mark.svg" alt="" width="42" height="42"><div><strong>GC UI</strong><small>Component Registry · v1 candidate</small></div></div>
- <nav aria-label="GC UI labs"><a href="./v1.html">Foundations</a><a href="./components.html">Components</a><a href="./adaptive.html">Adaptive</a><a href="./forms.html">Forms</a><a aria-current="page" href="./catalog.html">Registry</a></nav>
+ <nav class="gc-desktop-nav" aria-label="GC UI labs"><a href="./v1.html">Foundations</a><a href="./components.html">Components</a><a href="./adaptive.html">Adaptive</a><a href="./forms.html">Forms</a><a aria-current="page" href="./catalog.html">Registry</a></nav>
  <a href="https://github.com/GoreeCloud/gc-ui" class="repo">GitHub ↗</a>
 </header>
 <main id="main">
@@ -58,4 +59,10 @@
 </main>
 <footer>GC UI — Original design language · <a href="../docs/COMPONENT_CATALOG_V1.md">Full component contracts</a> · GoreeCloud © 2026</footer>
 </div>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body></html>

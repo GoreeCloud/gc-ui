@@ -40,7 +40,16 @@ for(const spec of pages){
    await page.evaluate(()=>document.documentElement.dir='ltr');
    const links=page.getByRole('navigation',{name:spec.nav}).getByRole('link');
    const drawer=page.locator('.gc-lab-mobile-links');
-   if(width<=spec.mobileBreakpoint){
+   if(width<=767){
+    await expect(drawer).toBeHidden();
+    await expect(links.first()).toBeHidden();
+    const dock=page.getByRole('navigation',{name:'Primary mobile navigation'});
+    await expect(dock).toBeVisible();
+    await expect(dock.getByRole('link')).toHaveCount(4);
+    const geometry=await dock.boundingBox();
+    expect(geometry.y+geometry.height).toBeLessThanOrEqual(780-8);
+    expect(geometry.y).toBeGreaterThan(780-134);
+   }else if(width<=spec.mobileBreakpoint){
     await expect(drawer).toBeVisible();
     await expect(drawer.locator('nav a')).toHaveCount(spec.mobileCount);
     const trigger=drawer.locator('summary');

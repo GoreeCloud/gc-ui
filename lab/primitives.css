@@ -56,3 +56,18 @@ fieldset{border:0;margin:0;padding:0;min-width:0}legend{margin-bottom:12px;font-
   color:CanvasText!important
  }
 }
+
+
+/* Unrestricted user-chosen accent. No GoreeCloud product hue is required. */
+.gc-color-fieldset .palette-row{margin-block-end:14px;flex-wrap:wrap}
+.gc-custom-accent-control{display:flex;align-items:center;gap:10px;min-height:60px;padding:8px;border:1px solid var(--gc-v1-color-divider);border-radius:18px;background:var(--gc-v1-color-surface-tonal);cursor:pointer}
+.gc-custom-accent-control input[type=color]{flex:none;inline-size:46px;block-size:46px;min-block-size:46px;border:1px solid var(--gc-v1-color-outline-strong);border-radius:14px;background:transparent;padding:3px;cursor:pointer}
+.gc-custom-accent-control input[type=color]::-webkit-color-swatch-wrapper{padding:0}
+.gc-custom-accent-control input[type=color]::-webkit-color-swatch{border:0;border-radius:10px}
+.gc-custom-accent-control input[type=color]::-moz-color-swatch{border:0;border-radius:10px}
+.gc-custom-accent-control input[type=color]:focus-visible{outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:3px}
+.gc-custom-accent-control span{display:grid;gap:2px;min-width:0}
+.gc-custom-accent-control strong{font-size:12px;color:var(--gc-v1-color-on-surface);font-weight:780}
+.gc-custom-accent-control small{font-size:10px;line-height:1.35;color:var(--gc-v1-color-on-surface-muted)}
+.gc-custom-accent-control output{font-size:10px;font-weight:770;color:var(--gc-v1-color-on-surface);font-variant-numeric:tabular-nums;margin-inline-start:auto;align-self:start}
+@media(forced-colors:active){.gc-custom-accent-control{background:Canvas;color:CanvasText;border-color:CanvasText}.gc-custom-accent-control input[type=color]{border-color:CanvasText}}

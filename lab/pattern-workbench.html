@@ -9,13 +9,14 @@
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="../styles/gc.v1.patterns.css">
 <script type="module" src="./pattern-workbench.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="gc-pattern-skip" href="#main">Skip to patterns</a>
 <div class="gc-pattern-page gc-environment">
 <header class="gc-pattern-top">
 <a class="gc-pattern-brand" href="./v1.html"><img src="../assets/gc-mark.svg" width="40" height="40" alt=""><span><strong>GC UI</strong><small>Pattern Workbench</small></span></a>
-<nav aria-label="Other UI labs"><a href="./components.html">Components</a><a href="./icon-atlas.html">Icon atlas</a><a href="./motion-gallery.html">Motion</a></nav>
+<nav class="gc-desktop-nav" aria-label="Other UI labs"><a href="./components.html">Components</a><a href="./icon-atlas.html">Icon atlas</a><a href="./motion-gallery.html">Motion</a></nav>
 </header>
 <main id="main">
 <div class="gc-pattern-hero">
@@ -66,4 +67,10 @@
 <p class="gc-pattern-footnote">Experimental GC UI examples · <a href="../docs/THIRD_PARTY_ASSETS.md">Source attribution</a> · <a href="../docs/MOTION_INPUT.md">Motion rules</a></p>
 </main>
 <footer class="gc-pattern-footer">Built from semantic HTML, GC design tokens, and optional licensed SVGs.</footer>
-</div></body></html>
+</div><nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html" aria-current="location"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
+</body></html>

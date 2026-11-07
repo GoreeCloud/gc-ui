@@ -6,11 +6,12 @@
 <link rel="stylesheet" href="../styles/gc.v1.generated.css">
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="./motion-gallery.css">
-<script type="module" src="./motion-gallery.mjs"></script></head>
-<body>
+<script type="module" src="./motion-gallery.mjs"></script><link rel="stylesheet" href="./mobile-dock.css">
+</head>
+<body data-gc-mobile-dock>
 <a class="skip" href="#main">Skip to motion samples</a>
 <div class="gc-environment view">
-<header class="topbar"><a href="./v1.html" class="brand"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Motion Grammar</small></span></a><nav aria-label="Other laboratories"><a href="./environment.html">Surfaces</a><a href="./icon-atlas.html">Icons</a><a href="./experience-studio.html">Studio</a><a href="./pattern-workbench.html">Patterns</a></nav></header>
+<header class="topbar"><a href="./v1.html" class="brand"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Motion Grammar</small></span></a><nav class="gc-desktop-nav" aria-label="Other laboratories"><a href="./environment.html">Surfaces</a><a href="./icon-atlas.html">Icons</a><a href="./experience-studio.html">Studio</a><a href="./pattern-workbench.html">Patterns</a></nav></header>
 <main id="main">
 <div class="hero"><p class="eyebrow">FUNCTION FIRST / MOTION SECOND</p><h1>Movement with meaning.</h1><p>Small interactions connect an action to its result. The DOM and focus are always usable without animation.</p></div>
 <section class="selector gc-material-surface" data-gc-treatment="raised" aria-labelledby="motion-controls">
@@ -43,4 +44,10 @@
 <p id="motion-status" class="status" aria-live="polite" role="status">Reveal selected. Ready to play.</p>
 <p class="explanation">Effects are intentionally short (120–320ms), including optional surface entry/exit and pressed feedback. Switching presets cancels the preceding animation; reduced-motion settings immediately suppress playback. View more in <a href="../docs/MOTION_INPUT.md">GC UI Motion Rules</a>.</p>
 </main><footer>GC UI experimental motion demo · <a href="./environment.html">Material environment</a></footer>
-</div></body></html>
+</div><nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html" aria-current="location"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
+</body></html>

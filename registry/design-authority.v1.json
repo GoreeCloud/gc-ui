@@ -89,5 +89,27 @@
     "totalSystems": 5,
     "scope": "design-user-experience-and-visual-consistency",
     "effectiveDate": "2026-10-19"
+  },
+  "ownerDesignClarification20261106": {
+    "effectiveDate": "2026-11-06",
+    "colorFreedom": {
+      "mandatoryGoreeCloudPalette": false,
+      "mandatoryGoreeCloudSystemColor": false,
+      "allowedColorChoice": "any-color-for-each-application-service-icon-wallpaper-or-other-surface",
+      "currentPresetPalettes": "optional-backward-compatible-examples-not-brand-requirements",
+      "colorConstraints": "accessible-functional-on-colors-and-legible-contrast"
+    },
+    "mobileNavigation": {
+      "primaryNavigation": "floating-bottom-dock",
+      "mobile": true,
+      "edgeInsetAndSafeAreaRequired": true,
+      "headerRole": "identity-context-and-non-navigation-actions-only",
+      "acceptance": "verify-each-mobile-app-source-and-real-device-viewport-separately"
+    },
+    "premiumQuality": {
+      "status": "founder-declares-current-visual-finish-insufficient",
+      "action": "iterative-screenshot-led-redesign-and-human-owner-visual-acceptance",
+      "allConsumerAcceptanceVerified": false
+    }
   }
 }

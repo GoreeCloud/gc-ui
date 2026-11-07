@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-gc-mode="light" data-gc-accent="iris" data-gc-material="translucent">
+<html lang="en" data-gc-mode="light" data-gc-accent="neutral" data-gc-material="translucent">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="description" content="GoreeCloud UI v1 accessible component primitives and theming reference">
@@ -10,13 +10,15 @@
 <link rel="stylesheet" href="./primitives.css">
 <link rel="stylesheet" href="./premium-direction.css">
 <script type="module" src="./primitives.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
+<link rel="stylesheet" href="./premium-refinement.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="skip-link" href="#content">Skip to content</a>
 <div class="environment">
 <header class="gc-lens masthead">
  <div class="identity"><img class="logo" src="../assets/gc-mark.svg" alt="" width="42" height="42"><div><strong>GC UI</strong><small>Components laboratory · v1 candidate</small></div></div>
- <nav aria-label="Laboratory navigation"><a href="./v1.html">Design lab</a><a href="#components">Components</a><a href="#materials">Materials</a><a href="./forms.html">Forms Lab</a><a href="./catalog.html">All 63 components</a></nav>
+ <nav class="gc-desktop-nav" aria-label="Laboratory navigation"><a href="./v1.html">Design lab</a><a href="#components">Components</a><a href="#materials">Materials</a><a href="./forms.html">Forms Lab</a><a href="./catalog.html">All 63 components</a></nav>
  <a class="repo" href="https://github.com/GoreeCloud/gc-ui">GitHub ↗</a>
 </header>
 <main id="content">
@@ -25,7 +27,7 @@
   <h1><bdi dir="auto">Made to feel</bdi><br><em><bdi dir="auto">effortless.</bdi></em></h1>
   <p class="summary"><bdi dir="auto">Real interactive controls, semantic colors, thoughtful states, and expressive precision. Everything keeps working when the visual effects are removed.</bdi></p>
   <a href="#components" class="gc-button" data-variant="primary">Explore components <span aria-hidden="true">↗</span></a>
-  <p class="gc-premium-microcopy">Curated themes <span aria-hidden="true">·</span> Native-first controls <span aria-hidden="true">·</span> Purposeful depth</p>
+  <p class="gc-premium-microcopy">Your colors <span aria-hidden="true">·</span> Native-first controls <span aria-hidden="true">·</span> Purposeful depth</p>
   <figure class="gc-premium-visual" aria-label="Preview of the original Aperture Weave identity artwork">
    <img src="../assets/candidates/aperture-interface-artwork.svg" alt="Abstract illustration of layered workspace surfaces, charts, and floating controls" width="1440" height="980">
    <figcaption><span class="gc-premium-dot" aria-hidden="true"></span><strong>Aperture Weave</strong><span>Official GC UI identity · Aperture Weave</span></figcaption>
@@ -57,12 +59,17 @@
       <button type="button" class="gc-button" data-theme-mode="light" data-variant="quiet" aria-pressed="false">Light</button>
       <button type="button" class="gc-button" data-theme-mode="dark" data-variant="quiet" aria-pressed="false">Dark</button>
    </div></fieldset>
-   <fieldset><legend>Accent</legend><div class="palette-row" role="group" aria-label="Choose accent palette">
-    <button type="button" class="palette iris" data-theme-accent="iris" aria-label="Iris" aria-pressed="true"></button>
+   <fieldset class="gc-color-fieldset"><legend>Color is yours</legend><div class="palette-row" role="group" aria-label="Optional example palettes">
+    <button type="button" class="palette iris" data-theme-accent="iris" aria-label="Iris" aria-pressed="false"></button>
     <button type="button" class="palette lagoon" data-theme-accent="lagoon" aria-label="Lagoon" aria-pressed="false"></button>
     <button type="button" class="palette ember" data-theme-accent="ember" aria-label="Ember" aria-pressed="false"></button>
     <button type="button" class="palette moss" data-theme-accent="moss" aria-label="Moss" aria-pressed="false"></button>
-   </div></fieldset>
+   </div>
+   <label class="gc-custom-accent-control" for="gc-custom-accent">
+    <input type="color" id="gc-custom-accent" value="#D946EF" aria-describedby="custom-accent-help">
+    <span><strong>Pick any color</strong><small id="custom-accent-help">Presets are examples, never GoreeCloud colors.</small></span>
+    <output id="gc-custom-accent-value" for="gc-custom-accent">#D946EF</output>
+   </label></fieldset>
    <fieldset><legend>Material</legend><label class="gc-switch">
       <input class="gc-switch-input" type="checkbox" id="lens-switch" aria-describedby="material-state" checked>
       <span class="gc-switch-track" aria-hidden="true"></span><span class="gc-switch-label">Translucent Lens</span>
@@ -213,4 +220,10 @@
  </div>
 </dialog>
 <div id="toast-region" class="gc-toast-region"></div>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body></html>

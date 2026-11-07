@@ -31,6 +31,11 @@ The brand-assets identity/Raster CI verifies source Git objects, metadata and ha
 
 Historical records previously referred to inaccessible GoreeCloud/branding-assets commits 29ea759c and dd13aad. They remain historical claims, not independently reverified provenance. The verified current authority is GoreeCloud/brand-assets.
 
+
+## 2026-11-06 founder color-freedom clarification
+
+Official GoreeCloud and GoreeCloud UI have no mandatory system color, default brand hue or fixed palette. The founder permits every app, service, icon, wallpaper and other surface to use any color. Approved authored asset colors, including the Aperture Weave icon, belong to that particular artwork and do not impose an ecosystem palette. Existing optional presets and technical fallback tokens are not universal colors. Semantic function, contrast and accessibility still apply.
+
 ## Optional Electron desktop-preview icon (source-only development)
 
 The optional Electron host uses the **exact published, founder-approved

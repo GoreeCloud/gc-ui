@@ -10,13 +10,14 @@
 <link rel="stylesheet" href="./environment.css">
 <link rel="stylesheet" href="./floating-topbar.css">
 <script type="module" src="./environment.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a href="#main" class="skip">Skip to content</a>
 <div class="gc-environment site">
 <header class="topbar gc-lab-floating-topbar">
  <a class="identity" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Material Environment Lab</small></span></a>
- <nav aria-label="Lab navigation"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a><a href="./icon-atlas.html">Icons</a><a href="./motion-gallery.html">Motion</a><a href="./experience-studio.html">Studio</a></nav>
+ <nav class="gc-desktop-nav" aria-label="Lab navigation"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a><a href="./icon-atlas.html">Icons</a><a href="./motion-gallery.html">Motion</a><a href="./experience-studio.html">Studio</a></nav>
  <button id="appearance" type="button" class="action secondary" aria-label="Switch to dark appearance">Dark mode</button>
  <details class="gc-lab-mobile-links"><summary>Explore labs</summary>
   <nav aria-label="Mobile lab destinations"><a href="./v1.html">Foundations</a><a href="./adaptive.html">Adaptive Shell</a><a href="./components.html">Components</a><a href="./icon-atlas.html">Icons</a><a href="./motion-gallery.html">Motion</a><a href="./experience-studio.html">Studio</a></nav>
@@ -75,5 +76,11 @@
 </main>
 <footer>Experimental GC UI materials · <a href="../docs/SURFACES_ENVIRONMENT.md">Read the surface specification</a> · <a href="./catalog.html">Component catalog</a></footer>
 </div>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html" aria-current="location"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body>
 </html>

@@ -9,10 +9,11 @@
 <link rel="stylesheet" href="../styles/gc.v1.materials.css">
 <link rel="stylesheet" href="./icon-atlas.css">
 <script type="module" src="./icon-atlas.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body><a class="skip" href="#atlas-main">Skip to icon atlas</a>
+<body data-gc-mobile-dock><a class="skip" href="#atlas-main">Skip to icon atlas</a>
 <div class="gc-environment page">
-<header class="toolbar"><a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Optional asset catalogue</small></span></a><nav aria-label="Labs"><a href="./environment.html">Material lab</a><a href="./components.html">Components</a><a href="./pattern-workbench.html">Patterns</a></nav></header>
+<header class="toolbar"><a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Optional asset catalogue</small></span></a><nav class="gc-desktop-nav" aria-label="Labs"><a href="./environment.html">Material lab</a><a href="./components.html">Components</a><a href="./pattern-workbench.html">Patterns</a></nav></header>
 <main id="atlas-main">
 <div class="intro"><p class="eyebrow">OPEN-SOURCE EXTENSION / ALPHA</p><h1>The icon atlas.</h1><p>Browse vetted, locally bundled symbols. External libraries retain their source identities, copyright notices, and licenses. GC UI's original glyphs remain the default.</p></div>
 <section class="filters gc-material-surface" data-gc-treatment="raised" aria-label="Icon search and filters">
@@ -25,4 +26,10 @@
 <p class="note">Each card lists the upstream family and shows the source icon geometry. Copy its local symbol ID to use it in applications. External marks are not original GC glyphs.</p>
 </main>
 <footer>Source <a href="../registry/third-party-assets.v1.json">inventory</a> · <a href="../docs/THIRD_PARTY_ASSETS.md">Licenses and use rules</a></footer>
-</div></body></html>
+</div><nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html" aria-current="location"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
+</body></html>
