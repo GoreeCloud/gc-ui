@@ -12,8 +12,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
       - name: Validate generated tokens and run tests
@@ -27,7 +27,7 @@ jobs:
       - name: Typecheck installed web-controls candidate with pinned TypeScript
         run: npm run release:seal:web:types
       - name: Retain unsigned Seal qualification artifact for review (not a release)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: gc-ui-seal-web-candidate-qa
           path: |
@@ -36,7 +36,7 @@ jobs:
           retention-days: 30
           if-no-files-found: error
       - name: Attach unsigned Foundations candidate tarball (not a public release)
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: gc-ui-foundations-v1-rc1-qa
           path: |
@@ -86,8 +86,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
       - name: Install pinned Playwright test runner
@@ -113,7 +113,7 @@ jobs:
           npm run qa:native-zoom:chromium
       - name: Upload visual captures and failure traces
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: gc-ui-browser-qa-evidence
           # Preserve the staged axe report even if the visual suite exits early.
@@ -130,8 +130,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
       - name: Install pinned Playwright and axe runner
@@ -157,7 +157,7 @@ jobs:
           npm run qa:native-zoom:firefox
       - name: Upload Firefox browser QA evidence
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: gc-ui-firefox-qa-evidence
           path: test-results/
@@ -169,8 +169,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: '22'
       - name: Verify Apache-2.0 Foundations stable distribution archive
@@ -178,7 +178,7 @@ jobs:
       - name: Compile installed stable distribution consumer types
         run: npm run release:foundations:types
       - name: Retain unsigned stable build candidate and checksum
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: gc-ui-foundations-v1-stable-qa
           path: |
