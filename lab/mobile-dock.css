@@ -35,7 +35,9 @@
   font:700 clamp(9px,2.7vw,11px)/1.12 system-ui,-apple-system,"Segoe UI",sans-serif;
   letter-spacing:-.01em;white-space:nowrap;text-decoration:none;
   color:var(--gc-v1-color-on-surface);background:transparent;
-  transition:background 180ms ease,transform 180ms ease,color 180ms ease;
+  /* Semantic foreground and selected-state background switch atomically
+     with theme/contrast changes; interpolated colors can dip below WCAG. */
+  transition:transform 180ms ease,box-shadow 180ms ease;
  }
  .gc-mobile-dock a svg{inline-size:21px;block-size:21px;flex:none;stroke:currentColor;fill:none}
  .gc-mobile-dock a:hover{background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface)}

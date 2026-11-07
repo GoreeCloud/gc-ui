@@ -53,6 +53,17 @@ Light/dark appearance policy is independent of color. Never store an app
 suggestion as though it were a user choice or sync preferences without explicit
 privacy-aware consent.
 
+**Navigation transition safety (November 7, 2026, experimental reference).**
+Any independently selected product or user hue must keep semantic foreground
+and active-destination background roles **readable throughout appearance and
+contrast changes**. In the shared experimental floating mobile dock, do not
+animate/interpolate `color`, `background`, `background-color`, or `all` on
+navigation links: a partially interpolated light foreground over an already
+darkened Surface can transiently fall below 4.5:1, even when both endpoints
+pass. Motion may remain on spatial press response or shadow (with reduced-motion
+fallback). `e2e/forms-solid-contrast.spec.mjs` guards the actual computed CSS
+and rendered 4.5:1 surface pairs. This does not establish native app compliance.
+
 ## Implementation guidance
 
 - Use `--gc-v1-color-primary`, `--gc-v1-color-on-primary`, `--gc-v1-color-primary-container` and other GC UI roles rather than literal brand colors in components.

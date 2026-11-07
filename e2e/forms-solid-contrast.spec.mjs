@@ -22,6 +22,17 @@ for(const scenario of [
   expect(transition.split(',').map(value=>value.trim())).not.toContain('background-color');
   await expect(page.locator('html')).toHaveAttribute('data-gc-mode',scenario.mode);
   if(scenario.high)await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
+  if(scenario.width<=767){
+   // Theme changes must not interpolate semantic foreground and selection
+   // backgrounds. The end-state may pass while intermediate frames fail.
+   const changes=await page.locator('.gc-mobile-dock a').evaluateAll(links=>
+    links.map(link=>getComputedStyle(link).transitionProperty.split(',').map(x=>x.trim())));
+   expect(changes).toHaveLength(4);
+   for(const properties of changes){
+    for(const unsafe of ['all','color','background','background-color'])
+     expect(properties,'navigation colors must switch without low-contrast frames').not.toContain(unsafe);
+   }
+  }
   const contrasts=await page.evaluate(()=>{
    const pairs=[
     ['navigation link',innerWidth<=767?'.gc-mobile-dock a:first-child':'.gc-form-header nav a:first-child',innerWidth<=767?'.gc-mobile-dock':'.gc-form-header nav a:first-child'],
