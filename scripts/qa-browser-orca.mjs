@@ -1,5 +1,6 @@
 /** Local-only, headed browser fixture for isolated Orca/AT-SPI acceptance diagnostics. */
 import {chromium} from '@playwright/test';
+import {access} from 'node:fs/promises';
 
 const port=Number(process.env.GC_UI_AT_PORT);
 if(!Number.isInteger(port)||port<1024||port>65535)
@@ -28,6 +29,47 @@ try{
  await page.waitForTimeout(5500);
  await input.press('Escape');
  await page.waitForTimeout(1400);
+ const sample=page.locator('#demo-passphrase');
+ const invented='test-only-not-a-credential';
+ await sample.fill(invented);
+ const reveal=page.locator('#passphrase-reveal');
+ const stableName='Reveal sample passphrase';
+ const statesMatch=async(pressed,type)=>await reveal.getAttribute('aria-pressed')===pressed
+  &&await sample.getAttribute('type')===type
+  &&await sample.inputValue()===invented
+  &&await reveal.getAttribute('aria-label')===stableName;
+ if(!await statesMatch('false','password'))
+  throw new Error('Password reveal initial name, value or masked state invalid');
+ await reveal.focus();
+ console.log('PHASE_PASSWORD_REVEAL_FOCUSED');
+ await page.waitForTimeout(3800);
+ await reveal.press('Space');
+ if(!await statesMatch('true','text'))
+  throw new Error('Password reveal did not expose stable label, value and visible state');
+ console.log('PHASE_PASSWORD_REVEAL_ON');
+ // Do not re-mask until the external real AT-SPI observer has actually
+ // sampled the pressed state; an arbitrary sleep can miss this brief phase.
+ const gate=process.env.GC_UI_AT_PRESSED_GATE;
+ if(!gate)throw new Error('Isolated AT-SPI state-observation gate required');
+ let atspiObservedPressed=false;
+ for(let attempt=0;attempt<40;attempt++){
+  try{
+   await access(gate);
+   atspiObservedPressed=true;
+   break;
+  }catch(error){
+   if(error.code!=='ENOENT')throw error;
+  }
+  await page.waitForTimeout(250);
+ }
+ if(!atspiObservedPressed)
+  throw new Error('AT-SPI observer did not report the pressed toggle state');
+ await page.waitForTimeout(600);
+ await reveal.press('Space');
+ if(!await statesMatch('false','password'))
+  throw new Error('Password reveal did not restore stable label, value and masked state');
+ console.log('PHASE_PASSWORD_REVEAL_OFF');
+ await page.waitForTimeout(2200);
 }finally{
  await browser.close();
 }
