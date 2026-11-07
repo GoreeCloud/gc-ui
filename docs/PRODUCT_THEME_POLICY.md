@@ -21,29 +21,37 @@
 
 See [GC UI appearance and theme specification](COLOR_THEMES.md#5-appearance-and-precedence) for the corresponding design contract.
 
-## Design identity
+## Design identity — no mandatory GoreeCloud hue (founder direction, November 6, 2026)
 
-GoreeCloud UI (GC UI) owns the shared semantic tokens, typography, navigation, spacing, component states, elevation and accessibility behaviors. Product personalities select semantic roles, not hardcoded UI colors. The ecosystem fallback accent is **Neutral** (slate, not violet). Purple **Iris** remains an opt-in palette.
+**Neither GoreeCloud nor GoreeCloud UI has a mandatory default/system color.**
+Any application, service, wallpaper, icon, artwork or other surface may use
+**any color independently**. Product names must not silently impose a hue.
+Iris, Lagoon, Ember, Moss, Ocean and Neutral remain optional historical
+examples. The neutral alpha-runtime fallback is necessary for a legible
+unspecified interface; it is NOT an official GoreeCloud brand color.
 
-| Consumer | Product-suggested accent when no user choice exists | Notes |
-| --- | --- | --- |
-| Core GC UI and unspecified products | Neutral | Baseline, no mandatory accent hue |
-| GoreeCloud Messenger | Ocean | Expressive blue communication UI |
-| GoreeCloud Notify | Lagoon | Calm teal notification UI |
-| GoreeCloud DNS | Moss | Green network filtering, when a UI exists |
-| Wardveil / GoreeShield / security products | Neutral | Semantic warnings and dangers retain meaning |
-| Other products | Neutral | Specific product suggestions require scoped review |
+GC UI owns semantic foreground/background roles, visible focus and status
+indicators, contrast and other accessibility requirements, not a specific hue.
+Stable Foundations 1.0.1 token bytes remain unchanged.
 
-These are **defaults or proposals**, not evidence of migration for each consumer.
+### Preference precedence and color freedom
 
-## Preference precedence
+1. Explicit saved user color wins, including any valid opaque #RRGGBB seed
+   through controller.set({accent:'custom',seed:'#FA2E87'}).
+2. An individual app MAY deliberately choose a local defaultAccent, independent
+   of its name and other apps. Any #RRGGBB color may be its nonpersisted
+   suggestion using defaultAccent:'custom' and defaultSeed:'#FA2E87'.
+   No product-specific color is mandatory.
+3. Historical example suggestions need useProductSuggestion:true; simply
+   passing product:'messenger' does not set Ocean.
+4. If no choice is provided, the current alpha runtime uses its neutral
+   technical rendering fallback, not a required GoreeCloud identity color.
+5. Forced-colors and contrast-safe on-colors remain accessibility safeguards,
+   not system-imposed brand styling.
 
-1. A validated **explicit saved user accent** takes precedence over product suggestions.
-2. Accessibility settings (forced colors, high contrast, reduced transparency) govern accessibility-dependent rendering independently of accent preference.
-3. If no valid user accent exists, an application's validated `defaultAccent` suggests its product identity.
-4. If no product suggestion exists, use `neutral`.
-
-Changing *appearance* (light/dark) must not freeze the suggested accent into storage as if the user selected it. Resetting an app accent restores its product suggestion. Never sync cross-origin theme preferences without an explicit, privacy-aware design and user authorization.
+Light/dark appearance policy is independent of color. Never store an app
+suggestion as though it were a user choice or sync preferences without explicit
+privacy-aware consent.
 
 ## Implementation guidance
 
@@ -70,8 +78,13 @@ matching GC UI CSS roles):
 ```js
 import {createProductThemeController} from '@goreecloud/gc-ui'; // future versioned package entry
 const controller = createProductThemeController({product:'messenger'});
-// With no saved accent, Messenger suggests Ocean blue. A saved Iris choice wins.
-// controller.set({accent:'iris'}) is an explicit user selection only.
+// Product name does not force a hue. Technical neutral fallback is not branding.
+// Optional example: useProductSuggestion:true opts into historical Ocean.
+// Optional app-local arbitrary suggestion (not persisted as user choice):
+// createProductThemeController({product:'messenger',
+//   defaultAccent:'custom',defaultSeed:'#19A6CF'});
+// Individual users may choose a different color, which always wins:
+controller.set({accent:'custom',seed:'#F71E85'});
 ```
 
 The package name above is illustrative for an eventual verified distribution;
@@ -87,6 +100,6 @@ revision, rather than independently editing product hex values. Do not include
 remote browser CDN dependencies that could delay, block, or alter login UI.
 
 Before general release, the v1 canonical token registry and generated stylesheet
-must be brought into neutral-first alignment and all consumers must pass real
+must preserve neutral as an optional rendering fallback without product-hue requirements and all consumers must pass real
 rendered/forced-color accessibility review. The alpha compatibility overlay
 is not a substitute for a formally qualified versioned token release.

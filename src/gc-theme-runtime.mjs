@@ -55,8 +55,15 @@ export function getCuratedAccentRoles(accent,mode) {
 }
 
 
-export function normalizeTheme(input={},defaultAccent=GC_THEME_DEFAULTS.accent){
-  const out={...GC_THEME_DEFAULTS,accent:choices.accent.includes(defaultAccent)&&defaultAccent!=='custom'?defaultAccent:GC_THEME_DEFAULTS.accent};
+export function normalizeTheme(
+  input={},defaultAccent=GC_THEME_DEFAULTS.accent,defaultSeed=GC_THEME_DEFAULTS.seed
+){
+  const validSeed=typeof defaultSeed==='string'&&hex.test(defaultSeed);
+  const accent=choices.accent.includes(defaultAccent) &&
+    (defaultAccent!=='custom'||validSeed)
+    ?defaultAccent:GC_THEME_DEFAULTS.accent;
+  const out={...GC_THEME_DEFAULTS,accent,
+    seed:validSeed?defaultSeed.toUpperCase():GC_THEME_DEFAULTS.seed};
   if(!input||typeof input!=='object')return out;
   for(const [key,values] of Object.entries(choices))if(values.includes(input[key]))out[key]=input[key];
   if(typeof input.seed==='string'&&hex.test(input.seed))out.seed=input.seed.toUpperCase();
@@ -72,7 +79,8 @@ export function resolveTheme(config={},system={}){
 export function createThemeController({
   root=globalThis.document?.documentElement,
   media=globalThis.matchMedia?.bind(globalThis),
-  storage,key='gc-ui-v1:',defaultAccent=GC_THEME_DEFAULTS.accent
+  storage,key='gc-ui-v1:',defaultAccent=GC_THEME_DEFAULTS.accent,
+  defaultSeed=GC_THEME_DEFAULTS.seed
 }={}){
   if(!root?.style||!root?.dataset)throw new TypeError('A document root with style and dataset is required');
   let persistence=storage;
@@ -86,7 +94,7 @@ export function createThemeController({
   for(const name of Object.keys(GC_THEME_DEFAULTS)){
     try{const value=persistence?.getItem(key+name);if(value!==null&&value!==undefined)previous[name]=value}catch{}
   }
-  let state=normalizeTheme(previous,defaultAccent),destroyed=false;
+  let state=normalizeTheme(previous,defaultAccent,defaultSeed),destroyed=false;
   const overridden=new Map(),relinquished=new Set(),listeners=[];
   const datasetKeys=['gcMode','gcAccent','gcMaterial','gcContrast'];
   const priorDataset=new Map(datasetKeys.map(name=>[
@@ -177,7 +185,7 @@ export function createThemeController({
         accepted.seed=patch.seed.toUpperCase();
       }
       if(!Object.keys(accepted).length)return {...state};
-      state=normalizeTheme({...state,...accepted},defaultAccent);
+      state=normalizeTheme({...state,...accepted},defaultAccent,defaultSeed);
       for(const [name,value] of Object.entries(accepted)){
         try{persistence?.setItem(key+name,value)}catch{}
       }
@@ -186,7 +194,7 @@ export function createThemeController({
     },
     reset(){
       if(destroyed)throw new Error('Theme controller was destroyed');
-      state=normalizeTheme({},defaultAccent);
+      state=normalizeTheme({},defaultAccent,defaultSeed);
       for(const name of Object.keys(state)){
         try{persistence?.removeItem(key+name)}catch{}
       }

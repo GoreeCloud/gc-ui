@@ -1,10 +1,11 @@
 /**
- * GC UI product theme suggestions (experimental web contract).
- * A product provides a suggested accent, not a user-level preference.
- * User storage always has precedence through createThemeController.
+ * Optional example product accents (experimental web contract).
+ * Product identity alone must never enforce a default color.
+ * Historic examples need explicit opt-in; saved user choices always win.
  */
 import {createThemeController, GC_THEME_DEFAULTS} from './gc-theme-runtime.mjs';
 
+/** Historical example colors, not product or ecosystem requirements. */
 export const GC_PRODUCT_ACCENTS=Object.freeze({
   'gc-ui':'neutral',
   'messenger':'ocean',
@@ -22,7 +23,7 @@ export const GC_PRODUCT_ACCENTS=Object.freeze({
   'vault':'neutral'
 });
 
-/** Unknown or malformed products are neutral, never the first curated hue. */
+/** Lookup only: returning an example never applies it automatically. */
 export function getProductAccent(product) {
   if(typeof product!=='string'||!/^([a-z0-9]+-?)+$/.test(product)) return GC_THEME_DEFAULTS.accent;
   const key=product.toLowerCase();
@@ -30,10 +31,20 @@ export function getProductAccent(product) {
 }
 
 /**
- * Creates the standard controller with an app suggestion. An explicitly stored
- * theme choice takes precedence. The caller may provide root/media/storage/key
- * exactly as with createThemeController; product is never persisted by this API.
+ * App names never impose a color. Historical sample suggestions require
+ * useProductSuggestion:true. Apps can still intentionally choose a local
+ * defaultAccent, including a 'custom' defaultAccent with explicit validated
+ * defaultSeed:'#RRGGBB'. Individual users can pick ANY separate seed with
+ * set({accent:'custom',seed:'#RRGGBB'}).
+ * Product names and example suggestions are never persisted as user choices.
  */
-export function createProductThemeController({product,...options}={}) {
-  return createThemeController({...options,defaultAccent:getProductAccent(product)});
+export function createProductThemeController({
+  product,useProductSuggestion=false,...options
+}={}) {
+  const defaultAccent=Object.hasOwn(options,'defaultAccent')
+    ? options.defaultAccent
+    : useProductSuggestion===true
+      ? getProductAccent(product)
+      : GC_THEME_DEFAULTS.accent;
+  return createThemeController({...options,defaultAccent});
 }
