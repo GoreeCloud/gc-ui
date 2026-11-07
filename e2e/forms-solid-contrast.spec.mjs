@@ -24,7 +24,7 @@ for(const scenario of [
   if(scenario.high)await expect(page.locator('html')).toHaveAttribute('data-gc-contrast','high');
   const contrasts=await page.evaluate(()=>{
    const pairs=[
-    ['navigation link','.gc-form-header nav a:first-child','.gc-form-header nav a:first-child'],
+    ['navigation link',innerWidth<=767?'.gc-mobile-dock a:first-child':'.gc-form-header nav a:first-child',innerWidth<=767?'.gc-mobile-dock':'.gc-form-header nav a:first-child'],
     ['header brand','.gc-form-brand','.gc-form-header'],
     ['project field label','label[for="brief-name"]','.gc-form-panel:first-child'],
     ['project title','#draft-title','.gc-form-panel:first-child'],

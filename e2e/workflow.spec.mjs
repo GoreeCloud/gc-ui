@@ -119,7 +119,7 @@ test('workflow remains usable at 320px and in forced-colors mode',async({page})=
  await page.goto('/lab/workflow.html');
  const bounds=await page.evaluate(()=>({
   overflow:document.documentElement.scrollWidth-document.documentElement.clientWidth,
-  navigation:[...document.querySelectorAll('.gc-workflow-header nav a')].map(e=>e.getBoundingClientRect().height),
+  navigation:[...document.querySelectorAll('.gc-mobile-dock a')].map(e=>e.getBoundingClientRect().height),
   current:document.querySelectorAll('.gc-workflow-steps [aria-current=step]').length
  }));
  expect(bounds.overflow).toBeLessThanOrEqual(1);

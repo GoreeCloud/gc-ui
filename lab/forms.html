@@ -9,12 +9,13 @@
 <link rel="stylesheet" href="../styles/gc.v1.components.css">
 <link rel="stylesheet" href="./forms.css">
 <script type="module" src="./forms.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="gc-skip-link" href="#content">Skip to forms</a>
 <header class="gc-form-header">
  <a href="./adaptive.html" class="gc-form-brand"><img src="../assets/gc-mark.svg" width="40" height="40" alt=""><strong>GC UI</strong><span>Forms Lab</span></a>
- <nav aria-label="Lab navigation"><a href="./components.html">Components</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
+ <nav class="gc-desktop-nav" aria-label="Lab navigation"><a href="./components.html">Components</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
 </header>
 <main id="content" class="gc-form-layout">
  <div class="gc-form-intro"><p class="gc-form-eyebrow">FORM INTELLIGENCE / NATIVE FIRST</p><h1><bdi dir="auto">Every detail matters.</bdi></h1><p><bdi dir="auto">Forms that make recovery simple and search that respects keyboard intent. This is a local-only experimental reference.</bdi></p></div>
@@ -126,4 +127,10 @@
  <p class="gc-form-disclaimer">Experimental GoreeCloud UI references. Demonstration values only, no network calls and no account data.</p>
 </main>
 <footer class="gc-form-footer"><a href="./components.html">Components Lab</a> · <a href="./catalog.html">Component Registry</a> · <a href="../docs/WEB_API_ALPHA.md">Web API</a></footer>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body></html>

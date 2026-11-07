@@ -12,13 +12,15 @@
 <link rel="stylesheet" href="./floating-topbar.css">
 <link rel="stylesheet" href="./premium-direction.css">
 <script type="module" src="./experience-studio.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
+<link rel="stylesheet" href="./premium-refinement.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="gc-skip" href="#main">Skip to studio</a>
 <div class="gc-environment studio">
  <header class="topbar gc-lab-floating-topbar">
   <a class="brand" href="./v1.html"><img src="../assets/gc-mark.svg" alt="" width="40" height="40"><span><strong>GC UI</strong><small>Experience Studio · Alpha</small></span></a>
-  <nav aria-label="Other design labs"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
+  <nav class="gc-desktop-nav" aria-label="Other design labs"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
   <button id="appearance" class="mode-button" type="button" aria-label="Switch to dark appearance">Dark mode</button>
   <details class="gc-lab-mobile-links"><summary>Explore labs</summary>
    <nav aria-label="Mobile lab destinations"><a href="./environment.html">Materials</a><a href="./motion-gallery.html">Motion</a><a href="./icon-atlas.html">Icons</a></nav>
@@ -82,4 +84,10 @@
  </main>
  <footer>Experimental GC UI Studio · <a href="../docs/EXPERIENCE_STUDIO.md">Architecture and limitations</a> · <a href="./adaptive.html">Adaptive Shell</a></footer>
 </div>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html" aria-current="page"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body></html>
