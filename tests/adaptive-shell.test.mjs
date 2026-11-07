@@ -11,13 +11,13 @@ test('adaptive shell has one content landmark and an accessible skip target',()=
   assert.match(markup,/<a href="#main-content" class="gc-skip-link">Skip to main content<\/a>/);
   assert.equal((markup.match(/<main\b/g)||[]).length,1);
   for(const size of ['sidebar','rail','bottom']){
-    assert.match(markup,new RegExp('<nav class="gc-navigation gc-nav-'+size+'" aria-label="Primary navigation,'));
+    assert.match(markup,new RegExp('<nav class="gc-navigation gc-nav-'+size+(size==='bottom'?' gc-mobile-dock':'')+'" aria-label="Primary navigation,'));
     assert.match(css,new RegExp('\\.gc-nav-'+size+'\\b'));
   }
 });
 test('every navigation viewport offers all three routes, with current location semantics',()=>{
  for(const size of ['sidebar','rail','bottom']){
-   const match=markup.match(new RegExp('<nav class="gc-navigation gc-nav-'+size+'"[^>]*>([\\s\\S]*?)<\\/nav>'));
+   const match=markup.match(new RegExp('<nav class="gc-navigation gc-nav-'+size+(size==='bottom'?' gc-mobile-dock':'')+'"[^>]*>([\\s\\S]*?)<\\/nav>'));
    assert.ok(match,size+' landmark missing');
    for(const route of ['overview','activity','library']){
     assert.match(match[1],new RegExp('data-gc-route="'+route+'"'),size+' missing '+route);

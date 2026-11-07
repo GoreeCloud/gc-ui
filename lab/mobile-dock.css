@@ -1,0 +1,82 @@
+/* GoreeCloud UI experimental mobile-primary-navigation specimen.
+ * Page-specific palettes are allowed; nothing in this dock sets a brand hue.
+ * Layout, motion, accessibility, and safe-area contracts are shared.
+ */
+.gc-mobile-dock{display:none}
+@media(max-width:767px){
+ html{scroll-padding-block-end:calc(112px + env(safe-area-inset-bottom,0px))}
+ body[data-gc-mobile-dock]{padding-block-end:calc(106px + env(safe-area-inset-bottom,0px))}
+ /* Top chrome is a compact title/action toolbar, never the primary mobile nav. */
+ nav.gc-desktop-nav,.gc-lab-mobile-links{display:none!important}
+ .gc-mobile-dock{
+  box-sizing:border-box;position:fixed;z-index:80;display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;
+  inset-inline:max(14px,env(safe-area-inset-left,0px)) max(14px,env(safe-area-inset-right,0px));
+  inset-block-end:max(14px,env(safe-area-inset-bottom,0px));
+  width:min(440px,calc(100vw - 28px));margin-inline:auto;
+  padding:7px;gap:3px;min-block-size:70px;
+  background:var(--gc-v1-color-surface-raised);
+  color:var(--gc-v1-color-on-surface);
+  border:1px solid var(--gc-v1-color-outline);
+  border-radius:28px;
+  box-shadow:0 18px 48px -20px color-mix(in srgb,var(--gc-v1-color-on-canvas) 36%,transparent),
+    0 4px 15px -7px color-mix(in srgb,var(--gc-v1-color-on-canvas) 25%,transparent);
+  isolation:isolate;
+ }
+ .gc-mobile-dock:before{
+  content:"";pointer-events:none;position:absolute;
+  inset:1px 10px auto;height:1px;border-radius:999px;
+  background:linear-gradient(90deg,transparent,var(--gc-v1-color-outline),transparent);
+ }
+ .gc-mobile-dock a{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;min-width:0;min-height:56px;
+  padding:7px 2px;border-radius:21px;border:1px solid transparent;
+  font:700 clamp(9px,2.7vw,11px)/1.12 system-ui,-apple-system,"Segoe UI",sans-serif;
+  letter-spacing:-.01em;white-space:nowrap;text-decoration:none;
+  color:var(--gc-v1-color-on-surface-muted);background:transparent;
+  transition:background 180ms ease,transform 180ms ease,color 180ms ease;
+ }
+ .gc-mobile-dock a svg{inline-size:21px;block-size:21px;flex:none;stroke:currentColor;fill:none}
+ .gc-mobile-dock a:hover{background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface)}
+ .gc-mobile-dock a:active{transform:scale(.97)}
+ .gc-mobile-dock a[aria-current=page]{
+  color:var(--gc-v1-color-on-primary-container);
+  background:var(--gc-v1-color-primary-container);
+  border-color:var(--gc-v1-color-outline);
+  box-shadow:inset 0 1px 0 color-mix(in srgb,var(--gc-v1-color-surface-raised) 56%,transparent);
+  font-weight:800;
+ }
+ .gc-mobile-dock a:focus-visible{
+  outline:3px solid var(--gc-v1-color-focus-ring);outline-offset:1px;
+ }
+ .gc-mobile-dock.gc-nav-bottom{grid-template-columns:repeat(3,minmax(0,1fr));min-block-size:70px}
+ .gc-mobile-dock.gc-nav-bottom .gc-bottom-link{font-size:11px}
+ .gc-mobile-dock.gc-nav-bottom .gc-bottom-link span:first-child{font-size:23px}
+}
+/* 600–767 is still mobile-app navigation; suppress tablet rail, whose
+ * original 600px breakpoint otherwise exposes two primary nav systems. */
+@media(min-width:600px) and (max-width:767px){
+ .gc-app-shell .gc-nav-rail{display:none}
+ .gc-app-shell .gc-main-content{margin-inline-start:auto;margin-inline-end:auto}
+}
+@media(max-width:319px){
+ .gc-mobile-dock{inset-inline:8px;width:calc(100vw - 16px);padding:5px;gap:1px}
+ .gc-mobile-dock a{font-size:9px}
+}
+@media(prefers-reduced-motion:reduce){
+ .gc-mobile-dock a{transition:none}
+ .gc-mobile-dock a:active{transform:none}
+}
+@media(prefers-reduced-transparency:reduce){
+ .gc-mobile-dock{box-shadow:none;background:var(--gc-v1-color-surface)}
+}
+:root[data-gc-contrast=high] .gc-mobile-dock,
+:root[data-gc-material=solid] .gc-mobile-dock{background:var(--gc-v1-color-surface);box-shadow:none}
+@media(forced-colors:active){
+ .gc-mobile-dock{background:Canvas;color:CanvasText;border:1px solid CanvasText;box-shadow:none}
+ .gc-mobile-dock:before{display:none}
+ .gc-mobile-dock a{color:CanvasText}
+ .gc-mobile-dock a[aria-current=page]{color:HighlightText;background:Highlight;border-color:Highlight}
+ .gc-mobile-dock a:focus-visible{outline:3px solid Highlight}
+}

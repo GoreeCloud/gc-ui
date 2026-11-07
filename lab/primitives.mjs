@@ -25,6 +25,9 @@ function syncControls(){
  const label=document.getElementById('lens-switch').closest('label');
  label.title=resolved.material==='solid'&&preference.material==='translucent'
   ?'Solid Lens is active because of system accessibility settings':'';
+ const color=document.getElementById('gc-custom-accent');
+ if(preference.accent==='custom')color.value=preference.seed;
+ document.getElementById('gc-custom-accent-value').textContent=color.value.toUpperCase();
 }
 document.documentElement.addEventListener('gc-theme-change',syncControls);
 document.querySelectorAll('[data-theme-mode]').forEach(button=>{
@@ -32,6 +35,10 @@ document.querySelectorAll('[data-theme-mode]').forEach(button=>{
 });
 document.querySelectorAll('[data-theme-accent]').forEach(button=>{
  button.addEventListener('click',()=>theme.set({accent:button.dataset.themeAccent}));
+});
+// Any opaque RGB seed is allowed: named swatches are optional examples.
+document.getElementById('gc-custom-accent').addEventListener('input',event=>{
+ theme.set({accent:'custom',seed:event.currentTarget.value});
 });
 document.getElementById('lens-switch').addEventListener('change',event=>{
  theme.set({material:event.target.checked?'translucent':'solid'});

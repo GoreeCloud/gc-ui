@@ -9,12 +9,13 @@
 <link rel="stylesheet" href="../styles/gc.v1.components.css">
 <link rel="stylesheet" href="./workflow.css">
 <script type="module" src="./workflow.mjs"></script>
+<link rel="stylesheet" href="./mobile-dock.css">
 </head>
-<body>
+<body data-gc-mobile-dock>
 <a class="gc-skip-link" href="#content">Skip to setup</a>
 <header class="gc-workflow-header">
  <a href="./forms.html" class="gc-workflow-brand"><img src="../assets/gc-mark.svg" width="38" height="38" alt=""><strong>GC UI</strong><span>Workflow Lab</span></a>
- <nav aria-label="Lab navigation"><a href="./forms.html">Forms</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
+ <nav class="gc-desktop-nav" aria-label="Lab navigation"><a href="./forms.html">Forms</a><a href="./adaptive.html">Adaptive</a><a href="./catalog.html">Registry</a></nav>
 </header>
 <main id="content" class="gc-workflow-layout">
  <div class="gc-workflow-intro">
@@ -126,5 +127,11 @@
  </div>
  <p class="gc-workflow-note">Experimental GC UI reference, not a production onboarding wizard or a stable component API. <a href="../docs/UX_UI_DESIGN_PRINCIPLES.md">Eight UX/UI principles</a> · <a href="./forms.html">Return to short forms</a></p>
 </main>
+<nav class="gc-mobile-dock" aria-label="Primary mobile navigation">
+ <a href="./v1.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-layers"></use></svg><span>Foundation</span></a>
+ <a href="./components.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-sliders"></use></svg><span>Components</span></a>
+ <a href="./catalog.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-search"></use></svg><span>Library</span></a>
+ <a href="./experience-studio.html"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="../assets/gc-glyphs.svg#gc-spark"></use></svg><span>Studio</span></a>
+</nav>
 </body>
 </html>
