@@ -122,6 +122,7 @@ jobs:
             playwright-report/
             dist/qa/accessibility-review/
             dist/qa/accessibility-triage/
+            dist/qa/accessibility-coverage/
           retention-days: 7
           if-no-files-found: ignore
 
