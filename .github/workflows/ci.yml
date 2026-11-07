@@ -128,7 +128,8 @@ jobs:
   browser-firefox:
     name: Firefox interaction smoke tests
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    # Cold Ubuntu package mirrors consumed 15m50s before Firefox tests could run.
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -152,7 +153,8 @@ jobs:
         run: npm run qa:seal-evidence:verify
       - name: Verify genuine 200% and 400% Firefox browser zoom
         run: |
-          sudo apt-get update
+          # Playwright --with-deps refreshed apt indexes earlier in this job.
+          # Reuse those indexes before the mandatory native zoom test.
           sudo apt-get install -y x11-utils libxtst6
           npm run qa:native-zoom:firefox
       - name: Upload Firefox browser QA evidence
