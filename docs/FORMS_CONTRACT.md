@@ -91,6 +91,7 @@ The focus-only skip link is supplied by `styles/gc.v1.components.css`, and the C
 
 ## Password, native select, numeric and recovery contracts
 
+- The mobile specimen uses a short, explicit sample-only password placeholder so its complete instruction fits beside the Show button in a real 320px Chromium light/dark viewport. The external helper retains the explicit no-real-credentials warning. A browser regression measures native field text space, including reserved button padding, rather than inferring fit from page overflow. This scoped correction does not certify all translations, zoom modes or devices.
 - F12 is explicitly an invented sample passphrase field. The Show/Hide button has a stable accessibility name (`Reveal sample passphrase`) and uses `aria-pressed` to report the reveal state; changing the type preserves the field value. No actual credential should be entered. Never store or transmit the value.
 - F17 prefers the platform-native select for mobile typeahead and accessible option behavior; selection changes only the local demonstration status.
 - F21 allows manual numeric input as well as 48px minimum increment/decrement controls. The specimen normalizes out-of-bounds numbers on change, updates the label/status in a live region and disables buttons at the configured minimum/maximum.
