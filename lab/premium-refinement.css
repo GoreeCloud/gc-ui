@@ -51,3 +51,34 @@
  .gc-premium-visual,.gc-premium-identity-panel,
  .environment .setting-surface,.studio .controls{background:Canvas;color:CanvasText;box-shadow:none;border-color:CanvasText}
 }
+
+/*
+ * Editorial atmosphere: contextual, surface-aware optical depth rather than
+ * a hardcoded brand or device-system hue. Never recolor the approved artwork.
+ * Halos are decoration only, with no interaction or meaning carried by color.
+ */
+.gc-premium-visual{
+ border-radius:clamp(25px,3vw,38px);
+ box-shadow:0 35px 85px -45px color-mix(in srgb,var(--gc-v1-color-on-canvas) 42%,transparent),
+ 0 0 0 1px color-mix(in srgb,var(--gc-v1-color-outline) 42%,transparent),
+ 0 17px 32px -30px color-mix(in srgb,var(--gc-v1-color-primary) 40%,transparent);
+}
+.gc-premium-visual figcaption{
+ border-color:color-mix(in srgb,var(--gc-v1-color-on-surface) 38%,transparent);
+ box-shadow:0 11px 22px -13px color-mix(in srgb,var(--gc-v1-color-on-canvas) 35%,transparent);
+}
+@media(max-width:540px){
+ .gc-premium-visual{
+  box-shadow:0 22px 48px -31px color-mix(in srgb,var(--gc-v1-color-on-canvas) 48%,transparent),
+  0 0 0 1px color-mix(in srgb,var(--gc-v1-color-outline) 45%,transparent);
+ }
+}
+@media(prefers-reduced-transparency:reduce){
+ .gc-premium-visual figcaption{box-shadow:none}
+}
+@media(forced-colors:active){
+ .gc-premium-visual,.gc-premium-visual figcaption{
+  border-color:CanvasText;
+  box-shadow:none;
+ }
+}

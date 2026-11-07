@@ -36,6 +36,8 @@ test('founder-approved Aperture Weave uses canonical nav branding and original a
  assert.match(components,/aperture-logo\.svg/);
  assert.match(components,/aperture-logo-dark\.svg/);
  assert.match(components,/App distribution requires platform validation/);
- assert.match(components,/Official GC UI identity/);
+ assert.match(components,/Canvas · Surface · Lens/);
+ assert.doesNotMatch(components,/v1 candidate/);
+ assert.match(components,/Original design system/);
  assert.match(experience,/Founder-approved/);
 });
