@@ -8,7 +8,7 @@ const root=new URL('../lab/',import.meta.url);
 const manifest=JSON.parse(readFileSync(new URL('manifest.json',assets),'utf8'));
 
 test('identity preview sources are pinned, distinct, and self-contained',()=>{
- assert.equal(manifest.status,'candidate-not-approved');
+ assert.equal(manifest.status,'founder-approved-source');
  const files=Object.keys(manifest.assets).sort();
  assert.equal(files.length,5);
  assert.deepEqual(readdirSync(assets).filter(x=>x.endsWith('.svg')).sort(),files);
@@ -32,8 +32,8 @@ test('premium preview uses new candidate artwork but retains official nav brandi
   assert.match(html,/aperture-interface-artwork\.svg/,'new original artwork is present');
   assert.match(html,/gc-premium-visual/);
  }
- assert.match(components,/UNAPPROVED CONCEPT/);
+ assert.match(components,/FOUNDER-APPROVED IDENTITY/);
  assert.match(components,/aperture-logo\.svg/);
  assert.match(components,/aperture-logo-dark\.svg/);
- assert.match(components,/Not an approved launcher or favicon/);
+ assert.match(components,/App distribution requires platform validation/);
 });

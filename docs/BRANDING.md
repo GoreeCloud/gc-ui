@@ -1,40 +1,32 @@
-# GC UI — Official Identity and Brand Asset Provenance
+# GC UI — Official Aperture Weave identity and provenance
 
-**Current official brand asset authority:** [GoreeCloud/brand-assets](https://github.com/GoreeCloud/brand-assets/tree/main/products/gc-ui)  
-**Official GC UI identity:** version 1.0.0  
-**Earlier reported publication commit (historical; former repository inaccessible at review):** `29ea759c167a86390a2b4ff559e5fc40ec7c99a3` (vector sources and catalog)  
-**Earlier reported raster derivative commit (historical; former repository inaccessible at review):** `dd13aad` (PNG/icon derivatives and reproducible export script)
+**Authority:** GoreeCloud/brand-assets/products/gc-ui
+**Approved by:** GoreeCloud founder, November 6, 2026, after reviewing the actual rendered app icon, wordmarks, and interface artwork
+**Source migration:** Founder-approved identity replaces the former GC letterform. The canonical master update is tracked in the brand-assets review branch and must land before this consumer branch is merged. This record does not certify deployed apps.
 
-GC UI is its own design language and product identity, designated to **permanently replace** the predecessor Glaze design system. **It is not the GoreeCloud platform symbol and not a relabeling of predecessor artwork.** The four source-identical official SVGs now have a verified master at `GoreeCloud/brand-assets/products/gc-ui/`. Local SVG files in this repository remain exact byte-matched consumer copies for standalone hosting, offline documentation, demos, and package consumption.
+GC UI remains its own design language and product identity; it is NOT the GoreeCloud platform emblem, GoreeShield symbol, Wardveil branding, or a renamed third-party artwork. Aperture Weave represents Canvas, Surface, and Lens through three folded planes around an open aperture. The icon and color-appropriate wordmarks are unaltered source-identical copies of the approved original SVGs.
 
-## Canonical → GC UI consumer mapping
+## Canonical to local exact-byte mapping
 
-| Branding source | GC UI local derivative | Use | Canonical source Git blob |
+| Canonical source | Local asset | Purpose | Canonical Git blob SHA-1 |
 | --- | --- | --- | --- |
-| `products/gc-ui/app-icon.svg` | `assets/gc-mark.svg` | App icon, favicon, lab branding | `d3d2f4f2ae241e172691de8c8f6bef628331a350` |
-| `products/gc-ui/gc-ui-symbol.svg` | `assets/gc-symbol.svg` | Transparent GC monogram | `613dfb1747f251d86a1faa6e12c83836b2a950b7` |
-| `products/gc-ui/gc-ui-logo.svg` | `assets/gc-logo.svg` | Light-background lockup | `95a7b63c6928d4e2d79f6afbd41025bc887d7c1c` |
-| `products/gc-ui/gc-ui-logo-dark.svg` | `assets/gc-logo-dark.svg` | Dark-background lockup | `9c36aec87107552fa703798a2b09adb610175572` |
+| products/gc-ui/app-icon.svg | assets/gc-mark.svg | App tile, favicon and lab header | f931dada18f8743706981ea6eb1e61f426d96170 |
+| products/gc-ui/gc-ui-symbol.svg | assets/gc-symbol.svg | Standalone transparent symbol | a38257a5242cd9741dfd1c5c87285b56cddeb868 |
+| products/gc-ui/gc-ui-logo.svg | assets/gc-logo.svg | Light-background wordmark | 6522c7955a227490408e453fd23845af2bbeffc1 |
+| products/gc-ui/gc-ui-logo-dark.svg | assets/gc-logo-dark.svg | Dark-background wordmark | 46ce79ed0d6200dd6a49f1f2f02c2fa57c8adb89 |
 
-## Usage rules
+The five immutable design source SVGs, including decorative interface artwork, are also retained with SHA-256 pins in assets/candidates and the canonical brand-assets candidates folder. No icon source is loaded from GitHub at runtime. The historical October 29 original GC letterform Git blob IDs remain in central brand-assets documentation and Git history for recovery.
 
-1. Use the canonical icon for launchers, favicons, small navigation identity, and social avatars. Do not embed an alternate G-shaped placeholder.
-2. Use the horizontal full-color logo in appropriately wide header/splash contexts, and the outlined reversed logo for dark backgrounds.
-3. Keep icon/wordmark proportions and source colors unchanged. Avoid extending official imagery with extra blur, outline, glow, shadow, or logo reinterpretation.
-4. For standalone rendering, include informative alternative text as appropriate; if adjacent text already says “GC UI”, the icon image can use `alt=""` to avoid repeating the name.
-5. Only reproduce raster/icon versions from the canonical SVG master in `GoreeCloud/brand-assets`. Do not independently recolor or redraw consumer artwork.
-6. The identity is stable even when the interface uses a user-selected theme accent; the icon does **not** change along with application theme color.
-7. Branding authority does not imply product stability, accessibility certification, security, or any other operational claim.
+## Usage and boundaries
 
-## Checks
+1. Use the canonical source-matched app icon for GC UI favicons, reference headers, and app identity. Preserve its aspect ratio and colors. Do not theme-recolor it, place text over it, or substitute the generic GC monogram.
+2. Use the color-specific wordmark SVG on light or dark surfaces; the wordmark uses only the approved system-ui font fallback stack (no remote font assets). Glyph rendering may vary slightly by host font, so cross-platform visual acceptance is still important.
+3. Adjacent visible GC UI product labels make small nav icon images decorative (empty alt); meaningful standalone artwork and wordmarks get descriptive alternative text.
+4. Platform raster derivatives originate only from brand-assets approved app-icon.svg. Do not independently redraw or recalculate a consumer icon. Verified 16–512px PNG and ICO assets live in the central source library; native installers/app bundles must independently incorporate and validate them.
+5. Approval of the **identity direction** does not establish human screen-reader/visual acceptance of every screen, a complete native release, all consumer migrations, production deployment, or the Stable status of the broader experimental workspace.
 
-`tests/branding.test.mjs` verifies exact source Git blob IDs for all four synchronized SVG files. If the brand master changes, update `GoreeCloud/brand-assets` **first**, replace consumer copies from the new canonical files, then deliberately update the pinned blob identifiers here and in the regression test.
+## Testing and source authority
 
-The original GC UI component-glyph sprite (`assets/gc-glyphs.svg`) is an independent iconography library and should not be confused with the GC UI identity mark.
+The brand-assets identity/Raster CI verifies source Git objects, metadata and hash manifests. GC UI tests/branding.test.mjs guards the canonical four SVG SHA-1 object IDs; tests/premium-identity-preview.test.mjs guards the original design SHA-256 pins, lab adoption and founder approval labels. Real Chromium/Firefox browser test matrices check light/dark, phone/tablet/desktop, reduced motion and forced colors.
 
-
-## Current canonical repository and migration verification (October 29, 2026)
-
-The founder has designated [GoreeCloud/brand-assets](https://github.com/GoreeCloud/brand-assets) for **all** official application and service assets, including development and alpha. Its [GC UI product namespace](https://github.com/GoreeCloud/brand-assets/tree/main/products/gc-ui) now contains the four SVG sources listed above. Connected GitHub readback verified their byte-identical Git blob identities against the four corresponding consumer assets and `tests/branding.test.mjs` pins.
-
-The previously cited `GoreeCloud/branding-assets` repository was not found in the connected GitHub account review. The older reported history and publication SHAs at the top of this file are **retained as historical claims**, not reverified source history. Do not treat its historical PNG/favicons/manifest claims as evidence of files currently published at the new `brand-assets` destination. Rasters, web manifests, native asset bundles, and remaining GoreeCloud product migrations require their own verified publication and tests.
+Historical records previously referred to inaccessible GoreeCloud/branding-assets commits 29ea759c and dd13aad. They remain historical claims, not independently reverified provenance. The verified current authority is GoreeCloud/brand-assets.

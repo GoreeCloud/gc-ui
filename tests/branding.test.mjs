@@ -4,10 +4,10 @@ import {readFileSync} from 'node:fs';
 import {createHash} from 'node:crypto';
 
 const pinned={
- 'assets/gc-mark.svg':'d3d2f4f2ae241e172691de8c8f6bef628331a350',
- 'assets/gc-symbol.svg':'613dfb1747f251d86a1faa6e12c83836b2a950b7',
- 'assets/gc-logo.svg':'95a7b63c6928d4e2d79f6afbd41025bc887d7c1c',
- 'assets/gc-logo-dark.svg':'9c36aec87107552fa703798a2b09adb610175572'
+ 'assets/gc-mark.svg':'f931dada18f8743706981ea6eb1e61f426d96170',
+ 'assets/gc-symbol.svg':'a38257a5242cd9741dfd1c5c87285b56cddeb868',
+ 'assets/gc-logo.svg':'6522c7955a227490408e453fd23845af2bbeffc1',
+ 'assets/gc-logo-dark.svg':'46ce79ed0d6200dd6a49f1f2f02c2fa57c8adb89'
 };
 function blobId(data){
  return createHash('sha1').update('blob '+data.length+'\0').update(data).digest('hex');
@@ -18,7 +18,14 @@ test('GC UI consumer vectors exactly match canonical branding Git blob IDs',()=>
   assert.equal(blobId(source),expected,path+' drifted from branding source');
   const svg=source.toString('utf8');
   assert.match(svg,/<svg\s[^>]*viewBox=/);
-  assert.doesNotMatch(svg,/<script\b|<foreignObject\b|<text\b|<image\b/i);
+  assert.doesNotMatch(svg,/<script\b|<foreignObject\b|<image\b|<iframe\b|\bon[a-z]+\s*=|\bhref\s*=/i);
+  if(path.endsWith('gc-mark.svg')||path.endsWith('gc-symbol.svg')){
+   assert.doesNotMatch(svg,/<text\b/i,'symbol and app tile must be true vector outlines');
+  } else {
+   assert.match(svg,/<text\b[^>]*font-family="system-ui,-apple-system,Segoe UI,sans-serif"/,
+    'source-identical approved wordmark contains first-party text with system fallback');
+   assert.doesNotMatch(svg,/<style\b|@font-face|@import/i,'wordmark must not import fonts or styles');
+  }
  }
 });
 test('official icon is used in all GC UI laboratory headers and favicons',()=>{

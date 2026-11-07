@@ -1,7 +1,7 @@
 {
   "schema": "gc-ui-original-identity-candidate.v1",
   "name": "Aperture Weave",
-  "status": "candidate-not-approved",
+  "status": "founder-approved-source",
   "master": "GoreeCloud/brand-assets/products/gc-ui/candidates",
   "consumer": "GoreeCloud/gc-ui/assets/candidates",
   "rendering": "static-safe-svg-no-external-references",
@@ -26,5 +26,11 @@
       "sha256": "78794bc48907ddd822b42d96cd0be0061bd1b1b4fe168384e5a3818afef50078",
       "size": 1803
     }
+  },
+  "approval": {
+    "decision": "approved",
+    "by": "GoreeCloud founder",
+    "date": "2026-11-06",
+    "scope": "GC UI Aperture Weave visual identity direction; consumer deployment separately gated"
   }
 }

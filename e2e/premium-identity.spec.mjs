@@ -72,8 +72,8 @@ for(const target of pages){
    expect(geo.art.right,'artwork clipping right').toBeLessThanOrEqual(geo.width+2);
    expect(geo.art.height).toBeGreaterThan(170);
    if(target.board){
-    await expect(page.getByText('UNAPPROVED CONCEPT')).toBeVisible();
-    await expect(page.getByText('Not an approved launcher or favicon')).toBeVisible();
+    await expect(page.getByText('FOUNDER-APPROVED IDENTITY')).toBeVisible();
+    await expect(page.getByText('App distribution requires platform validation')).toBeVisible();
     const boards=page.locator('.gc-premium-logo-board');
     await expect(boards).toHaveCount(2);
     const s=await boards.evaluateAll(nodes=>nodes.map(x=>({left:x.getBoundingClientRect().left,right:x.getBoundingClientRect().right})));
