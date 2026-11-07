@@ -13,7 +13,7 @@ const cases=[
 ];
 for(const target of pages){
  for(const variant of cases){
-  test(target.name+' premium candidate: '+variant.id,async({page},testInfo)=>{
+  test(target.name+' founder-approved identity: '+variant.id,async({page},testInfo)=>{
    const errors=[];
    page.on('pageerror',error=>errors.push(String(error)));
    await page.setViewportSize({width:variant.width,height:variant.height});
