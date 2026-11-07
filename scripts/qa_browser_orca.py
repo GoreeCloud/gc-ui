@@ -45,6 +45,16 @@ def parse_speech(log: str) -> dict[str, bool]:
     }
 
 
+def release_speech_gates(log: str, gates: dict[str, Path]) -> None:
+    """Only actual Orca generated-speech markers may release browser focus."""
+    observed = parse_speech(log)
+    for name, path in gates.items():
+        if name not in observed:
+            raise KeyError("Unknown required Orca utterance: " + name)
+        if observed[name] and not path.exists():
+            path.write_text("Orca generated speech observed\n")
+
+
 def visit(node, found: set[tuple[str, str]], depth=0,
           pressed_states: set[bool] | None = None, pressed_state=None):
     if node is None or depth > 13:
@@ -114,6 +124,8 @@ def run() -> dict:
             ),
             GC_UI_AT_PORT=str(port),
             GC_UI_AT_PRESSED_GATE=str(work / "password-pressed-observed.flag"),
+            GC_UI_AT_FORMS_SPEECH_GATE=str(work / "forms-spoken.flag"),
+            GC_UI_AT_REVEAL_SPEECH_GATE=str(work / "password-spoken.flag"),
         )
         procs: list[subprocess.Popen] = []
         handles = []
@@ -147,11 +159,21 @@ def run() -> dict:
             found: set[tuple[str, str]] = set()
             reveal_pressed_states: set[bool] = set()
             gate = work / "password-pressed-observed.flag"
-            deadline = time.monotonic() + 44
+            forms_speech_gate = work / "forms-spoken.flag"
+            reveal_speech_gate = work / "password-spoken.flag"
+            speech_log = work / "orca.log"
+            deadline = time.monotonic() + 75
             while time.monotonic() < deadline and browser.poll() is None:
                 found.update(collect_atspi(Atspi, reveal_pressed_states))
                 if True in reveal_pressed_states and not gate.exists():
                     gate.write_text("AT-SPI pressed state observed\n")
+                # Never create a speech gate from browser/DOM evidence.
+                # Only the independent real Orca output may release it.
+                if speech_log.exists():
+                    release_speech_gates(speech_log.read_text(errors="replace"), {
+                        "forms_combobox": forms_speech_gate,
+                        "password_reveal_control": reveal_speech_gate,
+                    })
                 time.sleep(0.4)
             browser.wait(timeout=10)
             for handle in handles:

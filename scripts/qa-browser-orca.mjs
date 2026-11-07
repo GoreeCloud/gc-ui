@@ -6,6 +6,21 @@ const port=Number(process.env.GC_UI_AT_PORT);
 if(!Number.isInteger(port)||port<1024||port>65535)
  throw new Error('GC_UI_AT_PORT must be a valid local test port');
 const base='http://127.0.0.1:'+port;
+// Speech gates are written by an independent observer only after real Orca
+// debug output includes the expected utterance. Bounded focus retries help
+// platforms which do not announce the first synthetic keyboard focus event.
+async function waitForSpeechGate(page,envKey,restoreFocus){
+ const gate=process.env[envKey];
+ if(!gate)throw new Error('Real Orca speech gate missing: '+envKey);
+ for(let attempt=0;attempt<56;attempt++){
+  try{await access(gate);return}catch(error){
+   if(error.code!=='ENOENT')throw error;
+  }
+  if(attempt===16||attempt===32)await restoreFocus();
+  await page.waitForTimeout(250);
+ }
+ throw new Error('Real Orca did not announce focused control: '+envKey);
+}
 const browser=await chromium.launch({headless:false,args:['--force-renderer-accessibility']});
 try{
  const page=await browser.newPage({viewport:{width:1000,height:850}});
@@ -26,7 +41,11 @@ try{
  await input.press('ArrowDown');
  await page.getByRole('option',{name:'Studio refresh'}).waitFor();
  console.log('PHASE_FORMS_SUGGESTION_OPEN');
- await page.waitForTimeout(5500);
+ await waitForSpeechGate(page,'GC_UI_AT_FORMS_SPEECH_GATE',async()=>{
+  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await input.focus();
+ });
  await input.press('Escape');
  await page.waitForTimeout(1400);
  const sample=page.locator('#demo-passphrase');
@@ -40,9 +59,17 @@ try{
   &&await reveal.getAttribute('aria-label')===stableName;
  if(!await statesMatch('false','password'))
   throw new Error('Password reveal initial name, value or masked state invalid');
- await reveal.focus();
+ await sample.focus();
+ await sample.press('Tab');
+ if(!await reveal.evaluate(element=>document.activeElement===element))
+  await reveal.focus();
  console.log('PHASE_PASSWORD_REVEAL_FOCUSED');
- await page.waitForTimeout(3800);
+ await waitForSpeechGate(page,'GC_UI_AT_REVEAL_SPEECH_GATE',async()=>{
+  await sample.focus();
+  await sample.press('Tab');
+  if(!await reveal.evaluate(element=>document.activeElement===element))
+   await reveal.focus();
+ });
  await reveal.press('Space');
  if(!await statesMatch('true','text'))
   throw new Error('Password reveal did not expose stable label, value and visible state');

@@ -19,6 +19,14 @@ Two initial real Orca/AT-SPI executions observed both states on the isolated Lin
 
 The isolated harness must observe both **not pressed** (masked) and **pressed** (revealed) states through AT-SPI itself. The browser holds the revealed state until a temporary local-only file gate confirms the external AT-SPI observer actually sampled it, or fails closed if the gate is not received. This prevents false failures caused by re-masking before the accessibility-tree observer can sample the transient state. Its real Orca debug log must contain fixture-specific generated speech identifying the named control, in addition to the pre-existing speech and role gates. Synthetic unit tests cover the state collector and speech parser independently.
 
+## Post-Aperture Weave integration and generated-speech synchronization
+
+Following the founder-approved identity merge and the separate 11-lab visual, Forms mobile, and localized-controller changes, an isolated real Chromium + Orca + AT-SPI diagnostic verified the correct native input state, toggle role, stable accessible name and both masked/revealed AT-SPI states, but **failed closed** because two expected Orca speech utterances were absent in that run. An independent rerun produced all required speech; speech observation was intermittent even though DOM and AT-SPI states were correct.
+
+The review follow-up adds bounded independent **Orca generated-speech gates** for the search combobox and reveal toggle, plus keyboard focus retries at two intervals. The browser cannot proceed merely because a DOM/ARIA node exists; only the external Python observer reading **actual Orca speech output** may release each gate. An unspoken control, unknown gate, missing pressed-state observation, or a late/nonexistent speech event still fails with an explicit error. New unit coverage proves that browser-only text, unmarked logs and unknown gate types cannot forge a successful speech acknowledgement.
+
+Two independent real generated-speech gated runs passed all browser phases, seven named AT-SPI roles, pressed/unpressed states, and five required speech classes in an isolated Linux desktop against the combined post-identity source **before the helper extraction**. The helper extraction is covered by its own unit tests and subsequent live validation. This evidence is still not a human-heard screen-reader session, a production language translation, or native/mobile AT certification.
+
 ## Privacy and trust boundaries
 
 Only a local loopback HTTP fixture is opened. The test uses no real user data, secrets, external services, microphone input, persistent Orca preferences, actual audio capture, or system-wide desktop settings. It runs inside temporary X11 and D-Bus contexts. The synthetic example value must never be treated as a user password. No runtime password controller or stable Foundations API is modified by this QA evidence.
