@@ -77,6 +77,12 @@
  .gc-mobile-dock{background:Canvas;color:CanvasText;border:1px solid CanvasText;box-shadow:none}
  .gc-mobile-dock:before{display:none}
  .gc-mobile-dock a{color:CanvasText}
- .gc-mobile-dock a[aria-current]{color:HighlightText;background:Highlight;border-color:Highlight}
+ /* Forced-color Highlight/HighlightText may both render near-white.
+    Use Canvas/CanvasText for text contrast; shape/outline still show state. */
+ .gc-mobile-dock a[aria-current]{
+  color:CanvasText;background:Canvas;
+  border-color:Highlight;outline:2px solid Highlight;outline-offset:-2px;
+  text-decoration:underline;text-underline-offset:3px;
+ }
  .gc-mobile-dock a:focus-visible{outline:3px solid Highlight}
 }
