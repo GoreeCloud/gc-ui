@@ -29,6 +29,29 @@ states unless the host changed those values afterward. A later mount can
 safely retry. Established controllers retain the existing native semantics.
 This does not imply stable component API status.
 
+## Localized password-reveal text (experimental)
+
+The optional third argument supports a complete visible-text locale pair:
+
+```js
+const reveal=initPasswordReveal(passwordInput,revealButton,{
+  labels:{show:'Mostrar',hide:'Ocultar'}
+});
+```
+
+When provided, the controller initializes the plain or explicitly marked
+`data-gc-password-reveal-label` text to the localized Show translation and
+uses the localized Hide/Show text thereafter. Both nonempty strings are
+required to avoid accidentally mixing languages. Values are inserted using
+`textContent`, never interpreted as HTML. The control still requires a
+stable application-owned accessible name (for example a translated
+`aria-label`), reports `aria-pressed`, re-masks the input on teardown, and
+restores only its own visible-text writes. Icon-only child markup stays intact;
+add a marked text-only descendant to show mutable captions beside icons.
+Without options, the existing English Show/Hide toggle behavior and initial
+host text are unchanged. This API is experimental and does not establish
+localized screen-reader or mobile-IME acceptance.
+
 ## Field validation contract
 
 - Visible labels are persistent and associated with native inputs through `for` / `id`.
