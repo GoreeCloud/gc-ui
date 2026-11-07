@@ -35,6 +35,8 @@ body{margin:0;background:var(--gc-v1-color-canvas);color:var(--gc-v1-color-on-ca
 .gc-form-panel .gc-field{margin-bottom:23px}
 .gc-form-panel .gc-button[type=submit]{margin-top:12px}
 .gc-form-panel .gc-banner{margin-top:20px}
+/* Leave space below the visible autocomplete popup after nearest scrolling. */
+#project-suggestions{scroll-margin-block-end:12px}
 .gc-search-results{padding:0;margin:15px 0 0;list-style:none;border:1px solid var(--gc-v1-color-divider);border-radius:18px;overflow:hidden}
 .gc-search-results:empty{display:none}
 .gc-search-results li{padding:16px 18px;background:var(--gc-v1-color-surface)}
