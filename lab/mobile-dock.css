@@ -40,7 +40,7 @@
  .gc-mobile-dock a svg{inline-size:21px;block-size:21px;flex:none;stroke:currentColor;fill:none}
  .gc-mobile-dock a:hover{background:var(--gc-v1-color-surface-tonal);color:var(--gc-v1-color-on-surface)}
  .gc-mobile-dock a:active{transform:scale(.97)}
- .gc-mobile-dock a[aria-current=page]{
+ .gc-mobile-dock a[aria-current]{
   color:var(--gc-v1-color-on-primary-container);
   background:var(--gc-v1-color-primary-container);
   border-color:var(--gc-v1-color-outline);
@@ -77,6 +77,6 @@
  .gc-mobile-dock{background:Canvas;color:CanvasText;border:1px solid CanvasText;box-shadow:none}
  .gc-mobile-dock:before{display:none}
  .gc-mobile-dock a{color:CanvasText}
- .gc-mobile-dock a[aria-current=page]{color:HighlightText;background:Highlight;border-color:Highlight}
+ .gc-mobile-dock a[aria-current]{color:HighlightText;background:Highlight;border-color:Highlight}
  .gc-mobile-dock a:focus-visible{outline:3px solid Highlight}
 }

@@ -27,6 +27,8 @@ test('every existing HTML lab has a static and independently accessible primary 
   if(name!=='adaptive.html'){
    assert.equal((markup.match(/<nav class="gc-mobile-dock"/g)||[]).length,1,name+' unexpected duplicate dock');
    assert.match(markup,/class="gc-desktop-nav" aria-label=/,name+' missing segregated desktop nav');
+   const dock=markup.split('<nav class="gc-mobile-dock"')[1]?.split('</nav>')[0];
+   assert.equal((dock?.match(/aria-current="(?:page|location)"/g)||[]).length,1,name+' missing exactly one current mobile section');
   }
  }
 });

@@ -21,6 +21,7 @@ for(const name of labs){
    await expect(dock).toBeVisible();
    const expected=name==='adaptive'?3:4;
    await expect(dock.getByRole('link')).toHaveCount(expected);
+   await expect(dock.locator('[aria-current]')).toHaveCount(1);
    const bounds=await dock.evaluate(element=>{
     const rect=element.getBoundingClientRect(),style=getComputedStyle(element);
     const links=Array.from(element.querySelectorAll('a')).map(link=>{
