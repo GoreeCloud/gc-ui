@@ -13,13 +13,18 @@ function controlUnavailable(control){
 }
 
 /** Maintain a stable accessible button name while exposing the pressed state. */
-export function initPasswordReveal(input,button){
+export function initPasswordReveal(input,button,{labels}={}){
  if(input?.localName!=='input'||input.type!=='password')
   throw new TypeError('Expected a native password input');
  if(button?.localName!=='button')throw new TypeError('Expected a native button');
  if(button.type!=='button')throw new TypeError('Password reveal button must be type=button');
  if(!button.getAttribute('aria-label')&&!button.getAttribute('aria-labelledby'))
   throw new TypeError('Password reveal needs a stable accessible button name');
+ // Optional complete locale pair; never fall back to a mixed-language UI.
+ if(labels!==undefined && (!labels||typeof labels.show!=='string'||
+   typeof labels.hide!=='string'||!labels.show.trim()||!labels.hide.trim()))
+  throw new TypeError('Password reveal labels require nonempty show and hide strings');
+ const display=labels===undefined?null:{show:labels.show.trim(),hide:labels.hide.trim()};
  // Host markup is not owned by the controller. A marked visible label may
  // change, but never replace a button's children (icons, badges, SVG, etc.).
  const label=button.querySelector?.('[data-gc-password-reveal-label]')??null;
@@ -37,13 +42,16 @@ export function initPasswordReveal(input,button){
   input.type=visible?'text':'password';
   setPressed(String(visible));
   if(textTarget){
-   const text=visible?'Hide':'Show';
+   const text=visible?(display?.hide??'Hide'):(display?.show??'Show');
    textTarget.textContent=text;
    writtenText=text;
   }
   return visible;
  };
  setPressed('false');
+ // Explicit localization also sets the initial visible label; the default
+ // contract leaves existing host text intact for backward compatibility.
+ if(display&&textTarget){textTarget.textContent=display.show;writtenText=display.show}
  const toggle=()=>{
   if(controlUnavailable(button)||controlUnavailable(input))return;
   setVisible(input.type==='password');
