@@ -6,6 +6,11 @@ test('theme settings validate values and seeds',()=>{
   assert.deepEqual(normalizeTheme(null),GC_THEME_DEFAULTS);
   assert.deepEqual(normalizeTheme({mode:'bad',accent:'custom',seed:'red',material:'glass'}),{...GC_THEME_DEFAULTS,accent:'custom'});
   assert.equal(normalizeTheme({seed:'#13aBED'}).seed,'#13ABED');
+  assert.deepEqual(normalizeTheme({},'custom','#abcDEF'),
+    {...GC_THEME_DEFAULTS,accent:'custom',seed:'#ABCDEF'});
+  assert.deepEqual(normalizeTheme({},'custom','not-a-color'),GC_THEME_DEFAULTS);
+  assert.deepEqual(normalizeTheme({mode:'dark'},'custom','#42A5FD'),
+    {...GC_THEME_DEFAULTS,accent:'custom',seed:'#42A5FD',mode:'dark'});
 });
 test('auto mode follows system but explicit mode does not',()=>{
   assert.equal(resolveTheme({mode:'auto'},{dark:true}).mode,'dark');
