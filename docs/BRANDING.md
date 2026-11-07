@@ -35,3 +35,28 @@ Historical records previously referred to inaccessible GoreeCloud/branding-asset
 ## 2026-11-06 founder color-freedom clarification
 
 Official GoreeCloud and GoreeCloud UI have no mandatory system color, default brand hue or fixed palette. The founder permits every app, service, icon, wallpaper and other surface to use any color. Approved authored asset colors, including the Aperture Weave icon, belong to that particular artwork and do not impose an ecosystem palette. Existing optional presets and technical fallback tokens are not universal colors. Semantic function, contrast and accessibility still apply.
+
+## Optional Electron desktop-preview icon (source-only development)
+
+The optional Electron host uses the **exact published, founder-approved
+Aperture Weave 512px PNG** checked into
+native/desktop/resources/aperture-weave-512.png, with the window icon
+property referencing that file relative to the source module. This keeps the
+developer preview's window/task-switcher identity locally available without
+runtime requests to GitHub, third-party image services, or the network.
+
+Canonical source: GoreeCloud/brand-assets/products/gc-ui/raster/icon-512.png.
+Expected SHA-256:
+12f77149579508284e85c56033d6fe9a93b664db18887dccbf4f3f3f99081880
+(75,236 bytes; 512 × 512). The source manifest binds that PNG to the approved
+products/gc-ui/app-icon.svg Git blob. The regression in
+tests/native-desktop-icon.test.mjs verifies the checked-in bytes, dimensions,
+source reference and preservation of Electron sandbox settings.
+
+This is a **source-level optional desktop-preview adoption**, not a signed or
+installed Linux/Windows/macOS app icon or a new native package release.
+macOS application bundle icons, Windows packaging, Linux launcher metadata,
+taskbar/dock acceptance and physical platform testing are still separately gated.
+Android adaptive launcher treatment also remains a separate design/packaging
+acceptance task; do not use the legacy tile raster as an unreviewed adaptive
+foreground.

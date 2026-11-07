@@ -13,6 +13,8 @@ function createWindow(){
   width:1200,height:850,minWidth:320,minHeight:500,
   backgroundColor:'#ECF0F8',
   title:'GoreeCloud UI — Desktop Host',
+  // Exact-byte approved GoreeCloud UI raster, bundled locally for desktop host.
+  icon:join(import.meta.dirname,'resources','aperture-weave-512.png'),
   show:false,
   webPreferences:{
    preload:join(import.meta.dirname,'preload.cjs'),
