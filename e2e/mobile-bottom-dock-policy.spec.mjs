@@ -85,3 +85,51 @@ test('custom colors are user-driven, persisted locally and not forced to a named
  await expect(page.locator('html')).toHaveAttribute('data-gc-mode','dark');
  await expect(page.locator('#gc-custom-accent-value')).toHaveText('#A7BD1B');
 });
+
+test('product names cannot impose hues; arbitrary app seed stays local and resettable',async({page})=>{
+ await page.setViewportSize({width:375,height:780});
+ await page.goto('/lab/components.html');
+ const result=await page.evaluate(async()=>{
+  const {createProductThemeController}=await import('/src/gc-product-themes.mjs');
+  const {contrastRatio}=await import('/src/gc-color-engine.mjs');
+  const root=document.createElement('section');
+  root.hidden=true;
+  document.body.append(root);
+  const values=new Map();
+  const storage={
+   getItem:key=>values.get(key)??null,
+   setItem:(key,value)=>values.set(key,value),
+   removeItem:key=>values.delete(key)
+  };
+  const raw=createProductThemeController({product:'notify',root,storage,media:()=>null});
+  const byName=raw.get().accent;
+  raw.destroy();
+  const chosen=createProductThemeController({
+   product:'notify',root,storage,media:()=>null,
+   defaultAccent:'custom',defaultSeed:'#FA2E87'
+  });
+  const first={
+   accent:chosen.get().accent,
+   seed:chosen.get().seed,
+   inlinePrimary:root.style.getPropertyValue('--gc-v1-color-primary'),
+   inlineOnPrimary:root.style.getPropertyValue('--gc-v1-color-on-primary'),
+   storageSize:values.size
+  };
+  const ratio=contrastRatio(first.inlinePrimary,first.inlineOnPrimary);
+  chosen.set({accent:'custom',seed:'#2C8DC1'});
+  const userSeed=values.get('gc-ui-v1:seed');
+  chosen.reset();
+  const reset={...chosen.get(),storageSize:values.size};
+  chosen.destroy();
+  root.remove();
+  return {byName,first,ratio,userSeed,reset};
+ });
+ expect(result.byName).toBe('neutral');
+ expect(result.first.accent).toBe('custom');
+ expect(result.first.seed).toBe('#FA2E87');
+ expect(result.first.storageSize).toBe(0);
+ expect(result.ratio).toBeGreaterThanOrEqual(4.5);
+ expect(result.userSeed).toBe('#2C8DC1');
+ expect(result.reset.seed).toBe('#FA2E87');
+ expect(result.reset.storageSize).toBe(0);
+});
