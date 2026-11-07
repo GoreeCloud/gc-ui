@@ -82,6 +82,26 @@ test('zero-match empty state has one effective reset action',async({page})=>{
  await expect(page.locator('#project-empty')).toBeHidden();
  await expect(page.locator('#project-results li')).toHaveCount(6);
 });
+test('compact password sample placeholder fits beside the reveal control in both themes',async({page})=>{
+ await page.setViewportSize({width:320,height:740});
+ for(const colorScheme of ['light','dark']){
+  await page.emulateMedia({colorScheme});
+  await page.goto('/lab/forms.html');
+  const widths=await page.locator('#demo-passphrase').evaluate(input=>{
+   const style=getComputedStyle(input);
+   const context=document.createElement('canvas').getContext('2d');
+   context.font=style.font;
+   return {
+    text:context.measureText(input.placeholder).width,
+    available:input.getBoundingClientRect().width-parseFloat(style.paddingInlineStart)-
+     parseFloat(style.paddingInlineEnd)-parseFloat(style.borderInlineStartWidth)-
+     parseFloat(style.borderInlineEndWidth)
+   };
+  });
+  expect(widths.available,colorScheme+': placeholder needs '+widths.text.toFixed(1)+'px within '+widths.available+'px').toBeGreaterThan(widths.text+6);
+ }
+});
+
 test('forms lab remains in bounds at 320px and under dark theme',async({page})=>{
  await page.setViewportSize({width:320,height:740});
  await page.goto('/lab/components.html');
