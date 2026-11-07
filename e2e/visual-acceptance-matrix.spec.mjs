@@ -1,24 +1,11 @@
 import {test,expect} from '@playwright/test';
 import {mkdir,writeFile} from 'node:fs/promises';
 import {join,resolve} from 'node:path';
+import {visualAcceptancePages,visualAcceptanceVariants} from '../scripts/visual-acceptance-scenarios.mjs';
 
 // Browser geometry and screen-state evidence, not pixel-level design signoff.
-const pages=[
- {id:'components',path:'/lab/components.html'},
- {id:'catalog',path:'/lab/catalog.html'},
- {id:'adaptive',path:'/lab/adaptive.html'},
- {id:'forms',path:'/lab/forms.html'},
- {id:'environment',path:'/lab/environment.html'},
- {id:'experience',path:'/lab/experience-studio.html'}
-];
-const environments=[
- {id:'320-light',width:320,height:812,dark:false,rtl:false,forced:false,reduced:false},
- {id:'375-dark',width:375,height:812,dark:true,rtl:false,forced:false,reduced:true},
- {id:'768-rtl',width:768,height:900,dark:false,rtl:true,forced:false,reduced:false},
- {id:'1440-forced',width:1440,height:900,dark:false,rtl:false,forced:true,reduced:false}
-];
-for(const target of pages){
- for(const variant of environments){
+for(const target of visualAcceptancePages){
+ for(const variant of visualAcceptanceVariants){
   test(target.id+': visual acceptance geometry '+variant.id,async({page},testInfo)=>{
    await page.setViewportSize({width:variant.width,height:variant.height});
    await page.emulateMedia({colorScheme:variant.dark?'dark':'light',
