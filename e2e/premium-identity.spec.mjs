@@ -72,7 +72,7 @@ for(const target of pages){
    expect(geo.art.right,'artwork clipping right').toBeLessThanOrEqual(geo.width+2);
    expect(geo.art.height).toBeGreaterThan(170);
    if(target.board){
-    await expect(page.getByText('FOUNDER-APPROVED IDENTITY')).toBeVisible();
+    await expect(page.locator('.gc-premium-identity-panel .eyebrow')).toHaveText('FOUNDER-APPROVED IDENTITY / APERTURE WEAVE');
     await expect(page.getByText('App distribution requires platform validation')).toBeVisible();
     const boards=page.locator('.gc-premium-logo-board');
     await expect(boards).toHaveCount(2);
