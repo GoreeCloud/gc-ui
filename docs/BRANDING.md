@@ -30,3 +30,8 @@ The five immutable design source SVGs, including decorative interface artwork, a
 The brand-assets identity/Raster CI verifies source Git objects, metadata and hash manifests. GC UI tests/branding.test.mjs guards the canonical four SVG SHA-1 object IDs; tests/premium-identity-preview.test.mjs guards the original design SHA-256 pins, lab adoption and founder approval labels. Real Chromium/Firefox browser test matrices check light/dark, phone/tablet/desktop, reduced motion and forced colors.
 
 Historical records previously referred to inaccessible GoreeCloud/branding-assets commits 29ea759c and dd13aad. They remain historical claims, not independently reverified provenance. The verified current authority is GoreeCloud/brand-assets.
+
+
+## 2026-11-06 founder color-freedom clarification
+
+Official GoreeCloud and GoreeCloud UI have no mandatory system color, default brand hue or fixed palette. The founder permits every app, service, icon, wallpaper and other surface to use any color. Approved authored asset colors, including the Aperture Weave icon, belong to that particular artwork and do not impose an ecosystem palette. Existing optional presets and technical fallback tokens are not universal colors. Semantic function, contrast and accessibility still apply.

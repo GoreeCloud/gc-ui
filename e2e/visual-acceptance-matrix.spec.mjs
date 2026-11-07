@@ -62,10 +62,12 @@ for(const width of [280,319,320,340,341,375,430,440]){
   await page.setViewportSize({width,height:812});
   await page.emulateMedia({colorScheme:'dark',reducedMotion:'reduce'});
   await page.goto('/lab/forms.html');
-  const nav=page.locator('.gc-form-header nav');
-  await expect(nav.getByRole('link')).toHaveCount(3);
+  const nav=page.locator('.gc-mobile-dock');
+  await expect(nav).toBeVisible();
+  await expect(page.locator('.gc-form-header nav')).toBeHidden();
+  await expect(nav.getByRole('link')).toHaveCount(4);
   const geometry=await nav.getByRole('link').evaluateAll(links=>links.map(link=>{
-   const textRange=document.createRange();textRange.selectNodeContents(link);
+   const textRange=document.createRange();textRange.selectNodeContents(link.querySelector('span:last-child')||link);
    const linkRect=link.getBoundingClientRect();
    const textRects=Array.from(textRange.getClientRects());
    return {
@@ -77,7 +79,7 @@ for(const width of [280,319,320,340,341,375,430,440]){
     height:linkRect.height
    };
   }));
-  expect(geometry.map(item=>item.text)).toEqual(['Components','Adaptive','Registry']);
+  expect(geometry.map(item=>item.text)).toEqual(['Foundation','Components','Library','Studio']);
   for(const link of geometry){
    expect(link.lines,link.text+' single visual line').toBe(1);
    expect(link.scrollWidth,link.text+' not clipped').toBeLessThanOrEqual(link.clientWidth+1);

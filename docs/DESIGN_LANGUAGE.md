@@ -4,6 +4,16 @@
 
 **Implementation maturity:** The current `0.2.0-alpha.1` workspace and experimental component demos remain alpha. Separately released **Stable Foundations 1.0.1** covers only its explicitly shipped token, color and theme-control contract. An active design standard does not certify consumer migration, production readiness or accessibility acceptance. Verified repository tokens, component APIs and governance controls remain the code-level contract until formally reconciled.
 
+## Founder clarification — November 6, 2026: color freedom and floating mobile navigation
+
+**Owner decision, effective now:** Neither GoreeCloud nor GoreeCloud UI has an official default color, mandated color family, or required operating-system color. **Any application, service, wallpaper, icon, illustration, or other GoreeCloud surface may choose any color**, independently of other products and artworks. Iris, Lagoon, Ember, Moss, Ocean and Neutral in existing alpha/stable code are optional, historically versioned example presets and technical fallbacks, **not** GoreeCloud brand colors. Existing published Foundations 1.0.1 fallback values remain byte-stable for compatibility; a fallback when no preference exists is not a mandatory identity color. The approved Aperture Weave artwork retains its authored colors without obligating other apps or icons to use them.
+
+**The common design language governs quality, not hue.** Any color must still support semantic foreground/background roles, focus, errors, success and warning meanings, readable WCAG contrast, forced-colors and light/dark contexts. Do not turn a demo palette, device wallpaper, system accent or one app's color into an ecosystem default. Independent multicolor artwork is welcome.
+
+**Mobile application rule:** All primary mobile app navigation bars are **floating bottom docks**, detached from screen edges, respecting device safe areas and on-screen keyboards. The top bar contains identity, context, search and page actions, not a second primary navigation strip. Content tabs, breadcrumbs, browser address entry, system permission/navigation surfaces, temporary sheets and OS controls retain proper non-primary semantics. Preserve minimum 44px targets, named landmarks, active state, focus, touch, RTL, zoom, reduced motion/transparency and footer clearance.
+
+**Acceptance:** The policy applies across GoreeCloud now, but each app and reference lab requires a separate source audit, migration, rendered screenshot and target-device verification. A shared CSS pattern does not certify all mobile apps. The founder also considers the current GC UI insufficiently premium; improve actual screens through screenshot-led iteration rather than assuming an approved logo makes the interface beautiful.
+
 ## 1. Identity
 
 **Name:** GoreeCloud UI (short form: GC UI). This is the canonical public full name; "GoreeCloud User Interface" may explain the acronym but is not the preferred full product name.
@@ -93,10 +103,10 @@ Apple's public HIG describes Liquid Glass as a functional navigation and control
 
 GC UI employs two connected layers of color definitions:
 
-- **Palette seeds** supply brand / on-brand / brand-container / on-brand-container colors. Starter seeds: Iris, Lagoon, Ember, Moss.
+- **Palette seeds** supply brand / on-brand / brand-container / on-brand-container colors. Optional compatibility examples: Iris, Lagoon, Ember, Moss; none is an ecosystem default or required product hue.
 - **Semantic roles** determine usage: `canvas`, `surface`, `surface-tonal`, `text`, `text-soft`, `outline`, `positive`, `negative`, `lens-fill`, etc.
 
-Mode is independent of palette: each accent works in light or dark appearance. The current alpha uses **curated palettes**, not automatic wallpaper or image extraction. Full tonal palette generation is planned. Do not describe these four seeds as a Material 3 algorithm implementation.
+Mode is independent of palette: each accent works in light or dark appearance. The current alpha has optional curated presets and an existing arbitrary custom seed engine, not automatic wallpaper or image extraction. Full tonal palette generation is planned. Do not describe these four seeds as a Material 3 algorithm implementation.
 
 In code, semantic variables take the `--gc-` prefix, e.g. `--gc-brand` or `--gc-surface`.
 
@@ -145,4 +155,4 @@ Desktop: a persistent sidebar and content area. Tablet: compress spacing and reo
 
 ## 9. Boundaries and provenance
 
-**Inspirations:** Apple's public Liquid Glass hierarchy guidance and Google's Material You/M3 personalization and semantic color roles. **GC UI originals:** the three named layers, token prefix, curated palette set, alpha mark, component styling, and demonstration composition. Any future native platform support should preserve GC UI semantics and use appropriate system primitives.
+**Inspirations:** Apple's public Liquid Glass hierarchy guidance and Google's Material You/M3 personalization and semantic color roles. **GC UI originals:** the three named layers, token prefix, optional demo presets, alpha mark, component styling, and demonstration composition. Any future native platform support should preserve GC UI semantics and use appropriate system primitives.
