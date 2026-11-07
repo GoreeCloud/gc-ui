@@ -1,0 +1,30 @@
+{
+  "schema": "gc-ui-original-identity-candidate.v1",
+  "name": "Aperture Weave",
+  "status": "candidate-not-approved",
+  "master": "GoreeCloud/brand-assets/products/gc-ui/candidates",
+  "consumer": "GoreeCloud/gc-ui/assets/candidates",
+  "rendering": "static-safe-svg-no-external-references",
+  "assets": {
+    "aperture-app-icon.svg": {
+      "sha256": "a1bf6370761f247a56666c0d61ba615dce3e5789c6e7845c630caecf6d9de418",
+      "size": 2879
+    },
+    "aperture-interface-artwork.svg": {
+      "sha256": "50661cf8d84818240ac7ac5e273123e041f9471ef4aa953d2be05019e4aef6aa",
+      "size": 5074
+    },
+    "aperture-logo-dark.svg": {
+      "sha256": "dcdd57b18d94673973f1771f91752ece56d93737679b56bed4b8339719d1eb66",
+      "size": 2213
+    },
+    "aperture-logo.svg": {
+      "sha256": "4e40c93337c84de16560b26d701a3334d3b448bc7e04a2efe189944eac680682",
+      "size": 2214
+    },
+    "aperture-symbol.svg": {
+      "sha256": "78794bc48907ddd822b42d96cd0be0061bd1b1b4fe168384e5a3818afef50078",
+      "size": 1803
+    }
+  }
+}
