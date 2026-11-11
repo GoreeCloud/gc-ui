@@ -67,3 +67,5 @@ Screenshot inspection revealed that a 200% CSS root font-size caused a rounded h
 ### 400% CSS root-font stress test and adaptive clearance
 
 The lab now also exercises a 390px viewport with 400% CSS root font scaling. The dock's observed height and computed bottom inset must fit within the main region's effective padding, with no clipped hero text or ellipsis-shortened labels. This is CSS root-font stress testing, not real 400% browser zoom or physical OS text scaling; those separate acceptance gates remain open.
+
+The first 400% CSS text run failed on intrinsic widths of native action buttons and oversized content inside preview windows. The corrective layer permits wrap-aware mobile actions, badges, compact window controls, and textual panel contents without suppressing document overflow. This improves real controls and preserves rounded panels; the distinct true-browser-zoom gate remains open.

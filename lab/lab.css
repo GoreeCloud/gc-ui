@@ -183,3 +183,24 @@
   overflow-wrap:anywhere;
   hyphens:auto;
 }
+
+
+/* The lab's editorial preview must remain legible at 400% simulated text scale.
+   Decorative clipping still applies to art, but words wrap inside each surface. */
+@media(max-width:600px) {
+  .gc-lab-floating {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-floating :is(strong,small,span,div) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-glass { min-inline-size:0; overflow-wrap:anywhere; }
+  .gc-lab-glass :is(strong,small,div) { min-inline-size:0; overflow-wrap:anywhere; }
+  .gc-lab-section-head, .gc-lab-section-head > div,
+  .gc-lab-main > section, .gc-lab-main article { min-inline-size:0; }
+  .gc-lab-main .gc-cluster { max-inline-size:100%; }
+}
