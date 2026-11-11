@@ -75,6 +75,13 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
     const link = event.target?.closest?.("a[href]");
     if (!links.includes(link)) return;
     if (!enabled(link)) { event.preventDefault(); return; }
+    // A new tab, download, alternative browsing context or a consumer-canceled
+    // click is not navigation of this document. Never falsify aria-current.
+    // Disabled destinations above are still blocked even for modified clicks.
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey ||
+        event.shiftKey || event.altKey || event.button > 0 ||
+        (link.getAttribute("target") && link.getAttribute("target") !== "_self") ||
+        link.getAttribute("download") !== null) return;
     if (onNavigate) {
       try {
         const decision = onNavigate(link);

@@ -146,3 +146,45 @@ test("invalid clearance target is rejected before listeners are attached",()=>{
  const f=fixture();
  assert.throws(()=>initBottomNavigation(f.nav,{content:{style:{setProperty(){}}}}),TypeError);
 });
+
+
+test("modified, already-canceled, external browsing-context and download clicks never change current destination",()=>{
+  const f=fixture();
+  let calls=0;
+  const ctl=initBottomNavigation(f.nav,{onNavigate:()=>{calls++;return true;}});
+  const modes=[
+    {ctrlKey:true},{metaKey:true},{shiftKey:true},{altKey:true},
+    {button:1},{button:2},{defaultPrevented:true}
+  ];
+  for(const options of modes) {
+    const event=f.nav.emit("click",{target:f.links[1],...options});
+    assert.equal(f.links[0].getAttribute("aria-current"),"page",JSON.stringify(options));
+    assert.equal(f.links[1].getAttribute("aria-current"),null);
+    assert.equal(calls,0,"New-context or canceled event must not run route callback");
+    if(!options.defaultPrevented)assert.equal(event.defaultPrevented,false);
+  }
+  f.links[2].setAttribute("target","_blank");
+  f.nav.emit("click",{target:f.links[2]});
+  assert.equal(f.links[0].getAttribute("aria-current"),"page");
+  f.links[2].removeAttribute("target");
+  f.links[2].setAttribute("download","workspace.json");
+  f.nav.emit("click",{target:f.links[2]});
+  assert.equal(f.links[0].getAttribute("aria-current"),"page");
+  assert.equal(calls,0);
+  f.links[2].removeAttribute("download");
+  f.nav.emit("click",{target:f.links[2]});
+  assert.equal(f.links[2].getAttribute("aria-current"),"page");
+  assert.equal(calls,1);
+  ctl.dispose();
+});
+
+test("disabled navigation remains blocked even with modifier keys",()=>{
+  const f=fixture();f.links[2].setAttribute("aria-disabled","true");
+  const ctl=initBottomNavigation(f.nav);
+  for(const options of [{ctrlKey:true},{metaKey:true},{shiftKey:true}]) {
+    const event=f.nav.emit("click",{target:f.links[2],...options});
+    assert.equal(event.defaultPrevented,true);
+    assert.equal(f.links[0].getAttribute("aria-current"),"page");
+  }
+  ctl.dispose();
+});
