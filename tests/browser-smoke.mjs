@@ -325,6 +325,31 @@ try {
   assert.equal(forcedShot.width,390);
   console.log("Chromium forced-colors @ 390px: semantic boundary and layout passed");
 
+  // Dedicated signature-composition screenshots: not a replacement for human design review.
+  for(const [filename,width,height,dark] of [
+    ["gc-ui-premium-desktop.png",1440,900,false],
+    ["gc-ui-premium-dark-mobile.png",390,844,true]
+  ]) {
+    await browser.setViewport(width,height,{dark});
+    await browser.navigate(base+"/lab/");
+    const result=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,section=document.querySelector("#premium");'+
+      'const surface=section.querySelector(".gc-showcase"),tile=section.querySelector(".gc-feature-tile");'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+      'gradient:getComputedStyle(surface,"::before").backgroundImage.includes("gradient"),'+
+      'radius:getComputedStyle(surface).borderTopLeftRadius,'+
+      'tile:getComputedStyle(tile).backgroundColor});})()'));
+    assert.ok(result.scroll<=result.width+1,"Premium lab page overflow: "+JSON.stringify(result));
+    assert.equal(result.gradient,true,"Signature surface gradient missing");
+    assert.ok(parseFloat(result.radius)>=18,"Signature surface lost its premium shape");
+    await browser.evaluate('document.querySelector("#premium").scrollIntoView({behavior:"instant",block:"start"})');
+    await delay(150);
+    const shot=await browser.screenshot(join(directory,filename));
+    assert.equal(shot.width,width);
+    assert.equal(shot.height,height);
+    console.log("Chromium signature composition "+filename+": material, bounds and capture passed");
+  }
+
   for (const [filename,width,height,dark] of [
     ["gc-ui-light-desktop.png",1440,900,false],
     ["gc-ui-dark-mobile.png",390,844,true],

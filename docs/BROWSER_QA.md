@@ -45,3 +45,8 @@ Forced-colors emulation verifies the Chromium media query activates, tree bounda
 ### Enlarged text layout remediation
 
 The 200% CSS-root-text smoke gate initially exposed a 103px horizontal overflow on a 390px mobile viewport. Browser diagnostics traced the root overflow to three white-space-nowrap hero action buttons expanding to widths of 385px, 397px and 477px. The showcase now stacks and wraps those buttons within its grid on narrow screens while keeping interactive controls visible; it does not hide horizontal page overflow to mask the defect. Source-level button behavior remains unchanged for consumer apps.
+
+
+## Signature composition verification
+
+The browser job verifies the reusable signature surface and feature tile, including a semantic layered backdrop, solid legible content, radius, elevation and viewport reflow. It saves dedicated light desktop and dark mobile screenshots focused on the signature components. Visual quality still requires human review of the actual screenshots, real interactions, assistive technology and performance. These tests enforce implementation invariants, **not** subjective beauty or certification.

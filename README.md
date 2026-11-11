@@ -84,3 +84,7 @@ Run `npm run verify:package` to assemble a real local tarball and install only t
 ## Hierarchical navigation tree
 
 `initTreeView` adds a keyboard-accessible, single-selection tree for file browsers, settings, and dashboards. It supports RTL-aware direction keys, typeahead, explicit consumer activation callbacks, and safe focus management. No filesystem operation, backend access, persistence, or telemetry is included. Browser and assistive-technology review remain required for alpha adoption.
+
+## Mandatory premium design standard
+
+GoreeCloud UI must be visually distinctive, premium and modern in every supported application context. The shared implementation includes semantic signature composition (`gc-premium-shell`, `gc-showcase`, `gc-feature-grid`), polished controls and purposeful Canvas/Surface/Lens depth. See [Visual quality contract](docs/VISUAL_QUALITY.md). CI rendering does not replace human design acceptance.

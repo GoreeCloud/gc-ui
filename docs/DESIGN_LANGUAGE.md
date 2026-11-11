@@ -62,3 +62,7 @@ The JSON manifest follows a GC UI alpha-specific structure rather than claiming 
 ### Automated contrast evidence and limits
 
 `npm run contrast:check` fails if any of the currently defined 82 opaque foreground/background combinations falls below the relevant threshold (4.5:1 text or 3:1 focus ring). Pair inventory: text, supporting text, positive/warning/negative on Canvas/Surface/tonal, filled status on-colors, focus on all three surfaces, brand on those surfaces, and brand-container on-colors in Iris/Lagoon/Ember/Moss and both appearances. Its audit deliberately excludes variable-compositor translucent Lens backdrops, images, essential nontext indicators, visual effects and assistive-technology behavior; those must be reviewed separately on actual screens. This audit is alpha evidence, not device-wide acceptance or certification.
+
+## Premium visual quality is mandatory
+
+GoreeCloud UI must remain distinct, polished and modern across supported apps, dashboards and future operating systems. Generic unfinished defaults are unacceptable. Premium means original expressive hierarchy, balanced space, refined controls and purposeful depth—not indiscriminate blur or decoration. Use semantic tokens and three material roles, maintain opaque legibility and accessible modes, and require real visual acceptance. See [Premium visual quality](VISUAL_QUALITY.md).
