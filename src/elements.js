@@ -72,7 +72,8 @@ export function initTabs(tablist) {
 }
 export function openDialog(dialog, invoker = null) {
   if (!dialog || typeof dialog.showModal !== "function") throw new TypeError("Expected HTML dialog");
-  if (!dialog.open) dialog.showModal();
+  if (dialog.open) return;
+  dialog.showModal();
   const onClose = () => { if (invoker && typeof invoker.focus === "function") invoker.focus(); dialog.removeEventListener("close", onClose); };
   dialog.addEventListener("close", onClose);
 }

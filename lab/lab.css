@@ -58,3 +58,6 @@
 @media(max-width:600px) { .gc-lab-hero h1 { font-size:38px; }.gc-lab-hero { gap:0; }.gc-lab-scene { min-block-size:340px; }.gc-lab-glass { inset-inline-end:0; }.gc-lab-section { padding-block:44px 10px; }.gc-lab-breadcrumb { inline-size:100%; }.gc-lab-toolbar-controls { gap:8px; } }
 @media(prefers-reduced-motion:reduce) { .gc-lab-floating,.gc-lab-glass { transform:none; } }
 @media(prefers-contrast:more),(forced-colors:active) { .gc-lab-highlight { background:none; color:var(--gc-brand); }.gc-lab-orb { opacity:.15; }.gc-lab-glass { background:var(--gc-lens-solid); } }
+
+.gc-lab-color-picker { inline-size:52px; block-size:44px; min-inline-size:52px; padding:4px; border:1px solid var(--gc-outline); border-radius:var(--gc-radius-sm); background:var(--gc-surface); cursor:pointer; }
+.gc-lab-color-picker:disabled { opacity:var(--gc-opacity-disabled); cursor:not-allowed; }

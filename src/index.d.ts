@@ -18,3 +18,9 @@ export declare function openDialog(dialog: HTMLDialogElement, invoker?: HTMLElem
 export declare function closeDialog(dialog: HTMLDialogElement): void;
 export declare function toast(message: string, options?: { region?: HTMLElement; kind?: "info" | "positive" | "warning" | "negative"; duration?: number }): HTMLElement;
 export declare function bindThemeControls(root: HTMLElement, modeElement?: HTMLSelectElement, accentElement?: HTMLSelectElement): () => void;
+
+export declare function initAccordion(container: HTMLElement, options?: { single?: boolean }): () => void;
+export declare function initToggleGroup(container: HTMLElement, options?: { onChange?: (button: HTMLButtonElement) => void }): () => void;
+export declare function bindRangeOutput(input: HTMLInputElement, output: HTMLOutputElement, options?: { format?: (value: string) => string }): () => void;
+export declare function initDrawer(dialog: HTMLDialogElement, openButton: HTMLElement, closeButton: HTMLElement): () => void;
+export declare function createThemeController(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string }): { update: (options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string | null }) => { mode: GcMode; accent: GcAccent; contrast: GcContrast }; dispose: () => void };

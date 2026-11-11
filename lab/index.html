@@ -20,6 +20,7 @@
       <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon> Overview</a>
       <a href="#foundations"><gc-icon name="sparkle"></gc-icon> Foundations</a>
       <a href="#components"><gc-icon name="grid"></gc-icon> Components</a>
+      <a href="#patterns"><gc-icon name="list"></gc-icon> Patterns</a>
       <a href="#forms"><gc-icon name="edit"></gc-icon> Forms</a>
       <a href="#iconography"><gc-icon name="shield"></gc-icon> Iconography</a>
     </nav>
@@ -70,7 +71,7 @@
       <section id="foundations" class="gc-lab-section" aria-labelledby="foundations-heading">
         <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">01 / THE FOUNDATIONS</p><h2 class="gc-title" id="foundations-heading">A system with intention.</h2></div><p class="gc-support gc-readable">Semantic color, typography, shape, space and material that adapt without losing identity.</p></div>
         <div class="gc-grid gc-lab-foundations">
-          <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">An accent is a preference, not a dark-mode switch.</p><div class="gc-lab-colors" aria-label="Four approved accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
+          <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">An accent is a preference, not a dark-mode switch.</p><div class="gc-lab-colors" aria-label="Four approved accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-cluster"><label class="gc-check" for="demo-custom-accent"><input id="demo-custom-accent" type="checkbox"> Custom accent</label><input type="color" value="#5146C8" id="demo-custom-color" aria-label="Choose custom accent" disabled class="gc-lab-color-picker"></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
           <article class="gc-card"><p class="gc-lab-card-label">SHAPE & SPACING</p><h3 class="gc-heading">Soft, calm geometry</h3><p class="gc-support">4-pixel foundation. 12, 18, 26 and 36-pixel radii.</p><div class="gc-lab-shapes"><span></span><span></span><span></span><span></span></div></article>
           <article class="gc-card"><p class="gc-lab-card-label">TYPOGRAPHY</p><h3 class="gc-heading">Readable at every size</h3><p class="gc-support">Familiar system font metrics, nuanced weight, strong information hierarchy.</p><div class="gc-lab-type-sample"><b>Aa</b><div><strong>Clarity first.</strong><small>Consistent by nature.</small></div></div></article>
         </div>
@@ -110,6 +111,43 @@
         </div>
       </section>
 
+
+      <section id="patterns" class="gc-lab-section" aria-labelledby="patterns-heading">
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INTERACTION PATTERNS</p><h2 class="gc-title" id="patterns-heading">Control without complexity.</h2></div><p class="gc-support">Native disclosure, real inputs, accessible side navigation and stateful controls.</p></div>
+        <div class="gc-grid gc-grid--two">
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Disclosure accordion</h3>
+            <div id="demo-accordion" class="gc-accordion">
+              <details open><summary>What is Cloud Canvas?</summary><div class="gc-accordion__content">A calm, opaque foundation for work and reading.</div></details>
+              <details><summary>How does Cloud Surface work?</summary><div class="gc-accordion__content">Readable layers organize cards, forms and application content.</div></details>
+              <details><summary>When should I use Cloud Lens?</summary><div class="gc-accordion__content">Selectively, for elevated floating controls with a solid accessibility fallback.</div></details>
+            </div>
+          </article>
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Range and drawer</h3>
+            <div class="gc-field"><label for="demo-radius">Preview radius</label><div class="gc-cluster"><input id="demo-radius" class="gc-range" type="range" min="12" max="36" step="6" value="18" aria-describedby="demo-radius-hint" style="flex:1;min-inline-size:120px"><output id="demo-radius-value" class="gc-range-value" for="demo-radius">18px</output></div><small id="demo-radius-hint" class="gc-field__hint">A visual demonstration; theme tokens stay unchanged.</small></div>
+            <div id="demo-radius-preview" class="gc-surface--tonal" style="padding:20px;border:1px solid var(--gc-outline-soft);border-radius:18px">Shape responds to the native slider.</div>
+            <button type="button" id="demo-drawer-open" class="gc-button gc-button--secondary">Open side drawer</button>
+          </article>
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Process steps</h3>
+            <ol class="gc-steps" aria-label="Illustrative setup stages"><li data-step="1" data-complete="true">Choose style</li><li data-step="2" aria-current="step">Review preview</li><li data-step="3">Apply in app</li></ol>
+            <p class="gc-support">Steps are descriptive; no application setup is running in this demo.</p>
+            <h4 class="gc-heading">Design details</h4>
+            <dl class="gc-details-list"><dt>Material</dt><dd>Cloud Surface</dd><dt>Corner</dt><dd>18px medium</dd><dt>Appearance</dt><dd>Responsive to preference</dd></dl>
+          </article>
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Roving button selection</h3>
+            <div id="demo-toggle-group" role="group" aria-label="Illustrative arrangement" class="gc-toolbar">
+              <button type="button" class="gc-chip" aria-pressed="true">Grid</button>
+              <button type="button" class="gc-chip" aria-pressed="false">Rows</button>
+              <button type="button" class="gc-chip" aria-pressed="false">Cards</button>
+            </div>
+            <p class="gc-support">Select with a click, or use arrow keys, Home and End. Real forms should use radio inputs when submitting a single choice.</p>
+            <nav aria-label="Design reference location" class="gc-breadcrumbs"><ol><li><a href="#overview">Home</a></li><li><a href="#components">Components</a></li><li aria-current="page">Patterns</li></ol></nav>
+          </article>
+        </div>
+      </section>
       <section id="forms" class="gc-lab-section" aria-labelledby="forms-heading">
         <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INPUT & PREFERENCE</p><h2 class="gc-title" id="forms-heading">Controls that just work.</h2></div><p class="gc-support">Full labels, logical focus, native validation and understandable feedback.</p></div>
         <div class="gc-grid gc-grid--two">
@@ -142,6 +180,11 @@
   <h2 class="gc-title" id="dialog-title" style="margin-block:20px 12px">Interfaces with intention.</h2>
   <p id="dialog-copy" class="gc-support">This native dialog uses the browser's keyboard and focus behavior, with a purposeful elevated surface and clear way back.</p>
   <div class="gc-dialog__actions"><button class="gc-button gc-button--outline" id="dialog-cancel" type="button">Close preview</button><button class="gc-button" id="dialog-confirm" type="button">Looks good</button></div>
+</dialog>
+<dialog id="demo-drawer" class="gc-drawer" aria-labelledby="demo-drawer-title">
+  <div class="gc-drawer__header"><h2 id="demo-drawer-title" class="gc-heading">GoreeCloud drawer</h2><button class="gc-button gc-button--icon gc-button--quiet" id="demo-drawer-close" type="button" aria-label="Close side drawer"><gc-icon name="close"></gc-icon></button></div>
+  <p class="gc-support">A native modal side panel with Escape support and focus return. No account settings are modified.</p>
+  <nav class="gc-nav" aria-label="Drawer destinations"><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a></nav>
 </dialog>
 </body>
 </html>

@@ -47,3 +47,24 @@ Call defineCustomElements() to register the small gc-icon element. Decorative SV
 ### Quality gate for future controls
 
 Each new component must document: semantic role; keyboard, pointer and touch behavior; responsive footprint; loading/empty/error/disabled and selected states; dark/light/contrast handling; reduced-motion and transparency fallback; representative testing and correct consumer integration. A web component library does not constitute a native mobile or desktop SDK.
+
+
+## Interaction expansion — alpha
+
+Additional native-first patterns are implemented through CSS and small opt-in JS behaviors:
+
+| Pattern | CSS | Controller |
+| --- | --- | --- |
+| Disclosure accordion | gc-accordion, gc-accordion__content on native details/summary | initAccordion(container, { single: true }) |
+| Side drawer | gc-drawer, gc-drawer__header on native dialog | initDrawer(dialog, openButton, closeButton) |
+| Range | gc-range, gc-range-value on native input[type=range] and output | bindRangeOutput(input, output, { format }) |
+| Exclusive toolbar | gc-toolbar, gc-chip, aria-pressed buttons | initToggleGroup(container, { onChange }) |
+| Steps | gc-steps on ol, data-step, aria-current=step | Native structural markup, no controller |
+| Breadcrumbs | gc-breadcrumbs on nav > ol > li | Native links and aria-current=page |
+| Key/value details | gc-details-list on dl > dt + dd | Native semantics |
+
+Controllers expose cleanup callbacks; invoke them when a view unmounts. Avoid manually imitating radio, details or dialog behavior where native elements are available. A button-only toggle toolbar is for view selection, not a substitute for form radio inputs. Disabled items are not arrow-key destinations. Do not put a click handler on an inert card without a semantic control.
+
+createThemeController(root, options) accepts the same options as applyTheme(), returns update(next) and dispose(), and automatically recalculates custom accent colors on OS dark/light changes in auto mode. This opt-in watcher does **not** use local storage or network. Call dispose() to unregister the system listener. Curated palettes already respond to system appearance through CSS alone.
+
+See the reference laboratory's Patterns section for keyboard and real native-control examples. Those examples are not device acceptance or a native OS component library.

@@ -82,3 +82,41 @@ export function applyTheme(root, { mode = "auto", accent = "iris", contrast = "n
   }
   return { mode, accent, contrast };
 }
+
+
+/**
+ * Opt-in controller with live OS appearance updates for custom accents.
+ * CSS-only curated themes already respond automatically to system changes.
+ * No storage, telemetry, or background polling; dispose on unmount.
+ */
+export function createThemeController(root, options = {}) {
+  let state = { mode: "auto", accent: "iris", contrast: "normal", ...options };
+  let disposed = false;
+  const media = typeof globalThis.matchMedia === "function"
+    ? globalThis.matchMedia("(prefers-color-scheme: dark)") : null;
+  const onSystemChange = () => {
+    if (!disposed && state.mode === "auto" && state.customAccent != null) {
+      applyTheme(root, state);
+    }
+  };
+  const update = (next = {}) => {
+    if (disposed) throw new Error("Theme controller has been disposed");
+    if (!next || typeof next !== "object") throw new TypeError("Theme update must be an object");
+    const candidate = { ...state, ...next };
+    const value = applyTheme(root, candidate);
+    state = candidate;
+    return value;
+  };
+  update();
+  media?.addEventListener?.("change", onSystemChange);
+  if (!media?.addEventListener) media?.addListener?.(onSystemChange);
+  return Object.freeze({
+    update,
+    dispose() {
+      if (disposed) return;
+      disposed = true;
+      media?.removeEventListener?.("change", onSystemChange);
+      if (!media?.removeEventListener) media?.removeListener?.(onSystemChange);
+    }
+  });
+}

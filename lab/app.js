@@ -1,16 +1,22 @@
-import { applyTheme, defineCustomElements, initTabs, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
 const appearance = document.querySelector("#appearance");
 const accent = document.querySelector("#accent");
 const contrast = document.querySelector("#contrast");
-const updateTheme = () => applyTheme(root, {
-  mode: appearance.value, accent: accent.value, contrast: contrast.checked ? "more" : "normal"
+const customEnabled = document.querySelector("#demo-custom-accent");
+const customColor = document.querySelector("#demo-custom-color");
+const themeController = createThemeController(root);
+const updateTheme = () => themeController.update({
+  mode: appearance.value, accent: accent.value, contrast: contrast.checked ? "more" : "normal",
+  customAccent: customEnabled.checked ? customColor.value : null
 });
 appearance.addEventListener("change", updateTheme);
 accent.addEventListener("change", updateTheme);
 contrast.addEventListener("change", updateTheme);
+customEnabled.addEventListener("change", () => { customColor.disabled = !customEnabled.checked; updateTheme(); });
+customColor.addEventListener("input", updateTheme);
 updateTheme();
 initTabs(document.querySelector('[role="tablist"]'));
 const dialog = document.querySelector("#demo-dialog");
@@ -51,4 +57,22 @@ for (const name of ICON_NAMES) {
   text.textContent = name;
   tile.append(icon, text);
   grid.append(tile);
+}
+
+
+// Pattern controllers enhance semantic native elements; clean up when a host SPA unmounts them.
+initAccordion(document.querySelector("#demo-accordion"), { single: true });
+initToggleGroup(document.querySelector("#demo-toggle-group"), {
+  onChange(button) {
+    toast(button.textContent.trim() + " layout selected locally.", { region, kind: "info" });
+  }
+});
+bindRangeOutput(document.querySelector("#demo-radius"), document.querySelector("#demo-radius-value"), { format: value => value + "px" });
+document.querySelector("#demo-radius").addEventListener("input", (event) => {
+  document.querySelector("#demo-radius-preview").style.borderRadius = event.currentTarget.value + "px";
+});
+initDrawer(document.querySelector("#demo-drawer"), document.querySelector("#demo-drawer-open"), document.querySelector("#demo-drawer-close"));
+
+for (const link of document.querySelectorAll("#demo-drawer a[href^='#']")) {
+  link.addEventListener("click", () => document.querySelector("#demo-drawer").close());
 }
