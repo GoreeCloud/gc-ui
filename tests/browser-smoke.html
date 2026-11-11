@@ -265,6 +265,12 @@ try{
   dockLinks[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
   verify(document.activeElement===dockLinks[2],"dock skips disabled links during arrow-key focus");
   verify(dockLinks[0].getAttribute("aria-current")==="page","keyboard focus does not fake navigation");
+  // The controller is already registered. Cancel synthetic default navigation
+  // only AFTER its handler has inspected each click, so this DOM fixture stays local.
+  const blockSyntheticDockNavigation=event=>{
+    if (event.target?.closest?.("a")===dockLinks[2]) event.preventDefault();
+  };
+  dock.addEventListener("click",blockSyntheticDockNavigation);
   for(const key of ["ctrlKey","metaKey","shiftKey","altKey"]) {
     dockLinks[2].dispatchEvent(new MouseEvent("click",{bubbles:true,cancelable:true,[key]:true}));
     verify(dockLinks[0].getAttribute("aria-current")==="page",
@@ -280,6 +286,7 @@ try{
   verify(dockLinks[0].getAttribute("aria-current")==="page",
     "new-tab navigation preserves the current page");
   dockLinks[2].removeAttribute("target");
+  dock.removeEventListener("click",blockSyntheticDockNavigation);
   
   verify(dockCtl.select(dockLinks[2]) && dockLinks[2].getAttribute("aria-current")==="page","dock explicit route selection");
   const dockColor=document.createElement("span");
