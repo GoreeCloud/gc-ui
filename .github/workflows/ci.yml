@@ -20,8 +20,8 @@ jobs:
           node-version: "22"
       - name: Validate JavaScript and token contracts
         run: npm run check
-      - name: Check package inclusion
-        run: npm pack --dry-run --json
+      - name: Verify isolated offline package consumer
+        run: npm run verify:package
 
   browser-smoke:
     runs-on: ubuntu-24.04

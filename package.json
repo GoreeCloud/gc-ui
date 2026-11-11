@@ -65,7 +65,8 @@
     "contrast:check": "node scripts/audit-contrast.mjs --check",
     "icons:generate": "node scripts/build-icon-assets.mjs --write",
     "icons:check": "node scripts/build-icon-assets.mjs --check",
-    "browser:smoke": "node tests/browser-smoke.mjs"
+    "browser:smoke": "node tests/browser-smoke.mjs",
+    "verify:package": "node scripts/verify-package.mjs"
   },
   "sideEffects": [
     "**/*.css"

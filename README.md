@@ -76,3 +76,7 @@ The new `initCommandPalette()` adds a searchable, keyboard-operated action launc
 ## Sortable native tables
 
 The @goreecloud/ui/table controller implements stable local sorting for native table rows, including aria-sort, localized text, strict numeric/date comparisons, and explicit reset. It never fetches remote records or implies that unseen server pages are sorted. See the design lab and component documentation.
+
+## Offline npm consumer verification
+
+Run `npm run verify:package` to assemble a real local tarball and install only that tarball with npm's offline, ignore-scripts options into an isolated temporary consumer. The check verifies public JS imports, bundled CSS, icon assets and machine-readable design tokens. Temporary files are deleted afterwards. This is not npm publication, third-party supply-chain certification, a product migration or native SDK acceptance.
