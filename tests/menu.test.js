@@ -197,3 +197,46 @@ test("late rejected selection never announces stale errors after dismissal or di
     if(terminate==="outside")api.dispose();
   }
 });
+
+test("menu typeahead preserves native IME composition and resumes after commit",()=>{
+  const f=fixture();
+  f.items[0].textContent="Open";
+  f.items[1].textContent="Save";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  assert.equal(f.doc.activeElement,f.items[0]);
+  f.menu.emit("compositionstart");
+  for(const key of ["s","ArrowDown","Home","End","Escape"]){
+    const event=f.menu.emit("keydown",{target:f.items[0],key,isComposing:false});
+    assert.equal(event.defaultPrevented,false,"composition owns "+key);
+    assert.equal(f.doc.activeElement,f.items[0]);
+  }
+  assert.equal(f.isOpen(),true);
+  const legacy=f.menu.emit("keydown",{target:f.items[0],key:"s",keyCode:229});
+  assert.equal(legacy.defaultPrevented,false);
+  f.menu.emit("compositionend");
+  const after=f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(after.defaultPrevented,true);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
+
+test("legacy IME process keys do not open trigger popover or move focus",()=>{
+  const f=fixture();
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  for(const event of [
+    {key:"ArrowDown",isComposing:true},
+    {key:"ArrowDown",keyCode:229},
+    {key:"Process"},
+  ]){
+    assert.equal(f.trigger.emit("keydown",event).defaultPrevented,false);
+    assert.equal(f.isOpen(),false);
+  }
+  api.open();
+  const process=f.menu.emit("keydown",{target:f.items[0],key:"Process"});
+  assert.equal(process.defaultPrevented,false);
+  api.dispose();
+  f.menu.emit("compositionstart");
+  f.menu.emit("compositionend");
+  assert.equal(f.isOpen(),false);
+});
