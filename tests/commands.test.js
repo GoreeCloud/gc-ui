@@ -160,3 +160,55 @@ test("ordinary dialog close restores invoker only when focus still belongs to di
     "A deliberate outside focus move must not be stolen on close");
   api.dispose();
 });
+
+
+test("IME composition never activates commands or filters incomplete search text",async()=>{
+  const f=asyncPaletteFixture();
+  const actions=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:button=>actions.push(button)});
+  api.open();
+  const initial=f.status.textContent;
+  assert.equal(initial,"1 command available");
+  f.input.emit("compositionstart");
+  f.input.value="nonexistent";
+  f.input.emit("input",{isComposing:true});
+  assert.equal(f.status.textContent,initial,
+    "Do not announce uncommitted IME input as a finished search");
+  for(const details of [{key:"Enter",isComposing:true},{key:"Enter",keyCode:229},
+      {key:"Process"},{key:"ArrowDown",isComposing:true}]) {
+    const event=f.input.emit("keydown",details);
+    assert.equal(event.defaultPrevented,false,"Do not capture IME keyboard keys");
+  }
+  assert.deepEqual(actions,[]);
+  f.input.emit("compositionend");
+  assert.equal(f.status.textContent,"No matching commands");
+  f.input.value="open";
+  f.input.emit("input");
+  const event=f.input.emit("keydown",{key:"Enter"});
+  assert.equal(event.defaultPrevented,true);
+  await Promise.resolve();
+  assert.deepEqual(actions,[f.button]);
+  api.dispose();
+});
+
+test("global command shortcut ignores IME input and conflicting modified combinations",()=>{
+  const f=asyncPaletteFixture();
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:true,onSelect:()=>{}});
+  for(const extra of [
+    {key:"k",ctrlKey:true,isComposing:true},
+    {key:"k",metaKey:true,keyCode:229},
+    {key:"k",ctrlKey:true,altKey:true},
+    {key:"k",ctrlKey:true,shiftKey:true},
+  ]) {
+    const event=f.owner.emit("keydown",extra);
+    assert.equal(event.defaultPrevented,false);
+    assert.equal(f.dialog.open,false);
+  }
+  const valid=f.owner.emit("keydown",{key:"k",ctrlKey:true});
+  assert.equal(valid.defaultPrevented,true);
+  assert.equal(f.dialog.open,true);
+  api.close();
+  api.dispose();
+});
