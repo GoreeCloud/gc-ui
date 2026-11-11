@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -94,3 +94,19 @@ initCommandPalette(document.querySelector("#command-dialog"), {
     }
   }
 });
+
+
+// Native popover with local, authorized demonstration actions only.
+initActionMenu(document.querySelector("#demo-action-trigger"),
+  document.querySelector("#demo-action-menu"), {
+    onSelect(item) {
+      const action = item.getAttribute("data-gc-local-action");
+      if (action === "preview") {
+        toast("The native action menu opened this local notification.", { region, kind:"info" });
+      } else if (action === "system") {
+        appearance.value = "auto";
+        updateTheme();
+        toast("Lab appearance now follows the operating system.", { region, kind:"positive" });
+      }
+    }
+  });

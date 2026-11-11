@@ -68,3 +68,7 @@ GoreeCloud UI includes an original 42-glyph family. The canonical path shapes re
 ## Command palette
 
 The new `initCommandPalette()` adds a searchable, keyboard-operated action launcher to a native `<dialog>`. It requires an explicit `onSelect` callback so every command has an actual consumer action. Open with a labeled button or the optional Ctrl/⌘K shortcut. Filtering compares normalized text, without injected HTML, regex evaluation or network access. An asynchronous action keeps the palette open until its callback resolves; a rejected action remains open and presents an error message. See the component documentation and live lab.
+
+## Native popover action menu
+
+`initActionMenu()` adds a keyboard-operated, edge-aware menu to a native HTML popover. It provides outside-dismissal, focus return, disabled-item handling, an opt-in asynchronous action callback and a privacy-preserving error state, without external dependencies or network activity. See `docs/COMPONENTS.md` and the interactive lab. No native OS menu SDK is implied.

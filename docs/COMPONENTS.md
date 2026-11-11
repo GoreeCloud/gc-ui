@@ -82,3 +82,11 @@ Consumer apps must independently verify authorization through GoreeCloud Identit
 ### Tablist keyboard and disabled-state contract
 
 `initTabs()` supports horizontal arrow navigation (RTL-aware Left/Right), vertical arrow navigation (Up/Down when `aria-orientation="vertical"`), and Home/End. Native disabled, `aria-disabled="true"` and hidden tabs are excluded from navigation and selection; a tablist without any enabled tab is invalid. The controller keeps `aria-selected`, sequential tab focus and panel visibility synchronized and exposes a cleanup callback. Use unique `aria-controls`/tabpanel IDs and supply semantic labels for the enclosing tablist. This does not substitute for human screen-reader testing.
+
+## Native popover action menus
+
+Use a labeled trigger button and `<div class="gc-menu" popover="auto" role="menu" aria-label="...">` containing real `<button class="gc-menu__item" role="menuitem" type="button">` choices. Initialize with `initActionMenu(trigger, menu, { onSelect })` from `@goreecloud/ui/menu`. The required callback is responsible for action authorization and actual success; menu buttons must not directly mutate services without approved controls. The API returns `open(last?)`, `close(returnFocus?)`, and `dispose()`.
+
+Native popover supplies the top layer, click-outside dismissal, and Escape fallback. Arrow Up/Down opens the first/last enabled item from the trigger and navigates choices; Home/End jump to boundaries. Disabled and aria-disabled entries are skipped. Buttons use keyboard-native activation. Programmatic completion restores focus to the trigger; outside click does not steal focus. A rejected asynchronous callback leaves the menu open with a generic error. Positioning adapts to viewport edges, and scrolling dismisses floating controls. Always provide a visible descriptive label or accessible name, and use menus for **actions** rather than ordinary site navigation links. No menu item may be treated as an authorization boundary.
+
+Color, elevation, responsive width, reduced-contrast and forced-colors styling are handled by semantic `gc-menu` classes. Browser popover support and assistive-technology behavior must be verified on supported devices; non-supporting browsers should be offered a native alternative rather than a fabricated inert menu.

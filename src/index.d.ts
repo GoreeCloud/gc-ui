@@ -31,3 +31,7 @@ export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
   shortcut?: boolean;
   onSelect: (button: HTMLButtonElement) => void | Promise<void>;
 }): { open: () => void; close: () => void; refresh: () => void; dispose: () => void };
+
+export declare function initActionMenu(trigger: HTMLElement, menu: HTMLElement, options: {
+  onSelect: (item: HTMLButtonElement) => void | Promise<void>;
+}): { open: (last?: boolean) => void; close: (returnFocus?: boolean) => void; dispose: () => void };
