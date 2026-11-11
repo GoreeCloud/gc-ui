@@ -35,7 +35,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   // capability. Keep bindings and focus in sync with the current native DOM.
   let entries = [];
   const boundButtons = new Set();
-  let destroyed = false, inFlight = false, restoreFocus = null;
+  let destroyed = false, pendingSession = null, restoreFocus = null;
   let composing = false;
   // A pending action must not close or announce errors in a later dialog
   // session after Escape, native close, or a deliberate reopen.
@@ -87,6 +87,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     refresh();
     dialog.showModal();
     session += 1;
+    // Async work from a dismissed session cannot make this new dialog busy.
+    dialog.removeAttribute("aria-busy");
     input.focus();
   };
   const close = () => {
@@ -95,13 +97,17 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     session += 1; // Invalidate pending actions before queued close events.
   };
   const activate = async button => {
-    if (destroyed || inFlight || !dialog.open || !selectable().includes(button)) return;
-    inFlight = true;
+    // An operation must block repeat activation only in the session that
+    // started it. Reopening may safely launch a different action even while
+    // a prior callback has yet to settle.
+    if (destroyed || !dialog.open || pendingSession === session ||
+        !selectable().includes(button)) return;
     const actionSession = session;
+    pendingSession = actionSession;
     try {
       const operation = onSelect(button);
       if (operation && typeof operation.then === "function") {
-        dialog.setAttribute("aria-busy", "true");
+        if (session === actionSession) dialog.setAttribute("aria-busy", "true");
         await operation;
       }
       if (!destroyed && dialog.open && session === actionSession) close();
@@ -110,8 +116,11 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
         status.textContent = "Action could not be completed. Try again.";
       }
     } finally {
-      inFlight = false;
-      dialog.removeAttribute("aria-busy");
+      // Never clear a newer session's busy state or pending action.
+      if (pendingSession === actionSession) {
+        pendingSession = null;
+        dialog.removeAttribute("aria-busy");
+      }
     }
   };
   // IME composition must not be interpreted as an Enter-to-execute or
@@ -164,6 +173,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     // a dialog that has already been reopened.
     if (dialog.open) return;
     session += 1;
+    dialog.removeAttribute("aria-busy");
     const previous = restoreFocus;
     restoreFocus = null;
     // Do not steal focus from a person who has moved to another control
