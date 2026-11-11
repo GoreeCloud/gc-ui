@@ -14,7 +14,7 @@ const frame=document.querySelector("#lab");
 frame.addEventListener("load",()=>{
  try {
    const win=frame.contentWindow,doc=frame.contentDocument;
-   const width=win.innerWidth;
+   const width=doc.documentElement.clientWidth;
    const documentWidth=Math.max(doc.documentElement.scrollWidth,doc.body.scrollWidth);
    const controls=doc.querySelector(".gc-lab-toolbar-controls");
    const selects=[...doc.querySelectorAll(".gc-lab-toolbar-controls select")];

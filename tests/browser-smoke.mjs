@@ -157,7 +157,7 @@ async function startBrowser() {
     };
     const waitFor = async (name, url) => {
       for (let n=0; n<80; n++) {
-        const result=JSON.parse(await evaluate("JSON.stringify({url:location.href,state:document.documentElement.dataset['"+name+"'],viewport:innerWidth,diagnostics:document.querySelector('output[id$=\"result\"],output[id$=\"status\"]')?.textContent||''})"));
+        const result=JSON.parse(await evaluate("JSON.stringify({url:location.href,state:document.documentElement.dataset['"+name+"'],viewport:visualViewport?.width??innerWidth,layoutWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,diagnostics:document.querySelector('output[id$=\"result\"],output[id$=\"status\"]')?.textContent||''})"));
         if (result.url===url && (result.state==="pass" || result.state==="fail")) return result;
         await delay(100);
       }
@@ -182,6 +182,18 @@ const base = "http://127.0.0.1:" + server.address().port;
 let browser;
 try {
   browser = await startBrowser();
+  for (const [width,height] of [[320,760],[390,844],[600,860],[900,900],[1440,900]]) {
+    await browser.setViewport(width,height);
+    const url=base+"/tests/layout-smoke.html";
+    await browser.navigate(url);
+    const result=await browser.waitFor("gcLayout",url);
+    if (result.viewport!==width) {
+      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>document.documentElement.clientWidth+0.5).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
+      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
+    }
+    assert.equal(result.state,"pass","Layout overflow at "+width+"px: "+result.diagnostics);
+    console.log("Chromium full lab @ "+width+"px: no horizontal overflow");
+  }
   for (const [mode, accent, width, height] of [
     ["light","iris",1440,900], ["dark","moss",390,844]
   ]) {
@@ -190,25 +202,14 @@ try {
     await browser.navigate(url);
     const result=await browser.waitFor("gcSmoke",url);
     if (result.viewport!==width) {
-      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
+      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>document.documentElement.clientWidth+0.5).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
       throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
     }
     assert.equal(result.state,"pass","Interaction failure "+mode+"/"+accent+": "+result.diagnostics);
+    assert.ok(result.scrollWidth<=result.viewport+1,"Interaction fixture horizontal overflow at "+width+"px: "+JSON.stringify({scrollWidth:result.scrollWidth,viewport:result.viewport}));
     const checks=Number(await browser.evaluate("document.documentElement.dataset.gcCheckCount"));
     assert.ok(checks>=12,"Not enough interaction tests: "+checks);
     console.log("Chromium "+mode+"/"+accent+" @ "+width+"px: "+checks+" live DOM checks passed");
-  }
-  for (const [width,height] of [[320,760],[390,844],[600,860],[900,900],[1440,900]]) {
-    await browser.setViewport(width,height);
-    const url=base+"/tests/layout-smoke.html";
-    await browser.navigate(url);
-    const result=await browser.waitFor("gcLayout",url);
-    if (result.viewport!==width) {
-      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
-      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
-    }
-    assert.equal(result.state,"pass","Layout overflow at "+width+"px: "+result.diagnostics);
-    console.log("Chromium full lab @ "+width+"px: no horizontal overflow");
   }
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
