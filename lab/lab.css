@@ -1,5 +1,5 @@
 /* Gallery styling is showcase-only; real consumers use the documented semantic classes. */
-.gc-lab-shell { display:grid; grid-template-columns:245px minmax(0,1fr); }
+.gc-lab-shell { min-inline-size:0; }
 .gc-lab-rail { position:sticky; inset-block-start:0; block-size:100dvh; border-inline-end:1px solid var(--gc-outline-soft); padding:24px 12px; z-index:10; }
 .gc-lab-logo { display:flex; align-items:center; gap:12px; padding:12px 16px; white-space:nowrap; letter-spacing:-.025em; font-size:17px; }
 .gc-lab-logo strong span { color:var(--gc-brand); }
@@ -54,7 +54,7 @@
 .gc-lab-icon-tile span { font-size:11px; color:var(--gc-text-soft); overflow-wrap:anywhere; text-align:center; }
 .gc-lab-footer { display:flex; flex-wrap:wrap; justify-content:space-between; gap:16px; padding-block:72px 20px; color:var(--gc-text-soft); font-size:12px; }
 @media(max-width:1200px) { .gc-lab-hero { grid-template-columns:minmax(0,1fr); }.gc-lab-scene { max-inline-size:580px; inline-size:100%; justify-self:center; }.gc-lab-section-head { align-items:start; flex-direction:column; } }
-@media(max-width:900px) { .gc-lab-shell { grid-template-columns:1fr; }.gc-lab-rail { display:none; }.gc-lab-toolbar { padding-inline:18px; flex-wrap:wrap; }.gc-lab-hero { padding-block:24px 36px; }.gc-lab-contrast { margin-inline-start:0; } }
+@media(max-width:900px) { .gc-lab-toolbar { padding-inline:18px; flex-wrap:wrap; }.gc-lab-hero { padding-block:24px 36px; }.gc-lab-contrast { margin-inline-start:0; } }
 @media(max-width:600px) { .gc-lab-hero h1 { font-size:38px; }.gc-lab-hero { gap:0; }.gc-lab-scene { min-block-size:340px; }.gc-lab-glass { inset-inline-end:0; }.gc-lab-section { padding-block:44px 10px; }.gc-lab-breadcrumb { inline-size:100%; }.gc-lab-toolbar-controls { gap:8px; } }
 @media(prefers-reduced-motion:reduce) { .gc-lab-floating,.gc-lab-glass { transform:none; } }
 @media(prefers-contrast:more),(forced-colors:active) { .gc-lab-highlight { background:none; color:var(--gc-brand); }.gc-lab-orb { opacity:.15; }.gc-lab-glass { background:var(--gc-lens-solid); } }
@@ -290,4 +290,14 @@
     word-break:normal;
     text-wrap:wrap;
   }
+}
+
+/* Tablet and desktop use the adaptive rail; phone keeps the floating dock. */
+.gc-lab-rail .gc-navigation-rail__toggle { margin:var(--gc-space-2) auto 0; }
+.gc-lab-rail[data-gc-collapsed="true"] { padding-inline:var(--gc-space-1); }
+.gc-lab-rail[data-gc-collapsed="true"] .gc-lab-logo { justify-content:center; padding:var(--gc-space-2) 0; }
+.gc-lab-rail[data-gc-collapsed="true"] .gc-navigation-rail__links { padding-inline:var(--gc-space-1); }
+@media(min-width:601px) {
+  #demo-bottom-nav { display:none; }
+  .gc-app #main.gc-bottom-nav-content { padding-block-end:var(--gc-space-8); }
 }
