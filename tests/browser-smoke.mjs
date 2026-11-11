@@ -268,10 +268,16 @@ try {
     assert.equal(after.collapsed,String(!expectCollapsed),"Toggle did not change rail state");
     assert.equal(after.expanded,String(expectCollapsed),"Toggle aria-expanded did not update");
     assert.equal(after.focus,true,"Rail toggle should retain keyboard focus");
-    assert.ok(after.scroll<=after.viewport+1,"Toggled rail caused horizontal overflow");
-    assert.ok(expectCollapsed?after.width>200:after.width<100,
-      "Toggled rail failed to resize: "+JSON.stringify(after));
-    await delay(80);
+    // Grid width animates when motion is allowed; measure only after it settles.
+    await delay(300);
+    const settled=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail");'+
+      'return JSON.stringify({width:rail.getBoundingClientRect().width,'+
+      'scroll:document.documentElement.scrollWidth,'+
+      'viewport:document.documentElement.clientWidth});})()'));
+    assert.ok(settled.scroll<=settled.viewport+1,"Toggled rail caused horizontal overflow");
+    assert.ok(expectCollapsed?settled.width>200:settled.width<100,
+      "Toggled rail failed to resize: "+JSON.stringify({after,settled}));
     const selected=await browser.evaluate('document.querySelector(\'.gc-navigation-rail__links a[href="#forms"]\').getAttribute("aria-current")');
     assert.equal(selected,"page","Native link destination did not update active state");
     await browser.screenshot(join(directory,
