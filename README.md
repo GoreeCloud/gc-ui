@@ -88,3 +88,7 @@ Run `npm run verify:package` to assemble a real local tarball and install only t
 ## Searchable combobox
 
 The `@goreecloud/ui/combobox` module adds an editable, accessible local suggestion picker with native input focus, arrow-key active-descendant navigation, safe text filtering, disabled choices and optional asynchronous selection callbacks. It does not fetch remote suggestions or persist values. See `docs/COMPONENTS.md` and the design lab.
+
+## Mandatory premium design standard
+
+GoreeCloud UI must be visually distinctive, premium and modern in every supported application context. The shared implementation includes semantic signature composition (`gc-premium-shell`, `gc-showcase`, `gc-feature-grid`), polished controls and purposeful Canvas/Surface/Lens depth. See [Visual quality contract](docs/VISUAL_QUALITY.md). CI rendering does not replace human design acceptance.

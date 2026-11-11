@@ -87,6 +87,22 @@
   </div>
   <p id="test-combobox-status" role="status"></p>
 
+  <section id="premium-fixture" class="gc-showcase" aria-label="Premium composition test">
+    <div class="gc-showcase__content">
+      <p class="gc-overline">Signature composition</p>
+      <h2 class="gc-showcase__title">Purposeful depth.</h2>
+      <p class="gc-showcase__lead">A readable example on a solid surface.</p>
+      <div class="gc-showcase__actions"><a class="gc-button" href="#premium-fixture">Explore</a></div>
+    </div>
+    <div class="gc-showcase__visual" aria-hidden="true">
+      <div class="gc-showcase__orbit"></div>
+      <div class="gc-showcase__floating"><strong>Polished</strong></div>
+    </div>
+  </section>
+  <article class="gc-feature-tile" id="premium-tile">
+    <span class="gc-feature-tile__icon" aria-hidden="true">✦</span>
+    <h3>Design quality</h3><p>Original and adaptable.</p>
+  </article>
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
@@ -220,6 +236,23 @@ try{
   verify(comboInput.value==="Moss" && selectedAccent==="moss","combobox commits selected option");
   verify(comboInput.getAttribute("aria-expanded")==="false" && comboList.hidden,"combobox closes on commit");
   comboCtrl.dispose();
+  const signature=document.querySelector("#premium-fixture");
+  const signatureStyle=getComputedStyle(signature);
+  const featureStyle=getComputedStyle(document.querySelector("#premium-tile"));
+  verify(getComputedStyle(signature,"::before").backgroundImage.includes("gradient") && signatureStyle.backgroundColor!=="rgba(0, 0, 0, 0)",
+    "premium signature uses semantic layered background");
+  const anchorButton=signature.querySelector("a.gc-button");
+  const colorProbe=document.createElement("span");
+  colorProbe.style.color="var(--gc-on-brand)";
+  document.body.append(colorProbe);
+  const expectedAnchorColor=getComputedStyle(colorProbe).color;
+  colorProbe.remove();
+  verify(getComputedStyle(anchorButton).color===expectedAnchorColor,
+    "anchor action respects branded foreground contrast");
+  verify(parseFloat(signatureStyle.borderTopLeftRadius)>=18 && signatureStyle.boxShadow!=="none",
+    "premium surface has refined geometry and elevation");
+  verify(parseFloat(featureStyle.borderTopLeftRadius)>=18 && featureStyle.backgroundColor!=="rgba(0, 0, 0, 0)",
+    "premium feature tile is readable on an opaque surface");
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();

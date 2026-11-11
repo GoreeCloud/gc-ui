@@ -103,3 +103,72 @@
   }
   .gc-lab-hero-copy > .gc-cluster:last-child > .gc-button .gc-kbd { flex-shrink:0; }
 }
+
+
+/* Gallery integration uses core GC UI signature components, not standalone mockup CSS. */
+.gc-lab-rail {
+  background:linear-gradient(170deg,var(--gc-surface),var(--gc-canvas));
+}
+.gc-lab-toolbar {
+  background:var(--gc-lens-fill);
+  backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.08);
+  -webkit-backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.08);
+}
+.gc-lab-hero {
+  position:relative;
+  margin-block-start:var(--gc-space-4);
+  margin-block-end:var(--gc-space-6);
+  padding:clamp(24px,4.5vw,64px);
+  border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-xl);
+  background:var(--gc-surface);
+  background-image:
+    radial-gradient(ellipse 52% 65% at 95% 14%,var(--gc-brand-container),transparent 82%),
+    linear-gradient(125deg,var(--gc-surface),var(--gc-canvas));
+  box-shadow:var(--gc-shadow-2);
+  overflow:clip;
+  isolation:isolate;
+}
+.gc-lab-hero::after {
+  content:"";
+  pointer-events:none;
+  position:absolute;
+  inset:0 12% auto;
+  block-size:1px;
+  background:linear-gradient(90deg,transparent,var(--gc-outline-soft),transparent);
+}
+.gc-lab-hero h1 { letter-spacing:-.055em; text-wrap:balance; }
+.gc-lab-small-icon { box-shadow:inset 0 0 0 1px var(--gc-outline-soft); }
+.gc-lab-icon-tile {
+  background:linear-gradient(155deg,var(--gc-surface),var(--gc-surface-tonal));
+  transition:transform var(--gc-motion-base) var(--gc-ease),
+    box-shadow var(--gc-motion-base) var(--gc-ease);
+}
+@media(hover:hover) and (prefers-reduced-motion:no-preference) {
+  .gc-lab-icon-tile:hover { transform:translateY(-3px); box-shadow:var(--gc-shadow-2); }
+}
+@media(max-width:600px) {
+  .gc-lab-hero { border-radius:var(--gc-radius-lg); padding:var(--gc-space-6); }
+  .gc-lab-hero h1 { font-size:clamp(2.2rem,9vw,2.8rem); }
+}
+@media(prefers-reduced-transparency:reduce), (prefers-contrast:more) {
+  .gc-lab-toolbar { background:var(--gc-lens-solid); backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .gc-lab-hero { background-image:none; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .gc-lab-icon-tile { transition:none; }
+  .gc-lab-icon-tile:hover { transform:none; }
+}
+@media(forced-colors:active) {
+  .gc-lab-rail,.gc-lab-hero { background:none; border:1px solid CanvasText; box-shadow:none; }
+}
+
+
+/* Enlarged / translated headings can be wider than narrow mobile viewports. */
+.gc-lab-section-head,
+.gc-lab-section-head > div,
+.gc-lab-section-head :is(h1,h2,h3,p) { min-inline-size:0; max-inline-size:100%; }
+.gc-lab-section-head :is(h1,h2,h3) {
+  overflow-wrap:anywhere;
+  text-wrap:balance;
+}
