@@ -349,6 +349,30 @@ try {
     "Chromium stale command callback dismissed a newer native dialog session");
   console.log("Chromium native command palette: stale async completion cannot dismiss a new session");
 
+  // Native HTMLTableElement dynamic row reconciliation (no service data).
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const dynamicTable=JSON.parse(await browser.evaluate(
+    '(async()=>{const {initSortableTable}=await import("/src/table.js");'+
+    'const table=document.createElement("table"),header=document.createElement("thead"),'+
+    'body=document.createElement("tbody"),th=document.createElement("th"),'+
+    'button=document.createElement("button");button.dataset.gcSort="text";'+
+    'th.append(button);const heading=document.createElement("tr");heading.append(th);'+
+    'header.append(heading);table.append(header,body);document.body.append(table);'+
+    'const add=label=>{const row=document.createElement("tr"),cell=document.createElement("td");'+
+    'cell.textContent=label;row.append(cell);body.append(row);return row};'+
+    'const original=add("B"),firstA=add("A");const ctl=initSortableTable(table);'+
+    'ctl.sortBy(0);add("C");add("A");'+
+    'const count=ctl.refresh(),labels=()=>[...body.rows].map(r=>r.cells[0].textContent);'+
+    'const sorted=labels(),current=th.getAttribute("aria-sort");'+
+    'ctl.reset();const reset=labels();original.remove();'+
+    'ctl.refresh();const removed=labels();ctl.dispose();table.remove();'+
+    'return JSON.stringify({count,sorted,current,reset,removed});})()'));
+  assert.deepEqual(dynamicTable,{count:4,sorted:["A","A","B","C"],
+    current:"ascending",reset:["B","A","C","A"],removed:["A","C","A"]},
+    "Chromium native sortable-table row refresh or reset regressed");
+  console.log("Chromium native sortable table: dynamic insertion, sort and removal pass");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 

@@ -1,6 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { initSortableTable } from "../src/table.js";
+import { readFileSync } from "node:fs";
 
 function el(attrs={}) {
   const handlers=new Map();
@@ -85,4 +86,65 @@ test("malformed markup and unsupported sort requests fail closed",()=>{
   assert.throws(()=>api.sortBy(99),RangeError);
   assert.throws(()=>api.sortBy(0,"neither"),RangeError);
   api.dispose();
+});
+
+
+test("refresh preserves active sort across inserted and removed data rows",()=>{
+  const f=fixture([["Delta","4","2026-04-04"],["Alpha","1","2026-01-01"],["Charlie","3","2026-03-03"]]);
+  const observed=[];
+  const api=initSortableTable(f.table,{onSort:state=>observed.push(state)});
+  api.sortBy(0);
+  const beta={cells:[...["Beta","2","2026-02-02"]].map(textContent=>({textContent,getAttribute:()=>null}))};
+  f.body.rows.push(beta);
+  f.body.rows=f.body.rows.filter(row=>row!==f.rows[0]); // External removal.
+  assert.equal(api.refresh(),3);
+  assert.deepEqual(f.body.rows,[f.rows[1],beta,f.rows[2]]);
+  assert.equal(f.headers[0].getAttribute("aria-sort"),"ascending");
+  assert.equal(observed.at(-1).rows.length,3);
+  api.reset();
+  assert.deepEqual(f.body.rows,[f.rows[1],f.rows[2],beta],
+    "Reset must retain original survivor ordering plus new insertion order");
+  assert.equal(observed.at(-1).direction,"none");
+  assert.equal(api.refresh(),3);
+  api.dispose();
+  assert.throws(()=>api.refresh(),/disposed/);
+});
+
+test("sortBy/reset automatically reconcile rows inserted after initialization",()=>{
+  const f=fixture([["B","2","2026-01-02"],["A","1","2026-01-01"]]);
+  const inserted={cells:[...["A","1","2026-01-03"]].map(textContent=>({textContent,getAttribute:()=>null}))};
+  const api=initSortableTable(f.table);
+  f.body.rows.push(inserted);
+  api.sortBy(0);
+  assert.deepEqual(f.body.rows,[f.rows[1],inserted,f.rows[0]],
+    "New equal-valued rows must retain deterministic insertion-order ties");
+  api.reset();
+  assert.deepEqual(f.body.rows,[f.rows[0],f.rows[1],inserted]);
+  f.body.rows.splice(1,1);
+  api.reset();
+  assert.deepEqual(f.body.rows,[f.rows[0],inserted],"Removed rows must not reappear");
+  api.dispose();
+});
+
+test("refresh preserves descending date sort and reports zero rows safely",()=>{
+  const f=fixture([["Later","4","2026-04-01"],["Earlier","3","2026-03-01"]]);
+  const api=initSortableTable(f.table);
+  api.sortBy(2,"descending");
+  const newRow={cells:[...["Newest","5","2026-05-01"]].map(textContent=>({textContent,getAttribute:()=>null}))};
+  f.body.rows.unshift(newRow);
+  assert.equal(api.refresh(),3);
+  assert.deepEqual(f.body.rows,[newRow,f.rows[0],f.rows[1]]);
+  f.body.rows=[];
+  assert.equal(api.refresh(),0);
+  assert.deepEqual(f.body.rows,[]);
+  api.reset();
+  assert.deepEqual(f.body.rows,[]);
+  api.dispose();
+});
+
+test("public TypeScript declaration includes the dynamic table refresh return count",()=>{
+  const declaration=readFileSync(new URL("../src/index.d.ts",import.meta.url),"utf8");
+  const signature=declaration.split("export declare function initSortableTable")[1]
+    ?.split("export declare function initTreeView")[0];
+  assert.match(signature,/refresh:\s*\(\)\s*=>\s*number/);
 });
