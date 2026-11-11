@@ -66,3 +66,7 @@ The JSON manifest follows a GC UI alpha-specific structure rather than claiming 
 ## Premium visual quality is mandatory
 
 GoreeCloud UI must remain distinct, polished and modern across supported apps, dashboards and future operating systems. Generic unfinished defaults are unacceptable. Premium means original expressive hierarchy, balanced space, refined controls and purposeful depth—not indiscriminate blur or decoration. Use semantic tokens and three material roles, maintain opaque legibility and accessible modes, and require real visual acceptance. See [Premium visual quality](VISUAL_QUALITY.md).
+
+## Rounded application windows (founder requirement)
+
+Every GoreeCloud application window, including compact, modal and maximized frames, has rounded corners. Web gc-window and overlay primitives use the canonical 36px XL or compact 26px LG radii. See WINDOWS_AND_NAVIGATION.md. Native OS chrome requires independently verified platform adapters; no native implementation is claimed.

@@ -646,3 +646,59 @@
 .gc-app a.gc-button--outline,
 .gc-app a.gc-button--quiet { color:var(--gc-text); }
 .gc-app a.gc-button--danger { color:var(--gc-on-negative); }
+
+
+/* Mandatory four-corner GoreeCloud application window geometry. */
+.gc-window {
+  position:relative; display:flex; flex-direction:column; min-inline-size:0;
+  border:1px solid var(--gc-outline-soft); border-radius:var(--gc-radius-xl);
+  background:var(--gc-surface); color:var(--gc-text);
+  box-shadow:var(--gc-shadow-3); overflow:clip; isolation:isolate;
+}
+.gc-window--floating { box-shadow:var(--gc-shadow-4); }
+.gc-window--compact { border-radius:var(--gc-radius-lg); }
+.gc-window--maximized { border-radius:var(--gc-radius-xl); }
+.gc-window__titlebar {
+  display:flex; align-items:center; gap:var(--gc-space-3); min-block-size:64px;
+  padding:var(--gc-space-3) var(--gc-space-5); min-inline-size:0;
+  background:var(--gc-surface-tonal); border-block-end:1px solid var(--gc-outline-soft);
+}
+.gc-window__identity { display:flex; align-items:center; gap:var(--gc-space-3); min-inline-size:0; flex:1; font-weight:750; }
+.gc-window__identity > :last-child { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.gc-window__controls { display:flex; align-items:center; gap:var(--gc-space-1); flex-shrink:0; }
+.gc-window__controls > button {
+  display:grid; place-items:center; inline-size:var(--gc-touch-min); block-size:var(--gc-touch-min);
+  border:1px solid transparent; border-radius:var(--gc-radius-sm);
+  background:transparent; color:var(--gc-text);
+}
+.gc-window__controls > button:hover:not(:disabled) {
+  background:var(--gc-brand-container); color:var(--gc-on-brand-container);
+}
+.gc-window__body { flex:1; min-block-size:0; min-inline-size:0; padding:var(--gc-space-6); }
+.gc-window__statusbar {
+  display:flex; gap:var(--gc-space-2); flex-wrap:wrap; padding:var(--gc-space-3) var(--gc-space-5);
+  border-block-start:1px solid var(--gc-outline-soft); background:var(--gc-surface-tonal);
+  color:var(--gc-text-soft); font-size:var(--gc-type-support);
+}
+/* The floating side drawer is inset, so all four rounded corners remain visible. */
+.gc-app .gc-dialog,.gc-app .gc-command,.gc-app .gc-drawer { border-radius:var(--gc-radius-xl); }
+.gc-drawer {
+  inset-block:var(--gc-space-3); inset-inline-end:var(--gc-space-3);
+  block-size:calc(100dvh - 2 * var(--gc-space-3));
+  max-block-size:calc(100dvh - 2 * var(--gc-space-3));
+  inline-size:min(440px,calc(100vw - 2 * var(--gc-space-3)));
+  border:1px solid var(--gc-outline-soft);
+}
+[dir="rtl"] .gc-drawer { border-radius:var(--gc-radius-xl); }
+@media(max-width:600px) {
+  .gc-window__titlebar,.gc-window__statusbar { padding-inline:var(--gc-space-3); }
+  .gc-window__body { padding:var(--gc-space-4); }
+}
+@supports not (overflow:clip) { .gc-window { overflow:hidden; } }
+@media(prefers-contrast:more), (prefers-reduced-transparency:reduce) {
+  .gc-window { background:var(--gc-surface); }
+}
+@media(forced-colors:active) {
+  .gc-window,.gc-app .gc-drawer,.gc-app .gc-dialog,.gc-app .gc-command { border:1px solid CanvasText; box-shadow:none; }
+  .gc-window__titlebar,.gc-window__statusbar { border-color:CanvasText; }
+}
