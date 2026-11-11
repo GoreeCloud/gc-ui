@@ -337,8 +337,8 @@ try {
       'const surface=section.querySelector(".gc-showcase"),tile=section.querySelector(".gc-feature-tile");const action=section.querySelector(".gc-showcase__actions a.gc-button");const probe=document.createElement("span");probe.style.color="var(--gc-on-brand)";section.append(probe);const expectedAction=getComputedStyle(probe).color;probe.remove();'+
       'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
       'gradient:getComputedStyle(surface,"::before").backgroundImage.includes("gradient"),'+
-      'radius:getComputedStyle(surface).borderTopLeftRadius,
-      'anchorColor:getComputedStyle(action).color,expectedAction:expectedAction,'+'+
+      'radius:getComputedStyle(surface).borderTopLeftRadius,'+
+      'anchorColor:getComputedStyle(action).color,expectedAction:expectedAction,'+
       'tile:getComputedStyle(tile).backgroundColor});})()'));
     assert.ok(result.scroll<=result.width+1,"Premium lab page overflow: "+JSON.stringify(result));
     assert.equal(result.gradient,true,"Signature surface gradient missing");
