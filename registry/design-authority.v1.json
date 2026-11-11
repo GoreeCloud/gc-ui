@@ -1,0 +1,66 @@
+{
+  "schemaVersion": 1,
+  "authority": "GoreeCloud UI",
+  "abbreviation": "GC UI",
+  "status": "alpha-implementation",
+  "mandatoryFor": [
+    "GoreeCloud-controlled web interfaces",
+    "GoreeCloud apps",
+    "GoreeCloud dashboards",
+    "GoreeCloud OS interfaces where applicable"
+  ],
+  "designPhilosophy": "Clear by default. Consistent by nature. Fluid by design.",
+  "designPromise": "Calm information. Expressive personality. Purposeful depth.",
+  "implementation": {
+    "tokens": "tokens/gc.tokens.json",
+    "css": "src/tokens.css",
+    "components": "src/components.css",
+    "componentDocs": "docs/COMPONENTS.md",
+    "designDocs": "docs/DESIGN_LANGUAGE.md"
+  },
+  "materials": [
+    "Cloud Canvas",
+    "Cloud Surface",
+    "Cloud Lens"
+  ],
+  "accentFamilies": [
+    "iris",
+    "lagoon",
+    "ember",
+    "moss"
+  ],
+  "appearances": [
+    "light",
+    "dark",
+    "auto"
+  ],
+  "contrastModes": [
+    "normal",
+    "more"
+  ],
+  "requiredReview": [
+    "token use",
+    "information hierarchy",
+    "premium visual quality",
+    "responsive behavior",
+    "keyboard/accessibility",
+    "loading and failure states",
+    "contrast",
+    "motion/transparency fallbacks",
+    "real platform evidence"
+  ],
+  "tokenValuesStatus": "provisional-alpha-candidates",
+  "nativeSdkStatus": "not-implemented",
+  "consumerMigrationStatus": "not-audited",
+  "designInfluences": [
+    "ergonomic information hierarchy",
+    "adaptive semantic color",
+    "purposeful translucent depth"
+  ],
+  "privacy": {
+    "telemetry": "none",
+    "persistence": "opt-in to consumer"
+  },
+  "license": "MIT",
+  "upstreamGovernance": "GoreeCloud/Projects/GoreeCloud UI/DESIGN-LANGUAGE-AND-100-UI-UX-PRINCIPLES.md"
+}

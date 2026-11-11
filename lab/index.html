@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" data-gc-theme="auto" data-gc-accent="iris">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>GoreeCloud UI — Design Lab</title>
+  <link rel="stylesheet" href="../src/tokens.css">
+  <link rel="stylesheet" href="../src/components.css">
+  <link rel="stylesheet" href="./lab.css">
+  <script type="module" src="./app.js"></script>
+</head>
+<body class="gc-app">
+<a class="gc-link-skip" href="#main">Skip to content</a>
+<div class="gc-lab-shell">
+  <aside class="gc-lab-rail gc-surface" aria-label="Design lab navigation">
+    <div class="gc-lab-logo"><span class="gc-lab-mark" aria-hidden="true">✦</span><strong>GoreeCloud <span>UI</span></strong></div>
+    <p class="gc-support gc-lab-caption">DESIGN SYSTEM / ALPHA</p>
+    <nav class="gc-nav" aria-label="Sections">
+      <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon> Overview</a>
+      <a href="#foundations"><gc-icon name="sparkle"></gc-icon> Foundations</a>
+      <a href="#components"><gc-icon name="grid"></gc-icon> Components</a>
+      <a href="#forms"><gc-icon name="edit"></gc-icon> Forms</a>
+      <a href="#iconography"><gc-icon name="shield"></gc-icon> Iconography</a>
+    </nav>
+    <div class="gc-lab-rail-note gc-card gc-card--tonal">
+      <span class="gc-badge gc-badge--brand">0.1.0 alpha</span>
+      <p class="gc-support" style="margin:12px 0 0">Prototype palette. Native SDKs and consumer migrations are not shipped.</p>
+    </div>
+  </aside>
+  <div class="gc-lab-body">
+    <header class="gc-lab-toolbar gc-lens">
+      <div class="gc-lab-breadcrumb">GoreeCloud <span>/</span> <strong>Design Language</strong></div>
+      <div class="gc-lab-toolbar-controls">
+        <label class="gc-lab-compact-label" for="appearance">Appearance</label>
+        <select class="gc-select gc-lab-select" id="appearance" aria-label="Appearance">
+          <option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option>
+        </select>
+        <label class="gc-lab-compact-label" for="accent">Accent</label>
+        <select class="gc-select gc-lab-select" id="accent" aria-label="Accent color family">
+          <option value="iris">Iris</option><option value="lagoon">Lagoon</option><option value="ember">Ember</option><option value="moss">Moss</option>
+        </select>
+        <label class="gc-switch gc-lab-contrast"><input id="contrast" type="checkbox"><span>More contrast</span></label>
+      </div>
+    </header>
+    <main id="main" class="gc-container gc-lab-main">
+      <section id="overview" class="gc-lab-hero">
+        <div class="gc-lab-hero-copy">
+          <div class="gc-cluster"><span class="gc-badge gc-badge--brand">THE NEW INTERFACE LANGUAGE</span><span class="gc-support">Preview / 2026</span></div>
+          <h1 class="gc-display">Calm information.<br><span class="gc-lab-highlight">Expressive personality.</span><br>Purposeful depth.</h1>
+          <p class="gc-lab-lead">One thoughtful design language for everything GoreeCloud. Ergonomic where it matters. Adaptable by nature. Beautiful without getting in your way.</p>
+          <div class="gc-cluster">
+            <button class="gc-button gc-button--lg gc-button--round" type="button" id="open-dialog"><gc-icon name="sparkle"></gc-icon> Explore interaction</button>
+            <button class="gc-button gc-button--outline gc-button--lg gc-button--round" type="button" id="notify"><gc-icon name="bell"></gc-icon> Preview notification</button>
+          </div>
+        </div>
+        <div class="gc-lab-scene" aria-label="Preview of translucent and solid GoreeCloud UI panels">
+          <div class="gc-lab-orb gc-lab-orb--a"></div><div class="gc-lab-orb gc-lab-orb--b"></div>
+          <div class="gc-lab-floating gc-surface">
+            <div class="gc-cluster"><span class="gc-lab-small-icon"><gc-icon name="cloud"></gc-icon></span><strong>Cloud workspace</strong><span class="gc-spacer"></span><span class="gc-badge gc-badge--positive">Local</span></div>
+            <p class="gc-support">Everything in its place.</p>
+            <div class="gc-lab-stat"><span>All systems</span><strong>In harmony</strong></div>
+            <progress class="gc-progress" max="100" value="72" aria-label="Illustrative workspace progress"></progress>
+            <div class="gc-lab-palette-line"><span></span><span></span><span></span><span></span></div>
+          </div>
+          <div class="gc-lab-glass gc-lens"><gc-icon name="sparkle"></gc-icon><div><strong>Cloud Lens</strong><small>Clarity with depth</small></div><gc-icon name="check"></gc-icon></div>
+        </div>
+      </section>
+
+      <section id="foundations" class="gc-lab-section" aria-labelledby="foundations-heading">
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">01 / THE FOUNDATIONS</p><h2 class="gc-title" id="foundations-heading">A system with intention.</h2></div><p class="gc-support gc-readable">Semantic color, typography, shape, space and material that adapt without losing identity.</p></div>
+        <div class="gc-grid gc-lab-foundations">
+          <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">An accent is a preference, not a dark-mode switch.</p><div class="gc-lab-colors" aria-label="Four approved accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
+          <article class="gc-card"><p class="gc-lab-card-label">SHAPE & SPACING</p><h3 class="gc-heading">Soft, calm geometry</h3><p class="gc-support">4-pixel foundation. 12, 18, 26 and 36-pixel radii.</p><div class="gc-lab-shapes"><span></span><span></span><span></span><span></span></div></article>
+          <article class="gc-card"><p class="gc-lab-card-label">TYPOGRAPHY</p><h3 class="gc-heading">Readable at every size</h3><p class="gc-support">Familiar system font metrics, nuanced weight, strong information hierarchy.</p><div class="gc-lab-type-sample"><b>Aa</b><div><strong>Clarity first.</strong><small>Consistent by nature.</small></div></div></article>
+        </div>
+      </section>
+
+      <section id="components" class="gc-lab-section" aria-labelledby="components-heading">
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">02 / THE COMPONENTS</p><h2 class="gc-title" id="components-heading">Built to feel familiar.</h2></div><p class="gc-support">Responsive, native-semantic building blocks with visibly purposeful states.</p></div>
+        <div class="gc-grid gc-grid--two">
+          <article class="gc-card gc-stack"><h3 class="gc-heading">Buttons & actions</h3><div class="gc-cluster">
+            <button class="gc-button" type="button" data-demo-toast="Primary action activated">Primary</button>
+            <button class="gc-button gc-button--secondary" type="button" data-demo-toast="Secondary action activated">Secondary</button>
+            <button class="gc-button gc-button--outline" type="button" data-demo-toast="Outlined action activated">Outline</button>
+            <button class="gc-button gc-button--quiet" type="button" data-demo-toast="Quiet action activated">Quiet</button>
+            <button class="gc-button gc-button--danger" type="button" data-demo-toast="Destructive action preview; nothing was deleted">Destructive</button>
+            <button class="gc-button gc-button--icon" type="button" aria-label="Show icon action notification" data-demo-toast="Icon button activated"><gc-icon name="plus"></gc-icon></button>
+          </div><div class="gc-cluster"><span class="gc-badge gc-badge--brand">In progress</span><span class="gc-badge gc-badge--positive">Healthy</span><span class="gc-badge gc-badge--warning">Attention</span><span class="gc-badge gc-badge--negative">Error</span></div></article>
+          <article class="gc-card gc-stack"><h3 class="gc-heading">Tab navigation</h3>
+            <div class="gc-tabs" role="tablist" aria-label="Material layers">
+              <button id="tab-canvas" role="tab" type="button" aria-controls="panel-canvas" aria-selected="true">Canvas</button>
+              <button id="tab-surface" role="tab" type="button" aria-controls="panel-surface">Surface</button>
+              <button id="tab-lens" role="tab" type="button" aria-controls="panel-lens">Lens</button>
+            </div>
+            <section class="gc-tabpanel" id="panel-canvas" role="tabpanel" aria-labelledby="tab-canvas"><strong>Cloud Canvas</strong><p class="gc-support">Opaque, serene foundations that keep interfaces grounded.</p></section>
+            <section class="gc-tabpanel" id="panel-surface" role="tabpanel" aria-labelledby="tab-surface" hidden><strong>Cloud Surface</strong><p class="gc-support">Solid and tonal work surfaces for reliable readability.</p></section>
+            <section class="gc-tabpanel" id="panel-lens" role="tabpanel" aria-labelledby="tab-lens" hidden><strong>Cloud Lens</strong><p class="gc-support">Selective translucency for temporary, elevated interactions.</p></section>
+          </article>
+          <article class="gc-card gc-stack"><h3 class="gc-heading">Status & feedback</h3>
+            <div class="gc-alert" data-kind="info"><gc-icon name="info"></gc-icon><span>Changes here affect only the visual demo.</span></div>
+            <div class="gc-alert" data-kind="positive"><gc-icon name="check"></gc-icon><span>Theme tokens load entirely locally.</span></div>
+            <div class="gc-alert" data-kind="warning"><gc-icon name="alert"></gc-icon><span>Native platform adapters have not been released.</span></div>
+          </article>
+          <article class="gc-card gc-stack"><h3 class="gc-heading">Progress & loading</h3><label for="sample-progress">Illustrative progress: 72%</label>
+            <progress class="gc-progress" id="sample-progress" value="72" max="100">72%</progress>
+            <span class="gc-support">Example loading placeholder (not actual network activity)</span>
+            <div class="gc-skeleton" style="inline-size:75%" aria-hidden="true"></div><div class="gc-skeleton" style="inline-size:55%" aria-hidden="true"></div>
+          </article>
+        </div>
+      </section>
+
+      <section id="forms" class="gc-lab-section" aria-labelledby="forms-heading">
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INPUT & PREFERENCE</p><h2 class="gc-title" id="forms-heading">Controls that just work.</h2></div><p class="gc-support">Full labels, logical focus, native validation and understandable feedback.</p></div>
+        <div class="gc-grid gc-grid--two">
+          <form id="demo-form" class="gc-card gc-stack">
+            <h3 class="gc-heading">Sample local form</h3>
+            <div class="gc-field"><label for="demo-name">Workspace name</label><input class="gc-input" id="demo-name" name="workspace" placeholder="My workspace" maxlength="48" required aria-describedby="demo-name-hint"><small class="gc-field__hint" id="demo-name-hint">This is a local interaction demo. Nothing is saved.</small></div>
+            <div class="gc-field"><label for="demo-type">Display density</label><select class="gc-select" id="demo-type" name="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option></select></div>
+            <label class="gc-check"><input type="checkbox" name="confirm" required><span>I understand this is a local example.</span></label>
+            <button class="gc-button" type="submit">Validate sample form</button>
+          </form>
+          <article class="gc-card gc-stack"><h3 class="gc-heading">Settings & selection</h3>
+            <label class="gc-switch"><input type="checkbox" id="demo-switch" checked><span>Show motion examples</span></label>
+            <label class="gc-radio"><input type="radio" name="sample-choice" checked><span>Keep my preferred layout</span></label>
+            <label class="gc-radio"><input type="radio" name="sample-choice"><span>Use spacious layout</span></label>
+            <div class="gc-cluster"><button class="gc-chip" type="button" aria-pressed="true" data-chip="1">Privacy</button><button class="gc-chip" type="button" aria-pressed="false" data-chip="1">Sync</button><button class="gc-chip" type="button" aria-pressed="false" data-chip="1">Security</button></div>
+          </article>
+        </div>
+      </section>
+      <section id="iconography" class="gc-lab-section" aria-labelledby="icons-heading">
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">04 / ICONOGRAPHY</p><h2 class="gc-title" id="icons-heading">One consistent visual voice.</h2></div><p class="gc-support">Original, lightweight, 24px line glyphs. Uniform stroke language; no external icon packages.</p></div>
+        <div class="gc-card"><div id="icon-grid" class="gc-lab-icon-grid" aria-label="GoreeCloud icon catalogue"></div></div>
+      </section>
+      <footer class="gc-lab-footer"><span>GoreeCloud UI • 0.1.0 alpha</span><span>Clear by default. Consistent by nature. Fluid by design.</span></footer>
+    </main>
+  </div>
+</div>
+<div class="gc-toast-region" data-gc-toasts aria-live="polite"></div>
+<dialog class="gc-dialog" id="demo-dialog" aria-labelledby="dialog-title" aria-describedby="dialog-copy">
+  <div class="gc-cluster"><span class="gc-lab-small-icon"><gc-icon name="sparkle"></gc-icon></span><span class="gc-badge gc-badge--brand">Cloud Lens</span></div>
+  <h2 class="gc-title" id="dialog-title" style="margin-block:20px 12px">Interfaces with intention.</h2>
+  <p id="dialog-copy" class="gc-support">This native dialog uses the browser's keyboard and focus behavior, with a purposeful elevated surface and clear way back.</p>
+  <div class="gc-dialog__actions"><button class="gc-button gc-button--outline" id="dialog-cancel" type="button">Close preview</button><button class="gc-button" id="dialog-confirm" type="button">Looks good</button></div>
+</dialog>
+</body>
+</html>
