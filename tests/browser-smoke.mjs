@@ -238,6 +238,24 @@ try {
     assert.ok(checks>=12,"Not enough interaction tests: "+checks);
     console.log("Chromium "+mode+"/"+accent+" @ "+width+"px: "+checks+" live DOM checks passed");
   }
+  // On a cold load at an unknown fragment the HTML's static Home hint is
+  // stale. Initialization must remove it before any history event fires.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/#unknown-on-entry");
+  const initialUnknown=JSON.parse(await browser.evaluate(
+    '(()=>{const links=[...document.querySelectorAll("#demo-bottom-nav a[href]")];'+
+    'return JSON.stringify({current:links.filter(x=>x.hasAttribute("aria-current")).length,'+
+    'active:links.filter(x=>x.hasAttribute("data-gc-active")).length});})()'));
+  assert.deepEqual(initialUnknown,{current:0,active:0},
+    "Cold unknown route announced a stale primary destination");
+  await browser.navigate(base+"/lab/");
+  const initialDefault=JSON.parse(await browser.evaluate(
+    '(()=>{const links=[...document.querySelectorAll("#demo-bottom-nav a[href]")];'+
+    'return JSON.stringify(links.filter(x=>x.getAttribute("aria-current")==="page").map(x=>x.getAttribute("href")));})()'));
+  assert.deepEqual(initialDefault,["#overview"],
+    "Valid no-fragment document default failed to restore the declared current destination");
+  console.log("Chromium cold dock startup: no stale unknown route, explicit default preserved");
+
   // A native history update outside the dock must clear aria-current. A
   // recognized destination must restore exactly one active marker.
   await browser.setViewport(390,844);
