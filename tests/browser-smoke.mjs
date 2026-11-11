@@ -309,6 +309,23 @@ try {
       const shot=await browser.screenshot(join(directory,"gc-ui-text-200-percent-mobile.png"));
       assert.equal(shot.width,390);
     }
+    const visibleText=JSON.parse(await browser.evaluate(
+      '(()=>{const hero=document.querySelector(".gc-lab-hero h1");'+
+      'const dock=document.querySelector("#demo-bottom-nav");'+
+      'const links=[...dock.querySelectorAll("a.gc-bottom-nav__link")];'+
+      'return JSON.stringify({heroWidth:hero.clientWidth,heroScroll:hero.scrollWidth,'+
+      'dockWidth:dock.clientWidth,dockScroll:dock.scrollWidth,'+
+      'labels:links.map(a=>{const e=a.querySelector("span");const s=getComputedStyle(e);'+
+      'return {text:e.textContent,client:e.clientWidth,scroll:e.scrollWidth,'+
+      'overflow:s.overflowX,whiteSpace:s.whiteSpace,ellipsis:s.textOverflow};})});})()'));
+    assert.ok(visibleText.heroScroll<=visibleText.heroWidth+1,
+      "Enlarged hero text clipped within rounded window: "+JSON.stringify(visibleText));
+    assert.ok(visibleText.labels.every(label =>
+      label.scroll<=label.client+1 && label.ellipsis==="clip" && label.whiteSpace!=="nowrap"),
+      "Floating navigation labels truncated at enlarged text: "+JSON.stringify(visibleText));
+    assert.ok(visibleText.dockScroll>=visibleText.dockWidth,
+      "Floating dock must retain an internally scrollable overflow surface");
+
     console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
   }
 

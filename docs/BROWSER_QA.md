@@ -58,3 +58,8 @@ The full lab is checked in actual Chromium at 320, 390, 900 and 1440 CSS widths 
 ## Floating bottom navigation acceptance
 
 Chromium verifies actual floating dock layout at 320, 390, 900 and 1440 CSS widths, safe responsive geometry, content clearance, capsule radius and semantic active label contrast in both appearances. The DOM fixture verifies arrow-key movement past disabled destinations and selection states. System gesture insets are emulated through CSS only, not physical Android/iOS navigation-bar hardware. Native platform and screen-reader acceptance remain open.
+
+
+### Visible large-text acceptance (not only document width)
+
+Screenshot inspection revealed that a 200% CSS root font-size caused a rounded hero heading to be visually clipped and bottom navigation labels to be shortened with ellipses. The lab now allows actual long-word reflow; the floating dock keeps entire visible labels, scrolling internally only when enlarged destinations exceed its capsule width. The browser gate asserts actual hero scroll geometry and complete label text layout at enlarged font sizes in addition to root document overflow. True browser zoom, OS text scaling and screen-reader/device acceptance remain separate.

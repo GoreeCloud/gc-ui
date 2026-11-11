@@ -172,3 +172,14 @@
   overflow-wrap:anywhere;
   text-wrap:balance;
 }
+
+
+/* Prevent the rounded hero's clipping boundary from concealing enlarged text.
+   Any long word can reflow instead of rendering beyond its reading column. */
+.gc-lab-hero h1,
+.gc-lab-hero h1 > span {
+  max-inline-size:100%;
+  min-inline-size:0;
+  overflow-wrap:anywhere;
+  hyphens:auto;
+}
