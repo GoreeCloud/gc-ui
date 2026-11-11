@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 // A single reusable rail controller owns expansion and route announcements.
@@ -24,6 +24,7 @@ updateTheme();
 initTabs(document.querySelector('[role="tablist"]'));
 const dialog = document.querySelector("#demo-dialog");
 const region = document.querySelector("[data-gc-toasts]");
+initAvailabilityFeedback(document, { region });
 document.querySelector("#open-dialog").addEventListener("click", (event) => openDialog(dialog, event.currentTarget));
 document.querySelector("#dialog-cancel").addEventListener("click", () => closeDialog(dialog));
 document.querySelector("#dialog-confirm").addEventListener("click", () => {
