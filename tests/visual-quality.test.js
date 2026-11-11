@@ -49,3 +49,14 @@ test("machine-readable authority makes premium quality mandatory without false c
   assert.ok(load(registry.implementation.visualQualityDocs).includes("Non-negotiable identity"));
   assert.ok(load(".github/PULL_REQUEST_TEMPLATE.md").includes("not generic"));
 });
+
+test("color freedom is a founder requirement, while accessible semantic roles stay mandatory",()=>{
+  const registry=JSON.parse(load("registry/design-authority.v1.json"));
+  assert.equal(registry.colorPolicy.mandatoryGlobalHue,false);
+  assert.equal(registry.colorPolicy.curatedPresets,"optional-illustrative");
+  assert.equal(registry.colorPolicy.independentApplicationChoices,true);
+  assert.ok(registry.colorPolicy.accessibility.includes("contrast"));
+  assert.ok(load("docs/DESIGN_LANGUAGE.md").includes("no mandatory global/default/system/brand color"));
+  assert.ok(load("lab/index.html").includes("Four optional example accent families"));
+  assert.ok(!load("lab/index.html").includes("Four approved accent families"));
+});
