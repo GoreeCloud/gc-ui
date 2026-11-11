@@ -136,13 +136,14 @@ async function startBrowser() {
       if (result.exceptionDetails) throw new Error("Browser JS exception: " + JSON.stringify(result.exceptionDetails));
       return result.result?.value;
     };
-    const setViewport = async (width, height, { dark=false }={}) => {
+    const setViewport = async (width, height, { dark=false, reducedMotion=false }={}) => {
       await command("Emulation.setDeviceMetricsOverride", {
         width, height, screenWidth:width, screenHeight:height,
         mobile:width<=600, deviceScaleFactor:1
       });
       await command("Emulation.setEmulatedMedia", {
-        features:[{ name:"prefers-color-scheme", value:dark ? "dark" : "light" }]
+        features:[{ name:"prefers-color-scheme", value:dark ? "dark" : "light" },
+          { name:"prefers-reduced-motion", value:reducedMotion ? "reduce" : "no-preference" }]
       });
     };
     const navigate = async url => {
@@ -213,6 +214,51 @@ try {
   }
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
+
+  // Exercise every curated accent in both explicit appearances on a real rendered lab.
+  const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/lab/");
+  const evaluation="(function(mode,accent){"+
+    "const appearance=document.querySelector('#appearance');const choice=document.querySelector('#accent');"+
+    "appearance.value=mode;appearance.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "choice.value=accent;choice.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "const root=document.documentElement;const computed=getComputedStyle(root);"+
+    "return JSON.stringify({mode:root.dataset.gcTheme,accent:root.dataset.gcAccent,"+
+    "brand:computed.getPropertyValue('--gc-brand').trim().toUpperCase(),"+
+    "surface:computed.getPropertyValue('--gc-surface').trim().toUpperCase(),"+
+    "viewport:root.clientWidth,scrollWidth:root.scrollWidth});"+
+    "})";
+  for(const accent of ["iris","lagoon","ember","moss"]) {
+    for(const mode of ["light","dark"]) {
+      const code=evaluation+"("+JSON.stringify(mode)+","+JSON.stringify(accent)+")";
+      const actual=JSON.parse(await browser.evaluate(code));
+      assert.equal(actual.mode,mode,"Lab appearance control did not update");
+      assert.equal(actual.accent,accent,"Lab accent control did not update");
+      assert.equal(actual.brand,manifest.accents[accent][mode].brand.toUpperCase(),"Brand token differs from canonical JSON");
+      assert.equal(actual.surface,manifest.semantic[mode].surface.toUpperCase(),"Surface token differs from canonical JSON");
+      assert.ok(actual.scrollWidth<=actual.viewport+1,"Theme-specific horizontal overflow: "+accent+"/"+mode);
+      await delay(60);
+      const shot=await browser.screenshot(join(directory,"gc-ui-"+accent+"-"+mode+"-mobile.png"));
+      assert.equal(shot.width,390);
+      assert.equal(shot.height,844);
+      console.log("Chromium theme "+accent+"/"+mode+": semantic colors and 390px layout passed");
+    }
+  }
+  // Honor reduced motion and explicit increased-contrast Lens fallbacks.
+  await browser.setViewport(390,844,{dark:true,reducedMotion:true});
+  await browser.navigate(base+"/lab/");
+  const reduced=await browser.evaluate("getComputedStyle(document.documentElement).getPropertyValue('--gc-motion-base').trim()");
+  assert.equal(reduced,"0ms","Reduced-motion preference is not represented by token CSS");
+  const contrast=JSON.parse(await browser.evaluate(
+    "(function(){const checkbox=document.querySelector('#contrast');checkbox.checked=true;"+
+    "checkbox.dispatchEvent(new Event('change',{bubbles:true}));"+
+    "const root=document.documentElement,style=getComputedStyle(root);"+
+    "return JSON.stringify({mode:root.dataset.gcContrast,lens:style.getPropertyValue('--gc-lens-fill').trim(),solid:style.getPropertyValue('--gc-lens-solid').trim()});})()"));
+  assert.equal(contrast.mode,"more","Contrast preference did not apply");
+  assert.equal(contrast.lens,contrast.solid,"High-contrast Lens did not resolve to an opaque surface");
+  console.log("Chromium reduced-motion and opaque high-contrast Lens fallbacks passed");
+
   for (const [filename,width,height,dark] of [
     ["gc-ui-light-desktop.png",1440,900,false],
     ["gc-ui-dark-mobile.png",390,844,true],
