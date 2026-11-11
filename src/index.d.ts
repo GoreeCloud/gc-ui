@@ -1,0 +1,20 @@
+export type GcMode = "auto" | "light" | "dark";
+export type GcAccent = "iris" | "lagoon" | "ember" | "moss";
+export type GcContrast = "normal" | "more";
+export declare const ACCENTS: readonly GcAccent[];
+export declare const MODES: readonly GcMode[];
+export declare function contrastRatio(a: string, b: string): number;
+export declare function getAccentColor(accent: GcAccent, mode?: "light" | "dark"): string;
+export declare function deriveAccent(hex: string, mode?: "light" | "dark"): Readonly<{
+  brand: string; onBrand: string; brandContainer: string; onBrandContainer: string;
+}>;
+export declare function applyTheme(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string }): { mode: GcMode; accent: GcAccent; contrast: GcContrast };
+export declare const ICON_NAMES: readonly string[];
+export declare function hasIcon(name: string): boolean;
+export declare function iconSvg(name: string, options?: { size?: number; decorative?: boolean }): string;
+export declare function defineCustomElements(registry?: CustomElementRegistry): boolean;
+export declare function initTabs(tablist: HTMLElement): () => void;
+export declare function openDialog(dialog: HTMLDialogElement, invoker?: HTMLElement | null): void;
+export declare function closeDialog(dialog: HTMLDialogElement): void;
+export declare function toast(message: string, options?: { region?: HTMLElement; kind?: "info" | "positive" | "warning" | "negative"; duration?: number }): HTMLElement;
+export declare function bindThemeControls(root: HTMLElement, modeElement?: HTMLSelectElement, accentElement?: HTMLSelectElement): () => void;
