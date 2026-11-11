@@ -138,7 +138,8 @@ export function initCombobox(input, list, { onSelect } = {}) {
   list.addEventListener("click",onClick);
   list.addEventListener("pointerdown",onPointerDown);
   doc.addEventListener("pointerdown",onOutside);
-  refresh();
+  if (doc.activeElement === input) open();
+  else refresh();
   return Object.freeze({
     open,close,refresh,
     dispose(){

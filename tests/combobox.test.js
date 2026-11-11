@@ -108,3 +108,12 @@ test("public exports, CSS and checked-in docs remain consistent",()=>{
   assert.ok(read("src/combobox.d.ts").includes("initCombobox"));
   assert.ok(read("src/components.css").includes(".gc-combobox__option"));
 });
+
+test("initialization opens an input that was focused before mounting",()=>{
+  const f=fixture();
+  f.doc.activeElement=f.input;
+  const api=initCombobox(f.input,f.list);
+  assert.equal(f.list.hidden,false);
+  assert.equal(f.input.getAttribute("aria-expanded"),"true");
+  api.dispose();
+});
