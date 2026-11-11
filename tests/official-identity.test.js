@@ -42,3 +42,11 @@ test('lab has official identity wordmarks, artwork and accessible section',()=>{
  assert.match(html,/<h2[^>]*id="identity-heading"/);
  assert.match(html,/<figure class="gc-ui-identity-artwork">/);
 });
+
+test('large-text badge selector is stable when wordmark precedes hero status',()=>{
+ const html=read('lab/index.html').toString('utf8');
+ const css=read('lab/lab.css').toString('utf8');
+ assert.match(html,/<div class="gc-cluster gc-lab-status-cluster"><span class="gc-badge/);
+ assert.match(css,/\.gc-lab-hero-copy\s*>\s*\.gc-lab-status-cluster\s+\.gc-badge/);
+ assert.doesNotMatch(css,/\.gc-lab-hero-copy\s*>\s*\.gc-cluster:first-child\s+\.gc-badge/);
+});

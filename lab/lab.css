@@ -253,7 +253,7 @@
     line-height:1.25;
     padding-inline:8px;
   }
-  .gc-app .gc-lab-hero-copy > .gc-cluster:first-child .gc-badge {
+  .gc-app .gc-lab-hero-copy > .gc-lab-status-cluster .gc-badge {
     font-size:clamp(12px,calc(.22rem + 8px),24px);
     line-height:1.35;
     letter-spacing:.06em;
