@@ -24,3 +24,7 @@ Every native GoreeCloud window must have rounded corners, including maximized fr
 ## Founder floating-navigation direction
 
 GoreeCloud apps with multiple primary destinations require a rounded floating bottom navigation capsule. Native adapters must respect system gesture insets, screen-reader semantics and keyboard/remote focus. The web alpha implementation is not a native SDK; builds and real device testing remain open.
+
+## Distinguish viewport navigation from individual-window navigation
+
+The alpha web reference has two alternatives: a viewport bar for a full-screen application and a separate bar owned by a rounded app window with independent scrolling. Native adapters must preserve the same visual hierarchy while using native platform navigation, gesture safe areas, focus, window lifecycle and accessibility semantics. Do not duplicate the two bars within one consuming app. The machine-readable authority records both contexts but still declares native SDKs unimplemented and OS/device acceptance unverified.
