@@ -26,3 +26,7 @@ Browser failures should be reproduced with the same source SHA and a Chrome vers
 ## Responsive overflow regression gate
 
 The browser suite also loads the **complete** design lab inside a same-origin viewport test frame at 320, 390, 600, 900, and 1440px requested window sizes. It fails if the document's scroll width exceeds its measured layout viewport, or if the narrow theme selector grid and control bounds are incorrect. A 320px screenshot is captured alongside the existing desktop and dark-mobile screenshots. Decorative scenes are clipped **within their own art container**, rather than hiding overflow on the application document and potentially masking unusable UI.
+
+### Exact mobile emulation requirement
+
+Headless Chromium may silently clamp a requested `--window-size=320,760` or `390,844` to a **500px CSS viewport** while writing a cropped 320px/390px PNG. This can create misleading horizontal scrollbars and falsely green responsive checks. The browser runner now uses the Chrome DevTools Protocol `Emulation.setDeviceMetricsOverride`, asserts `window.innerWidth` equals the requested width, and checks the PNG IHDR pixel dimensions. It tests **real 320px and 390px CSS layouts**. A CI pass without verifying those dimensions must not be represented as mobile acceptance.
