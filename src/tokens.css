@@ -1,4 +1,4 @@
-/* GoreeCloud UI — generated-compatible alpha token sheet. Source: tokens/gc.tokens.json */
+/* Generated from tokens/gc.tokens.json by scripts/generate-web-tokens.mjs — DO NOT EDIT. */
 :root {
   --gc-font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --gc-font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
@@ -42,6 +42,9 @@
   --gc-z-lens: 40;
   --gc-z-dialog: 80;
   --gc-z-toast: 100;
+  --gc-breakpoint-compact: 600px;
+  --gc-breakpoint-medium: 900px;
+  --gc-breakpoint-expanded: 1200px;
   --gc-space-0: 0px;
   --gc-space-1: 4px;
   --gc-space-2: 8px;
@@ -159,26 +162,26 @@
   --gc-on-brand: #272057;
   --gc-brand-container: #413974;
   --gc-on-brand-container: #E8E5FF;
-    color-scheme: dark;
-  }
+  color-scheme: dark;
+}
   :root:not([data-gc-theme])[data-gc-accent="lagoon"], :root[data-gc-theme="auto"][data-gc-accent="lagoon"] {
   --gc-brand: #8BE7F1;
   --gc-on-brand: #003A42;
   --gc-brand-container: #19525B;
   --gc-on-brand-container: #D7FAFF;
-  }
+}
   :root:not([data-gc-theme])[data-gc-accent="ember"], :root[data-gc-theme="auto"][data-gc-accent="ember"] {
   --gc-brand: #FFB79F;
   --gc-on-brand: #4E1E0D;
   --gc-brand-container: #713922;
   --gc-on-brand-container: #FFE1D4;
-  }
+}
   :root:not([data-gc-theme])[data-gc-accent="moss"], :root[data-gc-theme="auto"][data-gc-accent="moss"] {
   --gc-brand: #A9E0B3;
   --gc-on-brand: #173B20;
   --gc-brand-container: #33553B;
   --gc-on-brand-container: #DBF7DF;
-  }
+}
 }
 :root[data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }
 @media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }

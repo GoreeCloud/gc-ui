@@ -31,10 +31,13 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && npm run export:platform && npm run export:check && npm test",
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check scripts/generate-web-tokens.mjs && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
-    "prepack": "npm run export:platform"
+    "prepack": "npm run tokens:check && npm run export:platform",
+    "tokens:generate": "node scripts/generate-web-tokens.mjs --write",
+    "tokens:check": "node scripts/generate-web-tokens.mjs --check",
+    "contrast:check": "node scripts/audit-contrast.mjs --check"
   },
   "sideEffects": [
     "**/*.css"
