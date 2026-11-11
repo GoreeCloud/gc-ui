@@ -162,3 +162,13 @@
 @media(forced-colors:active) {
   .gc-lab-rail,.gc-lab-hero { background:none; border:1px solid CanvasText; box-shadow:none; }
 }
+
+
+/* Enlarged / translated headings can be wider than narrow mobile viewports. */
+.gc-lab-section-head,
+.gc-lab-section-head > div,
+.gc-lab-section-head :is(h1,h2,h3,p) { min-inline-size:0; max-inline-size:100%; }
+.gc-lab-section-head :is(h1,h2,h3) {
+  overflow-wrap:anywhere;
+  text-wrap:balance;
+}
