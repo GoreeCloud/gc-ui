@@ -240,3 +240,18 @@ test("legacy IME process keys do not open trigger popover or move focus",()=>{
   f.menu.emit("compositionend");
   assert.equal(f.isOpen(),false);
 });
+
+test("native external dismissal clears stale composition before a new menu session",()=>{
+  const f=fixture();
+  f.items[0].textContent="Open";
+  f.items[1].textContent="Save";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  f.menu.emit("compositionstart");
+  f.menu.hidePopover(); // Native light-dismiss can precede compositionend.
+  api.open();
+  const event=f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(event.defaultPrevented,true);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
