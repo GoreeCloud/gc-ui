@@ -24,17 +24,17 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   if (!input || typeof input.addEventListener !== "function") {
     throw new Error("Command palette requires an input[type=search]");
   }
-  const buttons = Array.from(dialog.querySelectorAll('button[data-gc-command]'));
-  if (buttons.length === 0) throw new Error("Command palette requires at least one command button");
+  const initialButtons = Array.from(dialog.querySelectorAll('button[data-gc-command]'));
+  if (initialButtons.length === 0) throw new Error("Command palette requires at least one command button");
   if (trigger && typeof trigger.addEventListener !== "function") throw new TypeError("Trigger must be a button-like element");
   const owner = dialog.ownerDocument;
   if (!owner || typeof owner.addEventListener !== "function") throw new TypeError("Dialog must be attached to a document");
   const status = dialog.querySelector("[data-gc-command-status]");
   const empty = dialog.querySelector("[data-gc-command-empty]");
-  const entries = buttons.map(button => {
-    const row = button.closest?.("li") || button;
-    return { button, row };
-  });
+  // Commands may be added or removed when a product enables a new local
+  // capability. Keep bindings and focus in sync with the current native DOM.
+  let entries = [];
+  const boundButtons = new Set();
   let destroyed = false, inFlight = false, restoreFocus = null;
   let composing = false;
   // A pending action must not close or announce errors in a later dialog
@@ -46,6 +46,26 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     x.row.getAttribute?.("aria-disabled") !== "true").map(x => x.button);
   const refresh = () => {
     if (destroyed) return;
+    // Reconcile current native command nodes, not a stale initialization
+    // snapshot. Removed actions must never remain keyboard/pointer active.
+    const nextButtons = Array.from(dialog.querySelectorAll('button[data-gc-command]'));
+    const nextSet = new Set(nextButtons);
+    for (const button of boundButtons) {
+      if (!nextSet.has(button)) {
+        button.removeEventListener("click", onItemClick);
+        button.removeEventListener("keydown", onItemKey);
+        boundButtons.delete(button);
+        if (dialog.open && owner.activeElement === button) input.focus();
+      }
+    }
+    for (const button of nextButtons) {
+      if (!boundButtons.has(button)) {
+        button.addEventListener("click", onItemClick);
+        button.addEventListener("keydown", onItemKey);
+        boundButtons.add(button);
+      }
+    }
+    entries = nextButtons.map(button => ({ button, row: button.closest?.("li") || button }));
     let visible = 0;
     for (const entry of entries) {
       const match = matchesCommand(input.value,
@@ -160,10 +180,6 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   input.addEventListener("compositionstart", onCompositionStart);
   input.addEventListener("compositionend", onCompositionEnd);
   input.addEventListener("keydown", onInputKey);
-  buttons.forEach(button => {
-    button.addEventListener("click", onItemClick);
-    button.addEventListener("keydown", onItemKey);
-  });
   trigger?.addEventListener("click", open);
   if (shortcut) owner.addEventListener("keydown", onGlobalKey);
   dialog.addEventListener("close", onClose);
@@ -177,10 +193,12 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
       input.removeEventListener("compositionstart", onCompositionStart);
       input.removeEventListener("compositionend", onCompositionEnd);
       input.removeEventListener("keydown", onInputKey);
-      buttons.forEach(button => {
+      for (const button of boundButtons) {
         button.removeEventListener("click", onItemClick);
         button.removeEventListener("keydown", onItemKey);
-      });
+      }
+      boundButtons.clear();
+      entries = [];
       trigger?.removeEventListener("click", open);
       if (shortcut) owner.removeEventListener("keydown", onGlobalKey);
       dialog.removeEventListener("close", onClose);

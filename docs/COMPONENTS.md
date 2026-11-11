@@ -173,3 +173,7 @@ technology acceptance is still required. This behavior has no server authority.
 ### Combobox pointer gestures during composition (alpha)
 
 An editable combobox does not select a suggestion while the input method is composing. If an option pointerdown begins during preedit, its later click is ignored even when compositionend occurs between those events. A new pointer gesture after composition is allowed; pointer cancellation clears the one-click suppression. This prevents premature selection in a local UI controller; real IME and assistive-technology acceptance remains separate.
+
+### Dynamic command palette registration (alpha)
+
+`refresh()` now reconciles the actual `button[data-gc-command]` elements in the native dialog: late-added commands become keyboard/pointer actionable, removed commands lose their handlers, and repeated refresh calls do not duplicate listeners. A focused command removed while the dialog is open transfers focus to the search input. An initialized palette may temporarily have zero commands, showing its empty feedback until new native commands arrive. Call `refresh()` after changing the DOM; this is local UI discovery, **not** remote Mesh capability authorization or a plugin execution permission. Keep labels as text, preserve `onSelect` authorization, and call `dispose()` to remove all bound listeners.
