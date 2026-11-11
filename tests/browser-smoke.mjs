@@ -300,6 +300,25 @@ try {
   },"Native menu typeahead keyboard behavior regressed");
   console.log("Chromium native menu: repeat cycling, composition and external-close reset passed");
 
+  // Browser-semantic combobox: Home/End only intercept while the list is open.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const comboboxKeyboard=JSON.parse(await browser.evaluate(
+    '(()=>{const input=document.querySelector("#demo-combobox"),'+
+    'list=document.querySelector("#demo-combobox-list");'+
+    'const key=k=>input.dispatchEvent(new KeyboardEvent("keydown",{key:k,bubbles:true,cancelable:true}));'+
+    'const closedEnd=key("End");input.focus();'+
+    'const openEnd=key("End");const last=input.getAttribute("aria-activedescendant");'+
+    'const openHome=key("Home");const first=input.getAttribute("aria-activedescendant");'+
+    'document.body.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}));'+
+    'const closedHome=key("Home");return JSON.stringify({closedEnd,openEnd,'+
+    'last,openHome,first,closedHome,closed:!!list.hidden});})()'));
+  assert.deepEqual(comboboxKeyboard,{
+    closedEnd:true,openEnd:false,last:"demo-option-moss",
+    openHome:false,first:"demo-option-iris",closedHome:true,closed:true,
+  },"Chromium combobox Home/End semantics regressed");
+  console.log("Chromium combobox: Home/End preserve text navigation when closed");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
