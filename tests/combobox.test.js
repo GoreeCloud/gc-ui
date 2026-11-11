@@ -224,3 +224,49 @@ test("Home and End are ignored during asynchronous selection without mutating pe
   assert.equal(f.list.hidden,true);
   api.dispose();
 });
+
+test("composition defers native IME text without prematurely selecting an option",async()=>{
+  const f=fixture(),selected=[];
+  const api=initCombobox(f.input,f.list,{onSelect:(_option,value)=>selected.push(value)});
+  api.open();
+  f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  f.input.emit("compositionstart");
+  assert.equal(f.input.getAttribute("aria-activedescendant"),null);
+  f.input.value="Mos";
+  f.input.emit("input",{isComposing:true});
+  assert.equal(f.choices[0].hidden,false,"Preedit input must not filter visible choices");
+  for(const key of ["Enter","ArrowDown","Home","Escape"]) {
+    const event=f.input.emit("keydown",{key,isComposing:true});
+    assert.equal(event.defaultPrevented,false,"IME must own "+key);
+  }
+  assert.deepEqual(selected,[]);
+  f.input.emit("compositionend");
+  assert.equal(f.choices[0].hidden,true);
+  assert.equal(f.choices[2].hidden,false);
+  assert.equal(f.status.textContent,"1 option available");
+  f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-2");
+  assert.equal(f.input.emit("keydown",{key:"Enter",keyCode:229}).defaultPrevented,false);
+  assert.deepEqual(selected,[],"Legacy IME keyCode 229 cannot commit an option");
+  f.input.emit("keydown",{key:"Enter"});
+  await Promise.resolve();
+  assert.deepEqual(selected,["moss"]);
+  assert.equal(f.input.value,"Moss");
+  api.dispose();
+});
+
+test("disposing a composing combobox removes IME listeners without a late selection",()=>{
+  const f=fixture(),selected=[];
+  const api=initCombobox(f.input,f.list,{onSelect:(_option,value)=>selected.push(value)});
+  api.open();
+  f.input.emit("compositionstart");
+  f.input.value="M";
+  api.dispose();
+  f.input.emit("compositionend");
+  f.input.emit("input");
+  f.input.emit("keydown",{key:"Enter",isComposing:true});
+  assert.deepEqual(selected,[]);
+  assert.equal(f.list.hidden,true);
+  assert.equal(f.input.getAttribute("aria-expanded"),"false");
+});
