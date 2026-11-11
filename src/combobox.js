@@ -52,7 +52,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
       const text=normalize(label(option)+" "+(option.getAttribute("data-gc-keywords")||""));
       option.hidden=!text.includes(query);
     }
-    if (active?.hidden) setActive(null);
+    if (active && !choices().includes(active)) setActive(null);
     const count=choices().length;
     if (empty) empty.hidden=count!==0;
     if (status) status.textContent=count===0?"No matching options":
@@ -100,6 +100,14 @@ export function initCombobox(input, list, { onSelect } = {}) {
       return;
     }
     if (event.key==="Tab") {close();return;}
+    if (event.key==="Home"||event.key==="End") {
+      if (list.hidden) return;
+      const available=choices();
+      if (!available.length) return;
+      event.preventDefault();
+      setActive(event.key==="Home"?available[0]:available[available.length-1]);
+      return;
+    }
     if (event.key==="ArrowDown"||event.key==="ArrowUp") {
       event.preventDefault();
       if (list.hidden) open();
