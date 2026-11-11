@@ -307,13 +307,18 @@ try {
     '(()=>{const input=document.querySelector("#demo-combobox"),'+
     'list=document.querySelector("#demo-combobox-list");'+
     'const key=k=>input.dispatchEvent(new KeyboardEvent("keydown",{key:k,bubbles:true,cancelable:true}));'+
+    'const initialized=input.getAttribute("aria-haspopup")==="listbox";'+
     'const closedEnd=key("End");input.focus();'+
+    'const focused=document.activeElement===input,expanded=input.getAttribute("aria-expanded"),'+
+    'opened=!list.hidden;'+
     'const openEnd=key("End");const last=input.getAttribute("aria-activedescendant");'+
     'const openHome=key("Home");const first=input.getAttribute("aria-activedescendant");'+
     'document.body.dispatchEvent(new PointerEvent("pointerdown",{bubbles:true}));'+
-    'const closedHome=key("Home");return JSON.stringify({closedEnd,openEnd,'+
-    'last,openHome,first,closedHome,closed:!!list.hidden});})()'));
+    'const closedHome=key("Home");return JSON.stringify({initialized,focused,expanded,opened,'+
+    'closedEnd,openEnd,last,openHome,first,closedHome,closed:!!list.hidden});})()'));
+  console.log("Chromium combobox startup diagnostics: "+JSON.stringify(comboboxKeyboard));
   assert.deepEqual(comboboxKeyboard,{
+    initialized:true,focused:true,expanded:"true",opened:true,
     closedEnd:true,openEnd:false,last:"demo-option-moss",
     openHome:false,first:"demo-option-iris",closedHome:true,closed:true,
   },"Chromium combobox Home/End semantics regressed");
