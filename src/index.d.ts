@@ -24,3 +24,10 @@ export declare function initToggleGroup(container: HTMLElement, options?: { onCh
 export declare function bindRangeOutput(input: HTMLInputElement, output: HTMLOutputElement, options?: { format?: (value: string) => string }): () => void;
 export declare function initDrawer(dialog: HTMLDialogElement, openButton: HTMLElement, closeButton: HTMLElement): () => void;
 export declare function createThemeController(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string }): { update: (options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string | null }) => { mode: GcMode; accent: GcAccent; contrast: GcContrast }; dispose: () => void };
+
+export declare function matchesCommand(query: string, label: string, keywords?: string): boolean;
+export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
+  trigger?: HTMLElement | null;
+  shortcut?: boolean;
+  onSelect: (button: HTMLButtonElement) => void | Promise<void>;
+}): { open: () => void; close: () => void; refresh: () => void; dispose: () => void };

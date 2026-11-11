@@ -29,7 +29,11 @@
       "default": "./src/patterns.js"
     },
     "./icon-sprite": "./assets/gc-icons.svg",
-    "./icon-registry": "./assets/gc-icons.json"
+    "./icon-registry": "./assets/gc-icons.json",
+    "./commands": {
+      "types": "./src/commands.d.ts",
+      "default": "./src/commands.js"
+    }
   },
   "files": [
     "src/",
@@ -44,7 +48,7 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
     "prepack": "npm run icons:check && npm run tokens:check && npm run export:platform",

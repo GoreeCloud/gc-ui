@@ -23,10 +23,22 @@
   <label for="range">Radius</label><input id="range" class="gc-range" type="range" min="12" max="36" value="18"><output id="result" for="range">18px</output>
   <button type="button" id="drawer-open">Open drawer</button>
   <dialog class="gc-drawer" id="drawer" aria-label="Sample drawer"><button type="button" id="drawer-close">Close</button></dialog>
+  
+  <button type="button" id="command-trigger">Open quick commands</button>
+  <dialog id="command-dialog" aria-label="Commands">
+    <label for="command-query">Search commands</label>
+    <input id="command-query" type="search">
+    <p data-gc-command-status role="status"></p>
+    <p data-gc-command-empty hidden>No commands found</p>
+    <ul>
+      <li><button type="button" data-gc-command="alpha" data-gc-keywords="one start">First option</button></li>
+      <li><button type="button" data-gc-command="beta" data-gc-keywords="second finish">Second option</button></li>
+    </ul>
+  </dialog>
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -68,6 +80,24 @@ try{
   document.querySelector("#drawer-close").click();
   verify(!dialog.open,"native dialog closes");
   disposeDrawer();
+  let selectedCommand="";
+  const commandDialog=document.querySelector("#command-dialog");
+  const commandController=initCommandPalette(commandDialog,{
+    trigger:document.querySelector("#command-trigger"),
+    onSelect(button) { selectedCommand=button.getAttribute("data-gc-command"); }
+  });
+  document.querySelector("#command-trigger").click();
+  verify(commandDialog.open,"command palette opens");
+  const queryInput=document.querySelector("#command-query");
+  queryInput.value="second";
+  queryInput.dispatchEvent(new Event("input",{bubbles:true}));
+  const commandButtons=commandDialog.querySelectorAll("button[data-gc-command]");
+  verify(commandButtons[0].closest("li").hidden && !commandButtons[1].closest("li").hidden,"command search filters safely");
+  queryInput.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowDown",bubbles:true}));
+  verify(document.activeElement===commandButtons[1],"command keyboard navigation");
+  commandButtons[1].click();
+  verify(selectedCommand==="beta" && !commandDialog.open,"command action executes and closes");
+  commandController.dispose();
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();
