@@ -19,6 +19,20 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
   const announce = notify || (message => toast(message, { region, kind: 'info' }));
   let lastMessage = '';
   let lastTime = -Infinity;
+  const blockAndAnnounce = (event, element) => {
+    // Capture occurs before the form's ordinary submit handlers. This is UX
+    // feedback, not a replacement for server-side authorization.
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    const feature = (element.getAttribute('data-gc-feature') || '').trim().slice(0, 80);
+    const message = feature ? feature + ' is not available yet.' : 'Not available yet.';
+    const now = Date.now();
+    if (message !== lastMessage || now - lastTime >= 1200) {
+      lastMessage = message;
+      lastTime = now;
+      announce(message);
+    }
+  };
   const onClick = event => {
     let element = event.target;
     while (element && element !== root) {
@@ -28,23 +42,28 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
         const eligible = tag === 'BUTTON' || tag === 'A' ||
           (tag === 'INPUT' && ['button', 'submit', 'reset'].includes(element.type));
         if (AVAILABLE_STATES.has(state) && eligible) {
-          // A capturing listener blocks descendant click handlers and defaults.
-          event.preventDefault();
-          event.stopImmediatePropagation();
-          const feature = (element.getAttribute('data-gc-feature') || '').trim().slice(0, 80);
-          const message = feature ? feature + ' is not available yet.' : 'Not available yet.';
-          const now = Date.now();
-          if (message !== lastMessage || now - lastTime >= 1200) {
-            lastMessage = message;
-            lastTime = now;
-            announce(message);
-          }
+          blockAndAnnounce(event, element);
           return;
         }
       }
       element = element.parentNode || element.host || null;
     }
   };
+  // Implicit Enter submissions and form.requestSubmit() can bypass click
+  // interception. Handle intentionally planned forms and marked submitters.
+  const onSubmit = event => {
+    const form = event.target;
+    if (form?.tagName?.toUpperCase() !== 'FORM') return;
+    const submitter = event.submitter;
+    const planned = [submitter, form].find(element =>
+      element && typeof element.getAttribute === 'function' &&
+      AVAILABLE_STATES.has(element.getAttribute('data-gc-availability')));
+    if (planned) blockAndAnnounce(event, planned);
+  };
   root.addEventListener('click', onClick, true);
-  return () => root.removeEventListener('click', onClick, true);
+  root.addEventListener('submit', onSubmit, true);
+  return () => {
+    root.removeEventListener('click', onClick, true);
+    root.removeEventListener('submit', onSubmit, true);
+  };
 }
