@@ -280,3 +280,13 @@
    Real consumers own window sizing; keep page and window docks visually distinct. */
 #demo-window { block-size:min(560px,70dvh); min-block-size:350px; }
 @media(max-width:600px) { #demo-window { block-size:min(500px,66dvh); } }
+
+/* Real-phone visual QA: keep normal-width editorial words whole.
+   Below 320 CSS px the existing extreme-reflow fallback remains active. */
+@media (min-width:320px) and (max-width:600px) {
+  .gc-lab-hero h1, .gc-lab-hero h1 > span {
+    hyphens:manual;
+    overflow-wrap:normal;
+    word-break:normal;
+  }
+}
