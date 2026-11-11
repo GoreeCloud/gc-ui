@@ -86,7 +86,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
       close();
       // Programmatic value updates do not forge input/change DOM events.
     } catch {
-      if (status) status.textContent="Selection could not be completed. Try again.";
+      if (!destroyed && status) status.textContent="Selection could not be completed. Try again.";
     } finally {
       pending=false;
       input.removeAttribute("aria-busy");
