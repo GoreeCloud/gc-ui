@@ -66,3 +66,9 @@ export declare function initNavigationRail(rail: HTMLElement, options?: {
   sync: () => void;
   dispose: () => void;
 };
+
+/** Intercepts intentionally planned native controls and announces honest availability. */
+export declare function initAvailabilityFeedback(root: HTMLElement | Document, options?: {
+  region?: HTMLElement;
+  notify?: (message: string) => void;
+}): () => void;

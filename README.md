@@ -18,6 +18,10 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 There is no tracking, persistence, network access, third-party font, or bundled outside artwork.
 
+## Planned-feature feedback (alpha)
+
+The shared `initAvailabilityFeedback()` controller keeps intentionally planned native button/link actions visible and announces truthful, accessible "Not available yet" feedback without side effects. It intercepts only marked native controls and is **not** a security or authorization gate. The reference lab includes a planned Mesh integrations control; other applications are not yet migrated. See [availability-feedback contract and safety boundaries](docs/AVAILABILITY_FEEDBACK.md).
+
 ## Native-ready color resource generation
 
 Run `npm run export:platform` to generate deterministic color resources for Android XML, SwiftUI, Windows XAML and GTK CSS, plus a portable eight-palette JSON manifest. Run `npm run export:check` to verify generated resources match the canonical token file. These assets are **token bridges, not compiled native component SDKs**. See [platform resource bridge](docs/PLATFORM_BRIDGE.md).
