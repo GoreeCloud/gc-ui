@@ -34,3 +34,10 @@ Headless Chromium may silently clamp a requested `--window-size=320,760` or `390
 ## Complete curated appearance matrix
 
 Chromium CI now switches the actual design lab through **all four accents × light/dark appearance** (eight combinations), comparing computed brand and surface variables against the canonical JSON values at a true 390px CSS viewport. Each combination must remain free of horizontal overflow and produces a separate mobile PNG in the seven-day workflow artifact. A separate Chrome pass exercises reduced-motion CSS tokens and the increased-contrast solid Lens fallback. These checks support screenshot-led review but do not replace human visual acceptance, physical devices, OS-native component testing, color vision screening, translated RTL, or manual assistive technology.
+
+
+## Additional Chromium accessibility and localization gates
+
+The browser acceptance runner also checks the actual full lab in RTL at 390px and 900px CSS layout widths, including right-to-left hierarchical tree arrow navigation and no horizontal page scrolling. It checks **simulated CSS root font-size** at 200% on mobile and 300% on desktop, plus a longer sample tree label and document reflow. This is **not a substitute for real browser zoom** or platform text scaling.
+
+Forced-colors emulation verifies the Chromium media query activates, tree boundaries remain visible at the computed-style level, and mobile content does not exceed the viewport. It saves separate RTL, enlarged-text and forced-colors screenshots as short-lived GitHub Actions artifacts. These are automated smoke checks only: manual high-contrast, screen-reader, 400% zoom, localization, color-vision, physical-device and native SDK acceptance remain open.
