@@ -37,7 +37,9 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   });
   let destroyed = false, inFlight = false, restoreFocus = null;
 
-  const selectable = () => entries.filter(x => !x.row.hidden && !x.button.disabled).map(x => x.button);
+  const selectable = () => entries.filter(x => !x.row.hidden && !x.button.disabled &&
+    x.button.getAttribute("aria-disabled") !== "true" &&
+    x.row.getAttribute?.("aria-disabled") !== "true").map(x => x.button);
   const refresh = () => {
     if (destroyed) return;
     let visible = 0;
