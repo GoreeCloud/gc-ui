@@ -25,11 +25,16 @@
     "docs/",
     "registry/",
     "LICENSE",
-    "README.md"
+    "README.md",
+    "platform/generated/",
+    "scripts/"
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && npm test"
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && npm run export:platform && npm run export:check && npm test",
+    "export:platform": "node scripts/export-platform-tokens.mjs --write",
+    "export:check": "node scripts/export-platform-tokens.mjs --check",
+    "prepack": "npm run export:platform"
   },
   "sideEffects": [
     "**/*.css"

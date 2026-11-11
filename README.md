@@ -18,6 +18,10 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 There is no tracking, persistence, network access, third-party font, or bundled outside artwork.
 
+## Native-ready color resource generation
+
+Run `npm run export:platform` to generate deterministic color resources for Android XML, SwiftUI, Windows XAML and GTK CSS, plus a portable eight-palette JSON manifest. Run `npm run export:check` to verify generated resources match the canonical token file. These assets are **token bridges, not compiled native component SDKs**. See [platform resource bridge](docs/PLATFORM_BRIDGE.md).
+
 ## Run locally
 
 Open the lab from a static local web server:
@@ -33,6 +37,7 @@ Use web CSS from the package exports in a bundler: @goreecloud/ui/tokens.css and
 - [Component patterns](docs/COMPONENTS.md)
 - [Accessibility and validation](docs/ACCESSIBILITY.md)
 - [Native and OS integration roadmap](docs/PLATFORM_ADAPTERS.md)
+- [Native color-resource bridge](docs/PLATFORM_BRIDGE.md)
 - [Machine-readable authority](registry/design-authority.v1.json)
 - [Founder-approved 100 principles](https://drive.google.com/file/d/1JQiGg1ZC7Xgg2VH8ctN2qaPdIBVkrCp5/view) (authorized Drive account)
 
