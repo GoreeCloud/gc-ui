@@ -227,8 +227,9 @@
     position:static;
   }
   .gc-lab-section-head :is(h2,h3) {
-    font-size:clamp(28px,calc(.75rem + 12px),76px);
+    font-size:clamp(28px,calc(.65rem + 12px),72px);
     line-height:1.13;
+    letter-spacing:-.045em;
     text-wrap:balance;
   }
   .gc-lab-hero h1 {
