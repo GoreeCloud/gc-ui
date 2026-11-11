@@ -36,6 +36,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     return { button, row };
   });
   let destroyed = false, inFlight = false, restoreFocus = null;
+  let composing = false;
   // A pending action must not close or announce errors in a later dialog
   // session after Escape, native close, or a deliberate reopen.
   let session = 0;
@@ -61,6 +62,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     if (destroyed) throw new Error("Command palette has been disposed");
     if (dialog.open) { input.focus(); return; }
     restoreFocus = owner.activeElement;
+    composing = false;
     input.value = "";
     refresh();
     dialog.showModal();
@@ -92,8 +94,17 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
       dialog.removeAttribute("aria-busy");
     }
   };
-  const onInput = () => refresh();
+  // IME composition must not be interpreted as an Enter-to-execute or
+  // shortcut request. Filtering only applies to committed input text.
+  const onCompositionStart = () => { composing = true; };
+  const onCompositionEnd = () => { composing = false; if (!destroyed) refresh(); };
+  const onInput = event => {
+    if (!composing && !event?.isComposing) refresh();
+  };
+  const isComposingKey = event => composing || event.isComposing ||
+    event.key === "Process" || event.keyCode === 229;
   const onInputKey = event => {
+    if (isComposingKey(event) || event.altKey || event.ctrlKey || event.metaKey) return;
     const items = selectable();
     if (!items.length) return;
     if (event.key === "ArrowDown" || event.key === "ArrowUp") {
@@ -105,6 +116,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     }
   };
   const onItemKey = event => {
+    if (isComposingKey(event) || event.altKey || event.ctrlKey || event.metaKey) return;
     const items = selectable();
     const index = items.indexOf(event.currentTarget);
     if (index < 0) return;
@@ -120,7 +132,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   };
   const onItemClick = event => { void activate(event.currentTarget); };
   const onGlobalKey = event => {
-    if (destroyed || event.defaultPrevented || !shortcut || event.altKey) return;
+    if (destroyed || event.defaultPrevented || !shortcut || event.altKey ||
+        event.shiftKey || isComposingKey(event)) return;
     if ((event.ctrlKey || event.metaKey) && String(event.key).toLowerCase() === "k") {
       event.preventDefault();
       open();
@@ -144,6 +157,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     }
   };
   input.addEventListener("input", onInput);
+  input.addEventListener("compositionstart", onCompositionStart);
+  input.addEventListener("compositionend", onCompositionEnd);
   input.addEventListener("keydown", onInputKey);
   buttons.forEach(button => {
     button.addEventListener("click", onItemClick);
@@ -159,6 +174,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
       if (destroyed) return;
       destroyed = true;
       input.removeEventListener("input", onInput);
+      input.removeEventListener("compositionstart", onCompositionStart);
+      input.removeEventListener("compositionend", onCompositionEnd);
       input.removeEventListener("keydown", onInputKey);
       buttons.forEach(button => {
         button.removeEventListener("click", onItemClick);
