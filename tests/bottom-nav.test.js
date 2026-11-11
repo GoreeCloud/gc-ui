@@ -24,7 +24,7 @@ function fixture(){
  return {nav,links,doc,win};
 }
 test("real links maintain aria-current and sync to browser history",()=>{
- const f=fixture(),calls=[];const ctrl=initBottomNavigation(f.nav,{onNavigate:link=>calls.push(link)});
+ const f=fixture(),calls=[];const ctrl=initBottomNavigation(f.nav,{onNavigate:link=>{calls.push(link);}});
  assert.equal(f.links[0].getAttribute("aria-current"),"page");
  const e=f.nav.emit("click",{target:f.links[1]});
  assert.equal(e.defaultPrevented,false);
