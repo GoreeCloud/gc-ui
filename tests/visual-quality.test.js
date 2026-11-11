@@ -74,3 +74,18 @@ test("skip link moves by its own height, not a fixed negative offset",()=>{
   assert.ok(lab.includes(".gc-app .gc-lab-toolbar .gc-lab-select"));
   assert.ok(lab.includes(".gc-lab-hero-copy > .gc-cluster:first-child .gc-badge"));
 });
+
+test("mobile hero keeps complete words at physical phone widths, with extreme fallback",()=>{
+  const css=load("lab/lab.css");
+  const heading=css.indexOf("/* Prevent the rounded hero's clipping boundary");
+  const mobile=css.indexOf("/* Real-phone visual QA");
+  assert.ok(heading>=0 && mobile>heading);
+  const baseline=css.slice(heading,mobile);
+  assert.match(baseline,/overflow-wrap:anywhere/);
+  assert.match(baseline,/hyphens:auto/);
+  const rule=css.slice(mobile);
+  assert.match(rule,/@media \(min-width:320px\) and \(max-width:600px\)/);
+  assert.match(rule,/\.gc-lab-hero h1, \.gc-lab-hero h1 > span/);
+  for(const style of ["hyphens:manual","overflow-wrap:normal","word-break:normal"])
+    assert.ok(rule.includes(style),style);
+});
