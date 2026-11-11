@@ -188,7 +188,22 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     open, close, refresh,
     dispose() {
       if (destroyed) return;
+      // Never leave an inert native modal occupying the top layer after its
+      // controller has detached every command and keyboard handler.
+      if (dialog.open) {
+        const previous = restoreFocus;
+        const focusedBeforeClose = owner.activeElement;
+        close();
+        // Native close events may be queued asynchronously. Restore focus
+        // only if it still belongs to the dismissed dialog.
+        if (restoreFocus === previous && previous &&
+            previous.isConnected !== false && typeof previous.focus === "function" &&
+            (!focusedBeforeClose || focusedBeforeClose === owner.body ||
+             dialog.contains?.(focusedBeforeClose))) previous.focus();
+      }
+      restoreFocus = null;
       destroyed = true;
+      dialog.removeAttribute("aria-busy");
       input.removeEventListener("input", onInput);
       input.removeEventListener("compositionstart", onCompositionStart);
       input.removeEventListener("compositionend", onCompositionEnd);
