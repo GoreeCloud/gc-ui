@@ -17,7 +17,9 @@ const run=(cmd,args,cwd)=>execFileSync(cmd,args,{
   env:{...process.env,npm_config_audit:"false",npm_config_fund:"false"}
 });
 try{
-  const packed=JSON.parse(run(npm,["pack","--json","--pack-destination",temp],root));
+  // Run local prepack checks separately: their stdout must not corrupt npm pack JSON.
+  run(npm,["run","prepack","--offline"],root);
+  const packed=JSON.parse(run(npm,["pack","--json","--ignore-scripts","--offline","--pack-destination",temp],root));
   if(packed.length!==1||packed[0].name!=="@goreecloud/ui")throw new Error("Unexpected npm package");
   const meta=packed[0],files=new Set(meta.files.map(file=>file.path));
   const required=[
