@@ -101,14 +101,29 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     else open();
   };
   const onTriggerKey = event => {
+    // Keep legacy IME process keys under native input control.
+    if (event.isComposing || event.keyCode === 229 || event.key === "Process") return;
     if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
     event.preventDefault();
     open(event.key === "ArrowUp");
   };
   let typeahead = "";
   let typeaheadAt = 0;
+  let composing = false;
+  const onCompositionStart = () => {
+    composing = true;
+    typeahead = "";
+    typeaheadAt = 0;
+  };
+  const onCompositionEnd = () => {
+    composing = false;
+    // A finished IME composition is not an incremental typeahead query.
+    typeahead = "";
+    typeaheadAt = 0;
+  };
   const onMenuKey = event => {
-    if (!isOpen() || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return;
+    if (!isOpen() || composing || event.isComposing || event.keyCode === 229 ||
+        event.key === "Process" || event.altKey || event.ctrlKey || event.metaKey) return;
     if (event.key === "Escape") {
       event.preventDefault();
       close(true);
@@ -164,6 +179,8 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   trigger.addEventListener("click", onTriggerClick);
   trigger.addEventListener("keydown", onTriggerKey);
   menu.addEventListener("keydown", onMenuKey);
+  menu.addEventListener("compositionstart", onCompositionStart);
+  menu.addEventListener("compositionend", onCompositionEnd);
   menu.addEventListener("click", onMenuClick);
   menu.addEventListener("toggle", onToggle);
   view.addEventListener("resize", position);
@@ -178,6 +195,8 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
       trigger.removeEventListener("click", onTriggerClick);
       trigger.removeEventListener("keydown", onTriggerKey);
       menu.removeEventListener("keydown", onMenuKey);
+      menu.removeEventListener("compositionstart", onCompositionStart);
+      menu.removeEventListener("compositionend", onCompositionEnd);
       menu.removeEventListener("click", onMenuClick);
       menu.removeEventListener("toggle", onToggle);
       view.removeEventListener("resize", position);
