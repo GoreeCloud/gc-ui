@@ -175,6 +175,26 @@
             <p class="gc-support">Select with a click, or use arrow keys, Home and End. Real forms should use radio inputs when submitting a single choice.</p>
             <nav aria-label="Design reference location" class="gc-breadcrumbs"><ol><li><a href="#overview">Home</a></li><li><a href="#components">Components</a></li><li aria-current="page">Patterns</li></ol></nav>
           </article>
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Hierarchical navigation</h3>
+            <p class="gc-support">Local folder tree. Arrow keys explore; Enter activates leaves. Nothing is opened on a device.</p>
+            <ul id="demo-tree" class="gc-tree" role="tree" aria-label="Illustrative GoreeCloud folders">
+              <li role="treeitem" aria-label="Workspaces" data-gc-tree-label="Workspaces" aria-expanded="true" aria-selected="true">
+                <span class="gc-tree__row"><gc-icon name="folder"></gc-icon> Workspaces</span>
+                <ul role="group">
+                  <li role="treeitem" data-gc-tree-label="Design tokens"><span class="gc-tree__row"><gc-icon name="file"></gc-icon> Design tokens</span></li>
+                  <li role="treeitem" aria-disabled="true" data-gc-tree-label="Restricted draft"><span class="gc-tree__row"><gc-icon name="lock"></gc-icon> Restricted draft</span></li>
+                </ul>
+              </li>
+              <li role="treeitem" aria-label="Services" data-gc-tree-label="Services" aria-expanded="false">
+                <span class="gc-tree__row"><gc-icon name="cloud"></gc-icon> Services</span>
+                <ul role="group">
+                  <li role="treeitem" data-gc-tree-label="Mesh diagram"><span class="gc-tree__row"><gc-icon name="file"></gc-icon> Mesh diagram</span></li>
+                </ul>
+              </li>
+            </ul>
+            <p id="demo-tree-status" role="status" aria-live="polite" class="gc-support">Workspaces selected locally.</p>
+          </article>
         </div>
       </section>
       <section id="forms" class="gc-lab-section" aria-labelledby="forms-heading">

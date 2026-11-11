@@ -80,3 +80,7 @@ The @goreecloud/ui/table controller implements stable local sorting for native t
 ## Offline npm consumer verification
 
 Run `npm run verify:package` to assemble a real local tarball and install only that tarball with npm's offline, ignore-scripts options into an isolated temporary consumer. The check verifies public JS imports, bundled CSS, icon assets and machine-readable design tokens. Temporary files are deleted afterwards. This is not npm publication, third-party supply-chain certification, a product migration or native SDK acceptance.
+
+## Hierarchical navigation tree
+
+`initTreeView` adds a keyboard-accessible, single-selection tree for file browsers, settings, and dashboards. It supports RTL-aware direction keys, typeahead, explicit consumer activation callbacks, and safe focus management. No filesystem operation, backend access, persistence, or telemetry is included. Browser and assistive-technology review remain required for alpha adoption.

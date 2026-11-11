@@ -40,3 +40,9 @@ export declare function initSortableTable(table: HTMLTableElement, options?: {
   locale?: string;
   onSort?: (state: {column: number | null; direction: "ascending" | "descending" | "none"; rows: HTMLTableRowElement[]}) => void;
 }): { sortBy: (column: number, direction?: "ascending" | "descending") => void; reset: () => void; dispose: () => void };
+
+export declare function initTreeView(tree: HTMLElement, options?: {
+  onSelect?: (item: HTMLElement) => void;
+  onActivate?: (item: HTMLElement) => void;
+  locale?: string;
+}): { select: (item: HTMLElement) => boolean; expand: (item: HTMLElement) => boolean; collapse: (item: HTMLElement) => boolean; dispose: () => void };

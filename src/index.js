@@ -6,3 +6,4 @@ export { initAccordion, initToggleGroup, bindRangeOutput, initDrawer } from "./p
 export { matchesCommand, initCommandPalette } from "./commands.js";
 export { initActionMenu } from "./menu.js";
 export { initSortableTable } from "./table.js";
+export { initTreeView } from "./tree.js";

@@ -60,10 +60,23 @@
     </table>
   </div>
 
+    <ul role="tree" id="test-tree" aria-label="Test file tree" class="gc-tree">
+    <li role="treeitem" id="test-tree-projects" aria-label="Projects" data-gc-tree-label="Projects" aria-expanded="true" aria-selected="true">
+      <span class="gc-tree__row">Projects</span>
+      <ul role="group">
+        <li role="treeitem" id="test-tree-doc" data-gc-tree-label="Documents"><span class="gc-tree__row">Documents</span></li>
+        <li role="treeitem" id="test-tree-skip" data-gc-tree-label="Restricted" aria-disabled="true"><span class="gc-tree__row">Restricted</span></li>
+      </ul>
+    </li>
+    <li role="treeitem" id="test-tree-services" aria-label="Services" data-gc-tree-label="Services" aria-expanded="false">
+      <span class="gc-tree__row">Services</span>
+      <ul role="group"><li role="treeitem" id="test-tree-mesh" data-gc-tree-label="Mesh"><span class="gc-tree__row">Mesh</span></li></ul>
+    </li>
+  </ul>
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, initTreeView, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -149,6 +162,30 @@ try{
   tableSort.reset();
   verify(testTable.tBodies[0].rows[0].cells[0].textContent==="Bravo","table resets original row order");
   tableSort.dispose();
+  let treeActivated="";
+  const treeCtrl=initTreeView(document.querySelector("#test-tree"),{
+    onActivate(item){treeActivated=item.getAttribute("data-gc-tree-label");}
+  });
+  const treeRoot=document.querySelector("#test-tree");
+  const treeProjects=document.querySelector("#test-tree-projects");
+  const treeDoc=document.querySelector("#test-tree-doc");
+  const treeServices=document.querySelector("#test-tree-services");
+  const treeMesh=document.querySelector("#test-tree-mesh");
+  verify(treeServices.querySelector('[role="group"]').hidden,"tree collapsed group hidden");
+  treeProjects.focus();
+  treeProjects.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(document.activeElement===treeDoc,"tree right arrow enters open group");
+  treeDoc.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowDown",bubbles:true}));
+  verify(document.activeElement===treeServices,"tree skips disabled items");
+  treeServices.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(!treeServices.querySelector('[role="group"]').hidden,"tree branch expands");
+  treeServices.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(document.activeElement===treeMesh,"tree navigates into expanded group");
+  treeMesh.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true}));
+  verify(treeActivated==="Mesh","tree activation callback runs");
+  treeCtrl.collapse(treeServices);
+  verify(document.activeElement===treeServices && treeServices.getAttribute("aria-selected")==="true","tree collapse restores parent focus");
+  treeCtrl.dispose();
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();
