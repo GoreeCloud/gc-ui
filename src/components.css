@@ -805,3 +805,101 @@
   overflow-wrap:anywhere;
   text-overflow:clip;
 }
+
+
+/* 400% mobile text: preserve complete component content without making the
+   document horizontally scrollable. Internal tabs/tables remain scrollable. */
+@media(max-width:600px) {
+  .gc-app .gc-grid > *,
+  .gc-app .gc-card,
+  .gc-app .gc-stack,
+  .gc-app .gc-field,
+  .gc-app .gc-cluster {
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  .gc-app .gc-card,
+  .gc-app .gc-field,
+  .gc-app .gc-lab-section {
+    overflow-wrap:anywhere;
+  }
+  .gc-app :is(.gc-button,.gc-badge,.gc-chip) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-tabs {
+    inline-size:100%;
+    min-inline-size:0;
+    max-inline-size:100%;
+    overscroll-behavior-inline:contain;
+  }
+  .gc-app .gc-tabs [role="tab"] { flex:0 0 auto; }
+  .gc-app .gc-table-wrap {
+    inline-size:100%;
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+  }
+  .gc-app .gc-details-list { min-inline-size:0; grid-template-columns:minmax(0,1fr); }
+  .gc-app .gc-details-list > * {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-breadcrumbs,
+  .gc-app .gc-breadcrumbs ol {
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  .gc-app .gc-breadcrumbs :is(li,a) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-app :is(.gc-check,.gc-radio,.gc-switch) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-app :is(.gc-check,.gc-radio,.gc-switch) > span {
+    min-inline-size:0;
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-steps,
+  .gc-app .gc-steps li {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-window__titlebar { flex-wrap:wrap; }
+  .gc-app .gc-window__controls { min-inline-size:0; flex-shrink:1; }
+  .gc-app .gc-window__controls > .gc-button {
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  .gc-app .gc-showcase__floating {
+    min-inline-size:0;
+    max-inline-size:calc(100% - 16px);
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-showcase__floating > * {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-app .gc-bottom-nav {
+    left:50vw; /* fixed to viewport, not a widened body containing block */
+    max-inline-size:calc(100vw - 32px);
+  }
+  .gc-app .gc-toast-region {
+    inset-inline-end:auto;
+    left:50vw;
+    transform:translateX(-50%);
+    inline-size:min(400px,calc(100vw - 32px));
+    max-inline-size:calc(100vw - 32px);
+  }
+  .gc-app .gc-toast { max-inline-size:100%; overflow-wrap:anywhere; }
+}

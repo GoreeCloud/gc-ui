@@ -183,3 +183,37 @@
   overflow-wrap:anywhere;
   hyphens:auto;
 }
+
+
+/* 400% CSS text reflow for the design-lab's editorial typography sample.
+   Text remains visible, and the decorated frame keeps its own soft corners. */
+@media(max-width:600px) {
+  .gc-lab-foundations > *,
+  .gc-lab-main > .gc-lab-section,
+  .gc-lab-type-sample {
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  .gc-lab-type-sample {
+    flex-wrap:wrap;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-type-sample > div,
+  .gc-lab-type-sample :is(b,strong,small) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-floating,
+  .gc-lab-glass {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-floating :is(strong,small,span,div),
+  .gc-lab-glass :is(strong,small,div) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+}

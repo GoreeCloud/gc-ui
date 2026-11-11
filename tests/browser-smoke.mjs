@@ -285,7 +285,7 @@ try {
     console.log("Chromium RTL @ "+width+"px: tree keys and page reflow passed");
   }
 
-  for (const [width,percent] of [[390,200],[900,300]]) {
+  for (const [width,percent] of [[390,200],[390,400],[900,300]]) {
     await browser.setViewport(width,900,{dark:false});
     await browser.navigate(base+"/lab/");
     const result=JSON.parse(await browser.evaluate(
@@ -303,10 +303,22 @@ try {
         'tag:el.tagName,id:el.id,klass:typeof el.className==="string"?el.className.slice(0,80):"",'+
         'left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),'+
         'minWidth:c.minWidth,display:c.display,overflowX:c.overflowX};}))'));
-      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,offenders}));
+      const sections=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.querySelectorAll("main > section")].map(x=>'+
+        '({id:x.id,client:x.clientWidth,scroll:x.scrollWidth,rect:x.getBoundingClientRect().right})))'));
+      const unclipped=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.body.querySelectorAll("*")].filter(el=>{'+
+        'const r=el.getBoundingClientRect();if(r.right<=document.documentElement.clientWidth+1)return false;'+
+        'for(let p=el.parentElement;p&&p!==document.documentElement;p=p.parentElement){'+
+        'if(["hidden","clip","auto","scroll"].includes(getComputedStyle(p).overflowX))return false;}'+
+        'return true;}).slice(0,25).map(el=>({tag:el.tagName,id:el.id,'+
+        'klass:typeof el.className==="string"?el.className.slice(0,75):"",'+
+        'left:Math.round(el.getBoundingClientRect().left),right:Math.round(el.getBoundingClientRect().right),' +
+        'parent:el.parentElement?.className||""})))'));
+      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,sections,unclipped,offenders}));
     }
     if(width===390) {
-      const shot=await browser.screenshot(join(directory,"gc-ui-text-200-percent-mobile.png"));
+      const shot=await browser.screenshot(join(directory,"gc-ui-text-"+percent+"-percent-mobile.png"));
       assert.equal(shot.width,390);
     }
     const visibleText=JSON.parse(await browser.evaluate(
@@ -325,6 +337,24 @@ try {
       "Floating navigation labels truncated at enlarged text: "+JSON.stringify(visibleText));
     assert.ok(visibleText.dockScroll>=visibleText.dockWidth,
       "Floating dock must retain an internally scrollable overflow surface");
+
+    if(width===390 && percent===400) {
+      const internals=JSON.parse(await browser.evaluate(
+        '(()=>{const root=document.documentElement,selectors=[".gc-tabs",".gc-table-wrap",".gc-breadcrumbs",".gc-details-list",".gc-lab-type-sample"];'+
+        'return JSON.stringify({viewport:root.clientWidth,scrollWidth:root.scrollWidth,'+
+        'items:selectors.map(selector=>{const el=document.querySelector(selector),r=el.getBoundingClientRect();'+
+        'return {selector,left:r.left,right:r.right,width:el.clientWidth,scroll:el.scrollWidth};})});})()'));
+      assert.ok(internals.items.every(x=>x.left>=-1&&x.right<=internals.viewport+1),
+        "Responsive component escaped 400% layout viewport: "+JSON.stringify(internals));
+      const table=internals.items.find(x=>x.selector===".gc-table-wrap");
+      assert.ok(table.scroll>=table.width,"Sortable data table should retain internal horizontal scroll");
+      for(const id of ["foundations","components","patterns","forms"]) {
+        await browser.evaluate('document.querySelector("#'+id+'").scrollIntoView({behavior:"instant",block:"start"})');
+        await delay(60);
+        const shot=await browser.screenshot(join(directory,"gc-ui-full-400-"+id+".png"));
+        assert.equal(shot.width,390);
+      }
+    }
 
     console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
   }
