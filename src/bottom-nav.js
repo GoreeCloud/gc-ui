@@ -131,9 +131,11 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
   const updateClearance = () => {
     if (disposed || !content) return;
     const height = nav.getBoundingClientRect().height;
+    // Ignore transient or malformed measurements rather than writing NaNpx.
+    if (!Number.isFinite(height) || height < 0) return;
     const bottom = Number.parseFloat(win.getComputedStyle(nav).bottom);
     const padding = Number.isFinite(bottom) ? Math.max(0, bottom) : 0;
-    const px = Math.max(0, Math.ceil(height + padding + 16)) + "px";
+    const px = Math.ceil(height + padding + 16) + "px";
     content.style.setProperty("--gc-bottom-nav-clearance", px);
     lastClearance = px;
   };
