@@ -204,3 +204,10 @@
   .gc-lab-main > section, .gc-lab-main article { min-inline-size:0; }
   .gc-lab-main .gc-cluster { max-inline-size:100%; }
 }
+
+
+@media(max-width:600px) {
+  .gc-lab-type-sample { flex-wrap:wrap; max-inline-size:100%; min-inline-size:0; }
+  .gc-lab-type-sample > div { min-inline-size:0; max-inline-size:100%; overflow-wrap:anywhere; }
+  .gc-lab-type-sample :is(b,strong,small) { min-inline-size:0; max-inline-size:100%; overflow-wrap:anywhere; }
+}
