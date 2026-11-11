@@ -44,10 +44,26 @@
     <p data-gc-menu-status role="status"></p>
   </div>
 
+  
+  <div class="gc-table-wrap">
+    <table class="gc-table" id="test-sort-table">
+      <caption>Local sorting test</caption>
+      <thead><tr>
+        <th scope="col"><button type="button" data-gc-sort="text">Name</button></th>
+        <th scope="col"><button type="button" data-gc-sort="number" id="sort-score">Score</button></th>
+        <th scope="col"><button type="button" data-gc-sort="date">Date</button></th>
+      </tr></thead>
+      <tbody>
+        <tr><td>Bravo</td><td>20</td><td>2026-11-01</td></tr>
+        <tr><td>Alpha</td><td>5</td><td>2026-10-31</td></tr>
+      </tbody>
+    </table>
+  </div>
+
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -123,6 +139,16 @@ try{
   menuOptions[2].click();
   verify(chosen==="gamma"&&!testMenu.matches(":popover-open"),"menu action activates and closes");
   menuControl.dispose();
+  const testTable=document.querySelector("#test-sort-table");
+  const tableSort=initSortableTable(testTable);
+  document.querySelector("#sort-score").click();
+  verify(testTable.tBodies[0].rows[0].cells[0].textContent==="Alpha","numeric table sort ascending");
+  verify(document.querySelector("#sort-score").closest("th").getAttribute("aria-sort")==="ascending","table aria-sort updates");
+  document.querySelector("#sort-score").click();
+  verify(testTable.tBodies[0].rows[0].cells[0].textContent==="Bravo","numeric table sort descending");
+  tableSort.reset();
+  verify(testTable.tBodies[0].rows[0].cells[0].textContent==="Bravo","table resets original row order");
+  tableSort.dispose();
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();

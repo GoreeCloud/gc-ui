@@ -5,3 +5,4 @@ export { defineCustomElements, initTabs, openDialog, closeDialog, toast, bindThe
 export { initAccordion, initToggleGroup, bindRangeOutput, initDrawer } from "./patterns.js";
 export { matchesCommand, initCommandPalette } from "./commands.js";
 export { initActionMenu } from "./menu.js";
+export { initSortableTable } from "./table.js";

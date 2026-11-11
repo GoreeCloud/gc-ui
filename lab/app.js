@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -110,3 +110,14 @@ initActionMenu(document.querySelector("#demo-action-trigger"),
       }
     }
   });
+
+
+// Browser-native semantic table; only the three displayed example rows are sorted.
+const sortStatus = document.querySelector("#demo-sort-status");
+const sorted = initSortableTable(document.querySelector("#demo-sort-table"), {
+  onSort({column,direction}) {
+    sortStatus.textContent = column === null ? "Original order" :
+      "Local rows sorted by column " + (column + 1) + ", " + direction;
+  }
+});
+document.querySelector("#demo-sort-reset").addEventListener("click", () => sorted.reset());

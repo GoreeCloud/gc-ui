@@ -229,3 +229,30 @@
 .gc-menu [data-gc-menu-status] { margin:var(--gc-space-2) var(--gc-space-3); color:var(--gc-negative); font-size:var(--gc-type-support); }
 @media (prefers-contrast:more) { .gc-menu[popover] { border-color:var(--gc-outline); box-shadow:none; } }
 @media (forced-colors:active) { .gc-menu[popover], .gc-menu__item { border:1px solid CanvasText; } }
+
+
+/* Native semantic data table sorting */
+.gc-sort-button {
+  display:inline-flex;
+  align-items:center;
+  gap:var(--gc-space-2);
+  min-block-size:var(--gc-touch-min);
+  padding:var(--gc-space-2) var(--gc-space-1);
+  background:transparent;
+  color:var(--gc-text);
+  border:0;
+  font:inherit;
+  font-weight:700;
+  text-align:start;
+  cursor:pointer;
+}
+.gc-sort-button::after { content:"↕"; color:var(--gc-text-soft); font-size:var(--gc-type-support); }
+.gc-table th[aria-sort="ascending"] .gc-sort-button { color:var(--gc-brand); }
+.gc-table th[aria-sort="ascending"] .gc-sort-button::after { content:"↑"; color:var(--gc-brand); }
+.gc-table th[aria-sort="descending"] .gc-sort-button { color:var(--gc-brand); }
+.gc-table th[aria-sort="descending"] .gc-sort-button::after { content:"↓"; color:var(--gc-brand); }
+.gc-sort-button:hover:not(:disabled) { color:var(--gc-brand); }
+@media (forced-colors:active) {
+  .gc-table th[aria-sort="ascending"] .gc-sort-button,
+  .gc-table th[aria-sort="descending"] .gc-sort-button { color:Highlight; }
+}
