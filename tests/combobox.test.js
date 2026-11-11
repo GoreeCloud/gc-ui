@@ -172,3 +172,55 @@ test("rejected selection after disposal does not announce a stale error",async()
   assert.equal(f.status.textContent,previousStatus);
   assert.equal(f.input.getAttribute("aria-busy"),null);
 });
+
+
+test("Home/End move across visible enabled choices only while combobox is open",()=>{
+  const f=fixture(),api=initCombobox(f.input,f.list);
+  const closed=f.input.emit("keydown",{key:"End"});
+  assert.equal(closed.defaultPrevented,false,"Closed input retains normal text editing");
+  api.open();
+  let e=f.input.emit("keydown",{key:"End"});
+  assert.equal(e.defaultPrevented,true);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-2");
+  e=f.input.emit("keydown",{key:"Home"});
+  assert.equal(e.defaultPrevented,true);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  api.close();
+  assert.equal(f.input.emit("keydown",{key:"Home"}).defaultPrevented,false);
+  api.dispose();
+});
+
+test("refresh removes stale ARIA active descendant after dynamic option disabling",()=>{
+  const f=fixture(),api=initCombobox(f.input,f.list);
+  api.open();f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  f.choices[0].setAttribute("aria-disabled","true");
+  api.refresh();
+  assert.equal(f.input.getAttribute("aria-activedescendant"),null);
+  assert.equal(f.choices[0].getAttribute("data-gc-active"),null);
+  f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-2");
+  f.choices[2].disabled=true;
+  api.refresh();
+  const noChoices=f.input.emit("keydown",{key:"Home"});
+  assert.equal(noChoices.defaultPrevented,false);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),null);
+  api.dispose();
+});
+
+test("Home and End are ignored during asynchronous selection without mutating pending input",async()=>{
+  const f=fixture();let settle;
+  const gate=new Promise(resolve=>{settle=resolve});
+  const api=initCombobox(f.input,f.list,{onSelect:()=>gate});
+  api.open();
+  f.input.emit("keydown",{key:"ArrowDown"});
+  f.input.emit("keydown",{key:"Enter"});
+  assert.equal(f.input.getAttribute("aria-busy"),"true");
+  assert.equal(f.input.emit("keydown",{key:"End"}).defaultPrevented,false);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  settle();
+  for(let i=0;i<5;i++)await Promise.resolve();
+  assert.equal(f.input.value,"Iris");
+  assert.equal(f.list.hidden,true);
+  api.dispose();
+});
