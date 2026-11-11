@@ -53,7 +53,7 @@ export function initNavigationRail(rail, { collapsed } = {}) {
     for (const link of links) {
       const previous = titles.get(link);
       if (next && previous === null) {
-        link.title = link.querySelector(".gc-navigation-rail__label").textContent.trim();
+        link.setAttribute("title",link.querySelector(".gc-navigation-rail__label").textContent.trim());
       } else if (!next) {
         if (previous === null) link.removeAttribute("title");
         else link.setAttribute("title",previous);
