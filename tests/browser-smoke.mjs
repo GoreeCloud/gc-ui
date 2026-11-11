@@ -509,12 +509,17 @@ try {
     await browser.evaluate("window.focus()");
     const nodes=await browser.accessibilityTree();
     const has=(role,label)=>nodes.some(n=>n.role===role&&n.name===label);
-    assert.ok(has("navigation","Primary application destinations"),
-      "Floating dock is missing its named navigation landmark in "+name);
-    for(const label of ["Home","Design","Library","Forms"]) {
+    const useRail = width > 600;
+    assert.ok(has("navigation",useRail?"Design lab sections":"Primary application destinations"),
+      "Visible navigation landmark missing in "+name);
+    for(const label of (useRail?
+      ["Overview","Foundations","Signature surfaces","Rounded windows","Components","Patterns","Forms","Iconography"]:
+      ["Home","Design","Library","Forms"])) {
       assert.ok(has("link",label),
-        "Dock destination missing from accessibility tree: "+label+" ("+name+")");
+        "Visible navigation destination missing from accessibility tree: "+label+" ("+name+")");
     }
+    assert.equal(has("navigation",useRail?"Primary application destinations":"Design lab sections"),false,
+      "Hidden alternate navigation should not appear in assistive-tech tree");
     assert.ok(has("heading","Rounded. Always."),
       "Window showcase's visual heading is not in accessibility tree: "+name);
     const buttons=nodes.filter(n=>n.role==="button");
