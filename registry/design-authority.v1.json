@@ -121,5 +121,17 @@
       "forced-colors-fallbacks"
     ],
     "nativeProductAdoption": "not-audited"
+  },
+  "navigationRail": {
+    "requirement": "tablet-desktop-web-collapsible-icon-only",
+    "expandedDefault": "desktop-at-least-1024-css-px",
+    "collapsedDefault": "tablet-601-to-1023-css-px",
+    "compactWidth": "76px-web-alpha-default",
+    "expandedWidth": "248px-web-alpha-default",
+    "phone": "hide-rail-use-context-appropriate-bottom-navigation",
+    "webController": "implemented-alpha",
+    "nativeStatus": "requires-native-adapters",
+    "acceptance": "per-consumer-evidence-required",
+    "privacy": "no-storage-no-telemetry"
   }
 }
