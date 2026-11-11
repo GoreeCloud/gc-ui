@@ -101,3 +101,20 @@ test("async failure keeps action menu open with neutral feedback",async()=>{
   assert.doesNotMatch(status.textContent,/sensitive/);
   api.dispose();
 });
+
+
+test("menu typeahead finds enabled choices and ignores modifier shortcuts",()=>{
+  const f=fixture();
+  f.items[0].textContent="Open";
+  f.items[1].textContent="Save";
+  f.items[2].textContent="Search";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  const event=f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(event.defaultPrevented,true);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  const modified=f.menu.emit("keydown",{target:f.items[1],key:"o",ctrlKey:true});
+  assert.equal(modified.defaultPrevented,false);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
