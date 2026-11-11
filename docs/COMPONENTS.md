@@ -148,3 +148,7 @@ The real Chromium browser-smoke runner now inspects non-ignored accessibility-tr
 ### Modifier-click and route-state safety
 
 When a navigation link is opened in another tab/window, downloaded, modified with Ctrl/Meta/Shift/Alt or uses an alternative browsing context, the local page's active destination must **not** change. A click already canceled by a consumer handler must also preserve `aria-current` and must not invoke `onNavigate`. Disabled destinations remain blocked even on modified clicks. Only an ordinary, non-canceled, current-tab activation may optimistically set the current visual destination; consumer routing/Identity authorization remains authoritative.
+
+### Floating dock inside a rounded application window
+
+Use gc-window gc-window--app-shell with a scrollable gc-window__body and its sibling gc-bottom-nav gc-bottom-nav--window for desktop-like multiwindow applications. The capsule stays within all four rounded window corners and never follows the browser viewport. Browser acceptance checks 320/390/900/1440px geometry and captures mobile/desktop screenshots. This is an alternative to the page-level dock, not a second dock for one real consuming app.

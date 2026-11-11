@@ -19,3 +19,8 @@ Use a floating Cloud Lens capsule at the bottom of applications with multiple pr
 ### Bottom navigation authorization boundary
 
 The optional web `onNavigate` hook must make a synchronous route approval decision. Thrown errors, unexpected values and thenable/Promise results are treated as a denial of the native default link navigation, not implicit approval. Only `true` or no decision (`undefined`) permits navigation. Applications must still enforce route permissions server-side or in their authorized router and cannot use a visual dock as an Identity or Wardveil enforcement boundary.
+
+
+## Window-owned Cloud Lens destination docks (web alpha)
+
+A rounded web application with multiple panels uses a GC window in app-shell mode with a scrollable window body followed by a sibling bottom-nav in window mode. The window owns its floating pill: it stays centered above the window bottom while its content scrolls separately. Unlike the viewport bar, window mode never uses a device gesture safe-area inset inside another app window. Real app consumers choose either the viewport dock or the window-owned dock; the design lab displays both as **separate demonstrations**, not a mandate to duplicate navigation. The same initBottomNavigation controller handles keyboard semantics, disabled routes and consumer-owned authorization. The window has all four rounded corners; no native OS-managed chrome has been implemented.
