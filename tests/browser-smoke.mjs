@@ -623,7 +623,17 @@ try {
       'return JSON.stringify({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,'+
       'left:r.left,right:r.right,bottom:r.bottom,height:r.height,radius:getComputedStyle(dock).borderTopLeftRadius,'+
       'active:active?.textContent.trim(),activeColor:active?getComputedStyle(active).color:null,'+
-      'expected,padding:parseFloat(getComputedStyle(main).paddingBottom)});})()'));
+      'expected,padding:parseFloat(getComputedStyle(main).paddingBottom),'+
+      'railDisplay:getComputedStyle(document.querySelector(".gc-navigation-rail")).display,'+
+      'railWidth:document.querySelector(".gc-navigation-rail").getBoundingClientRect().width});})()'));
+    if (width >= 601) {
+      assert.equal(actual.height,0,"Wide-layout viewport dock must be hidden");
+      assert.notEqual(actual.railDisplay,"none","Wide layout requires visible rail");
+      assert.ok(actual.railWidth>=76,"Rail width must be meaningful");
+      assert.ok(actual.scroll<=actual.width+1,"Wide navigation caused horizontal overflow");
+      console.log("Chromium tablet/desktop @ "+width+"px: one visible rail, no viewport dock");
+      continue;
+    }
     assert.ok(actual.left>=0 && actual.right<=actual.width+1,"Floating dock exceeds viewport "+JSON.stringify(actual));
     assert.ok(actual.bottom<=844 && actual.height>=50,"Floating dock height/position incorrect "+JSON.stringify(actual));
     assert.ok(parseFloat(actual.radius)>=26,"Bottom nav lost rounded capsule "+JSON.stringify(actual));
