@@ -325,6 +325,29 @@ try {
   assert.equal(forcedShot.width,390);
   console.log("Chromium forced-colors @ 390px: semantic boundary and layout passed");
 
+  // Floating dock geometry, readable active state and reserved content space.
+  for(const width of [320,390,900,1440]) {
+    await browser.setViewport(width,844,{dark:width===390});
+    await browser.navigate(base+"/lab/");
+    const actual=JSON.parse(await browser.evaluate(
+      '(()=>{const dock=document.querySelector("#demo-bottom-nav"),r=dock.getBoundingClientRect();'+
+      'const links=[...dock.querySelectorAll("a")],main=document.querySelector("#main");'+
+      'const active=links.find(a=>a.getAttribute("aria-current")==="page");'+
+      'const probe=document.createElement("span");probe.style.color="var(--gc-on-brand-container)";'+
+      'document.body.append(probe);const expected=getComputedStyle(probe).color;probe.remove();'+
+      'return JSON.stringify({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,'+
+      'left:r.left,right:r.right,bottom:r.bottom,height:r.height,radius:getComputedStyle(dock).borderTopLeftRadius,'+
+      'active:active?.textContent.trim(),activeColor:active?getComputedStyle(active).color:null,'+
+      'expected,padding:parseFloat(getComputedStyle(main).paddingBottom)});})()'));
+    assert.ok(actual.left>=0 && actual.right<=actual.width+1,"Floating dock exceeds viewport "+JSON.stringify(actual));
+    assert.ok(actual.bottom<=844 && actual.height>=50,"Floating dock height/position incorrect "+JSON.stringify(actual));
+    assert.ok(parseFloat(actual.radius)>=26,"Bottom nav lost rounded capsule "+JSON.stringify(actual));
+    assert.ok(actual.active && actual.activeColor===actual.expected,"Dock selected state unreadable "+JSON.stringify(actual));
+    assert.ok(actual.padding>=actual.height,"Dock occludes content "+JSON.stringify(actual));
+    assert.ok(actual.scroll<=actual.width+1,"Floating nav causes horizontal overflow "+JSON.stringify(actual));
+    console.log("Chromium floating bottom dock @ "+width+"px: capsule, safe space and contrast passed");
+  }
+
   // Dedicated signature-composition screenshots: not a replacement for human design review.
   for(const [filename,width,height,dark] of [
     ["gc-ui-premium-desktop.png",1440,900,false],

@@ -103,10 +103,15 @@
     <span class="gc-feature-tile__icon" aria-hidden="true">✦</span>
     <h3>Design quality</h3><p>Original and adaptable.</p>
   </article>
+<nav id="test-bottom-nav" class="gc-bottom-nav" aria-label="Test primary destinations">
+  <a class="gc-bottom-nav__link" href="#test-dock-home" aria-current="page"><span>Home</span></a>
+  <a class="gc-bottom-nav__link" href="#test-dock-settings" aria-disabled="true"><span>Settings</span></a>
+  <a class="gc-bottom-nav__link" href="#test-dock-apps"><span>Applications</span></a>
+</nav>
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -236,6 +241,22 @@ try{
   verify(comboInput.value==="Moss" && selectedAccent==="moss","combobox commits selected option");
   verify(comboInput.getAttribute("aria-expanded")==="false" && comboList.hidden,"combobox closes on commit");
   comboCtrl.dispose();
+  const dock=document.querySelector("#test-bottom-nav");
+  const dockLinks=[...dock.querySelectorAll("a")];
+  const dockCtl=initBottomNavigation(dock);
+  verify(dockLinks[0].getAttribute("aria-current")==="page","floating dock sets selected destination");
+  dockLinks[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(document.activeElement===dockLinks[2],"dock skips disabled links during arrow-key focus");
+  verify(dockLinks[0].getAttribute("aria-current")==="page","keyboard focus does not fake navigation");
+  verify(dockCtl.select(dockLinks[2]) && dockLinks[2].getAttribute("aria-current")==="page","dock explicit route selection");
+  const dockColor=document.createElement("span");
+  dockColor.style.color="var(--gc-on-brand-container)";
+  document.body.append(dockColor);
+  const selectedColor=getComputedStyle(dockColor).color;
+  dockColor.remove();
+  verify(getComputedStyle(dockLinks[2]).color===selectedColor,"dock selected label respects semantic contrast");
+  verify(parseFloat(getComputedStyle(dock).borderTopLeftRadius)>=26,"floating dock has rounded capsule shape");
+  dockCtl.dispose();
   const signature=document.querySelector("#premium-fixture");
   const signatureStyle=getComputedStyle(signature);
   const featureStyle=getComputedStyle(document.querySelector("#premium-tile"));

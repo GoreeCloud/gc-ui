@@ -50,3 +50,7 @@ The 200% CSS-root-text smoke gate initially exposed a 103px horizontal overflow 
 ## Signature composition verification
 
 The browser job verifies the reusable signature surface and feature tile, including a semantic layered backdrop, solid legible content, radius, elevation and viewport reflow. It saves dedicated light desktop and dark mobile screenshots focused on the signature components. Visual quality still requires human review of the actual screenshots, real interactions, assistive technology and performance. These tests enforce implementation invariants, **not** subjective beauty or certification.
+
+## Floating bottom navigation acceptance
+
+Chromium verifies actual floating dock layout at 320, 390, 900 and 1440 CSS widths, safe responsive geometry, content clearance, capsule radius and semantic active label contrast in both appearances. The DOM fixture verifies arrow-key movement past disabled destinations and selection states. System gesture insets are emulated through CSS only, not physical Android/iOS navigation-bar hardware. Native platform and screen-reader acceptance remain open.
