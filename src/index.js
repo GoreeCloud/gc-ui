@@ -11,3 +11,5 @@ export { initCombobox } from "./combobox.js";
 export { initBottomNavigation } from "./bottom-nav.js";
 
 export { initNavigationRail } from "./navigation-rail.js";
+
+export { initAvailabilityFeedback } from "./availability.js";
