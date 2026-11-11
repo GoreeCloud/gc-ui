@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -149,3 +149,6 @@ initCombobox(document.querySelector("#demo-combobox"),
         option.textContent.trim()+" accent selected in this preview.";
     }
   });
+
+// Real local hash destinations; the floating dock tracks URL history automatically.
+initBottomNavigation(document.querySelector("#demo-bottom-nav"));

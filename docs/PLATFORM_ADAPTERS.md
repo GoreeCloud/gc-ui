@@ -20,3 +20,7 @@ GC UI is presentation only. GoreeCloud Identity owns authorization, GoreeShield 
 ## Mandatory rounded windows and bottom navigation
 
 Every native GoreeCloud window must have rounded corners, including maximized frames and secondary dialogs; integrate canonical XL/LG shape roles with documented OS APIs. If the compositor forbids outer corner changes, retain an in-app rounded frame and document the exception. A native floating bottom navigation bar must respect system gestures, insets, keyboard and accessibility semantics. No native adapter for these requirements is implemented or certified here.
+
+## Founder floating-navigation direction
+
+GoreeCloud apps with multiple primary destinations require a rounded floating bottom navigation capsule. Native adapters must respect system gesture insets, screen-reader semantics and keyboard/remote focus. The web alpha implementation is not a native SDK; builds and real device testing remain open.

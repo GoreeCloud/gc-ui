@@ -120,3 +120,15 @@ Initialize initCombobox(input, list, { onSelect }) from @goreecloud/ui/combobox 
 An optional onSelect(option, value) callback can perform an authorized asynchronous action. A pending callback sets aria-busy; rejected actions keep the popup open with a generic non-sensitive error. The controller returns open(), close(), refresh() and dispose(). Data values are local and never transmitted by the component; consumers must authorize actual operations, validate service responses, and decide whether to persist or emit form events.
 
 This alpha combobox is not a virtualized remote autocomplete, does not create or fetch options and does not replace simpler native select controls when search is unnecessary. Browser, localization, screen-reader and touch acceptance remain consumer responsibilities.
+
+## Floating bottom destination navigation
+
+GoreeCloud UI applications with multiple primary destinations use a rounded floating Cloud Lens capsule anchored above system gesture insets. The web implementation uses a labeled nav.gc-bottom-nav and two to six native anchors with gc-bottom-nav__link, href, original icons and visible labels. Set gc-bottom-nav-content on the main scrolling region so controls are not obscured by the dock.
+
+Initialize initBottomNavigation(nav, {onNavigate}) from @goreecloud/ui/bottom-nav or the root package. Synchronous onNavigate(link) may return false to veto navigation; otherwise a real same-origin native anchor retains ordinary behavior. The selection exposes aria-current=page and follows hashchange/popstate. Arrow Left/Right (RTL-aware) plus Home/End move focus without navigating or changing selection. Native Enter still activates the link. The controller returns select, sync and dispose.
+
+Disabled choices are skipped. Non-HTTP(S), cross-origin, empty and duplicate destinations are rejected. No telemetry, persistence, backend authority or server route is provided by the controller. Integrating applications retain GoreeCloud Identity authorization, GoreeShield privacy, Wardveil cybersecurity and Mesh boundaries.
+
+Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
+
+For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). Long single-line labels are safely ellipsized; the native link text remains available to assistive technology. Do not rely on truncation as a substitute for meaningful short labels.

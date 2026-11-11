@@ -96,3 +96,7 @@ GoreeCloud UI must be visually distinctive, premium and modern in every supporte
 ## Rounded application windows
 
 All GoreeCloud application windows must have rounded corners. The web library provides gc-window with rounded titlebar/body/controls/statusbar, including compact/floating variants, and four-corner dialogs/drawers. See docs/WINDOWS_AND_NAVIGATION.md. Native OS chrome remains a separate verified-adapter requirement.
+
+## Floating bottom navigation
+
+The responsive gc-bottom-nav capsule floats above device gesture insets, with native links, original icons, visible labels, selected-state contrast, mobile reflow and an optional keyboard/route controller. See docs/COMPONENTS.md. Actual routing authorization and native OS navigation remain consumer responsibilities.

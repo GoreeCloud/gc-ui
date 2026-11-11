@@ -91,5 +91,14 @@
     "compactRadiusRole": "radius.lg",
     "nativeEnforcement": "requires-platform-adapters",
     "nativeStatus": "unverified"
+  },
+  "bottomNavigation": {
+    "requirement": "floating-at-application-bottom",
+    "material": "Cloud Lens",
+    "webController": "implemented-alpha",
+    "safeArea": "required",
+    "keyboard": "arrow-home-end-rtl-aware",
+    "nativeEnforcement": "requires-platform-adapters",
+    "nativeStatus": "unverified"
   }
 }
