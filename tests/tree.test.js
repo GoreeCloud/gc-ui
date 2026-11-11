@@ -155,11 +155,11 @@ test("tree text navigation ignores IME composition and modified or whitespace ke
   const f=fixture(),api=initTreeView(f.tree);
   const ignored=[
     {key:"d",isComposing:true},{key:"d",altKey:true},{key:"d",ctrlKey:true},
-    {key:"d",metaKey:true},{key:" "},
+    {key:"d",metaKey:true},{key:"Tab"},
   ];
   for(const params of ignored){
     const e=f.tree.emit("keydown",f.projects,params);
-    assert.equal(e.defaultPrevented,params.key===" ");
+    assert.equal(e.defaultPrevented,false);
     assert.equal(f.projects.getAttribute("aria-selected"),"true");
   }
   const next=f.tree.emit("keydown",f.projects,{key:"d"});
