@@ -303,7 +303,19 @@ try {
         'tag:el.tagName,id:el.id,klass:typeof el.className==="string"?el.className.slice(0,80):"",'+
         'left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),'+
         'minWidth:c.minWidth,display:c.display,overflowX:c.overflowX};}))'));
-      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,offenders}));
+      const unclipped=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.body.querySelectorAll("*")].filter(el=>{'+
+        'const r=el.getBoundingClientRect();if(r.right<=document.documentElement.clientWidth+1)return false;'+
+        'for(let p=el.parentElement;p&&p!==document.documentElement;p=p.parentElement){'+
+        'const o=getComputedStyle(p).overflowX;if(["hidden","clip","auto","scroll"].includes(o))return false;}'+
+        'return true;}).slice(0,25).map(el=>({'+
+        'tag:el.tagName,id:el.id,klass:typeof el.className==="string"?el.className.slice(0,80):"",'+
+        'right:Math.round(el.getBoundingClientRect().right),'+
+        'ancestor:el.parentElement?.id||el.parentElement?.className||""})))'));
+      const sections=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.querySelectorAll("main > section")].map(el=>({id:el.id,'+
+        'client:el.clientWidth,scroll:el.scrollWidth,right:Math.round(el.getBoundingClientRect().right)})))'));
+      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,sections,unclipped,offenders}));
     }
     if(width===390) {
       const shot=await browser.screenshot(join(directory,"gc-ui-text-"+percent+"-percent-mobile.png"));
