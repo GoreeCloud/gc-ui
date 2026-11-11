@@ -84,6 +84,8 @@ Consumer apps must independently verify authorization through GoreeCloud Identit
 `initTabs()` supports horizontal arrow navigation (RTL-aware Left/Right), vertical arrow navigation (Up/Down when `aria-orientation="vertical"`), and Home/End. Native disabled, `aria-disabled="true"` and hidden tabs are excluded from navigation and selection; a tablist without any enabled tab is invalid. The controller keeps `aria-selected`, sequential tab focus and panel visibility synchronized and exposes a cleanup callback. Use unique `aria-controls`/tabpanel IDs and supply semantic labels for the enclosing tablist. This does not substitute for human screen-reader testing.
 
 ## Native popover action menus
+Keyboard improvements: while the native menu is open, single-character typeahead selects the next enabled matching item, repeated letters cycle matching items, and Home/End/arrow keys retain native-like focus behavior. Composition events and Ctrl/Meta/Alt shortcuts are ignored. The typeahead buffer is cleared on normal close and external popover dismissal. Menu selection still invokes only the consumer-supplied handler; no backend action or authorization is implied.
+
 
 Use a labeled trigger button and `<div class="gc-menu" popover="auto" role="menu" aria-label="...">` containing real `<button class="gc-menu__item" role="menuitem" type="button">` choices. Initialize with `initActionMenu(trigger, menu, { onSelect })` from `@goreecloud/ui/menu`. The required callback is responsible for action authorization and actual success; menu buttons must not directly mutate services without approved controls. The API returns `open(last?)`, `close(returnFocus?)`, and `dispose()`.
 

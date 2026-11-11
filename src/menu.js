@@ -60,6 +60,8 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const close = (returnFocus = true) => {
     if (isOpen()) menu.hidePopover();
+    typeahead = "";
+    typeaheadAt = 0;
     trigger.setAttribute("aria-expanded", "false");
     if (returnFocus && !disposed) trigger.focus();
   };
@@ -90,8 +92,10 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     event.preventDefault();
     open(event.key === "ArrowUp");
   };
+  let typeahead = "";
+  let typeaheadAt = 0;
   const onMenuKey = event => {
-    if (!isOpen()) return;
+    if (!isOpen() || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return;
     if (event.key === "Escape") {
       event.preventDefault();
       close(true);
@@ -106,9 +110,24 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     if (event.key === "ArrowUp") target = (index - 1 + choices.length) % choices.length;
     if (event.key === "Home") target = 0;
     if (event.key === "End") target = choices.length - 1;
-    if (target < 0) return;
-    event.preventDefault();
-    choices[target].focus();
+    if (target >= 0) {
+      event.preventDefault();
+      choices[target].focus();
+      return;
+    }
+    if (event.key.length !== 1 || !/\S/u.test(event.key)) return;
+    const now = Date.now();
+    const previous = now - typeaheadAt > 700 ? "" : typeahead;
+    // Repeated single-letter input cycles matching options, like native menus.
+    typeahead = previous && [...previous].every(letter => letter === event.key)
+      ? event.key : previous + event.key;
+    typeaheadAt = now;
+    const query = typeahead.toLocaleLowerCase();
+    const start = index < 0 ? 0 : (index + 1) % choices.length;
+    const match = Array.from({length: choices.length}, (_, i) => choices[(start + i) % choices.length])
+      .find(choice => (choice.getAttribute("aria-label") || choice.textContent || "").trim()
+        .toLocaleLowerCase().startsWith(query));
+    if (match) { event.preventDefault(); match.focus(); }
   };
   const onMenuClick = event => {
     const item = event.target?.closest?.('button[role="menuitem"]');
@@ -116,6 +135,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const onToggle = () => {
     const showing = isOpen();
+    if (!showing) { typeahead = ""; typeaheadAt = 0; }
     trigger.setAttribute("aria-expanded", String(showing));
     // Outside click should preserve where the person moved focus.
     if (!showing && menu.contains(doc.activeElement)) trigger.focus();

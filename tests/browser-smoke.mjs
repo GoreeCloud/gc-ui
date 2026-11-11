@@ -275,6 +275,31 @@ try {
     "Known history route failed to restore unique current destination");
   console.log("Chromium bottom navigation: unmatched route clears selection, known route restores it");
 
+  // Real Chromium native popover: typeahead must cycle repeated initial
+  // letters without activating an action, respect IME, and reset on outside
+  // dismissal. A local mock in the lab never touches service accounts.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const menuTypeahead=JSON.parse(await browser.evaluate(
+    '(()=>{const trigger=document.querySelector("#demo-action-trigger"),'+
+    'menu=document.querySelector("#demo-action-menu"),'+
+    'items=[...menu.querySelectorAll("button[role=menuitem]:not([disabled])")];'+
+    'items[0].textContent="Save";items[1].textContent="Search";'+
+    'trigger.click();const started=menu.matches(":popover-open")&&document.activeElement===items[0];'+
+    'const press=(el,key,composing=false)=>el.dispatchEvent(new KeyboardEvent("keydown",'+
+    '{key,bubbles:true,cancelable:true,isComposing:composing}));'+
+    'press(items[0],"s");const cycled1=document.activeElement===items[1];'+
+    'press(items[1],"s");const cycled2=document.activeElement===items[0];'+
+    'press(items[0],"s",true);const ignoredIme=document.activeElement===items[0];'+
+    'menu.hidePopover();menu.dispatchEvent(new Event("toggle"));'+
+    'trigger.click();press(items[0],"s");'+
+    'const reset=document.activeElement===items[1];'+
+    'return JSON.stringify({started,cycled1,cycled2,ignoredIme,reset});})()'));
+  assert.deepEqual(menuTypeahead,{
+    started:true,cycled1:true,cycled2:true,ignoredIme:true,reset:true,
+  },"Native menu typeahead keyboard behavior regressed");
+  console.log("Chromium native menu: repeat cycling, composition and external-close reset passed");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
