@@ -101,3 +101,42 @@ test("async failure keeps action menu open with neutral feedback",async()=>{
   assert.doesNotMatch(status.textContent,/sensitive/);
   api.dispose();
 });
+
+
+test("menu typeahead finds enabled choices and ignores modifier shortcuts",()=>{
+  const f=fixture();
+  f.items[0].textContent="Open";
+  f.items[1].textContent="Save";
+  f.items[2].textContent="Search";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  const event=f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(event.defaultPrevented,true);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  const modified=f.menu.emit("keydown",{target:f.items[1],key:"o",ctrlKey:true});
+  assert.equal(modified.defaultPrevented,false);
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
+
+test("typeahead cycles repeated letters, resets on reopen, and ignores composition",()=>{
+  const f=fixture();
+  f.items[0].textContent="Save";
+  f.items[1].textContent="Search";
+  f.items[2].textContent="Settings";
+  f.items[2].attrs["aria-disabled"]="false";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[1]);
+  f.menu.emit("keydown",{target:f.items[1],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[2]);
+  const composing=f.menu.emit("keydown",{target:f.items[2],key:"s",isComposing:true});
+  assert.equal(composing.defaultPrevented,false);
+  assert.equal(f.doc.activeElement,f.items[2]);
+  api.close();
+  api.open();
+  f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
