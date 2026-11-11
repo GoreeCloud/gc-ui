@@ -162,3 +162,10 @@ Use gc-window gc-window--app-shell with a scrollable gc-window__body and its sib
 ## Adaptive navigation rail (alpha)
 
 Use `initNavigationRail(rail, { collapsed?: boolean })` on a named native `aside` containing a named `nav.gc-navigation-rail__links`, a `button[data-gc-rail-toggle]` with an exact `aria-controls` target, and labeled native links. The API returns `{ collapsed, setCollapsed, toggle, sync, dispose }`. Default collapsed on tablet (601–1023 CSS px), expanded on desktop (1024+); phone has its own bottom navigation. Full example and acceptance boundary: [NAVIGATION_RAIL.md](NAVIGATION_RAIL.md). No storage, telemetry or service authorization is performed by the controller. Human AT and real-device acceptance remain open.
+
+### Editable combobox IME behavior (alpha)
+The native input retains composition ownership for language IMEs. While composing, the
+combobox does not hijack Enter, Escape, Home/End or arrow keys, select a suggestion,
+or filter on intermediate preedit text. Filtering resumes on `compositionend`;
+legacy `keyCode=229` key events remain native. Real device/IME and assistive
+technology acceptance is still required. This behavior has no server authority.
