@@ -80,6 +80,32 @@ test("RTL mapping, Home End, typeahead and leaf activation",()=>{
   f.tree.emit("keydown",f.docs,{key:"Enter"});
   assert.deepEqual(activated,[f.docs]);api.dispose();
 });
+test("disabled ancestors, groups, and trees exclude their descendants",()=>{
+  const f=fixture(), activated=[];
+  f.projects.setAttribute("aria-disabled","true");
+  const api=initTreeView(f.tree,{onActivate:item=>activated.push(item)});
+  assert.equal(f.services.tabIndex,0);
+  assert.equal(f.docs.tabIndex,-1);
+  assert.equal(api.select(f.docs),false);
+  f.tree.emit("click",f.docs);
+  f.tree.emit("keydown",f.docs,{key:"Enter"});
+  assert.deepEqual(activated,[]);
+  assert.equal(f.services.getAttribute("aria-selected"),"true");
+  api.dispose();
+
+  const g=fixture();
+  g.pg.setAttribute("aria-disabled","true");
+  const grouped=initTreeView(g.tree);
+  assert.equal(grouped.select(g.docs),false);
+  g.tree.emit("keydown",g.projects,{key:"ArrowRight"});
+  assert.equal(g.projects.getAttribute("aria-selected"),"true");
+  grouped.dispose();
+
+  const t=fixture();
+  t.tree.setAttribute("aria-disabled","true");
+  assert.throws(()=>initTreeView(t.tree),/visible enabled treeitem/);
+});
+
 test("invalid markup and disposed controllers fail closed",()=>{
   assert.throws(()=>initTreeView(null),TypeError);
   const f=fixture();assert.throws(()=>initTreeView(f.tree,{onSelect:3}),TypeError);
