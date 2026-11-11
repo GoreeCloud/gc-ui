@@ -60,3 +60,7 @@ Run `npm run contrast:check` to test 82 intended solid foreground/background pai
 ## Original icon registry and sprite
 
 GoreeCloud UI includes an original 42-glyph family. The canonical path shapes remain in `src/icons.js`; `npm run icons:generate` builds an offline SVG symbol sprite at `assets/gc-icons.svg` and a registry at `assets/gc-icons.json`. CI and npm packaging run `npm run icons:check` to reject stale glyph exports. Give each icon-only control an accessible label; the icon itself is decorative unless explicitly named. Native applications must implement and verify their own appropriate vector adapters.
+
+## Browser interaction and screenshot QA
+
+`npm run browser:smoke` exercises a local-only headless Chrome fixture and captures desktop/light and mobile/dark reference lab screenshots. A separate pinned GitHub Actions job runs it on Ubuntu 24.04 (where Chrome is included). Screenshots are retained as short-lived CI artifacts for human review; the browser job has no write token, credentials, dependency installer or remote backend. Passing these smoke checks does **not** certify human visual quality, zoom, RTL, physical-device ergonomics or screen-reader accessibility. See [browser QA](docs/BROWSER_QA.md).
