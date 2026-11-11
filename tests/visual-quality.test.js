@@ -36,3 +36,16 @@ test("signature lab, governance and browser QA remain aligned",()=>{
   assert.match(load("docs/VISUAL_QUALITY.md"),/mandatory|Premium/i);
   assert.match(load("docs/DESIGN_LANGUAGE.md"),/Premium visual quality is mandatory/);
 });
+
+test("machine-readable authority makes premium quality mandatory without false certification",()=>{
+  const registry=JSON.parse(load("registry/design-authority.v1.json"));
+  assert.equal(registry.visualQuality.requirement,"mandatory");
+  assert.equal(registry.visualQuality.identity,"distinctive-premium-modern");
+  assert.equal(registry.visualQuality.acceptance,"per-consumer-evidence-required");
+  assert.equal(registry.visualQuality.nativeStatus,"unverified");
+  assert.equal(registry.implementation.visualQualityDocs,"docs/VISUAL_QUALITY.md");
+  assert.equal(registry.consumerMigrationStatus,"not-audited");
+  assert.equal(registry.nativeSdkStatus,"not-implemented");
+  assert.ok(load(registry.implementation.visualQualityDocs).includes("Non-negotiable identity"));
+  assert.ok(load(".github/PULL_REQUEST_TEMPLATE.md").includes("not generic"));
+});
