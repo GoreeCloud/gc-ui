@@ -140,3 +140,7 @@ For premium mobile layouts, use concise visible destination names (for example, 
 ### Dynamic dock height / content clearance
 
 Pass `{ content: scrollRegionElement }` to `initBottomNavigation` when the dock overlays a scrolling application. The controller measures the actual capsule and its bottom inset, sets the local `--gc-bottom-nav-clearance` on the supplied element, tracks changes with ResizeObserver and window resize fallback, and restores the previous value at disposal. The existing `.gc-bottom-nav-content` class retains conservative CSS padding if JavaScript is unavailable. This avoids obscuring last-row content when larger text or translations increase dock height. The content must belong to the same document.
+
+### Accessibility-tree acceptance evidence
+
+The real Chromium browser-smoke runner now inspects non-ignored accessibility-tree roles and names for the named floating dock navigation, destination links, rounded window heading, native modal dialog and actionable buttons in desktop light and mobile dark. A button that becomes unnamed in the accessibility tree fails CI. This strengthens automated semantics checks but is not a substitute for platform screen-reader or real-device acceptance.
