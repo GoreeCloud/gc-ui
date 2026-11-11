@@ -59,6 +59,7 @@ export declare function initBottomNavigation(nav: HTMLElement, options?: {
 /** Tablet/desktop rail that collapses to icon-only destinations; native links navigate. */
 export declare function initNavigationRail(rail: HTMLElement, options?: {
   collapsed?: boolean;
+  unknownRoute?: "preserve" | "clear";
 }): {
   readonly collapsed: boolean;
   setCollapsed: (collapsed: boolean) => boolean;
