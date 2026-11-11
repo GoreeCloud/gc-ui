@@ -373,6 +373,31 @@ try {
     "Chromium native sortable-table row refresh or reset regressed");
   console.log("Chromium native sortable table: dynamic insertion, sort and removal pass");
 
+  // Native dialog must not turn text composition into a destructive command.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const commandIME=JSON.parse(await browser.evaluate(
+    '(async()=>{const {initCommandPalette}=await import("/src/commands.js");'+
+    'const dialog=document.createElement("dialog"),input=document.createElement("input"),'+
+    'button=document.createElement("button"),status=document.createElement("p");'+
+    'input.type="search";button.dataset.gcCommand="1";button.textContent="Open file";'+
+    'status.dataset.gcCommandStatus="";dialog.append(input,button,status);document.body.append(dialog);'+
+    'let calls=0;const api=initCommandPalette(dialog,{shortcut:false,onSelect:()=>{calls++;}});'+
+    'api.open();const initial=status.textContent;'+
+    'input.dispatchEvent(new CompositionEvent("compositionstart",{bubbles:true}));'+
+    'input.value="zz-unmatched";'+
+    'input.dispatchEvent(new InputEvent("input",{bubbles:true,isComposing:true}));'+
+    'const unchanged=status.textContent===initial;'+
+    'const enter=new KeyboardEvent("keydown",{key:"Enter",bubbles:true,cancelable:true,isComposing:true});'+
+    'input.dispatchEvent(enter);const ignored=!enter.defaultPrevented&&calls===0;'+
+    'input.dispatchEvent(new CompositionEvent("compositionend",{bubbles:true}));'+
+    'const updated=status.textContent==="No matching commands";'+
+    'api.close();api.dispose();dialog.remove();'+
+    'return JSON.stringify({unchanged,ignored,updated,calls});})()'));
+  assert.deepEqual(commandIME,{unchanged:true,ignored:true,updated:true,calls:0},
+    "Chromium IME composition unexpectedly activated a command or filtered interim text");
+  console.log("Chromium native command palette: IME composing and committed input passed");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
