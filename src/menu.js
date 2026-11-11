@@ -60,6 +60,8 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const close = (returnFocus = true) => {
     if (isOpen()) menu.hidePopover();
+    typeahead = "";
+    typeaheadAt = 0;
     trigger.setAttribute("aria-expanded", "false");
     if (returnFocus && !disposed) trigger.focus();
   };
@@ -93,7 +95,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   let typeahead = "";
   let typeaheadAt = 0;
   const onMenuKey = event => {
-    if (!isOpen() || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!isOpen() || event.altKey || event.ctrlKey || event.metaKey || event.isComposing) return;
     if (event.key === "Escape") {
       event.preventDefault();
       close(true);
@@ -115,7 +117,10 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     }
     if (event.key.length !== 1 || !/\S/u.test(event.key)) return;
     const now = Date.now();
-    typeahead = now - typeaheadAt > 700 ? event.key : typeahead + event.key;
+    const previous = now - typeaheadAt > 700 ? "" : typeahead;
+    // Repeated single-letter input cycles matching options, like native menus.
+    typeahead = previous && [...previous].every(letter => letter === event.key)
+      ? event.key : previous + event.key;
     typeaheadAt = now;
     const query = typeahead.toLocaleLowerCase();
     const start = index < 0 ? 0 : (index + 1) % choices.length;
@@ -130,6 +135,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const onToggle = () => {
     const showing = isOpen();
+    if (!showing) { typeahead = ""; typeaheadAt = 0; }
     trigger.setAttribute("aria-expanded", String(showing));
     // Outside click should preserve where the person moved focus.
     if (!showing && menu.contains(doc.activeElement)) trigger.focus();

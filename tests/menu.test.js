@@ -118,3 +118,25 @@ test("menu typeahead finds enabled choices and ignores modifier shortcuts",()=>{
   assert.equal(f.doc.activeElement,f.items[1]);
   api.dispose();
 });
+
+test("typeahead cycles repeated letters, resets on reopen, and ignores composition",()=>{
+  const f=fixture();
+  f.items[0].textContent="Save";
+  f.items[1].textContent="Search";
+  f.items[2].textContent="Settings";
+  f.items[2].attrs["aria-disabled"]="false";
+  const api=initActionMenu(f.trigger,f.menu,{onSelect(){}});
+  api.open();
+  f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[1]);
+  f.menu.emit("keydown",{target:f.items[1],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[2]);
+  const composing=f.menu.emit("keydown",{target:f.items[2],key:"s",isComposing:true});
+  assert.equal(composing.defaultPrevented,false);
+  assert.equal(f.doc.activeElement,f.items[2]);
+  api.close();
+  api.open();
+  f.menu.emit("keydown",{target:f.items[0],key:"s"});
+  assert.equal(f.doc.activeElement,f.items[1]);
+  api.dispose();
+});
