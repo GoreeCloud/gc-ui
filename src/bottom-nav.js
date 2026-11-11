@@ -162,12 +162,19 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
   nav.addEventListener("keydown", onKey);
   win.addEventListener("hashchange", syncFromLocation);
   win.addEventListener("popstate", syncFromLocation);
-  const initial = links.find(link=>enabled(link) && link.getAttribute("aria-current")==="page");
   const current = links.find((link,i)=>enabled(link) &&
     urls[i].pathname === win.location.pathname &&
     urls[i].search === win.location.search &&
     urls[i].hash === win.location.hash);
-  select(current || initial || choices()[0]);
+  // A static aria-current hint is only valid as the no-fragment default for
+  // this exact document. It must not override an initially unknown URL.
+  const initial = links.find((link,i)=>enabled(link) &&
+    link.getAttribute("aria-current")==="page" &&
+    urls[i].pathname === win.location.pathname &&
+    urls[i].search === win.location.search);
+  if (current) select(current);
+  else if (!win.location.hash && initial) select(initial);
+  else syncFromLocation();
   return Object.freeze({
     select,
     sync: syncFromLocation,
