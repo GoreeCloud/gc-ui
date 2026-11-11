@@ -86,6 +86,6 @@ test("mobile hero keeps complete words at physical phone widths, with extreme fa
   const rule=css.slice(mobile);
   assert.match(rule,/@media \(min-width:320px\) and \(max-width:600px\)/);
   assert.match(rule,/\.gc-lab-hero h1, \.gc-lab-hero h1 > span/);
-  for(const style of ["hyphens:manual","overflow-wrap:normal","word-break:normal"])
+  for(const style of ["hyphens:manual","overflow-wrap:anywhere","word-break:normal","text-wrap:wrap"])
     assert.ok(rule.includes(style),style);
 });
