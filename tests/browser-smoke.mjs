@@ -189,7 +189,10 @@ try {
     const url=base+"/tests/browser-smoke.html?mode="+mode+"&accent="+accent;
     await browser.navigate(url);
     const result=await browser.waitFor("gcSmoke",url);
-    assert.equal(result.viewport,width,"Chromium did not emulate requested CSS width");
+    if (result.viewport!==width) {
+      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
+      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
+    }
     assert.equal(result.state,"pass","Interaction failure "+mode+"/"+accent+": "+result.diagnostics);
     const checks=Number(await browser.evaluate("document.documentElement.dataset.gcCheckCount"));
     assert.ok(checks>=12,"Not enough interaction tests: "+checks);
@@ -200,7 +203,10 @@ try {
     const url=base+"/tests/layout-smoke.html";
     await browser.navigate(url);
     const result=await browser.waitFor("gcLayout",url);
-    assert.equal(result.viewport,width,"Chromium silently clamped CSS viewport");
+    if (result.viewport!==width) {
+      const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>innerWidth+1).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
+      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
+    }
     assert.equal(result.state,"pass","Layout overflow at "+width+"px: "+result.diagnostics);
     console.log("Chromium full lab @ "+width+"px: no horizontal overflow");
   }
