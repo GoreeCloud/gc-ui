@@ -22,10 +22,10 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
   const canChoose = item => Boolean(item && !item.hidden && !item.disabled &&
     item.getAttribute("aria-disabled") !== "true");
   const visible = item => {
-    if (!canChoose(item)) return false;
+    if (!canChoose(item) || tree.disabled || tree.getAttribute("aria-disabled") === "true") return false;
     let node = item;
     while (node && node !== tree) {
-      if (node.hidden) return false;
+      if (node.hidden || (node !== item && (node.disabled || node.getAttribute?.("aria-disabled") === "true"))) return false;
       if (node !== item && node.getAttribute?.("role") === "treeitem" &&
           node.getAttribute("aria-expanded") === "false") return false;
       node = node.parentElement;
