@@ -213,6 +213,26 @@
             <label class="gc-radio"><input type="radio" name="sample-choice"><span>Use spacious layout</span></label>
             <div class="gc-cluster"><button class="gc-chip" type="button" aria-pressed="true" data-chip="1">Privacy</button><button class="gc-chip" type="button" aria-pressed="false" data-chip="1">Sync</button><button class="gc-chip" type="button" aria-pressed="false" data-chip="1">Security</button></div>
           </article>
+          <article class="gc-card gc-stack">
+            <h3 class="gc-heading">Searchable local selection</h3>
+            <p class="gc-support">Choose a visual accent from local options. No suggestions are downloaded.</p>
+            <div class="gc-field">
+              <label for="demo-combobox">Accent family</label>
+              <div class="gc-combobox">
+                <input id="demo-combobox" class="gc-input" type="search" role="combobox"
+                  aria-controls="demo-combobox-list" aria-describedby="demo-combobox-status"
+                  autocomplete="off" placeholder="Search accents">
+                <ul id="demo-combobox-list" class="gc-combobox__list" role="listbox" hidden>
+                  <li class="gc-combobox__option" role="option" id="demo-option-iris" data-gc-value="iris">Iris</li>
+                  <li class="gc-combobox__option" role="option" id="demo-option-lagoon" data-gc-value="lagoon">Lagoon</li>
+                  <li class="gc-combobox__option" role="option" id="demo-option-ember" data-gc-value="ember">Ember</li>
+                  <li class="gc-combobox__option" role="option" id="demo-option-moss" data-gc-value="moss">Moss</li>
+                  <li class="gc-combobox__empty" data-gc-combobox-empty hidden>No matching accents.</li>
+                </ul>
+              </div>
+              <p id="demo-combobox-status" role="status" class="gc-support" aria-live="polite">Choose a local accent.</p>
+            </div>
+          </article>
         </div>
       </section>
       <section id="iconography" class="gc-lab-section" aria-labelledby="icons-heading">
