@@ -11,9 +11,9 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.
 - **Iris / Lagoon / Ember / Moss** accent families, separately defined light and dark palettes, and high-contrast, reduced-motion and reduced-transparency rules.
 - Shared tokens for color, typography, four-pixel spacing, shape, elevation, motion, icon size, control dimensions, breakpoints and z-index.
-- Native-first styled buttons, cards, form fields, switches, tabs, chips, badges, alerts, dialog, navigation, tables, toasts, progress and loading patterns.
+- Native-first styled buttons, cards, form fields, switches, tabs, chips, badges, alerts, dialogs, accordions, drawers, range sliders, breadcrumbs, steppers, structured detail lists, toolbars, navigation, tables, toasts, progress and loading patterns.
 - An original 24px line-glyph icon set with optional GC icon custom element.
-- Framework-independent JS utilities for themes, safe custom accents, tabs, dialog focus return and toasts.
+- Framework-independent JS utilities for themes, reactive custom accents on OS appearance changes, tabs, native disclosure groups, roving button selection, range outputs, modal drawers, dialog focus return and toasts.
 - Static reference lab, tests, GitHub CI and machine-readable design authority registry.
 
 There is no tracking, persistence, network access, third-party font, or bundled outside artwork.
