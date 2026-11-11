@@ -17,13 +17,13 @@ function fixture() {
   };
   const messages = [];
   const dispose = initAvailabilityFeedback(root, { notify: message => messages.push(message) });
-  function fire(target) {
+  function fire(target, type = 'click', submitter = null) {
     const event = {
-      target, prevented: false, stopped: false,
+      target, submitter, prevented: false, stopped: false,
       preventDefault() { this.prevented = true; },
       stopImmediatePropagation() { this.stopped = true; },
     };
-    handlers.get('click')?.(event);
+    handlers.get(type)?.(event);
     return event;
   }
   return { root, messages, fire, dispose, handlers };
@@ -66,4 +66,30 @@ test('invalid roots and notifiers reject before registering listeners', () => {
   assert.throws(() => initAvailabilityFeedback(null), TypeError);
   assert.throws(() => initAvailabilityFeedback({}, {notify:()=>{}}), TypeError);
   assert.throws(() => initAvailabilityFeedback({addEventListener(){}, removeEventListener(){}}, {notify:'bad'}), TypeError);
+});
+
+
+test('planned form submit from Enter or requestSubmit is blocked and announces the feature', () => {
+  const f = fixture();
+  const form = node('FORM', {'data-gc-availability':'planned','data-gc-feature':'Cloud sync setup'}, f.root);
+  const input = node('INPUT', { type:'text' }, form);
+  assert.equal(f.fire(input).prevented, false, 'normal input clicks remain usable');
+  const submit = f.fire(form, 'submit');
+  assert.equal(submit.prevented, true);
+  assert.equal(submit.stopped, true);
+  assert.deepEqual(f.messages, ['Cloud sync setup is not available yet.']);
+  f.dispose();
+  assert.equal(f.handlers.size, 0);
+  assert.equal(f.fire(form, 'submit').prevented, false);
+});
+
+test('a planned submitter is blocked even when its parent form is implemented', () => {
+  const f = fixture();
+  const form = node('FORM', {}, f.root);
+  const save = node('BUTTON', {'data-gc-availability':'planned','data-gc-feature':'Export'}, form);
+  assert.equal(f.fire(form, 'submit', save).prevented, true);
+  assert.equal(f.fire(form, 'submit').prevented, false);
+  assert.equal(f.fire(node('DIV', {}, f.root), 'submit', save).prevented, false);
+  assert.deepEqual(f.messages, ['Export is not available yet.']);
+  f.dispose();
 });

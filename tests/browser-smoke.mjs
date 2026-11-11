@@ -204,6 +204,23 @@ try {
     assert.equal(result.state,"pass","Layout overflow at "+width+"px: "+result.diagnostics);
     console.log("Chromium full lab @ "+width+"px: no horizontal overflow");
   }
+  // Planned-form availability must survive real Chromium requestSubmit(), not
+  // merely synthetic Node event dispatch, and must stop ordinary handlers.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const plannedForm=JSON.parse(await browser.evaluate(
+    '(()=>{const form=document.querySelector("#demo-planned-form");let submitCalls=0;'+
+    'form.addEventListener("submit",()=>{submitCalls++;});'+
+    'form.querySelector("input").value="Local only";form.requestSubmit();'+
+    'const status=document.querySelector(".gc-toast[role=status]");'+
+    'return JSON.stringify({submitCalls,status:status?.textContent||"",'+
+    'stillHere:location.pathname==="/lab/",formPresent:form.isConnected});})()'));
+  assert.equal(plannedForm.submitCalls,0,"Planned form allowed a submit handler");
+  assert.match(plannedForm.status,/Mesh connection setup is not available yet/);
+  assert.equal(plannedForm.stillHere,true,"Planned form unexpectedly navigated");
+  assert.equal(plannedForm.formPresent,true);
+  console.log("Chromium planned Mesh form: prevented submit, visible status, no navigation");
+
   for (const [mode, accent, width, height] of [
     ["light","iris",1440,900], ["dark","moss",390,844]
   ]) {
