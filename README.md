@@ -108,7 +108,7 @@ All GoreeCloud application windows must have rounded corners. The web library pr
 
 The responsive gc-bottom-nav capsule floats above device gesture insets, with native links, original icons, visible labels, selected-state contrast, mobile reflow and an optional keyboard/route controller. See docs/COMPONENTS.md. Actual routing authorization and native OS navigation remain consumer responsibilities.
 
-When a browser `hashchange` or `popstate` leaves the dock's known same-origin destinations, the controller now clears stale `aria-current` and active styling. A recognized route restores exactly one current destination. This updates only presentation; consumers remain responsible for real navigation, history state, and authorization.
+When a browser `hashchange` or `popstate` leaves the dock's known same-origin destinations, the controller now clears stale `aria-current` and active styling. A recognized route restores exactly one current destination. On initialization it also clears any stale server-rendered current marker for an unrecognized fragment or pathname; an explicit same-document initial marker is retained only when the URL has no fragment. This updates only presentation; consumers remain responsible for real navigation, history state, and authorization.
 
 ### Color choice is application- and user-directed
 

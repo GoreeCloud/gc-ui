@@ -246,3 +246,52 @@ test("explicit route synchronization never revives stale selection after disposa
  ctrl.sync();
  assert.equal(f.links.some(link=>link.getAttribute("aria-current")==="page"),false);
 });
+
+
+test("initially unknown fragment must not inherit stale server-rendered aria-current",()=>{
+ const f=fixture();
+ f.win.location.hash="#not-in-dock";
+ f.links[2].setAttribute("aria-current","page");
+ f.links[3].setAttribute("data-gc-active","");
+ const ctl=initBottomNavigation(f.nav);
+ assert.ok(f.links.every(link=>link.getAttribute("aria-current")===null));
+ assert.ok(f.links.every(link=>link.getAttribute("data-gc-active")===null));
+ f.win.location.hash="#settings";
+ f.win.emit("hashchange");
+ assert.equal(f.links[2].getAttribute("aria-current"),"page");
+ ctl.dispose();
+});
+
+test("initial exact route overrides a stale markup hint; unrelated paths remain unselected",()=>{
+ const f=fixture();
+ f.links[1].setAttribute("aria-current","page");
+ let ctl=initBottomNavigation(f.nav);
+ assert.equal(f.links[0].getAttribute("aria-current"),"page");
+ assert.equal(f.links[1].getAttribute("aria-current"),null);
+ ctl.dispose();
+
+ const other=fixture();
+ other.win.location.pathname="/another/";
+ other.win.location.hash="#home";
+ other.links[0].setAttribute("aria-current","page");
+ ctl=initBottomNavigation(other.nav);
+ assert.ok(other.links.every(link=>link.getAttribute("aria-current")===null));
+ ctl.dispose();
+});
+
+test("empty hash respects an explicit same-document initial destination only",()=>{
+ let f=fixture();
+ f.win.location.hash="";
+ f.links[2].setAttribute("aria-current","page");
+ let ctl=initBottomNavigation(f.nav);
+ assert.equal(f.links[2].getAttribute("aria-current"),"page");
+ assert.equal(f.links[0].getAttribute("aria-current"),null);
+ ctl.dispose();
+
+ f=fixture();
+ f.win.location.hash="";
+ // No markup hint: never invent a current destination on an ambiguous route.
+ ctl=initBottomNavigation(f.nav);
+ assert.ok(f.links.every(link=>link.getAttribute("aria-current")===null));
+ ctl.dispose();
+});
