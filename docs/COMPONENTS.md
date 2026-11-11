@@ -144,3 +144,7 @@ Pass `{ content: scrollRegionElement }` to `initBottomNavigation` when the dock 
 ### Accessibility-tree acceptance evidence
 
 The real Chromium browser-smoke runner now inspects non-ignored accessibility-tree roles and names for the named floating dock navigation, destination links, rounded window heading, native modal dialog and actionable buttons in desktop light and mobile dark. A button that becomes unnamed in the accessibility tree fails CI. This strengthens automated semantics checks but is not a substitute for platform screen-reader or real-device acceptance.
+
+### Modifier-click and route-state safety
+
+When a navigation link is opened in another tab/window, downloaded, modified with Ctrl/Meta/Shift/Alt or uses an alternative browsing context, the local page's active destination must **not** change. A click already canceled by a consumer handler must also preserve `aria-current` and must not invoke `onNavigate`. Disabled destinations remain blocked even on modified clicks. Only an ordinary, non-canceled, current-tab activation may optimistically set the current visual destination; consumer routing/Identity authorization remains authoritative.
