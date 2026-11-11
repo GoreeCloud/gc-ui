@@ -295,7 +295,16 @@ try {
       'return JSON.stringify({fontSize:getComputedStyle(root).fontSize,'+
       'clientWidth:root.clientWidth,scrollWidth:root.scrollWidth,treeWidth:document.querySelector("#demo-tree").getBoundingClientRect().width});})('+percent+')'));
     assert.ok(parseFloat(result.fontSize)>=percent*0.15,"Enlarged CSS root text size did not take effect");
-    assert.ok(result.scrollWidth<=result.clientWidth+1,"Enlarged text overflow at "+width+"px / "+percent+"%: "+JSON.stringify(result));
+    if(result.scrollWidth>result.clientWidth+1) {
+      const offenders=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.body.querySelectorAll("*")].filter(el=>{const r=el.getBoundingClientRect();'+
+        'const s=getComputedStyle(el);return r.width>0 && s.display!=="none" && r.right>document.documentElement.clientWidth+1;})'+
+        '.slice(0,30).map(el=>{const r=el.getBoundingClientRect();const c=getComputedStyle(el);return {'+
+        'tag:el.tagName,id:el.id,klass:typeof el.className==="string"?el.className.slice(0,80):"",'+
+        'left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),'+
+        'minWidth:c.minWidth,display:c.display,overflowX:c.overflowX};}))'));
+      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,offenders}));
+    }
     if(width===390) {
       const shot=await browser.screenshot(join(directory,"gc-ui-text-200-percent-mobile.png"));
       assert.equal(shot.width,390);
