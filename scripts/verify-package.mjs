@@ -26,6 +26,7 @@ try{
     "src/index.js","src/index.d.ts","src/components.css","src/tokens.css",
     "src/menu.js","src/menu.d.ts","src/table.js","src/table.d.ts",
     "src/commands.js","src/commands.d.ts","src/combobox.js","src/combobox.d.ts",
+    "src/bottom-nav.js","src/bottom-nav.d.ts",
     "tokens/gc.tokens.json",
     "assets/gc-icons.svg","assets/gc-icons.json",
     "platform/generated/GCUI.palettes.json","LICENSE"

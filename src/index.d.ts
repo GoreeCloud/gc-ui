@@ -50,3 +50,7 @@ export declare function initTreeView(tree: HTMLElement, options?: {
 export declare function initCombobox(input: HTMLInputElement, list: HTMLElement, options?: {
   onSelect?: (option: HTMLElement, value: string) => void | Promise<void>;
 }): { open: () => void; close: () => void; refresh: () => void; dispose: () => void };
+
+export declare function initBottomNavigation(nav: HTMLElement, options?: {
+  onNavigate?: (link: HTMLAnchorElement) => boolean | void;
+}): { select: (link: HTMLAnchorElement) => boolean; sync: () => void; dispose: () => void };
