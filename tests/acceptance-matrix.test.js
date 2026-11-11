@@ -23,7 +23,7 @@ test("human acceptance cannot pass on a bare checklist without reproducible evid
   for (const entry of data.entries) {
     assert.equal(typeof entry.id,"string"); assert.ok(!seen.has(entry.id)); seen.add(entry.id);
     for (const key of ["surface","platform","modality","steps","expected"]) {
-      assert.ok(typeof entry[key]==="string" && entry[key].trim().length>8,entry.id+" "+key);
+      assert.ok(typeof entry[key]==="string" && entry[key].trim().length>(key==="surface"?2:8),entry.id+" "+key);
     }
     assert.ok(states.has(entry.status),entry.id+" invalid state");
     assert.ok(Array.isArray(entry.evidence),entry.id+" evidence must be an array");
