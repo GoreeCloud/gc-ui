@@ -99,12 +99,13 @@ function asyncPaletteFixture(){
   dialog.querySelector=selector=>selector==='input[type="search"]'?input:
     selector==="[data-gc-command-status]"?status:
     selector==="[data-gc-command-empty]"?empty:null;
-  dialog.querySelectorAll=()=>[button];
+  const commands=[button];
+  dialog.querySelectorAll=()=>commands.slice();
   dialog.contains=node=>[dialog,input,row,button,status,empty].includes(node);
   dialog.showModal=()=>{dialog.open=true};
   dialog.close=()=>{dialog.open=false;dialog.emit("close")};
   const activate=()=>button.emit("click");
-  return {make,owner,dialog,button,input,invoker,outside,status,activate};
+  return {make,owner,dialog,button,input,invoker,outside,status,empty,commands,activate};
 }
 
 test("pending command success cannot close a reopened palette or steal current focus",async()=>{
@@ -211,4 +212,63 @@ test("global command shortcut ignores IME input and conflicting modified combina
   assert.equal(f.dialog.open,true);
   api.close();
   api.dispose();
+});
+
+test("command refresh discovers late native buttons and detaches removed actions",async()=>{
+  const f=asyncPaletteFixture(),actions=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:button=>actions.push(button)});
+  api.open();
+  f.input.value="mesh";
+  f.input.emit("input");
+  assert.equal(f.status.textContent,"No matching commands");
+  const row=f.make(),added=f.make();
+  added.ownerDocument=f.owner;
+  added.textContent="Mesh integrations";
+  added.closest=()=>row;
+  f.commands.push(added);
+  api.refresh();
+  assert.equal(f.status.textContent,"1 command available");
+  assert.equal(f.empty.hidden,true);
+  added.focus();
+  f.commands.splice(f.commands.indexOf(added),1);
+  api.refresh();
+  assert.equal(f.owner.activeElement,f.input,
+    "Removing a focused command should restore keyboard focus to search");
+  assert.equal(f.status.textContent,"No matching commands");
+  added.emit("click");
+  added.emit("keydown",{key:"Enter"});
+  assert.deepEqual(actions,[],"Detached native commands cannot execute");
+  api.dispose();
+});
+
+test("dynamic command refresh remains idempotent, handles empty list and later recovery",async()=>{
+  const f=asyncPaletteFixture(),actions=[];
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:button=>actions.push(button)});
+  api.open();
+  f.commands.splice(0,1);
+  api.refresh();
+  assert.equal(f.status.textContent,"No matching commands");
+  assert.equal(f.empty.hidden,false);
+  const emptyEnter=f.input.emit("keydown",{key:"Enter"});
+  assert.equal(emptyEnter.defaultPrevented,false);
+  assert.deepEqual(actions,[]);
+  const row=f.make(),added=f.make();
+  added.ownerDocument=f.owner;
+  added.textContent="Local command";
+  added.closest=()=>row;
+  f.commands.push(added);
+  api.refresh();api.refresh();api.refresh();
+  assert.equal(f.status.textContent,"1 command available");
+  const selected=f.input.emit("keydown",{key:"Enter"});
+  assert.equal(selected.defaultPrevented,true);
+  await Promise.resolve();
+  assert.deepEqual(actions,[added],"Repeated refresh cannot attach duplicate listeners");
+  api.open();
+  added.emit("click");
+  await Promise.resolve();
+  assert.deepEqual(actions,[added,added]);
+  api.dispose();
+  added.emit("click");
+  assert.equal(actions.length,2,"Disposal must unregister dynamically registered commands");
 });
