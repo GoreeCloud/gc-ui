@@ -132,3 +132,7 @@ Disabled choices are skipped. Non-HTTP(S), cross-origin, empty and duplicate des
 Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
 
 For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). Long single-line labels are safely ellipsized; the native link text remains available to assistive technology. Do not rely on truncation as a substitute for meaningful short labels.
+
+### Navigation callback fail-closed behavior
+
+`onNavigate` is intentionally **synchronous**. Only returning `true` or `undefined` permits the browser's native link activation. Returning `false`, an unexpected value, or a Promise prevents the default link action, as does throwing an exception. Asynchronous authorization must be performed by the application before deciding to enable a destination; an async callback does not authorize navigation. This control blocks only default browser navigation, not side effects initiated directly by a consumer callback.

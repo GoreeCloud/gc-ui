@@ -70,8 +70,25 @@ export function initBottomNavigation(nav, { onNavigate } = {}) {
     const link = event.target?.closest?.("a[href]");
     if (!links.includes(link)) return;
     if (!enabled(link)) { event.preventDefault(); return; }
-    if (onNavigate && onNavigate(link) === false) {
-      event.preventDefault(); return;
+    if (onNavigate) {
+      try {
+        const decision = onNavigate(link);
+        // Only an explicit true or no decision allows the browser's native link.
+        // Promise or unexpected values are NOT permission to navigate.
+        if (decision !== undefined && decision !== true) {
+          event.preventDefault();
+          // A mistaken async callback must not leak an unhandled rejection.
+          if (decision && typeof decision.then === "function") {
+            Promise.resolve(decision).catch(() => {});
+          }
+          return;
+        }
+      } catch {
+        // An authorization or route-validation failure cannot silently
+        // fall through to the native navigation default.
+        event.preventDefault();
+        return;
+      }
     }
     select(link); // Navigation remains native; callback must not claim backend success.
   };

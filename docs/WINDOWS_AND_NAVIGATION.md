@@ -15,3 +15,7 @@ Web CSS cannot round system-managed window chrome, compositor title bars, resize
 ## Floating bottom navigation: application destination pattern
 
 Use a floating Cloud Lens capsule at the bottom of applications with multiple primary destinations. Reserve safe-area space above gesture/home bars, preserve content inset below the scrollable view, use visible text/icon labels and native links, and avoid duplicated competing docks. Keyboard, RTL, forced colors, reduced transparency, zoom and narrow responsive widths must be tested. A single-destination screen should not show inert fake tabs. Application navigation and route authorization remain consumer-owned, subject to GoreeCloud Identity, GoreeShield privacy, Wardveil security and GoreeCloud Mesh integration controls.
+
+### Bottom navigation authorization boundary
+
+The optional web `onNavigate` hook must make a synchronous route approval decision. Thrown errors, unexpected values and thenable/Promise results are treated as a denial of the native default link navigation, not implicit approval. Only `true` or no decision (`undefined`) permits navigation. Applications must still enforce route permissions server-side or in their authorized router and cannot use a visual dock as an Identity or Wardveil enforcement boundary.

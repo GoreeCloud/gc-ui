@@ -94,3 +94,26 @@ test("mobile dock labels truncate on one line rather than breaking words",()=>{
   const lab=readFileSync(new URL("../lab/index.html",import.meta.url),"utf8");
   assert.ok(lab.includes('<span>Library</span></a>'));
 });
+
+test("thrown authorization callback fails closed and keeps the previous destination",()=>{
+ const f=fixture();
+ const ctrl=initBottomNavigation(f.nav,{onNavigate(){throw new Error("internal account failure")}});
+ const event=f.nav.emit("click",{target:f.links[2]});
+ assert.equal(event.defaultPrevented,true);
+ assert.equal(f.links[0].getAttribute("aria-current"),"page");
+ assert.equal(f.links[2].getAttribute("aria-current"),null);
+ ctrl.dispose();
+});
+test("async and malformed decisions never authorize native route changes",async()=>{
+ const f=fixture();let calls=0;
+ const ctrl=initBottomNavigation(f.nav,{onNavigate(){
+   calls++;return calls===1?Promise.reject(new Error("secret")):42;
+ }});
+ const first=f.nav.emit("click",{target:f.links[1]});
+ assert.equal(first.defaultPrevented,true);
+ const second=f.nav.emit("click",{target:f.links[2]});
+ assert.equal(second.defaultPrevented,true);
+ await Promise.resolve();await Promise.resolve();
+ assert.equal(f.links[0].getAttribute("aria-current"),"page");
+ ctrl.dispose();
+});
