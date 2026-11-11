@@ -172,7 +172,7 @@ async function startBrowser() {
       await writeFile(file, bytes);
       return { width:bytes.readUInt32BE(16), height:bytes.readUInt32BE(20), size:bytes.length };
     };
-    return { evaluate, setViewport, navigate, waitFor, screenshot, close:cleanup };
+    return { evaluate, setViewport, navigate, waitFor, screenshot, bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -383,6 +383,8 @@ try {
       'scroll:root.scrollWidth,dir:root.dir,forced:matchMedia("(forced-colors:active)").matches,'+
       'dock:{left:rect.left,right:rect.right},sections:["foundations","components","patterns","forms"]'+
       '.map(id=>{const el=document.getElementById(id);return {id,client:el.clientWidth,scroll:el.scrollWidth};})});})('+mode.rtl+')'));
+    await browser.bringToFront();
+    await browser.evaluate("window.focus()");
     const focusQA=JSON.parse(await browser.evaluate(
       '(()=>{const skip=document.querySelector(".gc-link-skip"),'+
       'select=document.querySelector(".gc-lab-toolbar .gc-lab-select"),'+
@@ -391,6 +393,7 @@ try {
       'const before=skip.getBoundingClientRect();skip.focus();'+
       'const after=skip.getBoundingClientRect();skip.blur();'+
       'return JSON.stringify({beforeBottom:before.bottom,focusedTop:after.top,focusedBottom:after.bottom,'+
+      'hasFocus:document.hasFocus(),active:document.activeElement===skip,focusMatch:skip.matches(":focus"),'+
       'selectSize:parseFloat(getComputedStyle(select).fontSize),'+
       'badgeSize:parseFloat(getComputedStyle(badge).fontSize),badgeRight:badge.getBoundingClientRect().right,'+
       'heroSize:parseFloat(getComputedStyle(hero).fontSize),viewport:root.clientWidth});})()'));
