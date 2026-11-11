@@ -113,7 +113,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
       choices[target].focus();
       return;
     }
-    if (event.key.length !== 1 || !/\\S/u.test(event.key)) return;
+    if (event.key.length !== 1 || !/\S/u.test(event.key)) return;
     const now = Date.now();
     typeahead = now - typeaheadAt > 700 ? event.key : typeahead + event.key;
     typeaheadAt = now;
