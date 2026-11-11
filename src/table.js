@@ -8,7 +8,7 @@ const DIRECTIONS = ["ascending", "descending"];
 const isoDate = value => {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) return null;
   const [year,month,day]=value.split("-").map(Number);
-  const timestamp=Date.UTC(year,month-1,day);
+  // Date.UTC interprets years 0–99 as 1900–1999; preserve the ISO year.\n  const date=new Date(0);\n  date.setUTCFullYear(year,month-1,day);\n  const timestamp=date.getTime();
   if (!Number.isFinite(timestamp)) return null;
   const reconstructed=new Date(timestamp).toISOString().slice(0,10);
   return reconstructed===value ? timestamp : null;
