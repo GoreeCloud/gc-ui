@@ -50,6 +50,8 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
   if (!eligible().length) throw new Error("Treeview needs at least one visible enabled treeitem");
   let destroyed = false;
   let current = null;
+  let typeahead = "";
+  let typeaheadAt = 0;
   const select = (item, { focus = false, notify = true } = {}) => {
     if (destroyed || !visible(item)) return false;
     const changed = current !== item;
@@ -78,6 +80,25 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
     }
     return true;
   };
+  // A consumer may disable/hide items dynamically after mounting. Reconcile
+  // the roving tab stop without trapping focus on an unavailable destination.
+  const refresh = () => {
+    if (destroyed) return false;
+    const available = eligible();
+    if (!available.length) {
+      current = null;
+      items.forEach(item => {
+        item.tabIndex = -1;
+        item.setAttribute("aria-selected", "false");
+      });
+      return false;
+    }
+    if (current && available.includes(current)) return true;
+    const focused = Boolean(current && tree.ownerDocument?.activeElement === current);
+    let ancestor = current ? parentItem(current) : null;
+    while (ancestor && !available.includes(ancestor)) ancestor = parentItem(ancestor);
+    return select(ancestor || available[0], { focus: focused });
+  };
   const toggle = item => setExpanded(item,item.getAttribute("aria-expanded") !== "true");
   const targetItem = target => {
     const node = target?.closest?.('[role="treeitem"]');
@@ -96,7 +117,8 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
   };
   const onKey = event => {
     const node=targetItem(event.target);
-    if (!node || !visible(node) || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!node || !visible(node) || event.altKey || event.ctrlKey ||
+        event.metaKey || event.isComposing) return;
     const available=eligible();
     const index=available.indexOf(node);
     if (index<0) return;
@@ -142,16 +164,21 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
       else onActivate?.(node);
       return;
     }
-    if (event.key?.length === 1) {
+    if (event.key?.length === 1 && /\S/u.test(event.key)) {
       const letter=event.key.toLocaleLowerCase(locale);
-      const choice=available.slice(index+1).concat(available.slice(0,index+1))
-        .find(item=>{
-          const label=(item.getAttribute("data-gc-tree-label") ||
-            item.getAttribute("aria-label") ||
-            Array.from(item.children||[]).find(child=>child.classList?.contains("gc-tree__row"))?.textContent ||
-            "").trim().toLocaleLowerCase(locale);
-          return label.startsWith(letter);
-        });
+      const now=Date.now();
+      const previous=now-typeaheadAt>700 ? "" : typeahead;
+      // Repeating one letter cycles matching destinations, instead of
+      // constructing a query such as "ddd" that matches none of them.
+      typeahead=previous && [...previous].every(key=>key===letter)
+        ? letter : previous+letter;
+      typeaheadAt=now;
+      const matches=available.slice(index+1).concat(available.slice(0,index+1));
+      const labelFor=item=>(item.getAttribute("data-gc-tree-label") ||
+        item.getAttribute("aria-label") ||
+        Array.from(item.children||[]).find(child=>child.classList?.contains("gc-tree__row"))?.textContent ||
+        "").trim().toLocaleLowerCase(locale);
+      const choice=matches.find(item=>labelFor(item).startsWith(typeahead));
       if (choice) { event.preventDefault(); select(choice,{focus:true}); }
     }
   };
@@ -162,11 +189,13 @@ export function initTreeView(tree, { onSelect, onActivate, locale } = {}) {
   select(initial,{notify:false});
   return Object.freeze({
     select: item => select(item,{focus:true}),
+    refresh,
     expand: item => setExpanded(item,true),
     collapse: item => setExpanded(item,false),
     dispose() {
       if (destroyed) return;
       destroyed=true;
+      typeahead="";
       tree.removeEventListener("click",onClick);
       tree.removeEventListener("focusin",onFocus);
       tree.removeEventListener("keydown",onKey);

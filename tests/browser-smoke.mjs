@@ -434,6 +434,34 @@ try {
   console.log("Chromium reduced-motion and opaque high-contrast Lens fallbacks passed");
 
 
+  // Genuine Chromium tree text navigation with composition suppression.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const treeTyping=JSON.parse(await browser.evaluate(
+    '(()=>{const tree=document.querySelector("#demo-tree"),'+
+    'parent=tree.querySelector("[data-gc-tree-label=\\"Workspaces\\"]"),'+
+    'design=tree.querySelector("[data-gc-tree-label=\\"Design tokens\\"]");'+
+    'parent.focus();'+
+    'const press=(item,key,isComposing=false)=>item.dispatchEvent(new KeyboardEvent("keydown",'+
+    '{key,bubbles:true,cancelable:true,isComposing}));'+
+    'const typedD=press(parent,"d"),first=document.activeElement===design;'+
+    'const composed=press(design,"s",true),ignored=document.activeElement===design;'+
+    'return JSON.stringify({typedD,first,composed,ignored});})()'));
+  assert.deepEqual(treeTyping,{typedD:false,first:true,composed:true,ignored:true},
+    "Chromium treeview typeahead or composition suppression regressed");
+  // After the standard 700 ms typeahead buffer, the next initial is distinct.
+  await delay(760);
+  const treeNext=JSON.parse(await browser.evaluate(
+    '(()=>{const tree=document.querySelector("#demo-tree"),'+
+    'design=tree.querySelector("[data-gc-tree-label=\\"Design tokens\\"]"),'+
+    'services=tree.querySelector("[data-gc-tree-label=\\"Services\\"]");'+
+    'const typedS=design.dispatchEvent(new KeyboardEvent("keydown",'+
+    '{key:"s",bubbles:true,cancelable:true}));'+
+    'return JSON.stringify({typedS,next:document.activeElement===services});})()'));
+  assert.deepEqual(treeNext,{typedS:false,next:true},
+    "Chromium treeview did not reach the next visible matching node");
+  console.log("Chromium tree keyboard: visible typeahead and IME suppression pass");
+
   // Accessibility/localization regression: genuine RTL DOM, enlarged root text and forced colors.
   // These tests are browser-level evidence only; no screen-reader or true browser zoom claim.
   for (const width of [390,900]) {
