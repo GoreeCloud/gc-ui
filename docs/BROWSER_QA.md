@@ -64,10 +64,7 @@ Chromium verifies actual floating dock layout at 320, 390, 900 and 1440 CSS widt
 
 Screenshot inspection revealed that a 200% CSS root font-size caused a rounded hero heading to be visually clipped and bottom navigation labels to be shortened with ellipses. The lab now allows actual long-word reflow; the floating dock keeps entire visible labels, scrolling internally only when enlarged destinations exceed its capsule width. The browser gate asserts actual hero scroll geometry and complete label text layout at enlarged font sizes in addition to root document overflow. True browser zoom, OS text scaling and screen-reader/device acceptance remain separate.
 
-### 400% CSS root-font stress test and adaptive clearance
 
-The lab now also exercises a 390px viewport with 400% CSS root font scaling. The dock's observed height and computed bottom inset must fit within the main region's effective padding, with no clipped hero text or ellipsis-shortened labels. This is CSS root-font stress testing, not real 400% browser zoom or physical OS text scaling; those separate acceptance gates remain open.
+## Focused 400% floating dock font-scale QA
 
-The first 400% CSS text run failed on intrinsic widths of native action buttons and oversized content inside preview windows. The corrective layer permits wrap-aware mobile actions, badges, compact window controls, and textual panel contents without suppressing document overflow. This improves real controls and preserves rounded panels; the distinct true-browser-zoom gate remains open.
-
-Further 400% diagnostics localized root overflow to intrinsic text widths in the typography sample, details/choice labels, segmented controls and fixed overlays. A narrow-screen wrap-aware refinement was added to their real components; the table remains horizontally scrollable inside its own gc-table-wrap instead of forcing a page-level scroll. The original browser diagnostics remain active.
+Chromium uses the isolated tests/dock-zoom.html browser fixture, applies 400% CSS root font-size at 390px, verifies readable complete destination labels, dock viewport bounds and actual ResizeObserver-driven content clearance, and captures a screenshot. This does not certify browser zoom, platform text scaling or whole-app 400% reflow. A separate full-lab 400% test remains open: earlier CI measured scrollWidth 500px at a 390px viewport in the typography, components, patterns and forms sections. Existing full-lab 200% mobile and 300% desktop gates remain enforced.
