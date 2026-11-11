@@ -71,6 +71,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     }
     typeahead = "";
     typeaheadAt = 0;
+    composing = false; // A dismissed menu cannot retain a stale IME session.
     trigger.setAttribute("aria-expanded", "false");
     if (returnFocus && !disposed) trigger.focus();
   };
@@ -167,6 +168,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
       session += 1;
       typeahead = "";
       typeaheadAt = 0;
+      composing = false;
     }
     trigger.setAttribute("aria-expanded", String(showing));
     // Outside click should preserve where the person moved focus.
