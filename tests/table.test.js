@@ -51,6 +51,21 @@ test("numeric and strict ISO dates keep missing or malformed cells last",()=>{
   assert.deepEqual(f.body.rows,[f.rows[1],f.rows[0],f.rows[2],f.rows[3]]);
   api.dispose();
 });
+test("ISO years 0000 through 0099 sort as their actual Gregorian years",()=>{
+  const f=fixture([
+    ["Later","1","0099-12-31"],
+    ["Earlier","2","0004-02-29"],
+    ["Modern","3","2026-01-01"],
+    ["Invalid","4","0005-02-30"]
+  ]);
+  const api=initSortableTable(f.table);
+  api.sortBy(2);
+  assert.deepEqual(f.body.rows,[f.rows[1],f.rows[0],f.rows[2],f.rows[3]]);
+  api.sortBy(2,"descending");
+  assert.deepEqual(f.body.rows,[f.rows[2],f.rows[0],f.rows[1],f.rows[3]]);
+  api.dispose();
+});
+
 test("data-sort-value overrides formatted cell text",()=>{
   const f=fixture([["A","$5","2026-01-01"],["B","$20","2026-01-02"]]);
   f.rows[0].cells[1].setAttribute("data-sort-value","5");
