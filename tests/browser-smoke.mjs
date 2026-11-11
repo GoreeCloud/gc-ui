@@ -328,6 +328,26 @@ try {
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
+  // Opt-in rail route truthfulness on a cold unmatched URL, using the
+  // actual native rail in the design lab. The normal default remains unchanged.
+  await browser.setViewport(820,900);
+  await browser.navigate(base+"/lab/#not-in-rail");
+  const railUnknown=JSON.parse(await browser.evaluate(
+    '(async()=>{const {initNavigationRail}=await import("/src/navigation-rail.js");'+
+    'const rail=document.querySelector(".gc-navigation-rail"),'+
+    'links=[...rail.querySelectorAll("nav a[href]")];'+
+    'links[0].setAttribute("aria-current","page");'+
+    'const ctl=initNavigationRail(rail,{unknownRoute:"clear"});'+
+    'const cold=links.filter(x=>x.getAttribute("aria-current")==="page").length;'+
+    'location.hash="#forms";ctl.sync();'+
+    'const known=links.filter(x=>x.getAttribute("aria-current")==="page").map(x=>x.getAttribute("href"));'+
+    'location.hash="#missing-again";ctl.sync();'+
+    'const missing=links.filter(x=>x.getAttribute("aria-current")==="page").length;'+
+    'ctl.dispose();return JSON.stringify({cold,known,missing});})()'));
+  assert.deepEqual(railUnknown,{cold:0,known:["#forms"],missing:0},
+    "Chromium optional rail synchronization announced an unknown destination");
+  console.log("Chromium optional rail: unmatched routes clear, recognized routes restore");
+
   // Navigation rail: real Chromium geometry, native focus/links, and tablet behavior.
   for (const [width,height,expectCollapsed] of [[1440,900,false],[820,900,true],[390,844,null]]) {
     await browser.setViewport(width,height);
