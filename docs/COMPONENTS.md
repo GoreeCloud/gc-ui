@@ -130,3 +130,5 @@ Initialize initBottomNavigation(nav, {onNavigate}) from @goreecloud/ui/bottom-na
 Disabled choices are skipped. Non-HTTP(S), cross-origin, empty and duplicate destinations are rejected. No telemetry, persistence, backend authority or server route is provided by the controller. Integrating applications retain GoreeCloud Identity authorization, GoreeShield privacy, Wardveil cybersecurity and Mesh boundaries.
 
 Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
+
+For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). Long single-line labels are safely ellipsized; the native link text remains available to assistive technology. Do not rely on truncation as a substitute for meaningful short labels.

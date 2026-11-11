@@ -739,11 +739,12 @@
   font-size:var(--gc-type-label);
   font-weight:700;
   line-height:1.15;
-  overflow-wrap:anywhere;
+  overflow-wrap:normal;
   transition:background-color var(--gc-motion-fast) var(--gc-ease),
     transform var(--gc-motion-fast) var(--gc-ease);
 }
 .gc-bottom-nav__link > :first-child { flex-shrink:0; }
+.gc-bottom-nav__link > span { display:block; max-inline-size:100%; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .gc-bottom-nav__link[aria-current="page"] {
   background:var(--gc-brand-container);
   color:var(--gc-on-brand-container);

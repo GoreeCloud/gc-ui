@@ -86,3 +86,11 @@ test("dock content clearance overrides consumer shorthand padding rules",()=>{
   const css=readFileSync(new URL("../src/components.css",import.meta.url),"utf8");
   assert.equal(css.split(".gc-app .gc-bottom-nav-content {").length-1,2);
 });
+
+test("mobile dock labels truncate on one line rather than breaking words",()=>{
+  const css=readFileSync(new URL("../src/components.css",import.meta.url),"utf8");
+  assert.ok(css.includes(".gc-bottom-nav__link > span {"));
+  assert.ok(css.includes("white-space:nowrap; text-overflow:ellipsis"));
+  const lab=readFileSync(new URL("../lab/index.html",import.meta.url),"utf8");
+  assert.ok(lab.includes('<span>Library</span></a>'));
+});
