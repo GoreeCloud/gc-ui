@@ -110,3 +110,13 @@ Hidden, disabled and aria-disabled entries are skipped. Collapsing a branch whos
 Semantic token CSS uses Cloud Surface and brand container, 44px minimum rows, logical indentation, visible keyboard focus and forced-colors boundaries. Do not nest extra keyboard-interactive controls inside treeitem. Render untrusted labels with textContent instead of raw HTML.
 
 No filesystem permissions, network access, persistence, virtualization or external authorization are provided. Assistive technology, large-tree performance, RTL, native OS and real-device acceptance remain unverified.
+
+## Searchable editable combobox
+
+Use a visible native label and a text or search input with role=combobox, aria-controls pointing to an identified role=listbox, plus stable unique IDs on its role=option choices. Place both inside a gc-combobox wrapper. Use gc-combobox__list and gc-combobox__option for semantic styling. Add aria-describedby pointing to a nearby role=status element for no-results and action error announcements. Never put HTML received from untrusted services directly into an option; create DOM elements and assign textContent.
+
+Initialize initCombobox(input, list, { onSelect }) from @goreecloud/ui/combobox or the root module. The controller sets aria-expanded, aria-haspopup=listbox and aria-autocomplete=list, filters locally on input, and keeps DOM focus on the input while arrow keys move aria-activedescendant. Escape closes, Enter commits the highlighted option, Tab closes without preventing native focus movement, and pointer selections preserve input focus. Disabled items are not selected. Each selected option receives aria-selected=true and the real input value updates only after onSelect succeeds.
+
+An optional onSelect(option, value) callback can perform an authorized asynchronous action. A pending callback sets aria-busy; rejected actions keep the popup open with a generic non-sensitive error. The controller returns open(), close(), refresh() and dispose(). Data values are local and never transmitted by the component; consumers must authorize actual operations, validate service responses, and decide whether to persist or emit form events.
+
+This alpha combobox is not a virtualized remote autocomplete, does not create or fetch options and does not replace simpler native select controls when search is unnecessary. Browser, localization, screen-reader and touch acceptance remain consumer responsibilities.

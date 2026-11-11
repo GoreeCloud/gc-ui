@@ -73,10 +73,24 @@
       <ul role="group"><li role="treeitem" id="test-tree-mesh" data-gc-tree-label="Mesh"><span class="gc-tree__row">Mesh</span></li></ul>
     </li>
   </ul>
+  
+  <label for="test-combobox">Choose a local theme</label>
+  <div class="gc-combobox">
+    <input type="search" id="test-combobox" class="gc-input" role="combobox"
+      aria-controls="test-combobox-list" aria-describedby="test-combobox-status">
+    <ul role="listbox" id="test-combobox-list" class="gc-combobox__list" hidden>
+      <li role="option" id="test-combobox-iris" class="gc-combobox__option" data-gc-value="iris">Iris</li>
+      <li role="option" id="test-combobox-lagoon" class="gc-combobox__option" aria-disabled="true">Lagoon</li>
+      <li role="option" id="test-combobox-moss" class="gc-combobox__option" data-gc-value="moss">Moss</li>
+      <li class="gc-combobox__empty" data-gc-combobox-empty hidden>No matches</li>
+    </ul>
+  </div>
+  <p id="test-combobox-status" role="status"></p>
+
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, initTreeView, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -186,6 +200,26 @@ try{
   treeCtrl.collapse(treeServices);
   verify(document.activeElement===treeServices && treeServices.getAttribute("aria-selected")==="true","tree collapse restores parent focus");
   treeCtrl.dispose();
+  let selectedAccent="";
+  const comboInput=document.querySelector("#test-combobox");
+  const comboList=document.querySelector("#test-combobox-list");
+  const comboCtrl=initCombobox(comboInput,comboList,{onSelect:(option,value)=>{selectedAccent=value;}});
+  // Headless Chromium can change activeElement without dispatching a focus event
+  // when its target tab is not window-focused. Test explicit API here; Node tests
+  // separately verify both focus and focusin event handling.
+  comboCtrl.open();
+  comboInput.focus();
+  verify(comboInput.getAttribute("aria-expanded")==="true" && !comboList.hidden,
+    "combobox open API exposes suggestions");
+  comboInput.value="mos";comboInput.dispatchEvent(new Event("input",{bubbles:true}));
+  verify(document.querySelector("#test-combobox-iris").hidden &&
+    !document.querySelector("#test-combobox-moss").hidden,"combobox filters local options");
+  comboInput.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowDown",bubbles:true}));
+  verify(comboInput.getAttribute("aria-activedescendant")==="test-combobox-moss","combobox active-descendant follows filtered option");
+  comboInput.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true}));
+  verify(comboInput.value==="Moss" && selectedAccent==="moss","combobox commits selected option");
+  verify(comboInput.getAttribute("aria-expanded")==="false" && comboList.hidden,"combobox closes on commit");
+  comboCtrl.dispose();
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();

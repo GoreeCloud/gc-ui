@@ -159,7 +159,7 @@ async function startBrowser() {
     };
     const waitFor = async (name, url) => {
       for (let n=0; n<80; n++) {
-        const result=JSON.parse(await evaluate("JSON.stringify({url:location.href,state:document.documentElement.dataset['"+name+"'],viewport:visualViewport?.width??innerWidth,layoutWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,diagnostics:document.querySelector('output[id$=\"result\"],output[id$=\"status\"]')?.textContent||''})"));
+        const result=JSON.parse(await evaluate("JSON.stringify({url:location.href,state:document.documentElement.dataset['"+name+"'],viewport:visualViewport?.width??innerWidth,layoutWidth:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,diagnostics:document.querySelector('#smoke-status')?.textContent||document.querySelector('#layout-result')?.textContent||''})"));
         if (result.url===url && (result.state==="pass" || result.state==="fail")) return result;
         await delay(100);
       }

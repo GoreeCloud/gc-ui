@@ -84,3 +84,7 @@ Run `npm run verify:package` to assemble a real local tarball and install only t
 ## Hierarchical navigation tree
 
 `initTreeView` adds a keyboard-accessible, single-selection tree for file browsers, settings, and dashboards. It supports RTL-aware direction keys, typeahead, explicit consumer activation callbacks, and safe focus management. No filesystem operation, backend access, persistence, or telemetry is included. Browser and assistive-technology review remain required for alpha adoption.
+
+## Searchable combobox
+
+The `@goreecloud/ui/combobox` module adds an editable, accessible local suggestion picker with native input focus, arrow-key active-descendant navigation, safe text filtering, disabled choices and optional asynchronous selection callbacks. It does not fetch remote suggestions or persist values. See `docs/COMPONENTS.md` and the design lab.
