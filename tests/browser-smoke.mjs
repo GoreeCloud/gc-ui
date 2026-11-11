@@ -78,7 +78,7 @@ async function startBrowser() {
   };
   try {
     let port = 0;
-    for (let n=0; n<100; n++) {
+    for (let n=0; n<300; n++) {
       if (launchError) throw launchError;
       if (child.exitCode !== null) throw new Error("Chrome exited: " + stderr);
       try {
@@ -88,7 +88,7 @@ async function startBrowser() {
       } catch {}
       await delay(100);
     }
-    if (!port) throw new Error("Chromium DevTools port never opened: " + stderr);
+    if (!port) throw new Error("Chromium DevTools port never opened within 30s: " + stderr);
     const response = await fetch("http://127.0.0.1:" + port + "/json/list", {
       signal:AbortSignal.timeout(5000)
     });
