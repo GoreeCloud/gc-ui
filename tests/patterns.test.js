@@ -41,6 +41,26 @@ test("toggle toolbar supports arrow navigation, disabled skip, RTL and detach",(
   dispose();a.emit("click");assert.equal(c.attributes["aria-pressed"],"true");
   assert.throws(()=>initToggleGroup(group,{onChange:"invalid"}),TypeError);
 });
+test("aria-disabled toggle options cannot become active or receive roving focus",()=>{
+  const [a,b,c]=[node({"aria-pressed":"false"}),
+    node({"aria-pressed":"true","aria-disabled":"true"}),node({"aria-pressed":"false"})];
+  const group=node();group.querySelectorAll=()=>[a,b,c];
+  group.ownerDocument={documentElement:{dir:"ltr"}};
+  const changes=[];const dispose=initToggleGroup(group,{onChange:button=>changes.push(button)});
+  assert.equal(a.getAttribute("aria-pressed"),"true");
+  assert.equal(b.getAttribute("aria-pressed"),"false");
+  assert.equal(b.tabIndex,-1);
+  a.emit("keydown",{key:"ArrowRight"});
+  assert.equal(c.getAttribute("aria-pressed"),"true");
+  assert.equal(c.focused,true);
+  b.emit("click");
+  assert.equal(c.getAttribute("aria-pressed"),"true");
+  const ignored=b.emit("keydown",{key:"ArrowRight"});
+  assert.equal(ignored.prevented,false);
+  assert.deepEqual(changes,[c]);
+  dispose();
+});
+
 test("range output uses textContent and detaches",()=>{
   const input=node();input.type="range";input.value="12";const output={textContent:"",value:""};
   const dispose=bindRangeOutput(input,output,{format:v=>"<"+v+">"});
