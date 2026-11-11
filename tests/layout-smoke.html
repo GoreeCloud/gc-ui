@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en" data-gc-layout="pending">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoreeCloud UI responsive layout test</title>
+<style>html,body{margin:0;block-size:100%;inline-size:100%}iframe{display:block;inline-size:100%;block-size:100%;border:0}</style>
+</head>
+<body>
+<iframe id="lab" title="GoreeCloud UI reference lab" src="../lab/"></iframe>
+<output id="layout-result" hidden>pending</output>
+<script>
+const frame=document.querySelector("#lab");
+frame.addEventListener("load",()=>{
+ try {
+   const win=frame.contentWindow,doc=frame.contentDocument;
+   const width=win.innerWidth;
+   const documentWidth=Math.max(doc.documentElement.scrollWidth,doc.body.scrollWidth);
+   const controls=doc.querySelector(".gc-lab-toolbar-controls");
+   const selects=[...doc.querySelectorAll(".gc-lab-toolbar-controls select")];
+   const offenders=[...doc.body.querySelectorAll("*")].filter(element=>{
+     const box=element.getBoundingClientRect();
+     const style=win.getComputedStyle(element);
+     return box.width>0 && style.display!=="none" && box.right>width+1;
+   }).slice(0,10).map(element=>({
+     tag:element.tagName.toLowerCase(),
+     className:typeof element.className==="string"?element.className.slice(0,60):"",
+     right:Math.round(element.getBoundingClientRect().right)
+   }));
+   const narrow=width<=600;
+   const grid=win.getComputedStyle(controls).display==="grid";
+   const selectFit=selects.every(element=>element.getBoundingClientRect().right<=width+1);
+   if(documentWidth>width+1)throw new Error("Horizontal overflow: "+JSON.stringify({width,documentWidth,offenders}));
+   if(narrow && !grid)throw new Error("Mobile theme controls must be a 2-column grid");
+   if(narrow && !selectFit)throw new Error("Theme control extends beyond mobile viewport");
+   document.documentElement.dataset.gcLayout="pass";
+   document.documentElement.dataset.gcViewport=String(width);
+   document.querySelector("#layout-result").textContent=JSON.stringify({width,documentWidth,grid,selectFit});
+ } catch(error) {
+   document.documentElement.dataset.gcLayout="fail";
+   document.querySelector("#layout-result").textContent=String(error);
+   console.error(error);
+ }
+});
+</script>
+</body>
+</html>

@@ -55,11 +55,22 @@ try{
     assert.ok(match&&Number(match[1])>=12,"Insufficient browser checks for "+mode+"/"+accent);
     console.log("Chromium "+mode+"/"+accent+": "+match[1]+" real-DOM interaction checks passed");
   }
+  // Check the full design lab, not only the small interaction fixture.
+  for (const size of ["320,760","390,844","600,860","900,900","1440,900"]) {
+    const html=await launch(["--window-size="+size,"--dump-dom",base+"/tests/layout-smoke.html"]);
+    if(!/data-gc-layout="pass"/.test(html)) {
+      const detail=html.match(/<output id="layout-result"[^>]*>([\s\S]*?)<\/output>/)?.[1]||"No layout diagnostics";
+      throw new Error("Responsive layout failure "+size+": "+detail.slice(0,1500));
+    }
+    const measured=html.match(/data-gc-viewport="(\d+)"/)?.[1]||"unknown";
+    console.log("Chromium layout "+size+" measured "+measured+"px: no horizontal page overflow");
+  }
   const dir=join(root,"qa/screenshots");
   await mkdir(dir,{recursive:true});
   for(const [file,flags] of [
     ["gc-ui-light-desktop.png",["--window-size=1440,900"]],
-    ["gc-ui-dark-mobile.png",["--window-size=390,844","--force-dark-mode"]]
+    ["gc-ui-dark-mobile.png",["--window-size=390,844","--force-dark-mode"]],
+    ["gc-ui-light-mobile-320.png",["--window-size=320,760"]]
   ]){
     const out=join(dir,file);
     await launch([...flags,"--screenshot="+out,base+"/lab/"]);

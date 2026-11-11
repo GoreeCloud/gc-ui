@@ -22,3 +22,7 @@ CI uses the pinned Ubuntu 24.04 runner because it includes Chrome/Chromium; runn
 All interaction checks must pass before the browser job is green. The PNG files prove that a headless browser produced images of the current lab; their existence alone does not prove the layout is visually excellent, that there are no occlusions, or that components are accessible. Screenshot-led human review should check hierarchy, spacing, contrast over glass, controls, mobile reach, text scaling, keyboard, RTL, reduced motion, forced colors, real assistive technologies and platform-specific behavior. No native Android, iOS, Windows or Linux SDK is implied by this browser smoke.
 
 Browser failures should be reproduced with the same source SHA and a Chrome version identified in Actions logs before remediation. Clean up only the isolated temporary QA directories, not production data.
+
+## Responsive overflow regression gate
+
+The browser suite also loads the **complete** design lab inside a same-origin viewport test frame at 320, 390, 600, 900, and 1440px requested window sizes. It fails if the document's scroll width exceeds its measured layout viewport, or if the narrow theme selector grid and control bounds are incorrect. A 320px screenshot is captured alongside the existing desktop and dark-mobile screenshots. Decorative scenes are clipped **within their own art container**, rather than hiding overflow on the application document and potentially masking unusable UI.
