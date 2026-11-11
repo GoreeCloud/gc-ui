@@ -41,3 +41,7 @@ Chromium CI now switches the actual design lab through **all four accents × lig
 The browser acceptance runner also checks the actual full lab in RTL at 390px and 900px CSS layout widths, including right-to-left hierarchical tree arrow navigation and no horizontal page scrolling. It checks **simulated CSS root font-size** at 200% on mobile and 300% on desktop, plus a longer sample tree label and document reflow. This is **not a substitute for real browser zoom** or platform text scaling.
 
 Forced-colors emulation verifies the Chromium media query activates, tree boundaries remain visible at the computed-style level, and mobile content does not exceed the viewport. It saves separate RTL, enlarged-text and forced-colors screenshots as short-lived GitHub Actions artifacts. These are automated smoke checks only: manual high-contrast, screen-reader, 400% zoom, localization, color-vision, physical-device and native SDK acceptance remain open.
+
+### Enlarged text layout remediation
+
+The 200% CSS-root-text smoke gate initially exposed a 103px horizontal overflow on a 390px mobile viewport. Browser diagnostics traced the root overflow to three white-space-nowrap hero action buttons expanding to widths of 385px, 397px and 477px. The showcase now stacks and wraps those buttons within its grid on narrow screens while keeping interactive controls visible; it does not hide horizontal page overflow to mask the defect. Source-level button behavior remains unchanged for consumer apps.
