@@ -123,3 +123,74 @@ test("tree source styling and typed package exports exist",()=>{
   assert.ok(pkg.exports["./tree"].types);
   assert.ok(read("src/tree.d.ts").includes("initTreeView"));
 });
+
+
+test("tree typeahead cycles repeated initials and supports multi-character lookup",()=>{
+  const f=fixture();
+  f.docs.setAttribute("data-gc-tree-label","Design tokens");
+  f.services.setAttribute("data-gc-tree-label","Dashboard");
+  const api=initTreeView(f.tree,{locale:"en"});
+  let e=f.tree.emit("keydown",f.projects,{key:"d"});
+  assert.equal(e.defaultPrevented,true);
+  assert.equal(f.docs.getAttribute("aria-selected"),"true");
+  e=f.tree.emit("keydown",f.docs,{key:"d"});
+  assert.equal(e.defaultPrevented,true);
+  assert.equal(f.services.getAttribute("aria-selected"),"true");
+  e=f.tree.emit("keydown",f.services,{key:"d"});
+  assert.equal(e.defaultPrevented,true);
+  assert.equal(f.docs.getAttribute("aria-selected"),"true");
+  api.dispose();
+
+  const other=fixture();
+  other.docs.setAttribute("data-gc-tree-label","Design tokens");
+  other.services.setAttribute("data-gc-tree-label","Dashboard");
+  const typed=initTreeView(other.tree,{locale:"en"});
+  other.tree.emit("keydown",other.projects,{key:"d"});
+  other.tree.emit("keydown",other.docs,{key:"e"});
+  assert.equal(other.docs.getAttribute("aria-selected"),"true");
+  typed.dispose();
+});
+
+test("tree text navigation ignores IME composition and modified or whitespace keys",()=>{
+  const f=fixture(),api=initTreeView(f.tree);
+  const ignored=[
+    {key:"d",isComposing:true},{key:"d",altKey:true},{key:"d",ctrlKey:true},
+    {key:"d",metaKey:true},{key:" "},
+  ];
+  for(const params of ignored){
+    const e=f.tree.emit("keydown",f.projects,params);
+    assert.equal(e.defaultPrevented,params.key===" ");
+    assert.equal(f.projects.getAttribute("aria-selected"),"true");
+  }
+  const next=f.tree.emit("keydown",f.projects,{key:"d"});
+  assert.equal(next.defaultPrevented,true);
+  assert.equal(f.docs.getAttribute("aria-selected"),"true");
+  api.dispose();
+});
+
+test("refresh moves active focus to eligible ancestor or fallback after dynamic disabling",()=>{
+  const f=fixture(),api=initTreeView(f.tree);
+  assert.equal(api.select(f.docs),true);
+  assert.equal(f.tree.ownerDocument.activeElement,f.docs);
+  f.docs.setAttribute("aria-disabled","true");
+  assert.equal(api.refresh(),true);
+  assert.equal(f.projects.getAttribute("aria-selected"),"true");
+  assert.equal(f.projects.tabIndex,0);
+  assert.equal(f.docs.tabIndex,-1);
+  assert.equal(f.tree.ownerDocument.activeElement,f.projects);
+  f.projects.setAttribute("aria-disabled","true");
+  assert.equal(api.refresh(),true);
+  assert.equal(f.services.getAttribute("aria-selected"),"true");
+  assert.equal(f.services.tabIndex,0);
+  f.services.setAttribute("aria-disabled","true");
+  assert.equal(api.refresh(),false);
+  for(const item of [f.projects,f.docs,f.services,f.mesh]){
+    assert.equal(item.tabIndex,-1);
+    assert.equal(item.getAttribute("aria-selected"),"false");
+  }
+  f.services.setAttribute("aria-disabled","false");
+  assert.equal(api.refresh(),true);
+  assert.equal(f.services.getAttribute("aria-selected"),"true");
+  api.dispose();
+  assert.equal(api.refresh(),false);
+});
