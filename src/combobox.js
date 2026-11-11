@@ -46,7 +46,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
     } else input.removeAttribute("aria-activedescendant");
   };
   const refresh=()=>{
-    if (destroyed) return;
+    if (destroyed || pending) return;
     const query=normalize(input.value);
     for (const option of options) {
       const text=normalize(label(option)+" "+(option.getAttribute("data-gc-keywords")||""));
@@ -60,6 +60,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
   };
   const open=()=>{
     if (destroyed) throw new Error("Combobox has been disposed");
+    if (pending) return;
     refresh();list.hidden=false;
     input.setAttribute("aria-expanded","true");
   };
@@ -85,15 +86,16 @@ export function initCombobox(input, list, { onSelect } = {}) {
       close();
       // Programmatic value updates do not forge input/change DOM events.
     } catch {
-      if (status) status.textContent="Selection could not be completed. Try again.";
+      if (!destroyed && status) status.textContent="Selection could not be completed. Try again.";
     } finally {
       pending=false;
       input.removeAttribute("aria-busy");
     }
   };
-  const onInput=()=>{selected=null;options.forEach(option=>option.setAttribute("aria-selected","false"));setActive(null);open()};
-  const onFocus=()=>open();
+  const onInput=()=>{if (pending || destroyed) return; selected=null;options.forEach(option=>option.setAttribute("aria-selected","false"));setActive(null);open()};
+  const onFocus=()=>{if (!pending && !destroyed) open();};
   const onKey=event=>{
+    if (pending || destroyed) return;
     if (event.altKey||event.ctrlKey||event.metaKey) return;
     if (event.key==="Escape") {
       if (!list.hidden) {event.preventDefault();close();}
@@ -117,15 +119,17 @@ export function initCombobox(input, list, { onSelect } = {}) {
     }
   };
   const onClick=event=>{
+    if (pending || destroyed) return;
     const option=event.target?.closest?.('[role="option"]');
     if (options.includes(option)) void choose(option);
   };
   const onPointerDown=event=>{
+    if (pending || destroyed) return;
     const option=event.target?.closest?.('[role="option"]');
     if (options.includes(option)) event.preventDefault();
   };
   const onOutside=event=>{
-    if (event.target!==input && !list.contains(event.target)) close();
+    if (!pending && !destroyed && event.target!==input && !list.contains(event.target)) close();
   };
   input.setAttribute("aria-haspopup","listbox");
   input.setAttribute("aria-autocomplete","list");
