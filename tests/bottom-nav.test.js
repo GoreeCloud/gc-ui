@@ -216,3 +216,33 @@ test("invalid dock measurements never overwrite a previously valid clearance",()
  ctl.dispose();
  assert.equal(values.has("--gc-bottom-nav-clearance"),false);
 });
+
+
+test("unmatched history routes clear stale current destination and recover when matched",()=>{
+ const f=fixture(),ctrl=initBottomNavigation(f.nav);
+ assert.equal(f.links[0].getAttribute("aria-current"),"page");
+ f.win.location.hash="#unrecognized";
+ f.win.emit("hashchange");
+ for(const link of f.links){
+   assert.equal(link.getAttribute("aria-current"),null);
+   assert.equal(link.getAttribute("data-gc-active"),null);
+ }
+ f.win.location.hash="#files";
+ f.win.emit("popstate");
+ assert.equal(f.links[1].getAttribute("aria-current"),"page");
+ for(const link of [f.links[0],f.links[2],f.links[3]]){
+   assert.equal(link.getAttribute("aria-current"),null);
+ }
+ ctrl.dispose();
+});
+
+test("explicit route synchronization never revives stale selection after disposal",()=>{
+ const f=fixture(),ctrl=initBottomNavigation(f.nav);
+ f.win.location.hash="#missing";
+ ctrl.sync();
+ assert.equal(f.links.some(link=>link.getAttribute("aria-current")==="page"),false);
+ ctrl.dispose();
+ f.win.location.hash="#home";
+ ctrl.sync();
+ assert.equal(f.links.some(link=>link.getAttribute("aria-current")==="page"),false);
+});

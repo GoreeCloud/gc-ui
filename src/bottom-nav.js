@@ -70,6 +70,15 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
       urls[i].search === location.search &&
       urls[i].hash === location.hash);
     if (match) select(match);
+    else {
+      // Browser history can leave the dock's route set. Never present a stale
+      // selection as the current page, even when it was selected earlier.
+      selected = null;
+      for (const item of links) {
+        item.removeAttribute("aria-current");
+        item.removeAttribute("data-gc-active");
+      }
+    }
   };
   const onClick = event => {
     const link = event.target?.closest?.("a[href]");
