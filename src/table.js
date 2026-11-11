@@ -23,7 +23,7 @@ const numberValue = value => {
 };
 
 /**
- * @returns {{sortBy:(index:number,direction?:string)=>void,reset:()=>void,dispose:()=>void}}
+ * @returns {{sortBy:(index:number,direction?:string)=>void,reset:()=>void,refresh:()=>number,dispose:()=>void}}
  */
 export function initSortableTable(table,{locale, onSort}={}) {
   if (!table || typeof table.querySelectorAll !== "function" ||
@@ -42,9 +42,19 @@ export function initSortableTable(table,{locale, onSort}={}) {
     return {header,button,index,kind};
   }).filter(Boolean);
   if (!columns.length) throw new Error("Sortable table requires a sort button in a column header");
-  const original=Array.from(body.rows);
-  // Keep original order for deterministic tie-breaks and undo.
-  const originalIndex=new Map(original.map((row,index)=>[row,index]));
+  // The reset baseline is the insertion order known to this controller.
+  // Preserve it for retained rows and append newly introduced rows in their
+  // present DOM order. Removed rows must never be silently re-inserted.
+  let original=Array.from(body.rows);
+  let originalIndex=new Map(original.map((row,index)=>[row,index]));
+  const reconcileRows=()=>{
+    const current=Array.from(body.rows);
+    const live=new Set(current);
+    const known=new Set(original);
+    original=original.filter(row=>live.has(row)).concat(current.filter(row=>!known.has(row)));
+    originalIndex=new Map(original.map((row,index)=>[row,index]));
+    return original.length;
+  };
   const collator=new Intl.Collator(locale||table.ownerDocument?.documentElement?.lang||"en",
     {numeric:true,sensitivity:"base"});
   let selected=null, direction="none", disposed=false;
@@ -61,6 +71,7 @@ export function initSortableTable(table,{locale, onSort}={}) {
     if (!DIRECTIONS.includes(nextDirection)) throw new RangeError("Invalid sort direction");
     const column=columns.find(c=>c.index===index);
     if (!column) throw new RangeError("Column has no sortable header");
+    reconcileRows(); // Prevent undefined tie indices on newly inserted DOM rows.
     const sign=nextDirection==="ascending"?1:-1;
     const sorted=Array.from(body.rows).sort((a,b)=>{
       const va=valueFor(a,column), vb=valueFor(b,column);
@@ -80,10 +91,20 @@ export function initSortableTable(table,{locale, onSort}={}) {
   };
   const reset=()=>{
     if (disposed) throw new Error("Sortable table has been disposed");
+    reconcileRows();
     body.append(...original);
     selected=null;direction="none";
     headers.forEach(header=>header.setAttribute("aria-sort","none"));
     if (onSort) onSort({column:null,direction:"none",rows:original.slice()});
+  };
+  const refresh=()=>{
+    if (disposed) throw new Error("Sortable table has been disposed");
+    const count=reconcileRows();
+    // A dynamically updated table keeps its last explicit user sort.
+    // No active sort means the new baseline is the only reset order.
+    if (selected!==null) sortBy(selected,direction);
+    else reset();
+    return count;
   };
   const callbacks=columns.map(({button,index})=>{
     const handler=()=>sortBy(index,selected===index&&direction==="ascending"?"descending":"ascending");
@@ -92,7 +113,7 @@ export function initSortableTable(table,{locale, onSort}={}) {
   });
   headers.forEach(header=>header.setAttribute("aria-sort","none"));
   return Object.freeze({
-    sortBy,reset,
+    sortBy,reset,refresh,
     dispose(){
       if (disposed) return;
       disposed=true;
