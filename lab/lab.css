@@ -241,3 +241,24 @@
     line-height:1.08;
   }
 }
+
+
+/* 400%-text design-lab controls: respect text enlargement without allowing
+   demo selectors/badges to dominate the usable viewport. */
+@media(max-width:600px) {
+  .gc-app .gc-lab-toolbar .gc-lab-select {
+    min-inline-size:0;
+    max-inline-size:100%;
+    font-size:clamp(16px,calc(.32rem + 10px),32px);
+    line-height:1.25;
+    padding-inline:8px;
+  }
+  .gc-app .gc-lab-hero-copy > .gc-cluster:first-child .gc-badge {
+    font-size:clamp(12px,calc(.22rem + 8px),24px);
+    line-height:1.35;
+    letter-spacing:.06em;
+    overflow-wrap:normal;
+    word-break:normal;
+  }
+  .gc-lab-hero h1 { font-size:clamp(36px,calc(.75rem + 16px),78px); }
+}

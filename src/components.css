@@ -903,3 +903,22 @@
   }
   .gc-app .gc-toast { max-inline-size:100%; overflow-wrap:anywhere; }
 }
+
+
+/* Skip-to-content must remain outside the viewport at ANY text size until
+   focused. The old fixed -100px offset was too small for 400% text. */
+.gc-app .gc-link-skip {
+  position:fixed;
+  inset-block-start:0;
+  max-inline-size:calc(100vw - 32px);
+  transform:translateY(calc(-100% - 12px));
+  overflow-wrap:anywhere;
+  border-radius:var(--gc-radius-md);
+}
+.gc-app .gc-link-skip:focus {
+  inset-block-start:var(--gc-space-3);
+  transform:none;
+}
+@media(forced-colors:active) {
+  .gc-app .gc-link-skip:focus { outline:3px solid Highlight; border:1px solid CanvasText; }
+}

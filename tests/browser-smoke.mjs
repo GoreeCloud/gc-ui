@@ -383,6 +383,27 @@ try {
       'scroll:root.scrollWidth,dir:root.dir,forced:matchMedia("(forced-colors:active)").matches,'+
       'dock:{left:rect.left,right:rect.right},sections:["foundations","components","patterns","forms"]'+
       '.map(id=>{const el=document.getElementById(id);return {id,client:el.clientWidth,scroll:el.scrollWidth};})});})('+mode.rtl+')'));
+    const focusQA=JSON.parse(await browser.evaluate(
+      '(()=>{const skip=document.querySelector(".gc-link-skip"),'+
+      'select=document.querySelector(".gc-lab-toolbar .gc-lab-select"),'+
+      'badge=document.querySelector(".gc-lab-hero-copy .gc-badge"),'+
+      'hero=document.querySelector(".gc-lab-hero h1"),root=document.documentElement;'+
+      'const before=skip.getBoundingClientRect();skip.focus();'+
+      'const after=skip.getBoundingClientRect();skip.blur();'+
+      'return JSON.stringify({beforeBottom:before.bottom,focusedTop:after.top,focusedBottom:after.bottom,'+
+      'selectSize:parseFloat(getComputedStyle(select).fontSize),'+
+      'badgeSize:parseFloat(getComputedStyle(badge).fontSize),badgeRight:badge.getBoundingClientRect().right,'+
+      'heroSize:parseFloat(getComputedStyle(hero).fontSize),viewport:root.clientWidth});})()'));
+    assert.ok(focusQA.beforeBottom<=0,
+      "Skip link leaked into viewport before focus at 400%: "+JSON.stringify(focusQA));
+    assert.ok(focusQA.focusedTop>=0&&focusQA.focusedBottom>focusQA.focusedTop,
+      "Skip link not visible on keyboard focus: "+JSON.stringify(focusQA));
+    assert.ok(focusQA.selectSize<=32&&focusQA.selectSize>=16,
+      "Large-text lab theme selector overwhelms toolbar: "+JSON.stringify(focusQA));
+    assert.ok(focusQA.badgeSize<=24&&focusQA.badgeRight<=focusQA.viewport+1,
+      "Badge exceeds enlarged hero viewport: "+JSON.stringify(focusQA));
+    assert.ok(focusQA.heroSize<=78,
+      "Enlarged hero display exceeds mobile editorial scale: "+JSON.stringify(focusQA));
     assert.ok(parseFloat(results.font)>=60,"400% root font did not take effect for "+mode.name);
     assert.equal(results.forced,mode.forcedColors,"Forced-colors mode mismatch "+mode.name);
     if(mode.rtl)assert.equal(results.dir,"rtl","RTL direction was not applied");
