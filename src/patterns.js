@@ -51,9 +51,11 @@ export function initToggleGroup(container, { onChange } = {}) {
   }
   const buttons = Array.from(container.querySelectorAll('button[aria-pressed]'));
   if (buttons.length === 0) throw new Error("Toggle group has no buttons with aria-pressed");
-  const enabled = () => buttons.filter((button) => !button.disabled);
+  const canChoose = button => Boolean(button && !button.disabled &&
+    button.getAttribute("aria-disabled") !== "true");
+  const enabled = () => buttons.filter(canChoose);
   const select = (button, focus = false, notify = true) => {
-    if (!button || button.disabled) return;
+    if (!buttons.includes(button) || !canChoose(button)) return;
     for (const entry of buttons) {
       const active = entry === button;
       entry.setAttribute("aria-pressed", String(active));
@@ -62,7 +64,7 @@ export function initToggleGroup(container, { onChange } = {}) {
     if (focus) button.focus();
     if (notify && onChange) onChange(button);
   };
-  const initial = buttons.find(b => b.getAttribute("aria-pressed") === "true" && !b.disabled) || enabled()[0];
+  const initial = buttons.find(b => b.getAttribute("aria-pressed") === "true" && canChoose(b)) || enabled()[0];
   select(initial, false, false);
   const handleClick = (event) => select(event.currentTarget);
   const handleKey = (event) => {
