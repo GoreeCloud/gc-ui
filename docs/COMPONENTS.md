@@ -14,7 +14,7 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Inputs | gc-field, gc-input, gc-select, gc-textarea, gc-field__hint, gc-field__error | Associated labels, describedby and aria-invalid |
 | Choices | gc-check, gc-radio, gc-switch, gc-chip, gc-segmented | Native state, checked or aria-pressed |
 | Status | gc-badge, gc-alert, gc-progress, gc-meter | Visible words in addition to color |
-| Navigation | gc-nav, gc-topbar, gc-tabs, gc-tabpanel | aria-current and correct tablist relationships |
+| Navigation | gc-nav, gc-topbar, gc-tabs, gc-tabpanel; gc-navigation-shell, gc-navigation-rail, gc-navigation-rail__links | Native links, aria-current and accessible icon-only collapsed mode on tablet/desktop/web |
 | Data | gc-list, gc-table, gc-table-wrap, gc-kbd | Native list/table headers |
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
 | Identity and icons | gc-avatar; gc-icon, iconSvg() | Image alt and icon-only button names |
@@ -152,3 +152,8 @@ When a navigation link is opened in another tab/window, downloaded, modified wit
 ### Floating dock inside a rounded application window
 
 Use gc-window gc-window--app-shell with a scrollable gc-window__body and its sibling gc-bottom-nav gc-bottom-nav--window for desktop-like multiwindow applications. The capsule stays within all four rounded window corners and never follows the browser viewport. Browser acceptance checks 320/390/900/1440px geometry and captures mobile/desktop screenshots. This is an alternative to the page-level dock, not a second dock for one real consuming app.
+
+
+## Adaptive navigation rail (alpha)
+
+Use `initNavigationRail(rail, { collapsed?: boolean })` on a named native `aside` containing a named `nav.gc-navigation-rail__links`, a `button[data-gc-rail-toggle]` with an exact `aria-controls` target, and labeled native links. The API returns `{ collapsed, setCollapsed, toggle, sync, dispose }`. Default collapsed on tablet (601–1023 CSS px), expanded on desktop (1024+); phone has its own bottom navigation. Full example and acceptance boundary: [NAVIGATION_RAIL.md](NAVIGATION_RAIL.md). No storage, telemetry or service authorization is performed by the controller. Human AT and real-device acceptance remain open.
