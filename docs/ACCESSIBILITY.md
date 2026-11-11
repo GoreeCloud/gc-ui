@@ -14,3 +14,7 @@ This is a checklist, **not an accessibility certificate**.
 - Report tested platform/browser combinations, manual assistive-tech gaps and visual limitations separately.
 
 Under founder governance, accessibility findings alone are advisory to the internal hobby-project Stable/Anchor designation. This does not waive legal, system-enforced, safety, privacy or platform requirements and does not permit false conformance claims.
+
+## Action-menu IME safety (alpha)
+
+The action-menu typeahead defers to native text composition. While IME preedit is active, shortcut and typeahead keys are not captured; legacy keyCode 229/Process keyboard events are also ignored. Composing text is never treated as an action choice. Typeahead resumes only after composition ends, with no buffered preedit query. This is a keyboard regression guard, not human assistive-technology or multi-device certification.
