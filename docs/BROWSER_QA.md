@@ -30,3 +30,7 @@ The browser suite also loads the **complete** design lab inside a same-origin vi
 ### Exact mobile emulation requirement
 
 Headless Chromium may silently clamp a requested `--window-size=320,760` or `390,844` to a **500px CSS viewport** while writing a cropped 320px/390px PNG. This can create misleading horizontal scrollbars and falsely green responsive checks. The browser runner now uses the Chrome DevTools Protocol `Emulation.setDeviceMetricsOverride`, asserts `window.innerWidth` equals the requested width, and checks the PNG IHDR pixel dimensions. It tests **real 320px and 390px CSS layouts**. A CI pass without verifying those dimensions must not be represented as mobile acceptance.
+
+## Complete curated appearance matrix
+
+Chromium CI now switches the actual design lab through **all four accents × light/dark appearance** (eight combinations), comparing computed brand and surface variables against the canonical JSON values at a true 390px CSS viewport. Each combination must remain free of horizontal overflow and produces a separate mobile PNG in the seven-day workflow artifact. A separate Chrome pass exercises reduced-motion CSS tokens and the increased-contrast solid Lens fallback. These checks support screenshot-led review but do not replace human visual acceptance, physical devices, OS-native component testing, color vision screening, translated RTL, or manual assistive technology.
