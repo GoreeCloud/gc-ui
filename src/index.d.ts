@@ -55,3 +55,14 @@ export declare function initBottomNavigation(nav: HTMLElement, options?: {
   onNavigate?: (link: HTMLAnchorElement) => boolean | void;
   content?: HTMLElement;
 }): { select: (link: HTMLAnchorElement) => boolean; sync: () => void; dispose: () => void };
+
+/** Tablet/desktop rail that collapses to icon-only destinations; native links navigate. */
+export declare function initNavigationRail(rail: HTMLElement, options?: {
+  collapsed?: boolean;
+}): {
+  readonly collapsed: boolean;
+  setCollapsed: (collapsed: boolean) => boolean;
+  toggle: () => boolean;
+  sync: () => void;
+  dispose: () => void;
+};

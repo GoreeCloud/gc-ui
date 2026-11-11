@@ -12,21 +12,22 @@
 </head>
 <body class="gc-app">
 <a class="gc-link-skip" href="#main">Skip to content</a>
-<div class="gc-lab-shell gc-premium-shell">
-  <aside class="gc-lab-rail gc-surface" aria-label="Design lab navigation">
-    <div class="gc-lab-logo"><span class="gc-lab-mark" aria-hidden="true">✦</span><strong>GoreeCloud <span>UI</span></strong></div>
-    <p class="gc-support gc-lab-caption">DESIGN SYSTEM / ALPHA</p>
-    <nav class="gc-nav" aria-label="Sections">
-      <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon> Overview</a>
-      <a href="#foundations"><gc-icon name="sparkle"></gc-icon> Foundations</a>
-      <a href="#premium"><gc-icon name="grid"></gc-icon> Signature surfaces</a>
-      <a href="#rounded-windows"><gc-icon name="grid"></gc-icon> Rounded windows</a>
-      <a href="#components"><gc-icon name="grid"></gc-icon> Components</a>
-      <a href="#patterns"><gc-icon name="list"></gc-icon> Patterns</a>
-      <a href="#forms"><gc-icon name="edit"></gc-icon> Forms</a>
-      <a href="#iconography"><gc-icon name="shield"></gc-icon> Iconography</a>
+<div class="gc-lab-shell gc-navigation-shell gc-premium-shell">
+  <aside class="gc-lab-rail gc-navigation-rail gc-surface" aria-label="Design lab navigation">
+    <div class="gc-lab-logo"><span class="gc-lab-mark" aria-hidden="true">✦</span><strong class="gc-navigation-rail__brand-label">GoreeCloud <span>UI</span></strong></div>
+    <button type="button" class="gc-navigation-rail__toggle" data-gc-rail-toggle aria-controls="gc-lab-rail-links" aria-label="Collapse navigation" aria-expanded="true"><gc-icon name="menu"></gc-icon><span class="gc-navigation-rail__toggle-label">Navigation</span></button>
+    <p class="gc-support gc-lab-caption gc-navigation-rail__secondary">DESIGN SYSTEM / ALPHA</p>
+    <nav id="gc-lab-rail-links" class="gc-nav gc-navigation-rail__links" aria-label="Design lab sections">
+      <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon><span class="gc-navigation-rail__label">Overview</span></a>
+      <a href="#foundations"><gc-icon name="sparkle"></gc-icon><span class="gc-navigation-rail__label">Foundations</span></a>
+      <a href="#premium"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Signature surfaces</span></a>
+      <a href="#rounded-windows"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Rounded windows</span></a>
+      <a href="#components"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Components</span></a>
+      <a href="#patterns"><gc-icon name="list"></gc-icon><span class="gc-navigation-rail__label">Patterns</span></a>
+      <a href="#forms"><gc-icon name="edit"></gc-icon><span class="gc-navigation-rail__label">Forms</span></a>
+      <a href="#iconography"><gc-icon name="shield"></gc-icon><span class="gc-navigation-rail__label">Iconography</span></a>
     </nav>
-    <div class="gc-lab-rail-note gc-card gc-card--tonal">
+    <div class="gc-lab-rail-note gc-card gc-card--tonal gc-navigation-rail__secondary">
       <span class="gc-badge gc-badge--brand">0.1.0 alpha</span>
       <p class="gc-support" style="margin:12px 0 0">Prototype palette. Native SDKs and consumer migrations are not shipped.</p>
     </div>

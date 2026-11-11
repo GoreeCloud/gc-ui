@@ -11,7 +11,7 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.
 - **Iris / Lagoon / Ember / Moss** accent families, separately defined light and dark palettes, and high-contrast, reduced-motion and reduced-transparency rules.
 - Shared tokens for color, typography, four-pixel spacing, shape, elevation, motion, icon size, control dimensions, breakpoints and z-index.
-- Native-first styled buttons, cards, form fields, switches, tabs, chips, badges, alerts, dialogs, accordions, drawers, range sliders, breadcrumbs, steppers, structured detail lists, toolbars, navigation, tables, toasts, progress and loading patterns.
+- Native-first styled buttons, cards, form fields, switches, tabs, chips, badges, alerts, dialogs, accordions, drawers, range sliders, breadcrumbs, steppers, structured detail lists, toolbars, **adaptive collapsible tablet/desktop/web navigation rails**, navigation tables, toasts, progress and loading patterns.
 - An original 24px line-glyph icon set with optional GC icon custom element.
 - Framework-independent JS utilities for themes, reactive custom accents on OS appearance changes, tabs, native disclosure groups, roving button selection, range outputs, modal drawers, dialog focus return and toasts.
 - Static reference lab, tests, GitHub CI and machine-readable design authority registry.
@@ -35,6 +35,7 @@ Use web CSS from the package exports in a bundler: @goreecloud/ui/tokens.css and
 
 - [Design language and semantic roles](docs/DESIGN_LANGUAGE.md)
 - [Component patterns](docs/COMPONENTS.md)
+- [Adaptive collapsible navigation rail](docs/NAVIGATION_RAIL.md)
 - [Accessibility and validation](docs/ACCESSIBILITY.md)
 - [Native and OS integration roadmap](docs/PLATFORM_ADAPTERS.md)
 - [Native color-resource bridge](docs/PLATFORM_BRIDGE.md)

@@ -224,6 +224,67 @@ try {
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
+  // Navigation rail: real Chromium geometry, native focus/links, and tablet behavior.
+  for (const [width,height,expectCollapsed] of [[1440,900,false],[820,900,true],[390,844,null]]) {
+    await browser.setViewport(width,height);
+    await browser.navigate(base+"/lab/");
+    const before=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail"),'+
+      'shell=document.querySelector(".gc-navigation-shell"),toggle=rail.querySelector("[data-gc-rail-toggle]"),'+
+      'link=rail.querySelector("nav a[href]"),label=link.querySelector(".gc-navigation-rail__label");'+
+      'return JSON.stringify({railDisplay:getComputedStyle(rail).display,railWidth:rail.getBoundingClientRect().width,'+
+      'shellWidth:shell.getBoundingClientRect().width,collapsed:rail.dataset.gcCollapsed,'+
+      'expanded:toggle.getAttribute("aria-expanded"),name:toggle.getAttribute("aria-label"),'+
+      'linkText:label.textContent.trim(),clip:getComputedStyle(label).clipPath,'+
+      'docWidth:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,'+
+      'dockDisplay:getComputedStyle(document.querySelector("#demo-bottom-nav")).display});})()'));
+    assert.ok(before.docWidth<=before.viewport+1,
+      "Navigation shell overflow at "+width+"px: "+JSON.stringify(before));
+    if (expectCollapsed===null) {
+      assert.equal(before.railDisplay,"none","Phone must keep compact bottom navigation");
+      assert.notEqual(before.dockDisplay,"none","Phone bottom dock must be visible");
+      continue;
+    }
+    assert.notEqual(before.railDisplay,"none","Tablet/desktop rail must remain visible");
+    assert.equal(before.collapsed,String(expectCollapsed));
+    assert.equal(before.expanded,String(!expectCollapsed));
+    assert.equal(before.linkText,"Overview","Icon-only state must retain accessible link text");
+    assert.equal(before.dockDisplay,"none","Do not present two primary navigation systems");
+    assert.ok(before.railWidth<(expectCollapsed?100:270) && before.railWidth>(expectCollapsed?56:200),
+      "Incorrect navigation rail width: "+JSON.stringify(before));
+    if(expectCollapsed) assert.equal(before.clip,"inset(50%)","Compact labels are visually hidden, not removed");
+    await browser.screenshot(join(directory,
+      width===820?"gc-ui-rail-tablet-collapsed.png":"gc-ui-rail-desktop-expanded.png"));
+    const after=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail"),'+
+      'toggle=rail.querySelector("[data-gc-rail-toggle]"),nav=rail.querySelector("nav");'+
+      'toggle.focus();toggle.click();'+
+      'const state={collapsed:rail.dataset.gcCollapsed,expanded:toggle.getAttribute("aria-expanded"),'+
+      'focus:document.activeElement===toggle,width:rail.getBoundingClientRect().width,'+
+      'label:toggle.getAttribute("aria-label"),scroll:document.documentElement.scrollWidth,'+
+      'viewport:document.documentElement.clientWidth};'+
+      'nav.querySelector(\'a[href="#forms"]\').click();'+
+      'return JSON.stringify(state);})()'));
+    assert.equal(after.collapsed,String(!expectCollapsed),"Toggle did not change rail state");
+    assert.equal(after.expanded,String(expectCollapsed),"Toggle aria-expanded did not update");
+    assert.equal(after.focus,true,"Rail toggle should retain keyboard focus");
+    // Grid width animates when motion is allowed; measure only after it settles.
+    await delay(300);
+    const settled=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail");'+
+      'return JSON.stringify({width:rail.getBoundingClientRect().width,'+
+      'scroll:document.documentElement.scrollWidth,'+
+      'viewport:document.documentElement.clientWidth});})()'));
+    assert.ok(settled.scroll<=settled.viewport+1,"Toggled rail caused horizontal overflow");
+    assert.ok(expectCollapsed?settled.width>200:settled.width<100,
+      "Toggled rail failed to resize: "+JSON.stringify({after,settled}));
+    const selected=await browser.evaluate('document.querySelector(\'.gc-navigation-rail__links a[href="#forms"]\').getAttribute("aria-current")');
+    assert.equal(selected,"page","Native link destination did not update active state");
+    await browser.screenshot(join(directory,
+      width===820?"gc-ui-rail-tablet-expanded.png":"gc-ui-rail-desktop-collapsed.png"));
+    console.log("Chromium adaptive navigation rail @ "+width+"px: focus, collapse, route and geometry passed");
+  }
+
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
   await browser.setViewport(390,844,{dark:false});
@@ -448,12 +509,17 @@ try {
     await browser.evaluate("window.focus()");
     const nodes=await browser.accessibilityTree();
     const has=(role,label)=>nodes.some(n=>n.role===role&&n.name===label);
-    assert.ok(has("navigation","Primary application destinations"),
-      "Floating dock is missing its named navigation landmark in "+name);
-    for(const label of ["Home","Design","Library","Forms"]) {
+    const useRail = width > 600;
+    assert.ok(has("navigation",useRail?"Design lab sections":"Primary application destinations"),
+      "Visible navigation landmark missing in "+name);
+    for(const label of (useRail?
+      ["Overview","Foundations","Signature surfaces","Rounded windows","Components","Patterns","Forms","Iconography"]:
+      ["Home","Design","Library","Forms"])) {
       assert.ok(has("link",label),
-        "Dock destination missing from accessibility tree: "+label+" ("+name+")");
+        "Visible navigation destination missing from accessibility tree: "+label+" ("+name+")");
     }
+    assert.equal(has("navigation",useRail?"Primary application destinations":"Design lab sections"),false,
+      "Hidden alternate navigation should not appear in assistive-tech tree");
     assert.ok(has("heading","Rounded. Always."),
       "Window showcase's visual heading is not in accessibility tree: "+name);
     const buttons=nodes.filter(n=>n.role==="button");
@@ -557,7 +623,17 @@ try {
       'return JSON.stringify({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,'+
       'left:r.left,right:r.right,bottom:r.bottom,height:r.height,radius:getComputedStyle(dock).borderTopLeftRadius,'+
       'active:active?.textContent.trim(),activeColor:active?getComputedStyle(active).color:null,'+
-      'expected,padding:parseFloat(getComputedStyle(main).paddingBottom)});})()'));
+      'expected,padding:parseFloat(getComputedStyle(main).paddingBottom),'+
+      'railDisplay:getComputedStyle(document.querySelector(".gc-navigation-rail")).display,'+
+      'railWidth:document.querySelector(".gc-navigation-rail").getBoundingClientRect().width});})()'));
+    if (width >= 601) {
+      assert.equal(actual.height,0,"Wide-layout viewport dock must be hidden");
+      assert.notEqual(actual.railDisplay,"none","Wide layout requires visible rail");
+      assert.ok(actual.railWidth>=76,"Rail width must be meaningful");
+      assert.ok(actual.scroll<=actual.width+1,"Wide navigation caused horizontal overflow");
+      console.log("Chromium tablet/desktop @ "+width+"px: one visible rail, no viewport dock");
+      continue;
+    }
     assert.ok(actual.left>=0 && actual.right<=actual.width+1,"Floating dock exceeds viewport "+JSON.stringify(actual));
     assert.ok(actual.bottom<=844 && actual.height>=50,"Floating dock height/position incorrect "+JSON.stringify(actual));
     assert.ok(parseFloat(actual.radius)>=26,"Bottom nav lost rounded capsule "+JSON.stringify(actual));

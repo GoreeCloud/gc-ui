@@ -263,6 +263,58 @@
       "reviewer": null,
       "testedAt": null,
       "sourceSha": null
+    },
+    {
+      "id": "rail-desktop-nvda",
+      "surface": "navigation-rail",
+      "platform": "Windows / Chrome / NVDA",
+      "modality": "screen-reader",
+      "steps": "Navigate all rail links; collapse and expand via keyboard; follow section",
+      "expected": "Toggle expanded state and icon-only destination names are announced; current page follows actual route",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "rail-tablet-talkback",
+      "surface": "navigation-rail",
+      "platform": "Android tablet / Chrome / TalkBack",
+      "modality": "touch-screen-reader",
+      "steps": "On a physical tablet open collapsed rail, explore icons, expand, activate a destination",
+      "expected": "Icon-only links have explicit names, touch targets are reachable, current destination and focus are conveyed",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "rail-desktop-visual",
+      "surface": "navigation-rail",
+      "platform": "Linux / Chrome physical desktop",
+      "modality": "visual-device",
+      "steps": "Inspect labeled and icon-only navigation at 1440px; contrast, RTL, zoom and reduced motion",
+      "expected": "Rail width changes without clipping headings, page overflow or duplicate bottom navigation",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "rail-tablet-visual",
+      "surface": "navigation-rail",
+      "platform": "Android tablet / Chrome physical tablet",
+      "modality": "visual-device",
+      "steps": "Inspect expanded and compact navigation at approximately 820 CSS px in portrait and landscape",
+      "expected": "Icon labels stay available to assistive technology, 44px actions remain reachable and content reflows",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
     }
   ]
 }
