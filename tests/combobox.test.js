@@ -117,3 +117,30 @@ test("initialization opens an input that was focused before mounting",()=>{
   assert.equal(f.input.getAttribute("aria-expanded"),"true");
   api.dispose();
 });
+
+
+test("Home and End navigate enabled visible choices without overriding closed input editing",()=>{
+  const f=fixture(),api=initCombobox(f.input,f.list);
+  const closed=f.input.emit("keydown",{key:"End"});
+  assert.equal(closed.defaultPrevented,false);
+  api.open();
+  const last=f.input.emit("keydown",{key:"End"});
+  assert.equal(last.defaultPrevented,true);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-2");
+  const first=f.input.emit("keydown",{key:"Home"});
+  assert.equal(first.defaultPrevented,true);
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  api.dispose();
+});
+
+test("refresh clears active descendant when choice becomes disabled",()=>{
+  const f=fixture(),api=initCombobox(f.input,f.list);
+  api.open();f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-0");
+  f.choices[0].setAttribute("aria-disabled","true");
+  api.refresh();
+  assert.equal(f.input.getAttribute("aria-activedescendant"),null);
+  f.input.emit("keydown",{key:"ArrowDown"});
+  assert.equal(f.input.getAttribute("aria-activedescendant"),"option-2");
+  api.dispose();
+});
