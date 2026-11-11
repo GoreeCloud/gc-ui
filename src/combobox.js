@@ -133,6 +133,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
   list.hidden=true;
   options.forEach(option=>option.setAttribute("aria-selected","false"));
   input.addEventListener("focus",onFocus);
+  input.addEventListener("focusin",onFocus);
   input.addEventListener("input",onInput);
   input.addEventListener("keydown",onKey);
   list.addEventListener("click",onClick);
@@ -146,6 +147,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
       if (destroyed) return;
       close();destroyed=true;
       input.removeEventListener("focus",onFocus);
+      input.removeEventListener("focusin",onFocus);
       input.removeEventListener("input",onInput);
       input.removeEventListener("keydown",onKey);
       list.removeEventListener("click",onClick);
