@@ -16,7 +16,8 @@
     "css": "src/tokens.css",
     "components": "src/components.css",
     "componentDocs": "docs/COMPONENTS.md",
-    "designDocs": "docs/DESIGN_LANGUAGE.md"
+    "designDocs": "docs/DESIGN_LANGUAGE.md",
+    "visualQualityDocs": "docs/VISUAL_QUALITY.md"
   },
   "materials": [
     "Cloud Canvas",
@@ -62,5 +63,24 @@
     "persistence": "opt-in to consumer"
   },
   "license": "MIT",
-  "upstreamGovernance": "GoreeCloud/Projects/GoreeCloud UI/DESIGN-LANGUAGE-AND-100-UI-UX-PRINCIPLES.md"
+  "upstreamGovernance": "GoreeCloud/Projects/GoreeCloud UI/DESIGN-LANGUAGE-AND-100-UI-UX-PRINCIPLES.md",
+  "visualQuality": {
+    "requirement": "mandatory",
+    "identity": "distinctive-premium-modern",
+    "acceptance": "per-consumer-evidence-required",
+    "nativeStatus": "unverified",
+    "supportedModes": [
+      "light",
+      "dark",
+      "high-contrast",
+      "reduced-motion",
+      "reduced-transparency"
+    ],
+    "guardrails": [
+      "opaque-essential-reading",
+      "semantic-roles-only",
+      "original-visual-language",
+      "no-inert-interactions"
+    ]
+  }
 }
