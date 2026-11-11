@@ -39,7 +39,7 @@ export declare function initActionMenu(trigger: HTMLElement, menu: HTMLElement, 
 export declare function initSortableTable(table: HTMLTableElement, options?: {
   locale?: string;
   onSort?: (state: {column: number | null; direction: "ascending" | "descending" | "none"; rows: HTMLTableRowElement[]}) => void;
-}): { sortBy: (column: number, direction?: "ascending" | "descending") => void; reset: () => void; dispose: () => void };
+}): { sortBy: (column: number, direction?: "ascending" | "descending") => void; reset: () => void; refresh: () => number; dispose: () => void };
 
 export declare function initTreeView(tree: HTMLElement, options?: {
   onSelect?: (item: HTMLElement) => void;
