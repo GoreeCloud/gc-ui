@@ -47,7 +47,10 @@ try{
   for(const [mode,accent,size] of [["light","iris","1440,900"],["dark","moss","390,844"]]){
     const url=base+"/tests/browser-smoke.html?mode="+mode+"&accent="+accent;
     const html=await launch(["--window-size="+size,"--dump-dom",url]);
-    assert.match(html,/data-gc-smoke="pass"/,"Browser fixture did not pass for "+mode+"/"+accent);
+    if(!/data-gc-smoke="pass"/.test(html)) {
+      const detail=html.match(/<output id="smoke-status"[^>]*>([\s\S]*?)<\/output>/)?.[1] || "No fixture detail";
+      throw new Error("Browser check failed for "+mode+"/"+accent+": "+detail.slice(0,900));
+    }
     const match=html.match(/data-gc-check-count="(\d+)"/);
     assert.ok(match&&Number(match[1])>=12,"Insufficient browser checks for "+mode+"/"+accent);
     console.log("Chromium "+mode+"/"+accent+": "+match[1]+" real-DOM interaction checks passed");

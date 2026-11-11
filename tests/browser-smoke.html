@@ -37,7 +37,8 @@ try{
   verify(getComputedStyle(root).getPropertyValue("--gc-brand").trim().toUpperCase()===getAccentColor(accent,mode), "semantic brand resolves");
   verify(getComputedStyle(document.body).backgroundColor!=="rgba(0, 0, 0, 0)", "canvas is visible");
   verify(parseFloat(getComputedStyle(document.querySelector("#action")).minHeight)>=44, "button is touch-sized");
-  verify(parseFloat(getComputedStyle(document.querySelector("#card")).borderTopLeftRadius)>=20, "card radius is tokenized");
+  const radius=parseFloat(getComputedStyle(document.querySelector("#card")).borderTopLeftRadius);
+  verify(Math.abs(radius-(innerWidth<=600?18:26))<0.5, "card uses responsive token radius");
   defineCustomElements();
   verify(Boolean(document.querySelector("gc-icon").shadowRoot?.querySelector("svg")), "icon custom element rendered");
   const tabs=initTabs(document.querySelector("#tabs"));
