@@ -84,6 +84,9 @@ Consumer apps must independently verify authorization through GoreeCloud Identit
 `initTabs()` supports horizontal arrow navigation (RTL-aware Left/Right), vertical arrow navigation (Up/Down when `aria-orientation="vertical"`), and Home/End. Native disabled, `aria-disabled="true"` and hidden tabs are excluded from navigation and selection; a tablist without any enabled tab is invalid. The controller keeps `aria-selected`, sequential tab focus and panel visibility synchronized and exposes a cleanup callback. Use unique `aria-controls`/tabpanel IDs and supply semantic labels for the enclosing tablist. This does not substitute for human screen-reader testing.
 
 ## Native popover action menus
+
+Async action lifetime: a pending consumer callback may complete after the popover is dismissed externally, closed explicitly, reopened or disposed. A result from an older menu session must never move focus to the trigger, close a newer menu session, or announce an outdated failure. Neutral local failure status is shown only while the same menu session remains open. This does not cancel or authorize the underlying consumer action; callers own cancellation, idempotency and server-side enforcement.
+
 Keyboard improvements: while the native menu is open, single-character typeahead selects the next enabled matching item, repeated letters cycle matching items, and Home/End/arrow keys retain native-like focus behavior. Composition events and Ctrl/Meta/Alt shortcuts are ignored. The typeahead buffer is cleared on normal close and external popover dismissal. Menu selection still invokes only the consumer-supplied handler; no backend action or authorization is implied.
 
 
