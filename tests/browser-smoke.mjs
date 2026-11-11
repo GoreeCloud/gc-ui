@@ -172,7 +172,15 @@ async function startBrowser() {
       await writeFile(file, bytes);
       return { width:bytes.readUInt32BE(16), height:bytes.readUInt32BE(20), size:bytes.length };
     };
-    return { evaluate, setViewport, navigate, waitFor, screenshot, bringToFront:()=>command("Page.bringToFront"), close:cleanup };
+    const accessibilityTree = async () => {
+      const result = await command("Accessibility.getFullAXTree", { depth: -1 });
+      return (result.nodes || []).filter(node => !node.ignored).map(node => ({
+        role:node.role?.value ?? "", name:node.name?.value ?? "",
+        description:node.description?.value ?? "",
+        properties:(node.properties || []).map(prop => ({name:prop.name,value:prop.value?.value}))
+      }));
+    };
+    return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree, bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -426,6 +434,47 @@ try {
     const shot=await browser.screenshot(join(directory,"gc-ui-full-400-"+mode.name+".png"));
     assert.equal(shot.width,mode.width);
     console.log("Chromium full 400% "+mode.name+": text and layout pass");
+  }
+
+  // Read Chromium's real accessibility tree, rather than inferring roles from
+  // DOM attributes alone. This does not constitute screen-reader acceptance.
+  for (const [name,width,dark] of [
+    ["desktop-light",1440,false],
+    ["mobile-dark",390,true]
+  ]) {
+    await browser.setViewport(width,900,{dark});
+    await browser.navigate(base+"/lab/");
+    await browser.bringToFront();
+    await browser.evaluate("window.focus()");
+    const nodes=await browser.accessibilityTree();
+    const has=(role,label)=>nodes.some(n=>n.role===role&&n.name===label);
+    assert.ok(has("navigation","Primary application destinations"),
+      "Floating dock is missing its named navigation landmark in "+name);
+    for(const label of ["Home","Design","Library","Forms"]) {
+      assert.ok(has("link",label),
+        "Dock destination missing from accessibility tree: "+label+" ("+name+")");
+    }
+    assert.ok(has("heading","Rounded. Always."),
+      "Window showcase's visual heading is not in accessibility tree: "+name);
+    const buttons=nodes.filter(n=>n.role==="button");
+    assert.ok(buttons.some(n=>n.name==="Explore interaction"),
+      "Real dialog action has no accessible button name: "+name);
+    const missingNames=buttons.filter(n=>!String(n.name).trim());
+    assert.equal(missingNames.length,0,
+      "Unlabeled buttons exposed to Chromium assistive tech: "+JSON.stringify(missingNames));
+
+    await browser.evaluate('document.querySelector("#demo-dialog").showModal()');
+    const modal=await browser.accessibilityTree();
+    const labeledDialog=modal.filter(n=>n.role==="dialog"&&n.name==="Interfaces with intention.");
+    assert.equal(labeledDialog.length,1,
+      "Native modal is not a single correctly named dialog in "+name+": "+
+        JSON.stringify(modal.filter(n=>n.role==="dialog")));
+    assert.ok(modal.some(n=>n.role==="button"&&n.name==="Close preview"),
+      "Open modal lacks its accessible close action: "+name);
+    assert.ok(modal.some(n=>n.role==="button"&&n.name==="Looks good"),
+      "Open modal lacks its labeled confirmation action: "+name);
+    await browser.evaluate('document.querySelector("#demo-dialog").close()');
+    console.log("Chromium AX tree "+name+": named nav, 4 links, window heading, native dialog and buttons passed");
   }
 
   // 400% root-font is an isolated dock stress test, NOT whole-app zoom acceptance.
