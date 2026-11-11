@@ -72,3 +72,7 @@ The new `initCommandPalette()` adds a searchable, keyboard-operated action launc
 ## Native popover action menu
 
 `initActionMenu()` adds a keyboard-operated, edge-aware menu to a native HTML popover. It provides outside-dismissal, focus return, disabled-item handling, an opt-in asynchronous action callback and a privacy-preserving error state, without external dependencies or network activity. See `docs/COMPONENTS.md` and the interactive lab. No native OS menu SDK is implied.
+
+## Sortable native tables
+
+The @goreecloud/ui/table controller implements stable local sorting for native table rows, including aria-sort, localized text, strict numeric/date comparisons, and explicit reset. It never fetches remote records or implies that unseen server pages are sorted. See the design lab and component documentation.

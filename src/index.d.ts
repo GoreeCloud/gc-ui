@@ -35,3 +35,8 @@ export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
 export declare function initActionMenu(trigger: HTMLElement, menu: HTMLElement, options: {
   onSelect: (item: HTMLButtonElement) => void | Promise<void>;
 }): { open: (last?: boolean) => void; close: (returnFocus?: boolean) => void; dispose: () => void };
+
+export declare function initSortableTable(table: HTMLTableElement, options?: {
+  locale?: string;
+  onSort?: (state: {column: number | null; direction: "ascending" | "descending" | "none"; rows: HTMLTableRowElement[]}) => void;
+}): { sortBy: (column: number, direction?: "ascending" | "descending") => void; reset: () => void; dispose: () => void };

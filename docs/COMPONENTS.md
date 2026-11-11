@@ -90,3 +90,11 @@ Use a labeled trigger button and `<div class="gc-menu" popover="auto" role="menu
 Native popover supplies the top layer, click-outside dismissal, and Escape fallback. Arrow Up/Down opens the first/last enabled item from the trigger and navigates choices; Home/End jump to boundaries. Disabled and aria-disabled entries are skipped. Buttons use keyboard-native activation. Programmatic completion restores focus to the trigger; outside click does not steal focus. A rejected asynchronous callback leaves the menu open with a generic error. Positioning adapts to viewport edges, and scrolling dismisses floating controls. Always provide a visible descriptive label or accessible name, and use menus for **actions** rather than ordinary site navigation links. No menu item may be treated as an authorization boundary.
 
 Color, elevation, responsive width, reduced-contrast and forced-colors styling are handled by semantic `gc-menu` classes. Browser popover support and assistive-technology behavior must be verified on supported devices; non-supporting browsers should be offered a native alternative rather than a fabricated inert menu.
+
+## Sortable native data tables
+
+Place real column-header buttons inside native th elements with scope=col and data-gc-sort=text, number or date. Wrap the table with gc-table-wrap, and supply a native caption. Initialize with initSortableTable(table, { locale, onSort }), exported from @goreecloud/ui/table or the root module.
+
+Clicking a header toggles ascending/descending and sets aria-sort on the appropriate th; other headers receive none. The returned controller exposes sortBy(columnIndex, direction), reset() and dispose(). Equal values retain their original row order; blank or invalid values remain last even in descending order. Text uses Intl.Collator with numeric substrings; numbers use strict decimal parsing; dates accept only real ISO YYYY-MM-DD calendar dates. Use data-sort-value on cells for formatted currency and localized dates.
+
+This is an intentionally client-only enhancement. It reorders the initial tbody rows and does not fetch, paginate or sort unseen records. Reinitialize after replacing rows. The consumer must implement server-side sorting, authorization, filtering, pagination, safe rendering and actual assistive-technology testing independently.
