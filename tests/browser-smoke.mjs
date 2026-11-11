@@ -300,7 +300,8 @@ try {
   },"Native menu typeahead keyboard behavior regressed");
   console.log("Chromium native menu: repeat cycling, composition and external-close reset passed");
 
-  // Browser-semantic combobox: Home/End only intercept while the list is open.
+  // Browser-semantic combobox: ArrowDown explicitly opens a closed, already
+  // focused listbox; Home/End only intercept while that list remains open.
   await browser.setViewport(390,844);
   await browser.navigate(base+"/lab/");
   const comboboxKeyboard=JSON.parse(await browser.evaluate(
@@ -308,7 +309,7 @@ try {
     'list=document.querySelector("#demo-combobox-list");'+
     'const key=k=>input.dispatchEvent(new KeyboardEvent("keydown",{key:k,bubbles:true,cancelable:true}));'+
     'const initialized=input.getAttribute("aria-haspopup")==="listbox";'+
-    'const closedEnd=key("End");input.focus();'+
+    'const closedEnd=key("End");input.focus();key("ArrowDown");'+
     'const focused=document.activeElement===input,expanded=input.getAttribute("aria-expanded"),'+
     'opened=!list.hidden;'+
     'const openEnd=key("End");const last=input.getAttribute("aria-activedescendant");'+
