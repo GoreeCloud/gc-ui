@@ -61,3 +61,25 @@
 
 .gc-lab-color-picker { inline-size:52px; block-size:44px; min-inline-size:52px; padding:4px; border:1px solid var(--gc-outline); border-radius:var(--gc-radius-sm); background:var(--gc-surface); cursor:pointer; }
 .gc-lab-color-picker:disabled { opacity:var(--gc-opacity-disabled); cursor:not-allowed; }
+
+
+/* Mobile composition: protect the content width, not the root page, from decorative art overflow. */
+@media (max-width: 600px) {
+  .gc-lab-shell, .gc-lab-body, .gc-lab-main, .gc-lab-hero, .gc-lab-hero-copy { min-inline-size: 0; }
+  .gc-lab-toolbar { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; padding-block: 14px; }
+  .gc-lab-toolbar-controls { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: end; column-gap: 12px; row-gap: 6px; min-inline-size: 0; inline-size: 100%; }
+  .gc-lab-toolbar-controls > label[for="appearance"] { grid-column: 1; grid-row: 1; }
+  .gc-lab-toolbar-controls > #appearance { grid-column: 1; grid-row: 2; }
+  .gc-lab-toolbar-controls > label[for="accent"] { grid-column: 2; grid-row: 1; }
+  .gc-lab-toolbar-controls > #accent { grid-column: 2; grid-row: 2; }
+  .gc-lab-toolbar-controls > .gc-lab-contrast { grid-column: 1 / -1; grid-row: 3; justify-self: start; }
+  .gc-lab-toolbar-controls .gc-lab-select { inline-size: 100%; min-inline-size: 0; }
+  .gc-lab-scene { min-inline-size: 0; max-inline-size: 100%; overflow: clip; border-radius: var(--gc-radius-lg); }
+  .gc-lab-orb--a { inline-size: 250px; block-size: 250px; inset-inline-start: 5%; }
+  .gc-lab-orb--b { inline-size: 230px; block-size: 230px; inset-inline-end: 5%; }
+  .gc-lab-floating { inline-size: min(310px, 86%); transform: rotate(-2deg); }
+  .gc-lab-glass { inset-inline-end: 8px; max-inline-size: calc(100% - 16px); transform: none; }
+}
+@supports not (overflow: clip) {
+  @media (max-width: 600px) { .gc-lab-scene { overflow: hidden; } }
+}
