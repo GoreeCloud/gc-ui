@@ -7,3 +7,4 @@ export { matchesCommand, initCommandPalette } from "./commands.js";
 export { initActionMenu } from "./menu.js";
 export { initSortableTable } from "./table.js";
 export { initTreeView } from "./tree.js";
+export { initCombobox } from "./combobox.js";

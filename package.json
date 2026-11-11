@@ -45,6 +45,10 @@
     "./tree": {
       "types": "./src/tree.d.ts",
       "default": "./src/tree.js"
+    },
+    "./combobox": {
+      "types": "./src/combobox.d.ts",
+      "default": "./src/combobox.js"
     }
   },
   "files": [
@@ -60,7 +64,7 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check src/menu.js && node --check src/table.js && node --check src/tree.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check src/menu.js && node --check src/table.js && node --check src/tree.js && node --check src/combobox.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
     "prepack": "npm run icons:check && npm run tokens:check && npm run export:platform",

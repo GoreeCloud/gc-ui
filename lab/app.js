@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -134,3 +134,18 @@ initTreeView(document.querySelector("#demo-tree"), {
     toast(label + " example activated locally. No file was opened.", { region, kind:"info" });
   }
 });
+
+
+// Local-only accessible editable combobox. Selects the already-supported accent family.
+initCombobox(document.querySelector("#demo-combobox"),
+  document.querySelector("#demo-combobox-list"), {
+    onSelect(option, value) {
+      if (!["iris","lagoon","ember","moss"].includes(value)) return;
+      accent.value=value;
+      customEnabled.checked=false;
+      customColor.disabled=true;
+      updateTheme();
+      document.querySelector("#demo-combobox-status").textContent=
+        option.textContent.trim()+" accent selected in this preview.";
+    }
+  });
