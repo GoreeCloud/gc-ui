@@ -158,3 +158,17 @@ test("dispose during unresolved selection never commits stale value",async()=>{
   assert.equal(f.choices[0].getAttribute("aria-selected"),"false");
   assert.equal(f.input.getAttribute("aria-busy"),null);
 });
+
+test("rejected selection after disposal does not announce a stale error",async()=>{
+  const f=fixture();let rejectSelection;
+  const gate=new Promise((_resolve,reject)=>{rejectSelection=reject;});
+  const api=initCombobox(f.input,f.list,{onSelect:()=>gate});
+  api.open();f.input.emit("keydown",{key:"ArrowDown"});
+  f.input.emit("keydown",{key:"Enter"});
+  const previousStatus=f.status.textContent;
+  api.dispose();
+  rejectSelection(new Error("private error details"));
+  for(let i=0;i<5;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,previousStatus);
+  assert.equal(f.input.getAttribute("aria-busy"),null);
+});
