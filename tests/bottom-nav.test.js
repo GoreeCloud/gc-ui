@@ -188,3 +188,31 @@ test("disabled navigation remains blocked even with modifier keys",()=>{
   }
   ctl.dispose();
 });
+
+test("invalid dock measurements never overwrite a previously valid clearance",()=>{
+ const f=fixture();
+ const values=new Map();
+ const content={ownerDocument:f.doc,style:{
+   setProperty:(k,v)=>values.set(k,v),
+   getPropertyValue:k=>values.get(k)||"",
+   removeProperty:k=>values.delete(k)
+ }};
+ let height=100, observer;
+ f.nav.getBoundingClientRect=()=>({height});
+ f.win.getComputedStyle=()=>({bottom:"12px"});
+ f.win.ResizeObserver=class {
+   constructor(callback){this.callback=callback;observer=this}
+   observe(){}
+   disconnect(){}
+ };
+ const ctl=initBottomNavigation(f.nav,{content});
+ assert.equal(values.get("--gc-bottom-nav-clearance"),"128px");
+ for(const invalid of [Number.NaN,Infinity,-Infinity,-1]) {
+   height=invalid;observer.callback();
+   assert.equal(values.get("--gc-bottom-nav-clearance"),"128px");
+ }
+ height=150;observer.callback();
+ assert.equal(values.get("--gc-bottom-nav-clearance"),"178px");
+ ctl.dispose();
+ assert.equal(values.has("--gc-bottom-nav-clearance"),false);
+});
