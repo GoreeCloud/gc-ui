@@ -795,7 +795,7 @@
 .gc-bottom-nav::-webkit-scrollbar { display:none; }
 .gc-bottom-nav__link {
   flex:1 0 max-content;
-  max-inline-size:min(45vw,170px);
+  max-inline-size:min(80vw,330px);
   scroll-snap-align:center;
 }
 .gc-bottom-nav__link > span {

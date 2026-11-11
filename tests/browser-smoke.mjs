@@ -341,12 +341,13 @@ try {
     'width:root.clientWidth,scroll:root.scrollWidth,left:rect.left,right:rect.right,height:rect.height,'+
     'bottom:parseFloat(getComputedStyle(dock).bottom),padding:parseFloat(getComputedStyle(content).paddingBottom),'+
     'labels:[...dock.querySelectorAll("a > span")].map(x=>({text:x.textContent,'+
-    'client:x.clientWidth,scroll:x.scrollWidth,overflow:getComputedStyle(x).textOverflow}))});})()'));
+    'client:x.clientWidth,scroll:x.scrollWidth,lines:(()=>{const range=document.createRange();range.selectNodeContents(x);return range.getClientRects().length;})(),overflow:getComputedStyle(x).textOverflow}))});})()'));
   assert.equal(zoomDock.ready,"true","Isolated dock fixture did not initialize");
   assert.ok(parseFloat(zoomDock.font)>=60,"400% root-font scaling did not apply");
   assert.ok(zoomDock.scroll<=zoomDock.width+1,"Dock-only horizontal page overflow "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.left>=0&&zoomDock.right<=zoomDock.width+1,"Dock escapes viewport "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.padding>=zoomDock.height+zoomDock.bottom+12,"Dock obscures content "+JSON.stringify(zoomDock));
+  assert.ok(zoomDock.labels.every(x=>x.lines===1),"Short dock labels should stay intact, not break inside words: "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.labels.every(x=>x.client+1>=x.scroll&&x.overflow==="clip"),
     "Dock truncates destination labels "+JSON.stringify(zoomDock));
   const shotDock=await browser.screenshot(join(directory,"gc-ui-dock-400-percent-text.png"));
