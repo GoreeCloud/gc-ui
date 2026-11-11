@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" data-gc-theme="auto" data-gc-accent="iris" data-gc-smoke="pending">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GoreeCloud UI — Headless browser QA</title>
+<link rel="stylesheet" href="../src/tokens.css">
+<link rel="stylesheet" href="../src/components.css">
+</head>
+<body class="gc-app">
+<main id="main">
+  <h1 class="gc-title">GC UI browser smoke fixture</h1>
+  <button id="action" class="gc-button" type="button">Button</button>
+  <article id="card" class="gc-card"><gc-icon name="shield"></gc-icon>Panel</article>
+  <div class="gc-lens" id="lens">Lens</div>
+  <div class="gc-tabs" id="tabs" role="tablist" aria-label="Sample tabs">
+    <button type="button" id="tab-one" role="tab" aria-selected="true" aria-controls="panel-one">One</button>
+    <button type="button" id="tab-two" role="tab" aria-selected="false" aria-controls="panel-two">Two</button>
+  </div>
+  <section id="panel-one" role="tabpanel" aria-labelledby="tab-one">First</section>
+  <section id="panel-two" role="tabpanel" aria-labelledby="tab-two" hidden>Second</section>
+  <div id="accordion" class="gc-accordion"><details open><summary>First</summary>First answer</details><details><summary>Second</summary>Second answer</details></div>
+  <div id="toggle" class="gc-toolbar" role="group" aria-label="Display choice"><button type="button" aria-pressed="true">Grid</button><button type="button" aria-pressed="false">List</button></div>
+  <label for="range">Radius</label><input id="range" class="gc-range" type="range" min="12" max="36" value="18"><output id="result" for="range">18px</output>
+  <button type="button" id="drawer-open">Open drawer</button>
+  <dialog class="gc-drawer" id="drawer" aria-label="Sample drawer"><button type="button" id="drawer-close">Close</button></dialog>
+  <output id="smoke-status" aria-live="polite">pending</output>
+</main>
+<script type="module">
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+const root=document.documentElement;
+const query=new URLSearchParams(location.search);
+const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
+const passed=[];
+function verify(condition,label){if(!condition)throw new Error("Browser check failed: "+label);passed.push(label);}
+try{
+  const theme=createThemeController(root,{mode,accent});
+  verify(getComputedStyle(root).getPropertyValue("--gc-brand").trim().toUpperCase()===getAccentColor(accent,mode), "semantic brand resolves");
+  verify(getComputedStyle(document.body).backgroundColor!=="rgba(0, 0, 0, 0)", "canvas is visible");
+  verify(parseFloat(getComputedStyle(document.querySelector("#action")).minHeight)>=44, "button is touch-sized");
+  verify(parseFloat(getComputedStyle(document.querySelector("#card")).borderTopLeftRadius)>=20, "card radius is tokenized");
+  defineCustomElements();
+  verify(Boolean(document.querySelector("gc-icon").shadowRoot?.querySelector("svg")), "icon custom element rendered");
+  const tabs=initTabs(document.querySelector("#tabs"));
+  document.querySelector("#tab-one").dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(document.querySelector("#tab-two").getAttribute("aria-selected")==="true", "tabs arrow navigation");
+  verify(!document.querySelector("#panel-two").hidden, "tab panel visibility");
+  tabs();
+  const accordion=document.querySelector("#accordion"),items=accordion.querySelectorAll("details");
+  const disposeAccordion=initAccordion(accordion);
+  items[1].open=true;items[1].dispatchEvent(new Event("toggle"));
+  verify(!items[0].open, "accordion exclusive-open");
+  disposeAccordion();
+  const group=document.querySelector("#toggle"),btns=group.querySelectorAll("button");
+  const disposeGroup=initToggleGroup(group);
+  btns[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true}));
+  verify(btns[1].getAttribute("aria-pressed")==="true", "roving selection");
+  disposeGroup();
+  const range=document.querySelector("#range"),output=document.querySelector("#result");
+  const disposeRange=bindRangeOutput(range,output,{format:value=>value+"px"});
+  range.value="35";range.dispatchEvent(new Event("input",{bubbles:true}));
+  verify(output.textContent==="35px","range output");
+  disposeRange();
+  const dialog=document.querySelector("#drawer");
+  const disposeDrawer=initDrawer(dialog,document.querySelector("#drawer-open"),document.querySelector("#drawer-close"));
+  document.querySelector("#drawer-open").click();
+  verify(dialog.open,"native dialog opens");
+  document.querySelector("#drawer-close").click();
+  verify(!dialog.open,"native dialog closes");
+  disposeDrawer();
+  const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
+  verify(Boolean(colors)&&colors!=="transparent","lens material computed");
+  theme.dispose();
+  root.dataset.gcSmoke="pass";
+  root.dataset.gcCheckCount=String(passed.length);
+  document.querySelector("#smoke-status").textContent="PASS: "+passed.join(", ");
+}catch(error){
+  root.dataset.gcSmoke="fail";
+  document.querySelector("#smoke-status").textContent=String(error?.stack||error);
+  console.error(error);
+}
+</script>
+</body>
+</html>

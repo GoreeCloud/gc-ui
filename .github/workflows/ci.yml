@@ -22,3 +22,26 @@ jobs:
         run: npm run check
       - name: Check package inclusion
         run: npm pack --dry-run --json
+
+  browser-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout isolated PR source
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - name: Setup Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - name: Exercise native browser interaction fixture and capture two viewports
+        run: npm run browser:smoke
+      - name: Preserve generated screenshots
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: gc-ui-browser-evidence
+          path: qa/screenshots/*.png
+          if-no-files-found: warn
+          retention-days: 7

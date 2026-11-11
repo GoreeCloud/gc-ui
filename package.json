@@ -52,7 +52,8 @@
     "tokens:check": "node scripts/generate-web-tokens.mjs --check",
     "contrast:check": "node scripts/audit-contrast.mjs --check",
     "icons:generate": "node scripts/build-icon-assets.mjs --write",
-    "icons:check": "node scripts/build-icon-assets.mjs --check"
+    "icons:check": "node scripts/build-icon-assets.mjs --check",
+    "browser:smoke": "node tests/browser-smoke.mjs"
   },
   "sideEffects": [
     "**/*.css"
