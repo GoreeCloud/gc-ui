@@ -217,3 +217,26 @@
     overflow-wrap:anywhere;
   }
 }
+
+
+/* Enlarged mobile reading mode: the theme picker must scroll out of the way,
+   not permanently cover a quarter of the viewport over section headings.
+   Use a gentler editorial heading scale while preserving body text scaling. */
+@media(max-width:600px) {
+  .gc-lab-toolbar {
+    position:static;
+  }
+  .gc-lab-section-head :is(h2,h3) {
+    font-size:clamp(28px,calc(.75rem + 12px),76px);
+    line-height:1.13;
+    text-wrap:balance;
+  }
+  .gc-lab-hero h1 {
+    font-size:clamp(36px,calc(1.1rem + 20px),96px);
+    line-height:1.1;
+  }
+  .gc-showcase__title {
+    font-size:clamp(32px,calc(1.1rem + 14px),90px);
+    line-height:1.08;
+  }
+}

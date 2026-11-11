@@ -339,6 +339,13 @@ try {
       "Floating dock must retain an internally scrollable overflow surface");
 
     if(width===390 && percent===400) {
+      const editorial=JSON.parse(await browser.evaluate(
+        '(()=>({toolbar:getComputedStyle(document.querySelector(".gc-lab-toolbar")).position,'+
+        'title:parseFloat(getComputedStyle(document.querySelector("#foundations-heading")).fontSize),'+
+        'body:parseFloat(getComputedStyle(document.body).fontSize)}))()'));
+      assert.equal(editorial.toolbar,"static","Mobile theme bar must not obscure headings at 400% text");
+      assert.ok(editorial.title<=76&&editorial.title>=28,
+        "Enlarged section heading is out of the intended editorial scale "+JSON.stringify(editorial));
       const internals=JSON.parse(await browser.evaluate(
         '(()=>{const root=document.documentElement,selectors=[".gc-tabs",".gc-table-wrap",".gc-breadcrumbs",".gc-details-list",".gc-lab-type-sample"];'+
         'return JSON.stringify({viewport:root.clientWidth,scrollWidth:root.scrollWidth,'+
