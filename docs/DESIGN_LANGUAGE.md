@@ -66,3 +66,7 @@ The JSON manifest follows a GC UI alpha-specific structure rather than claiming 
 ## Premium visual quality is mandatory
 
 GoreeCloud UI must remain distinct, polished and modern across supported apps, dashboards and future operating systems. Generic unfinished defaults are unacceptable. Premium means original expressive hierarchy, balanced space, refined controls and purposeful depth—not indiscriminate blur or decoration. Use semantic tokens and three material roles, maintain opaque legibility and accessible modes, and require real visual acceptance. See [Premium visual quality](VISUAL_QUALITY.md).
+
+## Floating application bottom navigation
+
+Use a rounded floating Cloud Lens bottom destination bar whenever a GoreeCloud app has multiple primary destinations. Preserve gesture safe areas, semantic links, RTL keyboard navigation and opaque high-contrast fallbacks. Refer to WINDOWS_AND_NAVIGATION.md and COMPONENTS.md; native adapters are not implemented yet.

@@ -16,3 +16,7 @@ A native port can generate resources with npm run export:platform (see PLATFORM_
 Delivery sequence: (1) review/freeze token schema; (2) generate native assets from reviewed semantic roles; (3) implement native controls; (4) run visual, accessibility, behavior and battery/performance matrices; (5) integrate into real apps; (6) independently validate release artifacts.
 
 GC UI is presentation only. GoreeCloud Identity owns authorization, GoreeShield owns **privacy**, Wardveil owns **cybersecurity**, GoreeCloud Mesh owns interoperability. Do not silently read credentials, perform telemetry or assume those systems are implemented by a UI component. No independent native SDK claims should appear until real code/tests exist.
+
+## Founder floating-navigation direction
+
+GoreeCloud apps with multiple primary destinations require a rounded floating bottom navigation capsule. Native adapters must respect system gesture insets, screen-reader semantics and keyboard/remote focus. The web alpha implementation is not a native SDK; builds and real device testing remain open.
