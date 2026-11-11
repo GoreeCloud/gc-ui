@@ -56,3 +56,7 @@ The canonical JSON token file generates the browser stylesheet. Run `npm run tok
 ## Semantic color contrast screening
 
 Run `npm run contrast:check` to test 82 intended solid foreground/background pairs across light, dark, and all four curated accent families. Machine-readable results: `node scripts/audit-contrast.mjs --json`. This is not a WCAG certification: translucent glass against mixed backdrops, nontext icons, screen reader interactions, browser behavior and native devices still require independent inspection.
+
+## Original icon registry and sprite
+
+GoreeCloud UI includes an original 42-glyph family. The canonical path shapes remain in `src/icons.js`; `npm run icons:generate` builds an offline SVG symbol sprite at `assets/gc-icons.svg` and a registry at `assets/gc-icons.json`. CI and npm packaging run `npm run icons:check` to reject stale glyph exports. Give each icon-only control an accessible label; the icon itself is decorative unless explicitly named. Native applications must implement and verify their own appropriate vector adapters.
