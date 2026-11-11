@@ -30,45 +30,71 @@ export function defineCustomElements(registry = globalThis.customElements) {
 
 /** WAI-ARIA tab behavior over native button[role=tab] elements and associated panels. */
 export function initTabs(tablist) {
-  if (!tablist || tablist.getAttribute("role") !== "tablist") throw new TypeError("Expected role=tablist");
+  if (!tablist || tablist.getAttribute?.("role") !== "tablist" ||
+      typeof tablist.querySelectorAll !== "function") {
+    throw new TypeError("Expected role=tablist");
+  }
   const tabs = Array.from(tablist.querySelectorAll('[role="tab"]'));
   if (tabs.length === 0) throw new Error("Tablist is empty");
   const doc = tablist.ownerDocument;
-  const panels = tabs.map((tab) => {
+  if (!doc || typeof doc.getElementById !== "function") throw new TypeError("Tablist needs an owner document");
+  const panels = tabs.map(tab => {
     const id = tab.getAttribute("aria-controls");
     const panel = id && doc.getElementById(id);
-    if (!panel || panel.getAttribute("role") !== "tabpanel") throw new Error("Tab missing an associated tabpanel");
+    if (!panel || panel.getAttribute("role") !== "tabpanel") {
+      throw new Error("Tab missing an associated tabpanel");
+    }
     return panel;
   });
-  const focusTab = (index, focus = false) => {
-    tabs.forEach((tab, i) => {
-      const selected = i === index;
-      tab.setAttribute("aria-selected", String(selected));
-      tab.tabIndex = selected ? 0 : -1;
-      panels[i].hidden = !selected;
+  const enabled = tab => !tab.disabled && !tab.hidden &&
+    tab.getAttribute("aria-disabled") !== "true";
+  const choices = () => tabs.filter(enabled);
+  if (!choices().length) throw new Error("Tablist needs at least one enabled tab");
+
+  const select = (tab, focus = false) => {
+    if (!enabled(tab)) return;
+    tabs.forEach((candidate, i) => {
+      const active = candidate === tab;
+      candidate.setAttribute("aria-selected", String(active));
+      candidate.tabIndex = active ? 0 : -1;
+      panels[i].hidden = !active;
     });
-    if (focus) tabs[index].focus();
+    if (focus) tab.focus();
   };
-  const onClick = (event) => {
-    const index = tabs.findIndex((tab) => tab === event.currentTarget);
-    if (index >= 0) focusTab(index);
-  };
-  const onKey = (event) => {
-    const index = tabs.indexOf(event.currentTarget);
-    const rtl = doc.dir === "rtl" || doc.documentElement.dir === "rtl";
-    const next = event.key === "ArrowRight" ? (rtl ? -1 : 1) :
-      event.key === "ArrowLeft" ? (rtl ? 1 : -1) :
-      event.key === "ArrowDown" ? 1 : event.key === "ArrowUp" ? -1 : 0;
+  const onClick = event => select(event.currentTarget);
+  const onKey = event => {
+    const available = choices();
+    const index = available.indexOf(event.currentTarget);
+    if (index < 0 || !available.length) return;
+    const vertical = tablist.getAttribute("aria-orientation") === "vertical";
+    const rtl = tablist.dir === "rtl" || doc.documentElement?.dir === "rtl";
+    let delta = 0;
+    if (vertical) {
+      if (event.key === "ArrowDown") delta = 1;
+      if (event.key === "ArrowUp") delta = -1;
+    } else {
+      if (event.key === "ArrowRight") delta = rtl ? -1 : 1;
+      if (event.key === "ArrowLeft") delta = rtl ? 1 : -1;
+    }
     let target = -1;
-    if (next) target = (index + next + tabs.length) % tabs.length;
+    if (delta) target = (index + delta + available.length) % available.length;
     if (event.key === "Home") target = 0;
-    if (event.key === "End") target = tabs.length - 1;
-    if (target >= 0) { event.preventDefault(); focusTab(target, true); }
+    if (event.key === "End") target = available.length - 1;
+    if (target < 0) return;
+    event.preventDefault();
+    select(available[target], true);
   };
-  tabs.forEach((t) => { t.addEventListener("click", onClick); t.addEventListener("keydown", onKey); });
-  const selected = tabs.findIndex((t) => t.getAttribute("aria-selected") === "true");
-  focusTab(selected >= 0 ? selected : 0);
-  return () => tabs.forEach((t) => { t.removeEventListener("click", onClick); t.removeEventListener("keydown", onKey); });
+  tabs.forEach(tab => {
+    tab.addEventListener("click", onClick);
+    tab.addEventListener("keydown", onKey);
+  });
+  const initial = tabs.find(tab => enabled(tab) && tab.getAttribute("aria-selected") === "true")
+    || choices()[0];
+  select(initial);
+  return () => tabs.forEach(tab => {
+    tab.removeEventListener("click", onClick);
+    tab.removeEventListener("keydown", onKey);
+  });
 }
 export function openDialog(dialog, invoker = null) {
   if (!dialog || typeof dialog.showModal !== "function") throw new TypeError("Expected HTML dialog");
