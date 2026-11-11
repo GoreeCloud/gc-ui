@@ -366,6 +366,35 @@ try {
     console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
   }
 
+  // Full-lab 400% typography under alternate accessibility/display conditions.
+  // This is still CSS root-font emulation, never a claim of browser zoom.
+  for (const mode of [
+    {name:"dark-rtl",width:390,dark:true,rtl:true,forcedColors:false},
+    {name:"forced-colors",width:390,dark:false,rtl:false,forcedColors:true},
+    {name:"compact",width:320,dark:false,rtl:false,forcedColors:false}
+  ]) {
+    await browser.setViewport(mode.width,900,{dark:mode.dark,forcedColors:mode.forcedColors});
+    await browser.navigate(base+"/lab/");
+    const results=JSON.parse(await browser.evaluate(
+      '((rtl)=>{const root=document.documentElement;root.style.fontSize="400%";'+
+      'if(rtl)root.dir="rtl";'+
+      'const nav=document.querySelector("#demo-bottom-nav"),rect=nav.getBoundingClientRect();'+
+      'return JSON.stringify({font:getComputedStyle(root).fontSize,width:root.clientWidth,'+
+      'scroll:root.scrollWidth,dir:root.dir,forced:matchMedia("(forced-colors:active)").matches,'+
+      'dock:{left:rect.left,right:rect.right},sections:["foundations","components","patterns","forms"]'+
+      '.map(id=>{const el=document.getElementById(id);return {id,client:el.clientWidth,scroll:el.scrollWidth};})});})('+mode.rtl+')'));
+    assert.ok(parseFloat(results.font)>=60,"400% root font did not take effect for "+mode.name);
+    assert.equal(results.forced,mode.forcedColors,"Forced-colors mode mismatch "+mode.name);
+    if(mode.rtl)assert.equal(results.dir,"rtl","RTL direction was not applied");
+    assert.ok(results.scroll<=results.width+1,
+      "400% multi-mode page overflow "+mode.name+": "+JSON.stringify(results));
+    assert.ok(results.dock.left>=-1&&results.dock.right<=results.width+1,
+      "400% multi-mode dock escaped "+mode.name+": "+JSON.stringify(results));
+    const shot=await browser.screenshot(join(directory,"gc-ui-full-400-"+mode.name+".png"));
+    assert.equal(shot.width,mode.width);
+    console.log("Chromium full 400% "+mode.name+": text and layout pass");
+  }
+
   // 400% root-font is an isolated dock stress test, NOT whole-app zoom acceptance.
   await browser.setViewport(390,900,{dark:false});
   await browser.navigate(base+"/tests/dock-zoom.html");
