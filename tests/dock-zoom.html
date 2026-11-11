@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en" data-gc-theme="light" data-gc-accent="iris">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>GC UI Dock Reflow</title>
+<link rel="stylesheet" href="../src/tokens.css"><link rel="stylesheet" href="../src/components.css"></head>
+<body class="gc-app">
+<main id="zoom-content" class="gc-container gc-bottom-nav-content" style="padding-block-start:24px">
+ <h1 style="font-size:20px">Floating dock text reflow</h1>
+ <p style="font-size:16px">Full labels and an unobscured content region.</p>
+ <section id="home">Home destination</section><section id="design">Design destination</section>
+ <section id="library">Library destination</section><section id="settings">Settings destination</section>
+</main>
+<nav id="zoom-dock" class="gc-bottom-nav" aria-label="Primary local destinations">
+ <a class="gc-bottom-nav__link" href="#home"><gc-icon name="home"></gc-icon><span>Home</span></a>
+ <a class="gc-bottom-nav__link" href="#design"><gc-icon name="sparkle"></gc-icon><span>Design</span></a>
+ <a class="gc-bottom-nav__link" href="#library"><gc-icon name="grid"></gc-icon><span>Library</span></a>
+ <a class="gc-bottom-nav__link" href="#settings"><gc-icon name="edit"></gc-icon><span>Settings</span></a>
+</nav>
+<script type="module">
+import {defineCustomElements,initBottomNavigation} from "../src/index.js";
+defineCustomElements();
+initBottomNavigation(document.querySelector("#zoom-dock"),{content:document.querySelector("#zoom-content")});
+document.documentElement.dataset.dockReady="true";
+</script></body></html>

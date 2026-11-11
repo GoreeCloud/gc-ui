@@ -329,6 +329,31 @@ try {
     console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
   }
 
+  // 400% root-font is an isolated dock stress test, NOT whole-app zoom acceptance.
+  await browser.setViewport(390,900,{dark:false});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  await browser.evaluate('document.documentElement.style.fontSize="400%"');
+  await delay(180);
+  const zoomDock=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,dock=document.querySelector("#zoom-dock"),'+
+    'content=document.querySelector("#zoom-content"),rect=dock.getBoundingClientRect();'+
+    'return JSON.stringify({ready:root.dataset.dockReady,font:getComputedStyle(root).fontSize,'+
+    'width:root.clientWidth,scroll:root.scrollWidth,left:rect.left,right:rect.right,height:rect.height,'+
+    'bottom:parseFloat(getComputedStyle(dock).bottom),padding:parseFloat(getComputedStyle(content).paddingBottom),'+
+    'labels:[...dock.querySelectorAll("a > span")].map(x=>({text:x.textContent,'+
+    'client:x.clientWidth,scroll:x.scrollWidth,lines:(()=>{const range=document.createRange();range.selectNodeContents(x);return range.getClientRects().length;})(),overflow:getComputedStyle(x).textOverflow}))});})()'));
+  assert.equal(zoomDock.ready,"true","Isolated dock fixture did not initialize");
+  assert.ok(parseFloat(zoomDock.font)>=60,"400% root-font scaling did not apply");
+  assert.ok(zoomDock.scroll<=zoomDock.width+1,"Dock-only horizontal page overflow "+JSON.stringify(zoomDock));
+  assert.ok(zoomDock.left>=0&&zoomDock.right<=zoomDock.width+1,"Dock escapes viewport "+JSON.stringify(zoomDock));
+  assert.ok(zoomDock.padding>=zoomDock.height+zoomDock.bottom+12,"Dock obscures content "+JSON.stringify(zoomDock));
+  assert.ok(zoomDock.labels.every(x=>x.lines===1),"Short dock labels should stay intact, not break inside words: "+JSON.stringify(zoomDock));
+  assert.ok(zoomDock.labels.every(x=>x.client+1>=x.scroll&&x.overflow==="clip"),
+    "Dock truncates destination labels "+JSON.stringify(zoomDock));
+  const shotDock=await browser.screenshot(join(directory,"gc-ui-dock-400-percent-text.png"));
+  assert.equal(shotDock.width,390);
+  console.log("Chromium isolated 400% root-font dock: labels, clearance, reflow passed");
+
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
   const forced=JSON.parse(await browser.evaluate(

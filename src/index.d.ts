@@ -53,4 +53,5 @@ export declare function initCombobox(input: HTMLInputElement, list: HTMLElement,
 
 export declare function initBottomNavigation(nav: HTMLElement, options?: {
   onNavigate?: (link: HTMLAnchorElement) => boolean | void;
+  content?: HTMLElement;
 }): { select: (link: HTMLAnchorElement) => boolean; sync: () => void; dispose: () => void };

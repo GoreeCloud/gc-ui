@@ -4,7 +4,7 @@
  * visible selection and offers optional, synchronous consumer approval.
  * No network, storage, telemetry or privileged actions.
  */
-export function initBottomNavigation(nav, { onNavigate } = {}) {
+export function initBottomNavigation(nav, { onNavigate, content } = {}) {
   if (!nav || nav.tagName?.toLowerCase() !== "nav" ||
       typeof nav.querySelectorAll !== "function" ||
       typeof nav.addEventListener !== "function") {
@@ -19,6 +19,11 @@ export function initBottomNavigation(nav, { onNavigate } = {}) {
   const doc = nav.ownerDocument;
   const win = doc?.defaultView;
   if (!doc || !win || !doc.baseURI) throw new TypeError("Bottom navigation needs a browser document");
+  if (content !== undefined && (!content || content.ownerDocument !== doc ||
+      typeof content.style?.setProperty !== "function" ||
+      typeof content.style?.getPropertyValue !== "function")) {
+    throw new TypeError("Dock content must be an element in the same document");
+  }
   const links = Array.from(nav.querySelectorAll("a[href]"));
   if (links.length < 2 || links.length > 6) {
     throw new RangeError("Bottom navigation requires two to six primary destinations");
@@ -111,6 +116,30 @@ export function initBottomNavigation(nav, { onNavigate } = {}) {
     available[next].focus(); // Focus does not navigate or change aria-current.
   };
 
+  // Reserve actual viewport space for the floating capsule at any font scale.
+  // A ResizeObserver is local-only: no polling, storage, or remote telemetry.
+  let clearanceObserver = null;
+  let previousClearance = "";
+  let lastClearance = "";
+  const updateClearance = () => {
+    if (disposed || !content) return;
+    const height = nav.getBoundingClientRect().height;
+    const bottom = Number.parseFloat(win.getComputedStyle(nav).bottom);
+    const padding = Number.isFinite(bottom) ? Math.max(0, bottom) : 0;
+    const px = Math.max(0, Math.ceil(height + padding + 16)) + "px";
+    content.style.setProperty("--gc-bottom-nav-clearance", px);
+    lastClearance = px;
+  };
+  if (content) {
+    previousClearance = content.style.getPropertyValue("--gc-bottom-nav-clearance");
+    updateClearance();
+    if (typeof win.ResizeObserver === "function") {
+      clearanceObserver = new win.ResizeObserver(updateClearance);
+      clearanceObserver.observe(nav);
+    }
+    // Resize fallback and device orientation updates.
+    win.addEventListener("resize", updateClearance);
+  }
   nav.addEventListener("click", onClick);
   nav.addEventListener("keydown", onKey);
   win.addEventListener("hashchange", syncFromLocation);
@@ -131,6 +160,14 @@ export function initBottomNavigation(nav, { onNavigate } = {}) {
       nav.removeEventListener("keydown", onKey);
       win.removeEventListener("hashchange", syncFromLocation);
       win.removeEventListener("popstate", syncFromLocation);
+      if (content) {
+        clearanceObserver?.disconnect();
+        win.removeEventListener("resize", updateClearance);
+        if (content.style.getPropertyValue("--gc-bottom-nav-clearance") === lastClearance) {
+          if (previousClearance) content.style.setProperty("--gc-bottom-nav-clearance", previousClearance);
+          else content.style.removeProperty("--gc-bottom-nav-clearance");
+        }
+      }
     }
   });
 }

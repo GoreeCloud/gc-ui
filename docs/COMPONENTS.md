@@ -136,3 +136,7 @@ For premium mobile layouts, use concise visible destination names (for example, 
 ### Navigation callback fail-closed behavior
 
 `onNavigate` is intentionally **synchronous**. Only returning `true` or `undefined` permits the browser's native link activation. Returning `false`, an unexpected value, or a Promise prevents the default link action, as does throwing an exception. Asynchronous authorization must be performed by the application before deciding to enable a destination; an async callback does not authorize navigation. This control blocks only default browser navigation, not side effects initiated directly by a consumer callback.
+
+### Dynamic dock height / content clearance
+
+Pass `{ content: scrollRegionElement }` to `initBottomNavigation` when the dock overlays a scrolling application. The controller measures the actual capsule and its bottom inset, sets the local `--gc-bottom-nav-clearance` on the supplied element, tracks changes with ResizeObserver and window resize fallback, and restores the previous value at disposal. The existing `.gc-bottom-nav-content` class retains conservative CSS padding if JavaScript is unavailable. This avoids obscuring last-row content when larger text or translations increase dock height. The content must belong to the same document.
