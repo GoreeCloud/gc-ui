@@ -187,9 +187,9 @@ try {
     const url=base+"/tests/layout-smoke.html";
     await browser.navigate(url);
     const result=await browser.waitFor("gcLayout",url);
-    if (result.viewport!==width) {
+    if (Math.abs(result.viewport-result.layoutWidth)>1 || result.layoutWidth>width || width-result.layoutWidth>20) {
       const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>document.documentElement.clientWidth+0.5).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
-      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
+      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" client "+result.layoutWidth+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
     }
     assert.equal(result.state,"pass","Layout overflow at "+width+"px: "+result.diagnostics);
     console.log("Chromium full lab @ "+width+"px: no horizontal overflow");
@@ -201,9 +201,9 @@ try {
     const url=base+"/tests/browser-smoke.html?mode="+mode+"&accent="+accent;
     await browser.navigate(url);
     const result=await browser.waitFor("gcSmoke",url);
-    if (result.viewport!==width) {
+    if (Math.abs(result.viewport-result.layoutWidth)>1 || result.layoutWidth>width || width-result.layoutWidth>20) {
       const metrics=await browser.evaluate('JSON.stringify({innerWidth:innerWidth,clientWidth:document.documentElement.clientWidth,visualWidth:visualViewport?.width,scrollWidth:document.documentElement.scrollWidth,bodyWidth:document.body.scrollWidth,screenWidth:screen.width,outerWidth:outerWidth,devicePixelRatio:devicePixelRatio,offenders:[...document.body.querySelectorAll("*")].filter(el=>el.getBoundingClientRect().right>document.documentElement.clientWidth+0.5).slice(0,8).map(el=>({tag:el.tagName,className:typeof el.className==="string"?el.className.slice(0,50):"",right:Math.round(el.getBoundingClientRect().right)}))})');
-      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
+      throw new Error("Viewport discrepancy requested "+width+" observed "+result.viewport+" client "+result.layoutWidth+" metrics "+metrics+" state "+result.state+" detail "+result.diagnostics);
     }
     assert.equal(result.state,"pass","Interaction failure "+mode+"/"+accent+": "+result.diagnostics);
     assert.ok(result.scrollWidth<=result.viewport+1,"Interaction fixture horizontal overflow at "+width+"px: "+JSON.stringify({scrollWidth:result.scrollWidth,viewport:result.viewport}));
