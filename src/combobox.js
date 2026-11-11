@@ -31,7 +31,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
   const normalize=text=>String(text??"").normalize("NFKC").toLocaleLowerCase().trim();
   const label=option=>option.getAttribute("data-gc-label") || option.textContent?.trim() || "";
   const enabled=option=>!option.disabled && option.getAttribute("aria-disabled")!=="true";
-  let destroyed=false, pending=false, composing=false, active=null, selected=null;
+  let destroyed=false, pending=false, composing=false, suppressPointerClick=false, active=null, selected=null;
   const choices=()=>options.filter(option=>!option.hidden && enabled(option));
   const setActive=option=>{
     if (option && !choices().includes(option)) return;
@@ -70,7 +70,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
     setActive(null);
   };
   const choose=async option=>{
-    if (destroyed||pending||!options.includes(option)||option.hidden||!enabled(option)) return;
+    if (destroyed||pending||composing||!options.includes(option)||option.hidden||!enabled(option)) return;
     pending=true;
     try {
       const value=option.getAttribute("data-gc-value")??label(option);
@@ -149,15 +149,21 @@ export function initCombobox(input, list, { onSelect } = {}) {
     }
   };
   const onClick=event=>{
-    if (pending || destroyed) return;
+    // An IME can finish composition between pointerdown and click. Preserve
+    // native preedit ownership for that entire pointer gesture.
+    if (suppressPointerClick) { suppressPointerClick=false; return; }
+    if (pending || destroyed || composing) return;
     const option=event.target?.closest?.('[role="option"]');
     if (options.includes(option)) void choose(option);
   };
   const onPointerDown=event=>{
     if (pending || destroyed) return;
     const option=event.target?.closest?.('[role="option"]');
+    suppressPointerClick=composing && options.includes(option);
+    if (suppressPointerClick) return;
     if (options.includes(option)) event.preventDefault();
   };
+  const onPointerCancel=()=>{suppressPointerClick=false;};
   const onOutside=event=>{
     if (!pending && !destroyed && event.target!==input && !list.contains(event.target)) close();
   };
@@ -174,6 +180,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
   input.addEventListener("keydown",onKey);
   list.addEventListener("click",onClick);
   list.addEventListener("pointerdown",onPointerDown);
+  list.addEventListener("pointercancel",onPointerCancel);
   doc.addEventListener("pointerdown",onOutside);
   if (doc.activeElement === input) open();
   else refresh();
@@ -190,6 +197,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
       input.removeEventListener("keydown",onKey);
       list.removeEventListener("click",onClick);
       list.removeEventListener("pointerdown",onPointerDown);
+      list.removeEventListener("pointercancel",onPointerCancel);
       doc.removeEventListener("pointerdown",onOutside);
     }
   });
