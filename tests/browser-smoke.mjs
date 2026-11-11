@@ -224,6 +224,61 @@ try {
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
+  // Navigation rail: real Chromium geometry, native focus/links, and tablet behavior.
+  for (const [width,height,expectCollapsed] of [[1440,900,false],[820,900,true],[390,844,null]]) {
+    await browser.setViewport(width,height);
+    await browser.navigate(base+"/lab/");
+    const before=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail"),'+
+      'shell=document.querySelector(".gc-navigation-shell"),toggle=rail.querySelector("[data-gc-rail-toggle]"),'+
+      'link=rail.querySelector("nav a[href]"),label=link.querySelector(".gc-navigation-rail__label");'+
+      'return JSON.stringify({railDisplay:getComputedStyle(rail).display,railWidth:rail.getBoundingClientRect().width,'+
+      'shellWidth:shell.getBoundingClientRect().width,collapsed:rail.dataset.gcCollapsed,'+
+      'expanded:toggle.getAttribute("aria-expanded"),name:toggle.getAttribute("aria-label"),'+
+      'linkText:label.textContent.trim(),clip:getComputedStyle(label).clipPath,'+
+      'docWidth:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth,'+
+      'dockDisplay:getComputedStyle(document.querySelector("#demo-bottom-nav")).display});})()'));
+    assert.ok(before.docWidth<=before.viewport+1,
+      "Navigation shell overflow at "+width+"px: "+JSON.stringify(before));
+    if (expectCollapsed===null) {
+      assert.equal(before.railDisplay,"none","Phone must keep compact bottom navigation");
+      assert.notEqual(before.dockDisplay,"none","Phone bottom dock must be visible");
+      continue;
+    }
+    assert.notEqual(before.railDisplay,"none","Tablet/desktop rail must remain visible");
+    assert.equal(before.collapsed,String(expectCollapsed));
+    assert.equal(before.expanded,String(!expectCollapsed));
+    assert.equal(before.linkText,"Overview","Icon-only state must retain accessible link text");
+    assert.equal(before.dockDisplay,"none","Do not present two primary navigation systems");
+    assert.ok(before.railWidth<(expectCollapsed?100:270) && before.railWidth>(expectCollapsed?56:200),
+      "Incorrect navigation rail width: "+JSON.stringify(before));
+    if(expectCollapsed) assert.equal(before.clip,"inset(50%)","Compact labels are visually hidden, not removed");
+    await browser.screenshot(join(directory,
+      width===820?"gc-ui-rail-tablet-collapsed.png":"gc-ui-rail-desktop-expanded.png"));
+    const after=JSON.parse(await browser.evaluate(
+      '(()=>{const rail=document.querySelector(".gc-navigation-rail"),'+
+      'toggle=rail.querySelector("[data-gc-rail-toggle]"),nav=rail.querySelector("nav");'+
+      'toggle.focus();toggle.click();'+
+      'const state={collapsed:rail.dataset.gcCollapsed,expanded:toggle.getAttribute("aria-expanded"),'+
+      'focus:document.activeElement===toggle,width:rail.getBoundingClientRect().width,'+
+      'label:toggle.getAttribute("aria-label"),scroll:document.documentElement.scrollWidth,'+
+      'viewport:document.documentElement.clientWidth};'+
+      'nav.querySelector(\'a[href="#forms"]\').click();'+
+      'return JSON.stringify(state);})()'));
+    assert.equal(after.collapsed,String(!expectCollapsed),"Toggle did not change rail state");
+    assert.equal(after.expanded,String(expectCollapsed),"Toggle aria-expanded did not update");
+    assert.equal(after.focus,true,"Rail toggle should retain keyboard focus");
+    assert.ok(after.scroll<=after.viewport+1,"Toggled rail caused horizontal overflow");
+    assert.ok(expectCollapsed?after.width>200:after.width<100,
+      "Toggled rail failed to resize: "+JSON.stringify(after));
+    await delay(80);
+    const selected=await browser.evaluate('document.querySelector(\'.gc-navigation-rail__links a[href="#forms"]\').getAttribute("aria-current")');
+    assert.equal(selected,"page","Native link destination did not update active state");
+    await browser.screenshot(join(directory,
+      width===820?"gc-ui-rail-tablet-expanded.png":"gc-ui-rail-desktop-collapsed.png"));
+    console.log("Chromium adaptive navigation rail @ "+width+"px: focus, collapse, route and geometry passed");
+  }
+
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
   await browser.setViewport(390,844,{dark:false});
