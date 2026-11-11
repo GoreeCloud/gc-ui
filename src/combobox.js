@@ -31,7 +31,7 @@ export function initCombobox(input, list, { onSelect } = {}) {
   const normalize=text=>String(text??"").normalize("NFKC").toLocaleLowerCase().trim();
   const label=option=>option.getAttribute("data-gc-label") || option.textContent?.trim() || "";
   const enabled=option=>!option.disabled && option.getAttribute("aria-disabled")!=="true";
-  let destroyed=false, pending=false, active=null, selected=null;
+  let destroyed=false, pending=false, composing=false, active=null, selected=null;
   const choices=()=>options.filter(option=>!option.hidden && enabled(option));
   const setActive=option=>{
     if (option && !choices().includes(option)) return;
@@ -92,10 +92,31 @@ export function initCombobox(input, list, { onSelect } = {}) {
       input.removeAttribute("aria-busy");
     }
   };
-  const onInput=()=>{if (pending || destroyed) return; selected=null;options.forEach(option=>option.setAttribute("aria-selected","false"));setActive(null);open()};
+  // IME preedit text is not a committed query. Keep native input editing and
+  // defer list filtering/selection until the composition has finished.
+  const onInput=event=>{
+    if (pending || destroyed || composing || event?.isComposing) return;
+    selected=null;
+    options.forEach(option=>option.setAttribute("aria-selected","false"));
+    setActive(null);
+    open();
+  };
+  const onCompositionStart=()=>{
+    if (pending || destroyed) return;
+    composing=true;
+    selected=null;
+    options.forEach(option=>option.setAttribute("aria-selected","false"));
+    setActive(null);
+  };
+  const onCompositionEnd=()=>{
+    if (destroyed) return;
+    composing=false;
+    if (!pending) onInput();
+  };
   const onFocus=()=>{if (!pending && !destroyed) open();};
   const onKey=event=>{
-    if (pending || destroyed) return;
+    if (pending || destroyed || composing || event.isComposing ||
+        event.keyCode===229 || event.key==="Process") return;
     if (event.altKey||event.ctrlKey||event.metaKey) return;
     if (event.key==="Escape") {
       if (!list.hidden) {event.preventDefault();close();}
@@ -148,6 +169,8 @@ export function initCombobox(input, list, { onSelect } = {}) {
   input.addEventListener("focus",onFocus);
   input.addEventListener("focusin",onFocus);
   input.addEventListener("input",onInput);
+  input.addEventListener("compositionstart",onCompositionStart);
+  input.addEventListener("compositionend",onCompositionEnd);
   input.addEventListener("keydown",onKey);
   list.addEventListener("click",onClick);
   list.addEventListener("pointerdown",onPointerDown);
@@ -162,6 +185,8 @@ export function initCombobox(input, list, { onSelect } = {}) {
       input.removeEventListener("focus",onFocus);
       input.removeEventListener("focusin",onFocus);
       input.removeEventListener("input",onInput);
+      input.removeEventListener("compositionstart",onCompositionStart);
+      input.removeEventListener("compositionend",onCompositionEnd);
       input.removeEventListener("keydown",onKey);
       list.removeEventListener("click",onClick);
       list.removeEventListener("pointerdown",onPointerDown);
