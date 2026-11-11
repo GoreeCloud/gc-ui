@@ -103,6 +103,13 @@
     <span class="gc-feature-tile__icon" aria-hidden="true">✦</span>
     <h3>Design quality</h3><p>Original and adaptable.</p>
   </article>
+  <section id="test-window" class="gc-window" aria-label="Sample rounded window">
+    <header class="gc-window__titlebar"><span class="gc-window__identity">Window</span></header>
+    <div class="gc-window__body">Readable window content</div>
+    <footer class="gc-window__statusbar">Local status</footer>
+  </section>
+  <div id="test-window-compact" class="gc-window gc-window--compact">Compact window</div>
+  <div id="test-window-max" class="gc-window gc-window--maximized">Maximized window</div>
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
@@ -236,6 +243,16 @@ try{
   verify(comboInput.value==="Moss" && selectedAccent==="moss","combobox commits selected option");
   verify(comboInput.getAttribute("aria-expanded")==="false" && comboList.hidden,"combobox closes on commit");
   comboCtrl.dispose();
+  const roundRadius=selector=>getComputedStyle(document.querySelector(selector)).borderTopLeftRadius;
+  const allCorners=selector=>{
+    const style=getComputedStyle(document.querySelector(selector));
+    return [style.borderTopLeftRadius,style.borderTopRightRadius,style.borderBottomRightRadius,
+      style.borderBottomLeftRadius].every(value=>parseFloat(value)>=18);
+  };
+  verify(allCorners("#test-window"),"base application window has four rounded corners");
+  verify(allCorners("#test-window-compact"),"compact application window has four rounded corners");
+  verify(allCorners("#test-window-max"),"maximized application window has four rounded corners");
+  verify(allCorners("#drawer"),"native web drawer has four rounded corners");
   const signature=document.querySelector("#premium-fixture");
   const signatureStyle=getComputedStyle(signature);
   const featureStyle=getComputedStyle(document.querySelector("#premium-tile"));
