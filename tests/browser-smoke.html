@@ -92,7 +92,7 @@
       <p class="gc-overline">Signature composition</p>
       <h2 class="gc-showcase__title">Purposeful depth.</h2>
       <p class="gc-showcase__lead">A readable example on a solid surface.</p>
-      <div class="gc-showcase__actions"><button type="button" class="gc-button">Explore</button></div>
+      <div class="gc-showcase__actions"><a class="gc-button" href="#premium-fixture">Explore</a></div>
     </div>
     <div class="gc-showcase__visual" aria-hidden="true">
       <div class="gc-showcase__orbit"></div>
@@ -241,6 +241,14 @@ try{
   const featureStyle=getComputedStyle(document.querySelector("#premium-tile"));
   verify(getComputedStyle(signature,"::before").backgroundImage.includes("gradient") && signatureStyle.backgroundColor!=="rgba(0, 0, 0, 0)",
     "premium signature uses semantic layered background");
+  const anchorButton=signature.querySelector("a.gc-button");
+  const colorProbe=document.createElement("span");
+  colorProbe.style.color="var(--gc-on-brand)";
+  document.body.append(colorProbe);
+  const expectedAnchorColor=getComputedStyle(colorProbe).color;
+  colorProbe.remove();
+  verify(getComputedStyle(anchorButton).color===expectedAnchorColor,
+    "anchor action respects branded foreground contrast");
   verify(parseFloat(signatureStyle.borderTopLeftRadius)>=18 && signatureStyle.boxShadow!=="none",
     "premium surface has refined geometry and elevation");
   verify(parseFloat(featureStyle.borderTopLeftRadius)>=18 && featureStyle.backgroundColor!=="rgba(0, 0, 0, 0)",

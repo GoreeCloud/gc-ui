@@ -334,13 +334,15 @@ try {
     await browser.navigate(base+"/lab/");
     const result=JSON.parse(await browser.evaluate(
       '(()=>{const root=document.documentElement,section=document.querySelector("#premium");'+
-      'const surface=section.querySelector(".gc-showcase"),tile=section.querySelector(".gc-feature-tile");'+
+      'const surface=section.querySelector(".gc-showcase"),tile=section.querySelector(".gc-feature-tile");const action=section.querySelector(".gc-showcase__actions a.gc-button");const probe=document.createElement("span");probe.style.color="var(--gc-on-brand)";section.append(probe);const expectedAction=getComputedStyle(probe).color;probe.remove();'+
       'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
       'gradient:getComputedStyle(surface,"::before").backgroundImage.includes("gradient"),'+
-      'radius:getComputedStyle(surface).borderTopLeftRadius,'+
+      'radius:getComputedStyle(surface).borderTopLeftRadius,
+      'anchorColor:getComputedStyle(action).color,expectedAction:expectedAction,'+'+
       'tile:getComputedStyle(tile).backgroundColor});})()'));
     assert.ok(result.scroll<=result.width+1,"Premium lab page overflow: "+JSON.stringify(result));
     assert.equal(result.gradient,true,"Signature surface gradient missing");
+    assert.equal(result.anchorColor,result.expectedAction,"Primary anchor button text is not readable on its brand fill");
     assert.ok(parseFloat(result.radius)>=18,"Signature surface lost its premium shape");
     await browser.evaluate('document.querySelector("#premium").scrollIntoView({behavior:"instant",block:"start"})');
     await delay(150);

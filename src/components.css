@@ -637,3 +637,12 @@
   .gc-feature-tile::before { background:Highlight; }
   .gc-feature-tile__icon { outline:1px solid Highlight; }
 }
+
+
+/* A semantic button is a button regardless of its native element.
+   More-specific app link styles must never override button foreground contrast. */
+.gc-app a.gc-button { color:var(--gc-on-brand); text-decoration:none; }
+.gc-app a.gc-button--secondary { color:var(--gc-on-brand-container); }
+.gc-app a.gc-button--outline,
+.gc-app a.gc-button--quiet { color:var(--gc-text); }
+.gc-app a.gc-button--danger { color:var(--gc-on-negative); }

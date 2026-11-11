@@ -23,6 +23,7 @@ test("premium visuals degrade gracefully in accessible modes",()=>{
   const section=css.slice(css.indexOf("/* GoreeCloud UI signature composition:"));
   for(const media of ["prefers-reduced-motion:reduce","prefers-reduced-transparency:reduce",
     "prefers-contrast:more","forced-colors:active"])assert.ok(section.includes(media),media);
+  assert.ok(section.includes(".gc-app a.gc-button { color:var(--gc-on-brand)"),"Anchor buttons need semantic foreground");
   assert.ok(section.includes("background:var(--gc-lens-solid)"),"Text must be on a solid backdrop");
   assert.ok(section.includes("inline-size:min(82%,320px)"));
   assert.ok(section.includes("grid-template-columns:minmax(0,1fr)"));
