@@ -81,3 +81,8 @@ test("canonical styling, package exports and non-native status documented",()=>{
  assert.equal(reg.nativeSdkStatus,"not-implemented");
  assert.equal(reg.consumerMigrationStatus,"not-audited");
 });
+
+test("dock content clearance overrides consumer shorthand padding rules",()=>{
+  const css=readFileSync(new URL("../src/components.css",import.meta.url),"utf8");
+  assert.equal(css.split(".gc-app .gc-bottom-nav-content {").length-1,2);
+});
