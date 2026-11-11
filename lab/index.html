@@ -53,6 +53,7 @@
           <div class="gc-cluster">
             <button class="gc-button gc-button--lg gc-button--round" type="button" id="open-dialog"><gc-icon name="sparkle"></gc-icon> Explore interaction</button>
             <button class="gc-button gc-button--outline gc-button--lg gc-button--round" type="button" id="notify"><gc-icon name="bell"></gc-icon> Preview notification</button>
+            <button class="gc-button gc-button--secondary gc-button--lg gc-button--round" type="button" id="open-command"><gc-icon name="search"></gc-icon> Quick commands <span class="gc-kbd">Ctrl K</span></button>
           </div>
         </div>
         <div class="gc-lab-scene" aria-label="Preview of translucent and solid GoreeCloud UI panels">
@@ -185,6 +186,22 @@
   <div class="gc-drawer__header"><h2 id="demo-drawer-title" class="gc-heading">GoreeCloud drawer</h2><button class="gc-button gc-button--icon gc-button--quiet" id="demo-drawer-close" type="button" aria-label="Close side drawer"><gc-icon name="close"></gc-icon></button></div>
   <p class="gc-support">A native modal side panel with Escape support and focus return. No account settings are modified.</p>
   <nav class="gc-nav" aria-label="Drawer destinations"><a href="#foundations">Foundations</a><a href="#components">Components</a><a href="#patterns">Patterns</a></nav>
+</dialog>
+
+<dialog class="gc-command" id="command-dialog" aria-labelledby="command-title" aria-describedby="command-hint">
+  <div class="gc-command__header"><h2 class="gc-heading" id="command-title">Quick commands</h2><span class="gc-kbd">Esc to close</span></div>
+  <label class="gc-label" for="command-search">Find an action</label>
+  <input id="command-search" class="gc-input gc-command__search" type="search" placeholder="Search commands" autocomplete="off" aria-describedby="command-hint">
+  <p class="gc-support" id="command-hint">These actions change only this local design lab.</p>
+  <p data-gc-command-status role="status" aria-live="polite"></p>
+  <ul class="gc-command__list">
+    <li><button type="button" class="gc-command__item" data-gc-command="notify" data-gc-keywords="alert message preview"><gc-icon name="bell"></gc-icon> Show a notification <span class="gc-command__meta">Demo</span></button></li>
+    <li><button type="button" class="gc-command__item" data-gc-command="light" data-gc-keywords="appearance day bright"><gc-icon name="sun"></gc-icon> Switch to light mode <span class="gc-command__meta">Theme</span></button></li>
+    <li><button type="button" class="gc-command__item" data-gc-command="dark" data-gc-keywords="appearance night dim"><gc-icon name="moon"></gc-icon> Switch to dark mode <span class="gc-command__meta">Theme</span></button></li>
+    <li><button type="button" class="gc-command__item" data-gc-command="system" data-gc-keywords="appearance auto operating system"><gc-icon name="sync"></gc-icon> Follow system appearance <span class="gc-command__meta">Theme</span></button></li>
+  </ul>
+  <p data-gc-command-empty hidden>No matching commands. Try another word.</p>
+  <div class="gc-command__footer"><span>↑ ↓ Navigate</span><span>Enter Select</span></div>
 </dialog>
 </body>
 </html>

@@ -64,3 +64,7 @@ GoreeCloud UI includes an original 42-glyph family. The canonical path shapes re
 ## Browser interaction and screenshot QA
 
 `npm run browser:smoke` exercises a local-only headless Chrome fixture and captures desktop/light and mobile/dark reference lab screenshots. A separate pinned GitHub Actions job runs it on Ubuntu 24.04 (where Chrome is included). Screenshots are retained as short-lived CI artifacts for human review; the browser job has no write token, credentials, dependency installer or remote backend. Passing these smoke checks does **not** certify human visual quality, zoom, RTL, physical-device ergonomics or screen-reader accessibility. See [browser QA](docs/BROWSER_QA.md).
+
+## Command palette
+
+The new `initCommandPalette()` adds a searchable, keyboard-operated action launcher to a native `<dialog>`. It requires an explicit `onSelect` callback so every command has an actual consumer action. Open with a labeled button or the optional Ctrl/⌘K shortcut. Filtering compares normalized text, without injected HTML, regex evaluation or network access. An asynchronous action keeps the palette open until its callback resolves; a rejected action remains open and presents an error message. See the component documentation and live lab.

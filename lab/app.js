@@ -1,4 +1,4 @@
-import { createThemeController, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -76,3 +76,21 @@ initDrawer(document.querySelector("#demo-drawer"), document.querySelector("#demo
 for (const link of document.querySelectorAll("#demo-drawer a[href^='#']")) {
   link.addEventListener("click", () => document.querySelector("#demo-drawer").close());
 }
+
+
+// Local actions: no backend calls, persistence or simulated account mutations.
+initCommandPalette(document.querySelector("#command-dialog"), {
+  trigger:document.querySelector("#open-command"),
+  onSelect(button) {
+    const command=button.getAttribute("data-gc-command");
+    if (command==="notify") {
+      toast("The command palette opened this local notification.",{region,kind:"info"});
+      return;
+    }
+    if (["light","dark","system"].includes(command)) {
+      appearance.value=command==="system"?"auto":command;
+      updateTheme();
+      toast("Lab appearance updated to "+appearance.value+".",{region,kind:"positive"});
+    }
+  }
+});

@@ -68,3 +68,13 @@ Controllers expose cleanup callbacks; invoke them when a view unmounts. Avoid ma
 createThemeController(root, options) accepts the same options as applyTheme(), returns update(next) and dispose(), and automatically recalculates custom accent colors on OS dark/light changes in auto mode. This opt-in watcher does **not** use local storage or network. Call dispose() to unregister the system listener. Curated palettes already respond to system appearance through CSS alone.
 
 See the reference laboratory's Patterns section for keyboard and real native-control examples. Those examples are not device acceptance or a native OS component library.
+
+## Command palette — searchable local actions
+
+The optional native-dialog launcher is available from `@goreecloud/ui/commands` or the root package, styled with `gc-command`, `gc-command__header`, `gc-command__search`, `gc-command__list`, `gc-command__item`, `gc-command__meta`, and `gc-command__footer`.
+
+Use a `<dialog class="gc-command" aria-labelledby="...">` containing a labeled `input[type=search]`, a list of real `button[data-gc-command]` elements, and preferably `[data-gc-command-status]` live status plus `[data-gc-command-empty]` empty feedback. Provide searchable aliases using `data-gc-keywords`. Do not inject untrusted HTML as labels.
+
+`initCommandPalette(dialog, { trigger, shortcut: true, onSelect })` returns `{ open, close, refresh, dispose }`. A **required** `onSelect(button)` callback prevents dead-end command shells. Ctrl/⌘K opens the modal; Escape uses native dialog behavior. Filter using input, move with Arrow Up/Down, select with Enter, and jump Home/End in the command list. Hidden or disabled entries are not activated. For asynchronous callbacks, the modal closes only after success; rejection keeps it open with a non-sensitive error message. Focus returns to the invoker on close.
+
+Consumer apps must independently verify authorization through GoreeCloud Identity and integrate GoreeShield privacy, Wardveil cybersecurity and GoreeCloud Mesh connectivity policies. Hiding a button is not authorization. Do not report backend success until the actual backend response arrives. This component itself performs no network call or storage write.
