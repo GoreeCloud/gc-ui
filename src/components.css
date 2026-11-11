@@ -181,3 +181,51 @@
 @media(max-width:600px) { .gc-command { border-radius:var(--gc-radius-lg); padding:var(--gc-space-4); } }
 @media(prefers-reduced-transparency:reduce), (prefers-contrast:more) { .gc-command::backdrop { backdrop-filter:none; } }
 @media(forced-colors:active) { .gc-command,.gc-command__item { border:1px solid CanvasText; } .gc-command__item:focus-visible { outline:2px solid Highlight; } }
+
+
+/* Native top-layer action menu: a solid, bounded surface with pointer and keyboard states. */
+.gc-menu[popover] {
+  box-sizing:border-box;
+  position:fixed;
+  inset:auto;
+  margin:0;
+  padding:var(--gc-space-2);
+  inline-size:min(290px,calc(100vw - 24px));
+  max-block-size:min(60dvh,420px);
+  overflow-y:auto;
+  border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-lg);
+  background:var(--gc-surface);
+  color:var(--gc-text);
+  box-shadow:var(--gc-shadow-3);
+  z-index:var(--gc-z-dropdown);
+}
+.gc-menu__item {
+  display:flex;
+  align-items:center;
+  gap:var(--gc-space-3);
+  inline-size:100%;
+  min-block-size:var(--gc-touch-min);
+  padding:var(--gc-space-2) var(--gc-space-4);
+  border:1px solid transparent;
+  border-radius:var(--gc-radius-sm);
+  background:transparent;
+  color:var(--gc-text);
+  text-align:start;
+  font-weight:600;
+  cursor:pointer;
+}
+.gc-menu__item:hover:not(:disabled),.gc-menu__item:focus-visible {
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+}
+.gc-menu__item:disabled,.gc-menu__item[aria-disabled="true"] {
+  opacity:var(--gc-opacity-disabled);
+  cursor:not-allowed;
+}
+.gc-menu__item--danger { color:var(--gc-negative); }
+.gc-menu__divider { margin:var(--gc-space-2) var(--gc-space-3); border:0; border-block-start:1px solid var(--gc-outline-soft); }
+.gc-menu__shortcut { margin-inline-start:auto; color:var(--gc-text-soft); font-size:var(--gc-type-label); }
+.gc-menu [data-gc-menu-status] { margin:var(--gc-space-2) var(--gc-space-3); color:var(--gc-negative); font-size:var(--gc-type-support); }
+@media (prefers-contrast:more) { .gc-menu[popover] { border-color:var(--gc-outline); box-shadow:none; } }
+@media (forced-colors:active) { .gc-menu[popover], .gc-menu__item { border:1px solid CanvasText; } }

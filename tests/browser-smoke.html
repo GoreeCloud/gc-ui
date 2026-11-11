@@ -35,10 +35,19 @@
       <li><button type="button" data-gc-command="beta" data-gc-keywords="second finish">Second option</button></li>
     </ul>
   </dialog>
+  
+  <button type="button" id="action-menu-trigger">Show action menu</button>
+  <div id="test-action-menu" role="menu" aria-label="Actions" popover="auto">
+    <button type="button" role="menuitem" data-choice="alpha">First</button>
+    <button type="button" role="menuitem" disabled data-choice="skip">Unavailable</button>
+    <button type="button" role="menuitem" data-choice="gamma">Last</button>
+    <p data-gc-menu-status role="status"></p>
+  </div>
+
   <output id="smoke-status" aria-live="polite">pending</output>
 </main>
 <script type="module">
-import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
+import { defineCustomElements, initTabs, initAccordion, initToggleGroup, initDrawer, initCommandPalette, initActionMenu, bindRangeOutput, createThemeController, getAccentColor } from "../src/index.js";
 const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
@@ -98,6 +107,22 @@ try{
   commandButtons[1].click();
   verify(selectedCommand==="beta" && !commandDialog.open,"command action executes and closes");
   commandController.dispose();
+  let chosen="";
+  const menuControl=initActionMenu(document.querySelector("#action-menu-trigger"),
+    document.querySelector("#test-action-menu"), {
+      onSelect(item) { chosen=item.getAttribute("data-choice"); }
+    });
+  const testMenu=document.querySelector("#test-action-menu");
+  const menuOptions=[...testMenu.querySelectorAll('button[role="menuitem"]')];
+  document.querySelector("#action-menu-trigger").dispatchEvent(
+    new KeyboardEvent("keydown",{key:"ArrowDown",bubbles:true}));
+  verify(testMenu.matches(":popover-open"),"native popover menu opens");
+  verify(document.activeElement===menuOptions[0],"menu first option focus");
+  menuOptions[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowDown",bubbles:true}));
+  verify(document.activeElement===menuOptions[2],"menu skips disabled option");
+  menuOptions[2].click();
+  verify(chosen==="gamma"&&!testMenu.matches(":popover-open"),"menu action activates and closes");
+  menuControl.dispose();
   const colors=getComputedStyle(document.querySelector("#lens")).backgroundColor;
   verify(Boolean(colors)&&colors!=="transparent","lens material computed");
   theme.dispose();

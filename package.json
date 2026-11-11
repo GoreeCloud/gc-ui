@@ -33,6 +33,10 @@
     "./commands": {
       "types": "./src/commands.d.ts",
       "default": "./src/commands.js"
+    },
+    "./menu": {
+      "types": "./src/menu.d.ts",
+      "default": "./src/menu.js"
     }
   },
   "files": [
@@ -48,7 +52,7 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check src/menu.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
     "prepack": "npm run icons:check && npm run tokens:check && npm run export:platform",

@@ -83,6 +83,14 @@
         <div class="gc-grid gc-grid--two">
           <article class="gc-card gc-stack"><h3 class="gc-heading">Buttons & actions</h3><div class="gc-cluster">
             <button class="gc-button" type="button" data-demo-toast="Primary action activated">Primary</button>
+            <button id="demo-action-trigger" type="button" class="gc-button gc-button--secondary" aria-haspopup="menu" aria-controls="demo-action-menu" aria-expanded="false"><gc-icon name="more"></gc-icon> Action menu</button>
+            <div id="demo-action-menu" class="gc-menu" popover="auto" role="menu" aria-label="Local demo actions">
+              <button type="button" class="gc-menu__item" role="menuitem" data-gc-local-action="preview"><gc-icon name="bell"></gc-icon> Preview notification</button>
+              <button type="button" class="gc-menu__item" role="menuitem" data-gc-local-action="system"><gc-icon name="sun"></gc-icon> Follow system theme</button>
+              <hr class="gc-menu__divider" aria-hidden="true">
+              <button type="button" class="gc-menu__item gc-menu__item--danger" role="menuitem" disabled>Delete account (unavailable)</button>
+              <p data-gc-menu-status role="status" aria-live="polite"></p>
+            </div>
             <button class="gc-button gc-button--secondary" type="button" data-demo-toast="Secondary action activated">Secondary</button>
             <button class="gc-button gc-button--outline" type="button" data-demo-toast="Outlined action activated">Outline</button>
             <button class="gc-button gc-button--quiet" type="button" data-demo-toast="Quiet action activated">Quiet</button>
