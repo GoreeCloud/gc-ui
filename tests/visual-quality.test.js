@@ -72,7 +72,7 @@ test("skip link moves by its own height, not a fixed negative offset",()=>{
   assert.ok(rule.includes("forced-colors:active"));
   const lab=load("lab/lab.css");
   assert.ok(lab.includes(".gc-app .gc-lab-toolbar .gc-lab-select"));
-  assert.ok(lab.includes(".gc-lab-hero-copy > .gc-cluster:first-child .gc-badge"));
+  assert.ok(lab.includes(".gc-lab-hero-copy > .gc-lab-status-cluster .gc-badge"));
 });
 
 test("mobile hero keeps complete words at physical phone widths, with extreme fallback",()=>{

@@ -1,5 +1,8 @@
 # GoreeCloud UI
 
+**Official identity:** The founder-approved Aperture Weave [logo, favicon and interface artwork](docs/OFFICIAL_IDENTITY.md) are centrally maintained in GoreeCloud/brand-assets and integrated into the experimental lab. Consumer visual acceptance remains separate from Stable release status.
+
+
 **Clear by default. Consistent by nature. Fluid by design.**
 
 GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled applications, websites, dashboards and future operating-system interfaces. It synthesizes ergonomic layout, adaptive semantic color and purposeful translucent depth into an original visual system.
