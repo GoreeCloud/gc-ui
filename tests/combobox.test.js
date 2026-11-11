@@ -270,3 +270,40 @@ test("disposing a composing combobox removes IME listeners without a late select
   assert.equal(f.list.hidden,true);
   assert.equal(f.input.getAttribute("aria-expanded"),"false");
 });
+
+test("preedit pointer gesture cannot select even when composition ends before click",async()=>{
+  const f=fixture(),selected=[];
+  const api=initCombobox(f.input,f.list,{onSelect:(_option,value)=>selected.push(value)});
+  api.open();
+  f.input.emit("compositionstart");
+  const down=f.list.emit("pointerdown",{target:f.choices[0]});
+  assert.equal(down.defaultPrevented,false,"IME retains native focus/commit handling");
+  f.input.emit("compositionend");
+  f.list.emit("click",{target:f.choices[0]});
+  await Promise.resolve();
+  assert.deepEqual(selected,[],"Late click from the composing pointer gesture must not select");
+  assert.equal(f.input.value,"");
+  // A new deliberate pointer gesture is allowed.
+  const next=f.list.emit("pointerdown",{target:f.choices[0]});
+  assert.equal(next.defaultPrevented,true);
+  f.list.emit("click",{target:f.choices[0]});
+  await Promise.resolve();
+  assert.deepEqual(selected,["iris"]);
+  api.dispose();
+});
+
+test("pointercancel clears deferred IME click guard, and direct composing clicks are denied",async()=>{
+  const f=fixture(),selected=[];
+  const api=initCombobox(f.input,f.list,{onSelect:(_option,value)=>selected.push(value)});
+  api.open();
+  f.input.emit("compositionstart");
+  f.list.emit("click",{target:f.choices[0]});
+  f.list.emit("pointerdown",{target:f.choices[0]});
+  f.list.emit("pointercancel");
+  f.input.emit("compositionend");
+  assert.deepEqual(selected,[]);
+  f.list.emit("click",{target:f.choices[0]});
+  await Promise.resolve();
+  assert.deepEqual(selected,["iris"],"Cancelled gesture cannot suppress later deliberate activation");
+  api.dispose();
+});
