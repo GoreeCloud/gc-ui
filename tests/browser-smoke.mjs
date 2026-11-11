@@ -527,6 +527,20 @@ try {
     assert.ok(actual.radii.every(v=>parseFloat(v)>=18),"Unrounded window corners "+JSON.stringify(actual));
     assert.ok(actual.scroll<=actual.width+1,"Rounded window page overflow "+JSON.stringify(actual));
     assert.ok(actual.rect<=actual.width,"Window escaped viewport "+JSON.stringify(actual));
+    const scoped=JSON.parse(await browser.evaluate(
+      '(()=>{const w=document.querySelector("#demo-window"),n=document.querySelector("#demo-window-nav"),'+
+      'b=w.querySelector(".gc-window__body"),a=w.getBoundingClientRect(),v=n.getBoundingClientRect();'+
+      'return JSON.stringify({window:{left:a.left,right:a.right,top:a.top,bottom:a.bottom},'+
+      'dock:{left:v.left,right:v.right,top:v.top,bottom:v.bottom},'+
+      'position:getComputedStyle(n).position,scroll:getComputedStyle(b).overflowY,'+
+      'current:n.querySelector("a[aria-current=page]")?.textContent.trim()});})()'));
+    assert.equal(scoped.position,"relative","Window dock must remain within its own shell");
+    assert.equal(scoped.scroll,"auto","Window body must scroll independently");
+    assert.ok(scoped.dock.left>=scoped.window.left&&scoped.dock.right<=scoped.window.right+1&&
+      scoped.dock.top>=scoped.window.top&&scoped.dock.bottom<=scoped.window.bottom+1,
+      "Floating dock escaped its rounded app window "+JSON.stringify(scoped));
+    assert.equal(scoped.current,"Workspace","Scoped window nav lost selection");
+
     console.log("Chromium rounded windows @ "+width+"px: four corners and reflow passed");
   }
 
@@ -551,6 +565,19 @@ try {
     assert.ok(actual.padding>=actual.height,"Dock occludes content "+JSON.stringify(actual));
     assert.ok(actual.scroll<=actual.width+1,"Floating nav causes horizontal overflow "+JSON.stringify(actual));
     console.log("Chromium floating bottom dock @ "+width+"px: capsule, safe space and contrast passed");
+  }
+
+  for(const [label,width,height,dark] of [
+    ["desktop",900,900,false],
+    ["mobile",390,844,true]
+  ]) {
+    await browser.setViewport(width,height,{dark});
+    await browser.navigate(base+"/lab/");
+    await browser.evaluate('document.querySelector("#demo-window").scrollIntoView({block:"center",behavior:"instant"})');
+    await delay(80);
+    const screenshot=await browser.screenshot(join(directory,"gc-ui-window-scoped-dock-"+label+".png"));
+    assert.equal(screenshot.width,width);
+    console.log("Chromium window-owned floating dock screenshot "+label+": captured");
   }
 
   // Dedicated signature-composition screenshots: not a replacement for human design review.

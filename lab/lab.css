@@ -274,3 +274,9 @@
   .gc-lab-toolbar-controls > #accent { grid-column:1; grid-row:4; }
   .gc-lab-toolbar-controls > .gc-lab-contrast { grid-column:1; grid-row:5; }
 }
+
+
+/* Only the design-lab preview has a fixed sample window height.
+   Real consumers own window sizing; keep page and window docks visually distinct. */
+#demo-window { block-size:min(560px,70dvh); min-block-size:350px; }
+@media(max-width:600px) { #demo-window { block-size:min(500px,66dvh); } }

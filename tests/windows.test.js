@@ -21,3 +21,28 @@ test("window policy is explicit without falsely claiming OS implementation",()=>
  assert.equal(reg.consumerMigrationStatus,"not-audited");
  assert.match(load("docs/WINDOWS_AND_NAVIGATION.md"),/Native window-manager boundary/);
 });
+
+
+test("window-owned navigation is a real distinct, bounded app-shell pattern",()=>{
+ const css=load("src/components.css");
+ const section=css.slice(css.indexOf("/* Window-owned Cloud Lens dock:"));
+ assert.ok(section.length>500);
+ assert.match(section,/\.gc-app \.gc-window--app-shell > \.gc-window__body\s*\{[^}]*overflow-y:auto/);
+ assert.match(section,/\.gc-app \.gc-window--app-shell > \.gc-bottom-nav--window\s*\{[^}]*position:relative/);
+ assert.ok(section.includes("inset-block-end:auto"));
+ assert.ok(section.includes("left:auto"));
+ assert.ok(section.includes("inline-size:min(540px,calc(100% - 2 * var(--gc-space-4)))"));
+ const lab=load("lab/index.html");
+ assert.ok(lab.includes('id="demo-window-nav" class="gc-bottom-nav gc-bottom-nav--window"'));
+ assert.ok(lab.includes('aria-label="Window preview destinations"'));
+ assert.ok(lab.includes("gc-window--app-shell"));
+});
+
+test("reusable app shell does not force design-lab-only window dimensions",()=>{
+ const css=load("src/components.css");
+ const start=css.indexOf("/* Window-owned Cloud Lens dock:");
+ const windowBlock=css.slice(start).split("}")[0];
+ assert.ok(!windowBlock.includes("block-size:min("));
+ assert.match(windowBlock,/min-block-size:0/);
+ assert.ok(load("lab/lab.css").includes("#demo-window { block-size:min(560px,70dvh)"));
+});
