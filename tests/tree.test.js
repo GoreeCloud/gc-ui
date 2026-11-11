@@ -122,6 +122,10 @@ test("tree source styling and typed package exports exist",()=>{
   assert.ok(read("src/components.css").includes(".gc-tree"));
   assert.ok(pkg.exports["./tree"].types);
   assert.ok(read("src/tree.d.ts").includes("initTreeView"));
+  const declaration=read("src/index.d.ts");
+  const treeAPI=declaration.split("export declare function initTreeView")[1]
+    ?.split("export declare function initCombobox")[0];
+  assert.match(treeAPI,/refresh:\s*\(\)\s*=>\s*boolean/);
 });
 
 

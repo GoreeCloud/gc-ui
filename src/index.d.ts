@@ -45,7 +45,7 @@ export declare function initTreeView(tree: HTMLElement, options?: {
   onSelect?: (item: HTMLElement) => void;
   onActivate?: (item: HTMLElement) => void;
   locale?: string;
-}): { select: (item: HTMLElement) => boolean; expand: (item: HTMLElement) => boolean; collapse: (item: HTMLElement) => boolean; dispose: () => void };
+}): { select: (item: HTMLElement) => boolean; refresh: () => boolean; expand: (item: HTMLElement) => boolean; collapse: (item: HTMLElement) => boolean; dispose: () => void };
 
 export declare function initCombobox(input: HTMLInputElement, list: HTMLElement, options?: {
   onSelect?: (option: HTMLElement, value: string) => void | Promise<void>;
