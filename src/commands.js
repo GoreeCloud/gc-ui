@@ -36,6 +36,9 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     return { button, row };
   });
   let destroyed = false, inFlight = false, restoreFocus = null;
+  // A pending action must not close or announce errors in a later dialog
+  // session after Escape, native close, or a deliberate reopen.
+  let session = 0;
 
   const selectable = () => entries.filter(x => !x.row.hidden && !x.button.disabled &&
     x.button.getAttribute("aria-disabled") !== "true" &&
@@ -61,21 +64,29 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     input.value = "";
     refresh();
     dialog.showModal();
+    session += 1;
     input.focus();
   };
-  const close = () => { if (dialog.open) dialog.close(); };
+  const close = () => {
+    if (!dialog.open) return;
+    dialog.close();
+    session += 1; // Invalidate pending actions before queued close events.
+  };
   const activate = async button => {
     if (destroyed || inFlight || !dialog.open || !selectable().includes(button)) return;
     inFlight = true;
+    const actionSession = session;
     try {
       const operation = onSelect(button);
       if (operation && typeof operation.then === "function") {
         dialog.setAttribute("aria-busy", "true");
         await operation;
       }
-      if (!destroyed) close();
+      if (!destroyed && dialog.open && session === actionSession) close();
     } catch {
-      if (status) status.textContent = "Action could not be completed. Try again.";
+      if (!destroyed && dialog.open && session === actionSession && status) {
+        status.textContent = "Action could not be completed. Try again.";
+      }
     } finally {
       inFlight = false;
       dialog.removeAttribute("aria-busy");
@@ -116,9 +127,21 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     }
   };
   const onClose = () => {
-    if (!destroyed && restoreFocus && restoreFocus.isConnected !== false &&
-        typeof restoreFocus.focus === "function") restoreFocus.focus();
+    // A delayed native close event from an older session must not interrupt
+    // a dialog that has already been reopened.
+    if (dialog.open) return;
+    session += 1;
+    const previous = restoreFocus;
     restoreFocus = null;
+    // Do not steal focus from a person who has moved to another control
+    // after external dismissal. Focus inside the closed dialog or on the
+    // document body is safe to restore, preserving ordinary Escape behavior.
+    const focused = owner.activeElement;
+    if (!destroyed && previous && previous.isConnected !== false &&
+        typeof previous.focus === "function" &&
+        (!focused || focused === owner.body || dialog.contains?.(focused))) {
+      previous.focus();
+    }
   };
   input.addEventListener("input", onInput);
   input.addEventListener("keydown", onInputKey);

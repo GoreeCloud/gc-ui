@@ -68,3 +68,95 @@ test("command stylesheet, typings, lab and browser verification remain connected
   assert.ok(smoke.includes("command search filters safely"));
   assert.ok(load("src/components.css").includes(".gc-command__item"));
 });
+
+
+function asyncPaletteFixture(){
+  const make=(attrs={})=>{
+    const listeners=new Map();
+    return {
+      attrs:{...attrs},open:false,hidden:false,disabled:false,value:"",textContent:"",
+      isConnected:true,
+      getAttribute(k){return this.attrs[k]??null},
+      setAttribute(k,v){this.attrs[k]=String(v)},
+      removeAttribute(k){delete this.attrs[k]},
+      addEventListener(k,cb){const list=listeners.get(k)||[];list.push(cb);listeners.set(k,list)},
+      removeEventListener(k,cb){listeners.set(k,(listeners.get(k)||[]).filter(x=>x!==cb))},
+      emit(k,extra={}){const e={currentTarget:this,target:this,key:"",defaultPrevented:false,
+        preventDefault(){this.defaultPrevented=true},...extra};
+        for(const cb of listeners.get(k)||[])cb(e);return e;
+      },
+      focus(){this.focused=true;this.ownerDocument.activeElement=this},
+    };
+  };
+  const owner=make(),outside=make(),invoker=make(),input=make(),status=make(),empty=make();
+  owner.body=make();owner.body.ownerDocument=owner;
+  for(const n of [outside,invoker,input,status,empty])n.ownerDocument=owner;
+  const button=make();
+  button.ownerDocument=owner;button.textContent="Open file";
+  const row=make();row.ownerDocument=owner;
+  button.closest=()=>row;
+  const dialog=make();dialog.ownerDocument=owner;
+  dialog.querySelector=selector=>selector==='input[type="search"]'?input:
+    selector==="[data-gc-command-status]"?status:
+    selector==="[data-gc-command-empty]"?empty:null;
+  dialog.querySelectorAll=()=>[button];
+  dialog.contains=node=>[dialog,input,row,button,status,empty].includes(node);
+  dialog.showModal=()=>{dialog.open=true};
+  dialog.close=()=>{dialog.open=false;dialog.emit("close")};
+  const activate=()=>button.emit("click");
+  return {make,owner,dialog,button,input,invoker,outside,status,activate};
+}
+
+test("pending command success cannot close a reopened palette or steal current focus",async()=>{
+  const f=asyncPaletteFixture();let settle;
+  const gate=new Promise(resolve=>{settle=resolve});
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>gate});
+  api.open();f.activate();
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true");
+  api.close();
+  f.outside.focus();
+  api.open();
+  assert.equal(f.dialog.open,true);
+  settle();
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.dialog.open,true,"A prior action must not close the next dialog session");
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("late rejected command never announces stale status after external dismissal",async()=>{
+  const f=asyncPaletteFixture();let rejectAction;
+  const gate=new Promise((_resolve,reject)=>{rejectAction=reject});
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>gate});
+  api.open();f.activate();
+  f.dialog.open=false; // Native Escape dismissal before queued close notification.
+  f.outside.focus();
+  f.dialog.emit("close");
+  assert.equal(f.owner.activeElement,f.outside,
+    "Closing after focus moved outside must not restore the prior invoker");
+  const prior=f.status.textContent;
+  rejectAction(Error("private upstream failure"));
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,prior);
+  assert.equal(f.owner.activeElement,f.outside);
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("ordinary dialog close restores invoker only when focus still belongs to dialog",()=>{
+  const f=asyncPaletteFixture();
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>{}});
+  api.open();
+  assert.equal(f.owner.activeElement,f.input);
+  api.close();
+  assert.equal(f.owner.activeElement,f.invoker);
+  api.open();
+  f.outside.focus();
+  api.close();
+  assert.equal(f.owner.activeElement,f.outside,
+    "A deliberate outside focus move must not be stolen on close");
+  api.dispose();
+});
