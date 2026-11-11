@@ -54,3 +54,11 @@ Mobile prioritizes reachable actions, readable vertical rhythm, safe area and le
 Every consumer design must be visually and functionally reviewed against actual device sizes, theme combinations, contrast, text scaling, keyboard flows, operating system conventions and true backing operations. WCAG AA contrast guidance is 4.5:1 for ordinary text and 3:1 for large text and applicable nontext indicators, with standards-defined exceptions. Tests in this repo do not certify application-wide accessibility.
 
 The [active founder-approved GoreeCloud UI design language and 100 UI/UX principles](https://drive.google.com/file/d/1JQiGg1ZC7Xgg2VH8ctN2qaPdIBVkrCp5/view) are the governing visual and interaction source. This is a new design system with no predecessor implementation. Each new capability must be validated in its own right.
+
+### Deterministic token generation
+
+The JSON manifest follows a GC UI alpha-specific structure rather than claiming full Design Tokens Community Group conformance. Regenerate browser CSS with `npm run tokens:generate`; CI requires `npm run tokens:check`. The same source drives native-platform token exports. Alpha color values remain candidates pending actual visual/device acceptance.
+
+### Automated contrast evidence and limits
+
+`npm run contrast:check` fails if any of the currently defined 82 opaque foreground/background combinations falls below the relevant threshold (4.5:1 text or 3:1 focus ring). Pair inventory: text, supporting text, positive/warning/negative on Canvas/Surface/tonal, filled status on-colors, focus on all three surfaces, brand on those surfaces, and brand-container on-colors in Iris/Lagoon/Ember/Moss and both appearances. Its audit deliberately excludes variable-compositor translucent Lens backdrops, images, essential nontext indicators, visual effects and assistive-technology behavior; those must be reviewed separately on actual screens. This audit is alpha evidence, not device-wide acceptance or certification.

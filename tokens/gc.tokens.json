@@ -1,5 +1,4 @@
 {
-  "$schema": "https://design-tokens.github.io/community-group/format/",
   "meta": {
     "name": "GoreeCloud UI",
     "status": "alpha candidate values; roles and material layers follow founder-approved standard",
@@ -10,7 +9,8 @@
       "Cloud Surface",
       "Cloud Lens"
     ],
-    "license": "MIT"
+    "license": "MIT",
+    "format": "goreecloud-ui-alpha-1"
   },
   "foundations": {
     "space": {

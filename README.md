@@ -48,3 +48,11 @@ GC UI is GoreeCloud's sole visual and experience authority. Using this package d
 Design influences are broad usability principles and material aesthetics, not copied Samsung, Google or Apple code, brand assets, proprietary fonts or glyphs. This repository includes original implementation source and no third-party runtime dependencies.
 
 **License:** MIT; copyright 2026 GoreeCloud.
+
+## Browser token integrity
+
+The canonical JSON token file generates the browser stylesheet. Run `npm run tokens:generate` after changing `tokens/gc.tokens.json` and commit the generated `src/tokens.css`. CI and npm packaging require `npm run tokens:check`; inconsistent styles fail closed. Platform exports remain derived independently from the same JSON source.
+
+## Semantic color contrast screening
+
+Run `npm run contrast:check` to test 82 intended solid foreground/background pairs across light, dark, and all four curated accent families. Machine-readable results: `node scripts/audit-contrast.mjs --json`. This is not a WCAG certification: translucent glass against mixed backdrops, nontext icons, screen reader interactions, browser behavior and native devices still require independent inspection.
