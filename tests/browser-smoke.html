@@ -205,7 +205,7 @@ try{
   const comboList=document.querySelector("#test-combobox-list");
   const comboCtrl=initCombobox(comboInput,comboList,{onSelect:(option,value)=>{selectedAccent=value;}});
   comboInput.focus();
-  verify(comboInput.getAttribute("aria-expanded")==="true","combobox opens on focus");
+  verify(comboInput.getAttribute("aria-expanded")==="true","combobox opens on focus "+JSON.stringify({active:document.activeElement?.id,expanded:comboInput.getAttribute("aria-expanded"),hidden:comboList.hidden,connected:comboInput.isConnected,disabled:comboInput.disabled}));
   comboInput.value="mos";comboInput.dispatchEvent(new Event("input",{bubbles:true}));
   verify(document.querySelector("#test-combobox-iris").hidden &&
     !document.querySelector("#test-combobox-moss").hidden,"combobox filters local options");
