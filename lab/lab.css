@@ -301,3 +301,27 @@
   #demo-bottom-nav { display:none; }
   .gc-app #main.gc-bottom-nav-content { padding-block-end:var(--gc-space-8); }
 }
+
+
+/* Official GC UI identity — byte-pinned assets from GoreeCloud/brand-assets. */
+.gc-lab-official-mark { inline-size:36px; block-size:36px; flex:none; object-fit:contain; border-radius:10px; }
+.gc-ui-official-wordmark { max-inline-size:300px; margin-block:0 var(--gc-space-3,12px); }
+.gc-ui-official-wordmark img { inline-size:100%; block-size:auto; object-fit:contain; }
+.gc-ui-wordmark-dark { display:none; }
+:root[data-gc-theme="dark"] .gc-ui-wordmark-dark {display:block;}
+:root[data-gc-theme="dark"] .gc-ui-wordmark-light {display:none;}
+@media(prefers-color-scheme:dark){
+ :root[data-gc-theme="auto"] .gc-ui-wordmark-dark {display:block;}
+ :root[data-gc-theme="auto"] .gc-ui-wordmark-light {display:none;}
+}
+.gc-ui-identity-layout { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.1fr); align-items:center; gap:clamp(20px,4vw,55px); }
+.gc-ui-identity-copy { min-inline-size:0; max-inline-size:60ch; }
+.gc-ui-identity-copy .gc-title { margin-block:8px 18px; text-wrap:balance; }
+.gc-ui-identity-copy .gc-support { font-size:16px; line-height:1.7; }
+.gc-ui-identity-copy .gc-link { display:inline-flex; margin-block-start:12px; min-block-size:44px; align-items:center; text-decoration:underline; text-underline-offset:4px; }
+.gc-ui-identity-artwork { margin:0; overflow:hidden; border:1px solid var(--gc-outline-soft); border-radius:var(--gc-radius-xl,36px); background:#111a37; }
+.gc-ui-identity-artwork img { inline-size:100%; block-size:auto; aspect-ratio:1440/980; display:block; }
+.gc-ui-identity-artwork figcaption { background:#15203b; color:#e5eaff; padding:12px 18px; font-size:13px; line-height:1.5; }
+@media(max-width:900px){ .gc-ui-identity-layout{grid-template-columns:minmax(0,1fr);} .gc-ui-identity-artwork{max-inline-size:720px;} }
+@media(max-width:600px){ .gc-ui-official-wordmark {max-inline-size:240px;} .gc-ui-identity-copy .gc-support {font-size:16px;} .gc-ui-identity-artwork figcaption{padding:12px;} }
+@media(forced-colors:active){.gc-ui-identity-artwork{border:2px solid CanvasText;} }

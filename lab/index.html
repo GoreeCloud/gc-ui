@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/svg+xml" href="../assets/identity/app-icon.svg">
+  <link rel="icon" type="image/x-icon" href="../assets/identity/favicon.ico" sizes="any">
   <title>GoreeCloud UI — Design Lab</title>
   <link rel="stylesheet" href="../src/tokens.css">
   <link rel="stylesheet" href="../src/components.css">
@@ -14,11 +16,12 @@
 <a class="gc-link-skip" href="#main">Skip to content</a>
 <div class="gc-lab-shell gc-navigation-shell gc-premium-shell">
   <aside class="gc-lab-rail gc-navigation-rail gc-surface" aria-label="Design lab navigation">
-    <div class="gc-lab-logo"><span class="gc-lab-mark" aria-hidden="true">✦</span><strong class="gc-navigation-rail__brand-label">GoreeCloud <span>UI</span></strong></div>
+    <div class="gc-lab-logo"><img class="gc-lab-official-mark" src="../assets/identity/app-icon.svg" alt="" width="36" height="36"><strong class="gc-navigation-rail__brand-label">GoreeCloud <span>UI</span></strong></div>
     <button type="button" class="gc-navigation-rail__toggle" data-gc-rail-toggle aria-controls="gc-lab-rail-links" aria-label="Collapse navigation" aria-expanded="true"><gc-icon name="menu"></gc-icon><span class="gc-navigation-rail__toggle-label">Navigation</span></button>
     <p class="gc-support gc-lab-caption gc-navigation-rail__secondary">DESIGN SYSTEM / ALPHA</p>
     <nav id="gc-lab-rail-links" class="gc-nav gc-navigation-rail__links" aria-label="Design lab sections">
       <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon><span class="gc-navigation-rail__label">Overview</span></a>
+      <a href="#identity"><gc-icon name="sparkle"></gc-icon><span class="gc-navigation-rail__label">Identity</span></a>
       <a href="#foundations"><gc-icon name="sparkle"></gc-icon><span class="gc-navigation-rail__label">Foundations</span></a>
       <a href="#premium"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Signature surfaces</span></a>
       <a href="#rounded-windows"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Rounded windows</span></a>
@@ -50,6 +53,10 @@
     <main id="main" class="gc-container gc-lab-main gc-bottom-nav-content">
       <section id="overview" class="gc-lab-hero">
         <div class="gc-lab-hero-copy">
+          <div class="gc-ui-official-wordmark" aria-label="GoreeCloud UI official Aperture Weave identity">
+            <img class="gc-ui-wordmark-light" src="../assets/identity/logo-light.svg" width="710" height="180" alt="GoreeCloud UI Aperture Weave">
+            <img class="gc-ui-wordmark-dark" src="../assets/identity/logo-dark.svg" width="710" height="180" alt="GoreeCloud UI Aperture Weave">
+          </div>
           <div class="gc-cluster"><span class="gc-badge gc-badge--brand">THE NEW INTERFACE LANGUAGE</span><span class="gc-support">Preview / 2026</span></div>
           <h1 class="gc-display">Calm information.<br><span class="gc-lab-highlight">Expressive personality.</span><br>Purposeful depth.</h1>
           <p class="gc-lab-lead">One thoughtful design language for everything GoreeCloud. Ergonomic where it matters. Adaptable by nature. Beautiful without getting in your way.</p>
@@ -70,6 +77,22 @@
             <div class="gc-lab-palette-line"><span></span><span></span><span></span><span></span></div>
           </div>
           <div class="gc-lab-glass gc-lens"><gc-icon name="sparkle"></gc-icon><div><strong>Cloud Lens</strong><small>Clarity with depth</small></div><gc-icon name="check"></gc-icon></div>
+        </div>
+      </section>
+
+      <section id="identity" class="gc-lab-section gc-ui-identity-section" aria-labelledby="identity-heading">
+        <div class="gc-ui-identity-layout">
+          <div class="gc-ui-identity-copy">
+            <p class="gc-lab-eyebrow">OFFICIAL APERTURE WEAVE IDENTITY</p>
+            <h2 class="gc-title" id="identity-heading">One mark. Three layers.</h2>
+            <p class="gc-support gc-readable">The founder-approved GoreeCloud UI symbol expresses Cloud Canvas, Surface, and Lens through three interlocking planes around an open center. The logo, icon, favicon, and interface artwork share a single verified source.</p>
+            <p class="gc-support gc-readable">This is original brand artwork and an experimental design-system lab—not evidence of a stable app or functioning product surfaces.</p>
+            <a class="gc-link" href="https://github.com/GoreeCloud/brand-assets/tree/main/products/gc-ui" target="_blank" rel="noopener noreferrer">View the authoritative identity sources</a>
+          </div>
+          <figure class="gc-ui-identity-artwork">
+            <img src="../assets/identity/interface-constellation.svg" alt="Official GC UI artwork illustrating the Canvas, Surface, and Lens composition as three abstract floating interface panels" width="1440" height="980" loading="lazy">
+            <figcaption>Original Aperture Weave artwork · conceptual interface illustration</figcaption>
+          </figure>
         </div>
       </section>
 

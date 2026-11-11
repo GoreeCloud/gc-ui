@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 980" role="img" aria-labelledby="title desc">
+<title id="title">GoreeCloud UI original interface constellation artwork candidate</title>
+<desc id="desc">Three layered floating interface surfaces form an orbital composition against a calm night-sky field, representing Canvas, Surface, and Lens.</desc>
+<defs>
+ <linearGradient id="night" x1="0" y1="0" x2="1440" y2="980" gradientUnits="userSpaceOnUse"><stop stop-color="#18214D"/><stop offset=".55" stop-color="#111A3A"/><stop offset="1" stop-color="#0C142B"/></linearGradient>
+ <linearGradient id="panel" x1="360" y1="230" x2="1020" y2="800" gradientUnits="userSpaceOnUse"><stop stop-color="#29376A"/><stop offset="1" stop-color="#182341"/></linearGradient>
+ <linearGradient id="prism" x1="305" y1="170" x2="1200" y2="860" gradientUnits="userSpaceOnUse"><stop stop-color="#7977FF"/><stop offset=".48" stop-color="#72ACFF"/><stop offset="1" stop-color="#42DECF"/></linearGradient>
+ <radialGradient id="halo" cx="0" cy="0" r="1" gradientTransform="translate(990 460) rotate(90) scale(500 560)" gradientUnits="userSpaceOnUse"><stop stop-color="#665DFF" stop-opacity=".28"/><stop offset="1" stop-color="#665DFF" stop-opacity="0"/></radialGradient>
+ </defs>
+<rect width="1440" height="980" rx="64" fill="url(#night)"/>
+<rect width="1440" height="980" rx="64" fill="url(#halo)"/>
+<g stroke="#95A9FF" stroke-opacity=".16" fill="none"><ellipse cx="885" cy="516" rx="510" ry="248" transform="rotate(-20 885 516)" stroke-width="2"/><ellipse cx="885" cy="516" rx="404" ry="150" transform="rotate(-20 885 516)" stroke-width="2"/><path d="M85 790c190-142 381-182 575-117s426 2 695-220" stroke-width="2"/></g>
+<g opacity=".5" fill="#B6CCFF"><circle cx="277" cy="306" r="4"/><circle cx="1220" cy="229" r="5"/><circle cx="1161" cy="795" r="3"/><circle cx="371" cy="820" r="3"/></g>
+<!-- Back panel: an understated Surface layer -->
+<g transform="translate(310 150) rotate(-11 425 320)">
+ <rect x="70" y="80" width="750" height="560" rx="52" fill="#111A34" stroke="#7F90F2" stroke-opacity=".28" stroke-width="3"/>
+ <rect x="91" y="101" width="708" height="518" rx="40" fill="url(#panel)"/>
+ <rect x="123" y="130" width="648" height="52" rx="22" fill="#34416D"/>
+ <circle cx="160" cy="157" r="8" fill="#92A5FF"/><circle cx="185" cy="157" r="8" fill="#7ADFD9"/><circle cx="210" cy="157" r="8" fill="#7182B7"/>
+ <rect x="125" y="218" width="166" height="360" rx="29" fill="#1B2A4F" stroke="#7F9BEA" stroke-opacity=".25"/>
+ <rect x="154" y="258" width="111" height="16" rx="8" fill="#9DC0F7" fill-opacity=".56"/>
+ <rect x="154" y="311" width="89" height="11" rx="5.5" fill="#8398C5" fill-opacity=".42"/>
+ <rect x="154" y="353" width="98" height="11" rx="5.5" fill="#8398C5" fill-opacity=".42"/>
+ <rect x="154" y="395" width="73" height="11" rx="5.5" fill="#8398C5" fill-opacity=".42"/>
+ <rect x="325" y="216" width="415" height="172" rx="32" fill="#354573" stroke="#6377B1" stroke-opacity=".35"/>
+ <rect x="354" y="246" width="193" height="16" rx="8" fill="#D5E5FF" fill-opacity=".72"/>
+ <rect x="354" y="284" width="280" height="11" rx="5.5" fill="#96A9DB" fill-opacity=".54"/>
+ <path d="m359 351 61-31 66 14 66-55 75 17 67-38" fill="none" stroke="url(#prism)" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+ <rect x="324" y="420" width="184" height="157" rx="28" fill="#293862"/>
+ <rect x="536" y="420" width="204" height="157" rx="28" fill="#293862"/>
+ <rect x="353" y="451" width="114" height="13" rx="6.5" fill="#A8C5F0" fill-opacity=".58"/>
+ <rect x="565" y="451" width="129" height="13" rx="6.5" fill="#A8C5F0" fill-opacity=".58"/>
+ <rect x="353" y="489" width="97" height="56" rx="16" fill="#786EF2" fill-opacity=".66"/>
+ <rect x="565" y="489" width="144" height="56" rx="16" fill="#56BFE1" fill-opacity=".48"/>
+</g>
+<!-- Foreground floating Lens panel / not a working UI -->
+<g transform="translate(758 433) rotate(8 235 181)">
+ <rect x="0" y="0" width="470" height="362" rx="46" fill="#182444" stroke="#BED4FF" stroke-opacity=".48" stroke-width="3"/>
+ <rect x="19" y="19" width="432" height="324" rx="36" fill="#2F3F6E"/>
+ <rect x="51" y="61" width="368" height="28" rx="14" fill="#6E7EBD" fill-opacity=".47"/>
+ <rect x="51" y="120" width="166" height="178" rx="28" fill="#514DC0" fill-opacity=".78"/>
+ <rect x="239" y="120" width="180" height="178" rx="28" fill="#253660"/>
+ <circle cx="134" cy="190" r="36" fill="none" stroke="#E5ECFF" stroke-opacity=".88" stroke-width="11"/>
+ <path d="m287 242 28-38 36 20 29-66" fill="none" stroke="#63E1D5" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<g transform="translate(150 570) rotate(-10 130 82)">
+ <rect width="280" height="164" rx="34" fill="#243862" stroke="#BCD2FF" stroke-opacity=".52" stroke-width="3"/>
+ <rect x="31" y="31" width="94" height="18" rx="9" fill="#B9CAFF" fill-opacity=".6"/>
+ <rect x="31" y="73" width="218" height="16" rx="8" fill="#7CCEEB" fill-opacity=".5"/>
+ <rect x="31" y="110" width="157" height="16" rx="8" fill="#ACA7FF" fill-opacity=".7"/>
+</g>
+</svg>
