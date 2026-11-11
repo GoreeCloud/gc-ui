@@ -18,6 +18,8 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 There is no tracking, persistence, network access, third-party font, or bundled outside artwork.
 
+The availability-feedback controller now also captures planned form submissions (including Enter and requestSubmit) and planned submitters, without altering implemented forms. Real backend permissions remain independent.
+
 ## Planned-feature feedback (alpha)
 
 The shared `initAvailabilityFeedback()` controller keeps intentionally planned native button/link actions visible and announces truthful, accessible "Not available yet" feedback without side effects. It intercepts only marked native controls and is **not** a security or authorization gate. The reference lab includes a planned Mesh integrations control; other applications are not yet migrated. See [availability-feedback contract and safety boundaries](docs/AVAILABILITY_FEEDBACK.md).
