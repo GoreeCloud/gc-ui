@@ -780,3 +780,28 @@
 .gc-app a.gc-bottom-nav__link[aria-current="page"] { color:var(--gc-on-brand-container); }
 .gc-app a.gc-bottom-nav__link:hover:not([aria-disabled="true"]) { color:var(--gc-text); }
 .gc-app a.gc-bottom-nav__link[aria-current="page"]:hover { color:var(--gc-on-brand-container); }
+
+
+/* Enlarged text and long translations must remain readable instead of ellipsizing
+   destination labels. Overflow stays inside the floating capsule, never the page. */
+.gc-bottom-nav {
+  overflow-x:auto;
+  overflow-y:hidden;
+  scrollbar-width:none;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  scroll-padding-inline:var(--gc-space-3);
+}
+.gc-bottom-nav::-webkit-scrollbar { display:none; }
+.gc-bottom-nav__link {
+  flex:1 0 max-content;
+  max-inline-size:min(45vw,170px);
+  scroll-snap-align:center;
+}
+.gc-bottom-nav__link > span {
+  max-inline-size:100%;
+  overflow:visible;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  text-overflow:clip;
+}
