@@ -183,3 +183,61 @@
   overflow-wrap:anywhere;
   hyphens:auto;
 }
+
+
+/* 400% CSS text reflow for the design-lab's editorial typography sample.
+   Text remains visible, and the decorated frame keeps its own soft corners. */
+@media(max-width:600px) {
+  .gc-lab-foundations > *,
+  .gc-lab-main > .gc-lab-section,
+  .gc-lab-type-sample {
+    min-inline-size:0;
+    max-inline-size:100%;
+  }
+  .gc-lab-type-sample {
+    flex-wrap:wrap;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-type-sample > div,
+  .gc-lab-type-sample :is(b,strong,small) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-floating,
+  .gc-lab-glass {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-floating :is(strong,small,span,div),
+  .gc-lab-glass :is(strong,small,div) {
+    min-inline-size:0;
+    max-inline-size:100%;
+    overflow-wrap:anywhere;
+  }
+}
+
+
+/* Enlarged mobile reading mode: the theme picker must scroll out of the way,
+   not permanently cover a quarter of the viewport over section headings.
+   Use a gentler editorial heading scale while preserving body text scaling. */
+@media(max-width:600px) {
+  .gc-lab-toolbar {
+    position:static;
+  }
+  .gc-lab-section-head :is(h2,h3) {
+    font-size:clamp(28px,calc(.65rem + 12px),72px);
+    line-height:1.13;
+    letter-spacing:-.045em;
+    text-wrap:balance;
+  }
+  .gc-lab-hero h1 {
+    font-size:clamp(36px,calc(1.1rem + 20px),96px);
+    line-height:1.1;
+  }
+  .gc-showcase__title {
+    font-size:clamp(32px,calc(1.1rem + 14px),90px);
+    line-height:1.08;
+  }
+}

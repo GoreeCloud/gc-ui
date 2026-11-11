@@ -68,3 +68,14 @@ Screenshot inspection revealed that a 200% CSS root font-size caused a rounded h
 ## Focused 400% floating dock font-scale QA
 
 Chromium uses the isolated tests/dock-zoom.html browser fixture, applies 400% CSS root font-size at 390px, verifies readable complete destination labels, dock viewport bounds and actual ResizeObserver-driven content clearance, and captures a screenshot. This does not certify browser zoom, platform text scaling or whole-app 400% reflow. A separate full-lab 400% test remains open: earlier CI measured scrollWidth 500px at a 390px viewport in the typography, components, patterns and forms sections. Existing full-lab 200% mobile and 300% desktop gates remain enforced.
+
+
+## 400% full-laboratory CSS-root text reflow regression gate
+
+Issue #28 observed a 390px design lab expanding to approximately 500px at 400% simulated CSS-root font size. The browser matrix now includes full lab 400% / 390px in addition to 200% / 390px and 300% / 900px. It checks the entire document for horizontal overflow, verifies the underlying tab list, sortable table, breadcrumb, definition list and typography sample remain within the viewport, preserves table-only internal horizontal scrolling, and captures 400% screenshots for the four affected sections. Local design-lab typography reflows; shared components enforce min-inline-size 0, line wrapping and their own scrollable surfaces. Root-level overflow clipping and reducing accessible font sizes are prohibited.
+
+This is still **CSS root-font emulation**, not browser zoom or physical Android/iOS accessibility text scaling. Actual zoom, native and assistive-technology acceptance remain separate.
+
+### Screenshot-led mobile typography correction
+
+The first 400% screenshots met geometry assertions but showed the sticky theme toolbar obscuring much of the readable viewport and display headings breaking into tiny character fragments. On narrow screens, the lab's theme toolbar now scrolls naturally rather than staying pinned; section/showcase/hero display typography uses a restrained, root-aware editorial scale while normal body and form text retain the user's enlargement. Chromium asserts the toolbar is non-sticky and the 400% section-title scale remains bounded. This is a design-lab presentation adjustment, not a general reduction of accessible application text.
