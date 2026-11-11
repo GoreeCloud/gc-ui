@@ -286,7 +286,8 @@
 @media (min-width:320px) and (max-width:600px) {
   .gc-lab-hero h1, .gc-lab-hero h1 > span {
     hyphens:manual;
-    overflow-wrap:normal;
+    overflow-wrap:anywhere;
     word-break:normal;
+    text-wrap:wrap;
   }
 }
