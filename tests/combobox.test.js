@@ -117,3 +117,44 @@ test("initialization opens an input that was focused before mounting",()=>{
   assert.equal(f.input.getAttribute("aria-expanded"),"true");
   api.dispose();
 });
+
+test("pending async selection ignores competing keyboard, input and outside clicks",async()=>{
+  const f=fixture();let resolveSelection;const calls=[];
+  const pendingSelection=new Promise(resolve=>{resolveSelection=resolve;});
+  const api=initCombobox(f.input,f.list,{onSelect:(_option,value)=>{
+    calls.push(value);return pendingSelection;
+  }});
+  api.open();
+  f.input.emit("keydown",{key:"ArrowDown"});
+  f.input.emit("keydown",{key:"Enter"});
+  assert.equal(f.input.getAttribute("aria-busy"),"true");
+  f.input.value="Moss";
+  f.input.emit("input");
+  f.input.emit("keydown",{key:"ArrowDown"});
+  f.input.emit("keydown",{key:"Enter"});
+  f.doc.emit("pointerdown",{target:node()});
+  f.list.emit("click",{target:f.choices[2]});
+  assert.deepEqual(calls,["iris"]);
+  assert.equal(f.list.hidden,false);
+  assert.equal(f.choices[0].hidden,false);
+  resolveSelection();
+  for(let i=0;i<5;i++)await Promise.resolve();
+  assert.equal(f.input.value,"Iris");
+  assert.equal(f.choices[0].getAttribute("aria-selected"),"true");
+  assert.equal(f.input.getAttribute("aria-busy"),null);
+  assert.equal(f.list.hidden,true);
+  api.dispose();
+});
+test("dispose during unresolved selection never commits stale value",async()=>{
+  const f=fixture();let resolveSelection;
+  const gate=new Promise(resolve=>{resolveSelection=resolve;});
+  const api=initCombobox(f.input,f.list,{onSelect:()=>gate});
+  api.open();f.input.emit("keydown",{key:"ArrowDown"});
+  f.input.emit("keydown",{key:"Enter"});
+  api.dispose();
+  resolveSelection();
+  for(let i=0;i<5;i++)await Promise.resolve();
+  assert.equal(f.input.value,"");
+  assert.equal(f.choices[0].getAttribute("aria-selected"),"false");
+  assert.equal(f.input.getAttribute("aria-busy"),null);
+});
