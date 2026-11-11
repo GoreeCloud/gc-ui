@@ -407,6 +407,15 @@ try {
       "Badge exceeds enlarged hero viewport: "+JSON.stringify(focusQA));
     assert.ok(focusQA.heroSize<=78,
       "Enlarged hero display exceeds mobile editorial scale: "+JSON.stringify(focusQA));
+    if(mode.width===320) {
+      const selectLayout=JSON.parse(await browser.evaluate(
+        '(()=>{const group=document.querySelector(".gc-lab-toolbar-controls"),'+
+        'select=document.querySelector("#appearance");'+
+        'return JSON.stringify({columns:getComputedStyle(group).gridTemplateColumns,'+
+        'selectWidth:select.getBoundingClientRect().width});})()'));
+      assert.ok(selectLayout.selectWidth>=250,
+        "Compact theme control should use one full-width readable column: "+JSON.stringify(selectLayout));
+    }
     assert.ok(parseFloat(results.font)>=60,"400% root font did not take effect for "+mode.name);
     assert.equal(results.forced,mode.forcedColors,"Forced-colors mode mismatch "+mode.name);
     if(mode.rtl)assert.equal(results.dir,"rtl","RTL direction was not applied");

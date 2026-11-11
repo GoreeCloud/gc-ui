@@ -262,3 +262,15 @@
   }
   .gc-lab-hero h1 { font-size:clamp(36px,calc(.75rem + 16px),78px); }
 }
+
+
+/* Compact screens need a complete native select label, not a cropped word.
+   Stack appearance and accent pickers while keeping the toolbar non-sticky. */
+@media(max-width:360px) {
+  .gc-lab-toolbar-controls { grid-template-columns:minmax(0,1fr); }
+  .gc-lab-toolbar-controls > label[for="appearance"] { grid-column:1; grid-row:1; }
+  .gc-lab-toolbar-controls > #appearance { grid-column:1; grid-row:2; }
+  .gc-lab-toolbar-controls > label[for="accent"] { grid-column:1; grid-row:3; }
+  .gc-lab-toolbar-controls > #accent { grid-column:1; grid-row:4; }
+  .gc-lab-toolbar-controls > .gc-lab-contrast { grid-column:1; grid-row:5; }
+}

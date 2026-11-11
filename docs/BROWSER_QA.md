@@ -84,3 +84,5 @@ The first 400% screenshots met geometry assertions but showed the sticky theme t
 ### 400% cross-mode skip-link and editorial-control acceptance
 
 Visual inspection of 400% dark/RTL, forced-colors and 320px screenshots revealed a hidden accessibility defect: the old fixed negative 100px absolute skip-link offset did not fully hide enlarged link text while unfocused. The shared skip-to-content primitive now moves entirely offscreen by its own rendered height until focused, then becomes visible and outlined. Actual Chromium checks verify hidden/restored skip link geometry under each 400% mode. Design-lab-only select and hero-badge typography scale moderately with root font size without altering body text enlargement; Chromium guards maximum selector/heading size and element viewport bounds. These tests are CSS root-font simulation, not physical zoom certification.
+
+On a 320px compact layout, the two native appearance/accent selectors are now vertically stacked instead of truncating enlarged option text within half-width columns. The 400% compact Chromium gate asserts a full-width select target, while 390px retains the two-column toolbar arrangement.
