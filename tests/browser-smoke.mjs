@@ -136,14 +136,15 @@ async function startBrowser() {
       if (result.exceptionDetails) throw new Error("Browser JS exception: " + JSON.stringify(result.exceptionDetails));
       return result.result?.value;
     };
-    const setViewport = async (width, height, { dark=false, reducedMotion=false }={}) => {
+    const setViewport = async (width, height, { dark=false, reducedMotion=false, forcedColors=false }={}) => {
       await command("Emulation.setDeviceMetricsOverride", {
         width, height, screenWidth:width, screenHeight:height,
         mobile:width<=600, deviceScaleFactor:1
       });
       await command("Emulation.setEmulatedMedia", {
         features:[{ name:"prefers-color-scheme", value:dark ? "dark" : "light" },
-          { name:"prefers-reduced-motion", value:reducedMotion ? "reduce" : "no-preference" }]
+          { name:"prefers-reduced-motion", value:reducedMotion ? "reduce" : "no-preference" },
+          { name:"forced-colors", value:forcedColors ? "active" : "none" }]
       });
     };
     const navigate = async url => {
@@ -258,6 +259,71 @@ try {
   assert.equal(contrast.mode,"more","Contrast preference did not apply");
   assert.equal(contrast.lens,contrast.solid,"High-contrast Lens did not resolve to an opaque surface");
   console.log("Chromium reduced-motion and opaque high-contrast Lens fallbacks passed");
+
+
+  // Accessibility/localization regression: genuine RTL DOM, enlarged root text and forced colors.
+  // These tests are browser-level evidence only; no screen-reader or true browser zoom claim.
+  for (const width of [390,900]) {
+    await browser.setViewport(width,900,{dark:false});
+    await browser.navigate(base+"/lab/");
+    const result=JSON.parse(await browser.evaluate(
+      '(()=>{document.documentElement.dir="rtl";'+
+      'const root=document.documentElement,tree=document.querySelector("#demo-tree");'+
+      'const parent=tree.querySelector(\'[role="treeitem"][aria-expanded="true"]\');'+
+      'const child=parent.querySelector(\'[role="treeitem"]\');'+
+      'parent.focus();parent.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowLeft",bubbles:true}));'+
+      'return JSON.stringify({dir:root.dir,clientWidth:root.clientWidth,scrollWidth:root.scrollWidth,'+
+      'entered:document.activeElement===child,selected:child.getAttribute("aria-selected")});})()'));
+    assert.equal(result.dir,"rtl","RTL direction was not applied");
+    assert.equal(result.entered,true,"RTL ArrowLeft did not enter an expanded tree group");
+    assert.equal(result.selected,"true","RTL tree keyboard selection did not update");
+    assert.ok(result.scrollWidth<=result.clientWidth+1,"RTL lab overflow at "+width+"px: "+JSON.stringify(result));
+    if(width===390) {
+      const shot=await browser.screenshot(join(directory,"gc-ui-rtl-mobile-390.png"));
+      assert.equal(shot.width,390);
+    }
+    console.log("Chromium RTL @ "+width+"px: tree keys and page reflow passed");
+  }
+
+  for (const [width,percent] of [[390,200],[900,300]]) {
+    await browser.setViewport(width,900,{dark:false});
+    await browser.navigate(base+"/lab/");
+    const result=JSON.parse(await browser.evaluate(
+      '((scale)=>{const root=document.documentElement;root.style.fontSize=scale+"%";'+
+      'const label=document.querySelector("#demo-tree .gc-tree__row");'+
+      'label.append(document.createTextNode(" — Internationalized detailed workspace example"));'+
+      'return JSON.stringify({fontSize:getComputedStyle(root).fontSize,'+
+      'clientWidth:root.clientWidth,scrollWidth:root.scrollWidth,treeWidth:document.querySelector("#demo-tree").getBoundingClientRect().width});})('+percent+')'));
+    assert.ok(parseFloat(result.fontSize)>=percent*0.15,"Enlarged CSS root text size did not take effect");
+    if(result.scrollWidth>result.clientWidth+1) {
+      const offenders=JSON.parse(await browser.evaluate(
+        'JSON.stringify([...document.body.querySelectorAll("*")].filter(el=>{const r=el.getBoundingClientRect();'+
+        'const s=getComputedStyle(el);return r.width>0 && s.display!=="none" && r.right>document.documentElement.clientWidth+1;})'+
+        '.slice(0,30).map(el=>{const r=el.getBoundingClientRect();const c=getComputedStyle(el);return {'+
+        'tag:el.tagName,id:el.id,klass:typeof el.className==="string"?el.className.slice(0,80):"",'+
+        'left:Math.round(r.left),right:Math.round(r.right),width:Math.round(r.width),'+
+        'minWidth:c.minWidth,display:c.display,overflowX:c.overflowX};}))'));
+      throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,offenders}));
+    }
+    if(width===390) {
+      const shot=await browser.screenshot(join(directory,"gc-ui-text-200-percent-mobile.png"));
+      assert.equal(shot.width,390);
+    }
+    console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
+  }
+
+  await browser.setViewport(390,844,{dark:true,forcedColors:true});
+  await browser.navigate(base+"/lab/");
+  const forced=JSON.parse(await browser.evaluate(
+    '(()=>{const tree=document.querySelector("#demo-tree");'+
+    'const root=document.documentElement;return JSON.stringify({active:matchMedia("(forced-colors: active)").matches,'+
+    'border:getComputedStyle(tree).borderTopStyle,clientWidth:root.clientWidth,scrollWidth:root.scrollWidth});})()'));
+  assert.equal(forced.active,true,"Chromium forced-colors media emulation did not activate");
+  assert.notEqual(forced.border,"none","Treeview lost its boundary in forced colors");
+  assert.ok(forced.scrollWidth<=forced.clientWidth+1,"Forced-colors mobile layout overflow");
+  const forcedShot=await browser.screenshot(join(directory,"gc-ui-forced-colors-mobile.png"));
+  assert.equal(forcedShot.width,390);
+  console.log("Chromium forced-colors @ 390px: semantic boundary and layout passed");
 
   for (const [filename,width,height,dark] of [
     ["gc-ui-light-desktop.png",1440,900,false],

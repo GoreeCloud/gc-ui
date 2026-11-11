@@ -83,3 +83,23 @@
 @supports not (overflow: clip) {
   @media (max-width: 600px) { .gc-lab-scene { overflow: hidden; } }
 }
+
+
+/* Enlarged-text mobile reflow: action buttons wrap inside their own column,
+   rather than increasing the document's min-content width. */
+@media (max-width: 600px) {
+  .gc-lab-hero-copy > .gc-cluster:last-child {
+    display:grid;
+    grid-template-columns:minmax(0,1fr);
+    inline-size:100%;
+    min-inline-size:0;
+  }
+  .gc-lab-hero-copy > .gc-cluster:last-child > .gc-button {
+    inline-size:100%;
+    max-inline-size:100%;
+    min-inline-size:0;
+    white-space:normal;
+    overflow-wrap:anywhere;
+  }
+  .gc-lab-hero-copy > .gc-cluster:last-child > .gc-button .gc-kbd { flex-shrink:0; }
+}
