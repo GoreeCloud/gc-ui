@@ -95,6 +95,8 @@ const root=document.documentElement;
 const query=new URLSearchParams(location.search);
 const mode=query.get("mode")||"light", accent=query.get("accent")||"iris";
 const passed=[];
+const browserErrors=[];
+window.addEventListener("error", event => browserErrors.push(String(event.message)+" @ "+event.filename+":"+event.lineno));
 function verify(condition,label){if(!condition)throw new Error("Browser check failed: "+label);passed.push(label);}
 try{
   const theme=createThemeController(root,{mode,accent});
@@ -205,7 +207,7 @@ try{
   const comboList=document.querySelector("#test-combobox-list");
   const comboCtrl=initCombobox(comboInput,comboList,{onSelect:(option,value)=>{selectedAccent=value;}});
   comboInput.focus();
-  verify(comboInput.getAttribute("aria-expanded")==="true","combobox opens on focus "+JSON.stringify({active:document.activeElement?.id,expanded:comboInput.getAttribute("aria-expanded"),hidden:comboList.hidden,connected:comboInput.isConnected,disabled:comboInput.disabled}));
+  verify(comboInput.getAttribute("aria-expanded")==="true","combobox opens on focus "+JSON.stringify({active:document.activeElement?.id,expanded:comboInput.getAttribute("aria-expanded"),hidden:comboList.hidden,connected:comboInput.isConnected,disabled:comboInput.disabled,browserErrors}));
   comboInput.value="mos";comboInput.dispatchEvent(new Event("input",{bubbles:true}));
   verify(document.querySelector("#test-combobox-iris").hidden &&
     !document.querySelector("#test-combobox-moss").hidden,"combobox filters local options");
