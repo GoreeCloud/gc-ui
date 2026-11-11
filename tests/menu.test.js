@@ -140,3 +140,60 @@ test("typeahead cycles repeated letters, resets on reopen, and ignores compositi
   assert.equal(f.doc.activeElement,f.items[1]);
   api.dispose();
 });
+
+
+test("late successful menu selection does not steal focus after external dismissal",async()=>{
+  const f=fixture();
+  let finish;
+  const gate=new Promise(resolve=>{finish=resolve;});
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:()=>gate});
+  const outside=node();outside.ownerDocument=f.doc;
+  api.open();
+  f.menu.emit("click",{target:f.items[0]});
+  assert.equal(f.menu.getAttribute("aria-busy"),"true");
+  f.menu.hidePopover();
+  outside.focus();
+  assert.equal(f.doc.activeElement,outside);
+  finish();
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.isOpen(),false);
+  assert.equal(f.doc.activeElement,outside,"Late action must not return focus to the trigger");
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("late selection cannot dismiss a reopened menu session",async()=>{
+  const f=fixture();let finish;
+  const gate=new Promise(resolve=>{finish=resolve});
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:()=>gate});
+  api.open();
+  f.menu.emit("click",{target:f.items[0]});
+  api.close(false);
+  api.open();
+  assert.equal(f.isOpen(),true);
+  finish();
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.isOpen(),true,"First session must not close second session");
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("late rejected selection never announces stale errors after dismissal or disposal",async()=>{
+  for(const terminate of ["outside","dispose"]){
+    const f=fixture();
+    const status={textContent:""};
+    f.menu.querySelector=()=>status;
+    let reject;
+    const gate=new Promise((_resolve,rej)=>{reject=rej});
+    const api=initActionMenu(f.trigger,f.menu,{onSelect:()=>gate});
+    api.open();
+    f.menu.emit("click",{target:f.items[0]});
+    if(terminate==="outside")f.menu.hidePopover();
+    else api.dispose();
+    reject(Error("private remote response"));
+    for(let i=0;i<7;i++)await Promise.resolve();
+    assert.equal(status.textContent,"");
+    assert.equal(f.menu.getAttribute("aria-busy"),null);
+    if(terminate==="outside")api.dispose();
+  }
+});
