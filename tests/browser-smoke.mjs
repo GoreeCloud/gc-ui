@@ -238,6 +238,25 @@ try {
     assert.ok(checks>=12,"Not enough interaction tests: "+checks);
     console.log("Chromium "+mode+"/"+accent+" @ "+width+"px: "+checks+" live DOM checks passed");
   }
+  // A native history update outside the dock must clear aria-current. A
+  // recognized destination must restore exactly one active marker.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const dockRoute=JSON.parse(await browser.evaluate(
+    '(()=>{const nav=document.querySelector("#demo-bottom-nav"),'+
+    'links=[...nav.querySelectorAll("a[href]")];'+
+    'location.hash="#unmatched-route-for-smoke";window.dispatchEvent(new Event("hashchange"));'+
+    'const unknown={current:links.filter(x=>x.hasAttribute("aria-current")).length,'+
+    'active:links.filter(x=>x.hasAttribute("data-gc-active")).length};'+
+    'location.hash="#forms";window.dispatchEvent(new Event("hashchange"));'+
+    'const restored=links.filter(x=>x.getAttribute("aria-current")==="page").map(x=>x.getAttribute("href"));'+
+    'return JSON.stringify({unknown,restored});})()'));
+  assert.deepEqual(dockRoute.unknown,{current:0,active:0},
+    "Unknown history route leaked stale bottom-navigation selection");
+  assert.deepEqual(dockRoute.restored,["#forms"],
+    "Known history route failed to restore unique current destination");
+  console.log("Chromium bottom navigation: unmatched route clears selection, known route restores it");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
