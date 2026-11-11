@@ -60,3 +60,17 @@ test("color freedom is a founder requirement, while accessible semantic roles st
   assert.ok(load("lab/index.html").includes("Four optional example accent families"));
   assert.ok(!load("lab/index.html").includes("Four approved accent families"));
 });
+
+test("skip link moves by its own height, not a fixed negative offset",()=>{
+  const css=load("src/components.css");
+  const start=css.indexOf("/* Skip-to-content must remain outside");
+  const rule=css.slice(start);
+  assert.ok(start>=0);
+  assert.ok(rule.includes("translateY(calc(-100% - 12px))"));
+  assert.ok(rule.includes(".gc-app .gc-link-skip:focus"));
+  assert.ok(rule.includes("transform:none"));
+  assert.ok(rule.includes("forced-colors:active"));
+  const lab=load("lab/lab.css");
+  assert.ok(lab.includes(".gc-app .gc-lab-toolbar .gc-lab-select"));
+  assert.ok(lab.includes(".gc-lab-hero-copy > .gc-cluster:first-child .gc-badge"));
+});
