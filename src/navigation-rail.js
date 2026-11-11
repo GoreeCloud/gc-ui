@@ -2,7 +2,7 @@
  * Native links preserve ordinary navigation and server-owned access control.
  * No persistence, network calls, analytics, or dependence on icon libraries.
  */
-export function initNavigationRail(rail, { collapsed } = {}) {
+export function initNavigationRail(rail, { collapsed, unknownRoute = "preserve" } = {}) {
   if (!rail || !["aside","nav"].includes(rail.tagName?.toLowerCase()) ||
       typeof rail.querySelector !== "function") {
     throw new TypeError("Navigation rail requires a native aside or nav element");
@@ -21,6 +21,9 @@ export function initNavigationRail(rail, { collapsed } = {}) {
   }
   if (collapsed !== undefined && typeof collapsed !== "boolean") {
     throw new TypeError("collapsed must be a boolean when provided");
+  }
+  if (!["preserve", "clear"].includes(unknownRoute)) {
+    throw new RangeError("unknownRoute must be preserve or clear");
   }
   const links = [...nav.querySelectorAll("a[href]")];
   if (!links.length || links.some(link => !link.querySelector(".gc-navigation-rail__label")?.textContent?.trim())) {
@@ -79,7 +82,10 @@ export function initNavigationRail(rail, { collapsed } = {}) {
           url.hash === current.hash;
       } catch { return false; }
     });
-    if (!selected) return; // Preserve consumer selection on an unmatched route.
+    // Preserve consumer-owned server state by default for legacy routers.
+    // A router that wants URL-truthful ARIA state may opt in to clearing an
+    // old current marker when the route is not a known enabled destination.
+    if (!selected && unknownRoute === "preserve") return;
     for (const link of links) {
       if (link === selected) link.setAttribute("aria-current","page");
       else link.removeAttribute("aria-current");

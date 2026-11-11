@@ -104,3 +104,39 @@ test("responsive rail CSS preserves phone bottom navigation and contrast rules",
   assert.ok(lab.includes("#demo-bottom-nav { display:none; }"));
   assert.ok(lab.includes(".gc-lab-rail[data-gc-collapsed=\"true\"]"));
 });
+
+
+test("optional URL-truthful rail mode clears stale current state and recovers on known route",()=>{
+  const f=fixture();
+  f.win.location.hash="#not-a-destination";
+  f.links[0].setAttribute("aria-current","page");
+  f.links[2].setAttribute("aria-current","page"); // disabled markup is stale
+  const ctrl=initNavigationRail(f.rail,{unknownRoute:"clear"});
+  assert.ok(f.links.every(link=>link.getAttribute("aria-current")===null),
+    "Unknown cold URL must not announce a stale active destination");
+  f.win.location.hash="#settings";
+  f.win.emit("hashchange");
+  assert.equal(f.links[1].getAttribute("aria-current"),"page");
+  assert.equal(f.links[0].getAttribute("aria-current"),null);
+  f.win.location.hash="#disabled";
+  f.win.emit("popstate");
+  assert.ok(f.links.every(link=>link.getAttribute("aria-current")===null),
+    "Disabled destination must not be announced as current");
+  f.win.location.hash="#overview";
+  ctrl.sync();
+  assert.equal(f.links[0].getAttribute("aria-current"),"page");
+  ctrl.dispose();
+});
+
+test("legacy rail selection survives unknown URL by default and invalid mode fails early",()=>{
+  const f=fixture();
+  f.win.location.hash="#not-registered";
+  f.links[1].setAttribute("aria-current","page");
+  const ctrl=f.init();
+  assert.equal(f.links[1].getAttribute("aria-current"),"page");
+  ctrl.dispose();
+
+  const bad=fixture();
+  assert.throws(()=>initNavigationRail(bad.rail,{unknownRoute:"trust-me"}),RangeError);
+  assert.equal(bad.win.listeners.size,0);
+});
