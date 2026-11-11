@@ -108,6 +108,8 @@ All GoreeCloud application windows must have rounded corners. The web library pr
 
 The responsive gc-bottom-nav capsule floats above device gesture insets, with native links, original icons, visible labels, selected-state contrast, mobile reflow and an optional keyboard/route controller. See docs/COMPONENTS.md. Actual routing authorization and native OS navigation remain consumer responsibilities.
 
+When a browser `hashchange` or `popstate` leaves the dock's known same-origin destinations, the controller now clears stale `aria-current` and active styling. A recognized route restores exactly one current destination. This updates only presentation; consumers remain responsible for real navigation, history state, and authorization.
+
 ### Color choice is application- and user-directed
 
 **There is no required GoreeCloud brand/system hue.** Iris, Lagoon, Ember and Moss are optional example accents; each app or authorized user may choose an independent hue through semantic color roles and custom-accent support. Iris is only the alpha no-configuration fallback for demonstrations, not a cross-product mandate. Contrast and accessibility rules still apply. See [Design language](docs/DESIGN_LANGUAGE.md).
