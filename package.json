@@ -16,8 +16,20 @@
     "./tokens": "./tokens/gc.tokens.json",
     "./tokens.css": "./src/tokens.css",
     "./components.css": "./src/components.css",
-    "./icons": "./src/icons.js",
-    "./theme": "./src/theme.js"
+    "./icons": {
+      "types": "./src/icons.d.ts",
+      "default": "./src/icons.js"
+    },
+    "./theme": {
+      "types": "./src/theme.d.ts",
+      "default": "./src/theme.js"
+    },
+    "./patterns": {
+      "types": "./src/patterns.d.ts",
+      "default": "./src/patterns.js"
+    },
+    "./icon-sprite": "./assets/gc-icons.svg",
+    "./icon-registry": "./assets/gc-icons.json"
   },
   "files": [
     "src/",
@@ -27,17 +39,20 @@
     "LICENSE",
     "README.md",
     "platform/generated/",
-    "scripts/"
+    "scripts/",
+    "assets/"
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check scripts/generate-web-tokens.mjs && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
+    "check": "node --check src/index.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
-    "prepack": "npm run tokens:check && npm run export:platform",
+    "prepack": "npm run icons:check && npm run tokens:check && npm run export:platform",
     "tokens:generate": "node scripts/generate-web-tokens.mjs --write",
     "tokens:check": "node scripts/generate-web-tokens.mjs --check",
-    "contrast:check": "node scripts/audit-contrast.mjs --check"
+    "contrast:check": "node scripts/audit-contrast.mjs --check",
+    "icons:generate": "node scripts/build-icon-assets.mjs --write",
+    "icons:check": "node scripts/build-icon-assets.mjs --check"
   },
   "sideEffects": [
     "**/*.css"

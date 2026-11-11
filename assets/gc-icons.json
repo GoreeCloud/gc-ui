@@ -1,0 +1,179 @@
+{
+  "schemaVersion": 1,
+  "authority": "GoreeCloud UI",
+  "style": "original-uniform-24px-line-glyphs",
+  "viewBox": "0 0 24 24",
+  "strokeWidth": 1.8,
+  "count": 42,
+  "defaultAccessibility": "decorative; label icon-only controls",
+  "icons": [
+    {
+      "name": "home",
+      "symbolId": "gc-icon-home"
+    },
+    {
+      "name": "search",
+      "symbolId": "gc-icon-search"
+    },
+    {
+      "name": "menu",
+      "symbolId": "gc-icon-menu"
+    },
+    {
+      "name": "close",
+      "symbolId": "gc-icon-close"
+    },
+    {
+      "name": "chevronDown",
+      "symbolId": "gc-icon-chevronDown"
+    },
+    {
+      "name": "chevronRight",
+      "symbolId": "gc-icon-chevronRight"
+    },
+    {
+      "name": "arrowLeft",
+      "symbolId": "gc-icon-arrowLeft"
+    },
+    {
+      "name": "arrowRight",
+      "symbolId": "gc-icon-arrowRight"
+    },
+    {
+      "name": "check",
+      "symbolId": "gc-icon-check"
+    },
+    {
+      "name": "plus",
+      "symbolId": "gc-icon-plus"
+    },
+    {
+      "name": "minus",
+      "symbolId": "gc-icon-minus"
+    },
+    {
+      "name": "info",
+      "symbolId": "gc-icon-info"
+    },
+    {
+      "name": "alert",
+      "symbolId": "gc-icon-alert"
+    },
+    {
+      "name": "error",
+      "symbolId": "gc-icon-error"
+    },
+    {
+      "name": "settings",
+      "symbolId": "gc-icon-settings"
+    },
+    {
+      "name": "sun",
+      "symbolId": "gc-icon-sun"
+    },
+    {
+      "name": "moon",
+      "symbolId": "gc-icon-moon"
+    },
+    {
+      "name": "user",
+      "symbolId": "gc-icon-user"
+    },
+    {
+      "name": "users",
+      "symbolId": "gc-icon-users"
+    },
+    {
+      "name": "folder",
+      "symbolId": "gc-icon-folder"
+    },
+    {
+      "name": "file",
+      "symbolId": "gc-icon-file"
+    },
+    {
+      "name": "download",
+      "symbolId": "gc-icon-download"
+    },
+    {
+      "name": "upload",
+      "symbolId": "gc-icon-upload"
+    },
+    {
+      "name": "share",
+      "symbolId": "gc-icon-share"
+    },
+    {
+      "name": "edit",
+      "symbolId": "gc-icon-edit"
+    },
+    {
+      "name": "trash",
+      "symbolId": "gc-icon-trash"
+    },
+    {
+      "name": "lock",
+      "symbolId": "gc-icon-lock"
+    },
+    {
+      "name": "shield",
+      "symbolId": "gc-icon-shield"
+    },
+    {
+      "name": "cloud",
+      "symbolId": "gc-icon-cloud"
+    },
+    {
+      "name": "sync",
+      "symbolId": "gc-icon-sync"
+    },
+    {
+      "name": "bell",
+      "symbolId": "gc-icon-bell"
+    },
+    {
+      "name": "calendar",
+      "symbolId": "gc-icon-calendar"
+    },
+    {
+      "name": "clock",
+      "symbolId": "gc-icon-clock"
+    },
+    {
+      "name": "filter",
+      "symbolId": "gc-icon-filter"
+    },
+    {
+      "name": "grid",
+      "symbolId": "gc-icon-grid"
+    },
+    {
+      "name": "list",
+      "symbolId": "gc-icon-list"
+    },
+    {
+      "name": "more",
+      "symbolId": "gc-icon-more"
+    },
+    {
+      "name": "eye",
+      "symbolId": "gc-icon-eye"
+    },
+    {
+      "name": "eyeOff",
+      "symbolId": "gc-icon-eyeOff"
+    },
+    {
+      "name": "help",
+      "symbolId": "gc-icon-help"
+    },
+    {
+      "name": "external",
+      "symbolId": "gc-icon-external"
+    },
+    {
+      "name": "sparkle",
+      "symbolId": "gc-icon-sparkle"
+    }
+  ]
+}
