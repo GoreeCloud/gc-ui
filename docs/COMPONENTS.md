@@ -181,3 +181,7 @@ An editable combobox does not select a suggestion while the input method is comp
 ### Command palette disposal and modal lifecycle (alpha)
 
 Calling `dispose()` on an open palette closes its native modal before detaching listeners and clears stale busy state. If the previously focused invoker still exists and focus belonged to the dialog, it restores the invoker; an explicit focus move to another control is preserved. This also handles browsers that queue the native `close` event rather than dispatching it immediately. A late pending action cannot announce a stale failure or reopen a disposed modal. This is local UI lifetime behavior, not an application authorization check.
+
+### Reopened command palette session isolation (alpha)
+
+A pending command action blocks repeat activation only inside the dialog session that started it. Closing and reopening the palette allows the new session to launch its own command even while an older callback remains unresolved. Old completions and failures cannot close, mark busy, or overwrite status in the new session; the current session retains its truthful busy/error state. The controller does not cancel the old action or undo any side effects: application-specific authorization, cancellation, and idempotency remain the product owner's responsibility.

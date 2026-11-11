@@ -319,3 +319,49 @@ test("teardown restores focus when the browser queues native close asynchronousl
   f.dialog.emit("close"); // late native close must not reclaim focus
   assert.equal(f.owner.activeElement,f.invoker);
 });
+
+test("reopened command palette can activate while previous session callback is still pending",async()=>{
+  const f=asyncPaletteFixture(),setters=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>new Promise(resolve=>setters.push(resolve))});
+  api.open();f.activate();
+  assert.equal(setters.length,1);
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true");
+  api.close();
+  api.open();
+  assert.equal(f.dialog.getAttribute("aria-busy"),null,"New session cannot inherit old busy state");
+  f.activate();
+  assert.equal(setters.length,2,"Old action must not block a different dialog session");
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true");
+  setters[0]();
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.dialog.open,true,"Old completion must not close the new dialog");
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true",
+    "Old callback must not clear the newer action's busy state");
+  setters[1]();
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.dialog.open,false,"Current action still closes its own session");
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("rejected stale command cannot corrupt status or busy state of reopened session",async()=>{
+  const f=asyncPaletteFixture(),rejects=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>new Promise((_resolve,reject)=>rejects.push(reject))});
+  api.open();f.activate();
+  api.close();
+  api.open();f.activate();
+  assert.equal(rejects.length,2);
+  const statusBefore=f.status.textContent;
+  rejects[0](Error("confidential previous-session failure"));
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,statusBefore);
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true");
+  rejects[1](Error("current session failed"));
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,"Action could not be completed. Try again.");
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  assert.equal(f.dialog.open,true);
+  api.dispose();
+});
