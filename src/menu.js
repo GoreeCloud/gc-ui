@@ -28,6 +28,9 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   const status = menu.querySelector("[data-gc-menu-status]");
   let disposed = false;
   let busy = false;
+  // A late asynchronous action must not reclaim focus or announce errors after
+  // the person dismissed this popover or opened a fresh session.
+  let session = 0;
   const isOpen = () => menu.matches(":popover-open");
   const enabledItems = () => items.filter(item => !item.disabled && !item.hidden &&
     item.getAttribute("aria-disabled") !== "true");
@@ -52,14 +55,20 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const open = (last = false) => {
     if (disposed) throw new Error("Action menu has been disposed");
-    if (!isOpen()) menu.showPopover();
+    if (!isOpen()) {
+      session += 1;
+      menu.showPopover();
+    }
     trigger.setAttribute("aria-expanded", "true");
     position();
     const choices = enabledItems();
     (last ? choices[choices.length - 1] : choices[0])?.focus();
   };
   const close = (returnFocus = true) => {
-    if (isOpen()) menu.hidePopover();
+    if (isOpen()) {
+      session += 1;
+      menu.hidePopover();
+    }
     typeahead = "";
     typeaheadAt = 0;
     trigger.setAttribute("aria-expanded", "false");
@@ -68,6 +77,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   const activate = async item => {
     if (disposed || busy || !isOpen() || !enabledItems().includes(item)) return;
     busy = true;
+    const activationSession = session;
     if (status) status.textContent = "";
     try {
       const outcome = onSelect(item);
@@ -75,9 +85,12 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
         menu.setAttribute("aria-busy", "true");
         await outcome;
       }
-      if (!disposed) close(true);
+      if (!disposed && isOpen() && session === activationSession) close(true);
     } catch {
-      if (status) status.textContent = "Action could not be completed. Try again.";
+      // An externally closed popover cannot write stale failure text.
+      if (!disposed && isOpen() && session === activationSession && status) {
+        status.textContent = "Action could not be completed. Try again.";
+      }
     } finally {
       busy = false;
       menu.removeAttribute("aria-busy");
@@ -135,7 +148,11 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const onToggle = () => {
     const showing = isOpen();
-    if (!showing) { typeahead = ""; typeaheadAt = 0; }
+    if (!showing) {
+      session += 1;
+      typeahead = "";
+      typeaheadAt = 0;
+    }
     trigger.setAttribute("aria-expanded", String(showing));
     // Outside click should preserve where the person moved focus.
     if (!showing && menu.contains(doc.activeElement)) trigger.focus();
