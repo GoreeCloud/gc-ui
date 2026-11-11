@@ -74,3 +74,10 @@ Every GoreeCloud application window, including compact, modal and maximized fram
 ## Floating application bottom navigation
 
 Use a rounded floating Cloud Lens bottom destination bar whenever a GoreeCloud app has multiple primary destinations. Preserve gesture safe areas, semantic links, RTL keyboard navigation and opaque high-contrast fallbacks. Refer to WINDOWS_AND_NAVIGATION.md and COMPONENTS.md; native adapters are not implemented yet.
+
+
+## Founder color freedom — no mandatory GoreeCloud hue
+
+GoreeCloud UI has **no mandatory global/default/system/brand color**. Individual apps, services, window surfaces, icons and other authorized visual contexts may choose **any** hue independently, while respecting user-provided color choices and privacy preferences. Iris, Lagoon, Ember and Moss are curated **optional demonstration presets**, not a compulsory identity palette. The alpha theme utility currently uses Iris only as a no-configuration technical/demo fallback; consumer applications should explicitly choose or derive their own permitted palette. The lab's Iris default is not a universal brand requirement.
+
+All choices must still preserve semantic foreground/background roles, text and focus contrast, forced-colors and reduced-transparency support, and independent light/dark behavior. Current local deriveAccent supports opaque hex custom colors with contrast adjustment, not comprehensive wallpaper-derived color or native platform harmonization. The written design authority retains its 100 active UX principles; this clarifies the founder's separate no-mandated-hue decision rather than replacing it.

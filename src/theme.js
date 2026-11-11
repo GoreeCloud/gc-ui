@@ -1,3 +1,7 @@
+/**
+ * Preset Iris is an alpha technical fallback, NOT a mandatory GoreeCloud brand hue.
+ * Consumers may choose per-app presets or authorized custom colors independently.
+ */
 /** Browser/SSR safe GoreeCloud UI theme utilities. No telemetry or persistence. */
 export const ACCENTS = Object.freeze(["iris", "lagoon", "ember", "moss"]);
 export const MODES = Object.freeze(["light", "dark", "auto"]);

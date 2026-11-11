@@ -100,5 +100,18 @@
     "keyboard": "arrow-home-end-rtl-aware",
     "nativeEnforcement": "requires-platform-adapters",
     "nativeStatus": "unverified"
+  },
+  "colorPolicy": {
+    "mandatoryGlobalHue": false,
+    "curatedPresets": "optional-illustrative",
+    "independentApplicationChoices": true,
+    "userAccentOverrides": "honor-when-authorized",
+    "accessibility": [
+      "semantic-color-roles",
+      "contrast",
+      "visible-focus",
+      "forced-colors-fallbacks"
+    ],
+    "nativeProductAdoption": "not-audited"
   }
 }
