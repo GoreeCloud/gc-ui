@@ -17,6 +17,10 @@ Delivery sequence: (1) review/freeze token schema; (2) generate native assets fr
 
 GC UI is presentation only. GoreeCloud Identity owns authorization, GoreeShield owns **privacy**, Wardveil owns **cybersecurity**, GoreeCloud Mesh owns interoperability. Do not silently read credentials, perform telemetry or assume those systems are implemented by a UI component. No independent native SDK claims should appear until real code/tests exist.
 
+## Mandatory rounded windows and bottom navigation
+
+Every native GoreeCloud window must have rounded corners, including maximized frames and secondary dialogs; integrate canonical XL/LG shape roles with documented OS APIs. If the compositor forbids outer corner changes, retain an in-app rounded frame and document the exception. A native floating bottom navigation bar must respect system gestures, insets, keyboard and accessibility semantics. No native adapter for these requirements is implemented or certified here.
+
 ## Founder floating-navigation direction
 
 GoreeCloud apps with multiple primary destinations require a rounded floating bottom navigation capsule. Native adapters must respect system gesture insets, screen-reader semantics and keyboard/remote focus. The web alpha implementation is not a native SDK; builds and real device testing remain open.

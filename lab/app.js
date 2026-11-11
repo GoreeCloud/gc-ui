@@ -150,6 +150,5 @@ initCombobox(document.querySelector("#demo-combobox"),
     }
   });
 
-
 // Real local hash destinations; the floating dock tracks URL history automatically.
 initBottomNavigation(document.querySelector("#demo-bottom-nav"));

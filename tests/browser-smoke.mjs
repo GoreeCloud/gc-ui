@@ -325,6 +325,21 @@ try {
   assert.equal(forcedShot.width,390);
   console.log("Chromium forced-colors @ 390px: semantic boundary and layout passed");
 
+  // Verify every window corner in the full lab, including simulated desktop/compact layouts.
+  for(const width of [320,390,900,1440]) {
+    await browser.setViewport(width,844,{dark:width===390});
+    await browser.navigate(base+"/lab/");
+    const actual=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,window=document.querySelector("#demo-window");'+
+      'const s=getComputedStyle(window);return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+      'radii:[s.borderTopLeftRadius,s.borderTopRightRadius,s.borderBottomRightRadius,s.borderBottomLeftRadius],'+
+      'rect:window.getBoundingClientRect().width});})()'));
+    assert.ok(actual.radii.every(v=>parseFloat(v)>=18),"Unrounded window corners "+JSON.stringify(actual));
+    assert.ok(actual.scroll<=actual.width+1,"Rounded window page overflow "+JSON.stringify(actual));
+    assert.ok(actual.rect<=actual.width,"Window escaped viewport "+JSON.stringify(actual));
+    console.log("Chromium rounded windows @ "+width+"px: four corners and reflow passed");
+  }
+
   // Floating dock geometry, readable active state and reserved content space.
   for(const width of [320,390,900,1440]) {
     await browser.setViewport(width,844,{dark:width===390});

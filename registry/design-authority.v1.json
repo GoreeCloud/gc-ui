@@ -17,7 +17,8 @@
     "components": "src/components.css",
     "componentDocs": "docs/COMPONENTS.md",
     "designDocs": "docs/DESIGN_LANGUAGE.md",
-    "visualQualityDocs": "docs/VISUAL_QUALITY.md"
+    "visualQualityDocs": "docs/VISUAL_QUALITY.md",
+    "windowsAndNavigationDocs": "docs/WINDOWS_AND_NAVIGATION.md"
   },
   "materials": [
     "Cloud Canvas",
@@ -82,6 +83,14 @@
       "original-visual-language",
       "no-inert-interactions"
     ]
+  },
+  "windowShape": {
+    "requirement": "rounded-all-windows",
+    "webComponents": "implemented-alpha",
+    "radiusRole": "radius.xl",
+    "compactRadiusRole": "radius.lg",
+    "nativeEnforcement": "requires-platform-adapters",
+    "nativeStatus": "unverified"
   },
   "bottomNavigation": {
     "requirement": "floating-at-application-bottom",
