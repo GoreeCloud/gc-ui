@@ -117,3 +117,32 @@ test("async and malformed decisions never authorize native route changes",async(
  assert.equal(f.links[0].getAttribute("aria-current"),"page");
  ctrl.dispose();
 });
+
+test("adaptive content clearance follows actual dock height and restores prior setting",()=>{
+ const f=fixture();
+ const styleMap=new Map([["--gc-bottom-nav-clearance","64px"]]);
+ const content={ownerDocument:f.doc,style:{
+   setProperty:(k,v)=>styleMap.set(k,v),
+   getPropertyValue:k=>styleMap.get(k)||"",
+   removeProperty:k=>styleMap.delete(k)
+ }};
+ let height=120;f.nav.getBoundingClientRect=()=>({height});
+ f.win.getComputedStyle=()=>({bottom:"24px"});
+ let observer=null;
+ f.win.ResizeObserver=class {
+   constructor(callback){this.callback=callback;observer=this}
+   observe(el){assert.equal(el,f.nav)}
+   disconnect(){this.stopped=true}
+ };
+ const ctrl=initBottomNavigation(f.nav,{content});
+ assert.equal(styleMap.get("--gc-bottom-nav-clearance"),"160px");
+ height=220;observer.callback();
+ assert.equal(styleMap.get("--gc-bottom-nav-clearance"),"260px");
+ ctrl.dispose();
+ assert.equal(styleMap.get("--gc-bottom-nav-clearance"),"64px");
+ assert.equal(observer.stopped,true);
+});
+test("invalid clearance target is rejected before listeners are attached",()=>{
+ const f=fixture();
+ assert.throws(()=>initBottomNavigation(f.nav,{content:{style:{setProperty(){}}}}),TypeError);
+});

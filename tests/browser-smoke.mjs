@@ -285,7 +285,7 @@ try {
     console.log("Chromium RTL @ "+width+"px: tree keys and page reflow passed");
   }
 
-  for (const [width,percent] of [[390,200],[900,300]]) {
+  for (const [width,percent] of [[390,200],[390,400],[900,300]]) {
     await browser.setViewport(width,900,{dark:false});
     await browser.navigate(base+"/lab/");
     const result=JSON.parse(await browser.evaluate(
@@ -306,7 +306,7 @@ try {
       throw new Error("Enlarged text overflow "+width+"px / "+percent+"%: "+JSON.stringify({result,offenders}));
     }
     if(width===390) {
-      const shot=await browser.screenshot(join(directory,"gc-ui-text-200-percent-mobile.png"));
+      const shot=await browser.screenshot(join(directory,"gc-ui-text-"+percent+"-percent-mobile.png"));
       assert.equal(shot.width,390);
     }
     const visibleText=JSON.parse(await browser.evaluate(
@@ -325,6 +325,15 @@ try {
       "Floating navigation labels truncated at enlarged text: "+JSON.stringify(visibleText));
     assert.ok(visibleText.dockScroll>=visibleText.dockWidth,
       "Floating dock must retain an internally scrollable overflow surface");
+
+    await delay(100); // let ResizeObserver update real content clearance after text reflow
+    const dockSpace=JSON.parse(await browser.evaluate(
+      '(()=>{const nav=document.querySelector("#demo-bottom-nav"),main=document.querySelector("#main");'+
+      'const s=getComputedStyle(nav),m=getComputedStyle(main);'+
+      'return JSON.stringify({height:nav.getBoundingClientRect().height,bottom:parseFloat(s.bottom),'+
+      'reserved:parseFloat(m.paddingBottom),variable:main.style.getPropertyValue("--gc-bottom-nav-clearance")});})()'));
+    assert.ok(dockSpace.reserved>=dockSpace.height+dockSpace.bottom+12,
+      "Floating dock can obscure content under enlarged text: "+JSON.stringify(dockSpace));
 
     console.log("Chromium CSS root text "+percent+"% @ "+width+"px: no horizontal overflow");
   }

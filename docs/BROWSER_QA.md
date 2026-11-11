@@ -63,3 +63,7 @@ Chromium verifies actual floating dock layout at 320, 390, 900 and 1440 CSS widt
 ### Visible large-text acceptance (not only document width)
 
 Screenshot inspection revealed that a 200% CSS root font-size caused a rounded hero heading to be visually clipped and bottom navigation labels to be shortened with ellipses. The lab now allows actual long-word reflow; the floating dock keeps entire visible labels, scrolling internally only when enlarged destinations exceed its capsule width. The browser gate asserts actual hero scroll geometry and complete label text layout at enlarged font sizes in addition to root document overflow. True browser zoom, OS text scaling and screen-reader/device acceptance remain separate.
+
+### 400% CSS root-font stress test and adaptive clearance
+
+The lab now also exercises a 390px viewport with 400% CSS root font scaling. The dock's observed height and computed bottom inset must fit within the main region's effective padding, with no clipped hero text or ellipsis-shortened labels. This is CSS root-font stress testing, not real 400% browser zoom or physical OS text scaling; those separate acceptance gates remain open.
