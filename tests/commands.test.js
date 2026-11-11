@@ -272,3 +272,50 @@ test("dynamic command refresh remains idempotent, handles empty list and later r
   added.emit("click");
   assert.equal(actions.length,2,"Disposal must unregister dynamically registered commands");
 });
+
+test("disposing an open command dialog removes its modal and returns invoker focus",()=>{
+  const f=asyncPaletteFixture(),actions=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:button=>actions.push(button)});
+  api.open();
+  assert.equal(f.dialog.open,true);
+  api.dispose();
+  assert.equal(f.dialog.open,false,"Disposed palette cannot remain a blocking modal");
+  assert.equal(f.owner.activeElement,f.invoker);
+  f.activate();
+  assert.deepEqual(actions,[],"Disposed palette cannot activate stale commands");
+  assert.throws(()=>api.open(),/disposed/);
+});
+
+test("disposing respects external focus and pending failures cannot restore stale modal",async()=>{
+  const f=asyncPaletteFixture();let rejectAction;
+  const gate=new Promise((_resolve,reject)=>{rejectAction=reject});
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:()=>gate});
+  api.open();
+  f.activate();
+  assert.equal(f.dialog.getAttribute("aria-busy"),"true");
+  f.outside.focus();
+  api.dispose();
+  assert.equal(f.dialog.open,false);
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  assert.equal(f.owner.activeElement,f.outside);
+  const priorStatus=f.status.textContent;
+  rejectAction(Error("private action failure"));
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,priorStatus);
+  assert.equal(f.owner.activeElement,f.outside);
+});
+
+test("teardown restores focus when the browser queues native close asynchronously",()=>{
+  const f=asyncPaletteFixture();
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect(){}});
+  f.dialog.close=()=>{f.dialog.open=false;}; // close event scheduled, not immediate
+  api.open();
+  api.dispose();
+  assert.equal(f.dialog.open,false);
+  assert.equal(f.owner.activeElement,f.invoker);
+  f.dialog.emit("close"); // late native close must not reclaim focus
+  assert.equal(f.owner.activeElement,f.invoker);
+});
