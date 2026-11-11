@@ -8,6 +8,7 @@ function node(attrs={}) {
     attrs:{...attrs},disabled:false,hidden:false,style:{},offsetWidth:220,offsetHeight:140,focused:false,
     getAttribute(name){return this.attrs[name]??null},
     setAttribute(name,value){this.attrs[name]=String(value)},
+    removeAttribute(name){delete this.attrs[name]},
     addEventListener(name,fn){const set=listeners.get(name)||new Set();set.add(fn);listeners.set(name,set)},
     removeEventListener(name,fn){listeners.get(name)?.delete(fn)},
     focus(){this.focused=true; if(this.ownerDocument)this.ownerDocument.activeElement=this},
