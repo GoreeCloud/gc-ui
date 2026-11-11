@@ -104,3 +104,7 @@ The responsive gc-bottom-nav capsule floats above device gesture insets, with na
 ### Color choice is application- and user-directed
 
 **There is no required GoreeCloud brand/system hue.** Iris, Lagoon, Ember and Moss are optional example accents; each app or authorized user may choose an independent hue through semantic color roles and custom-accent support. Iris is only the alpha no-configuration fallback for demonstrations, not a cross-product mandate. Contrast and accessibility rules still apply. See [Design language](docs/DESIGN_LANGUAGE.md).
+
+### Floating navigation in rounded application windows
+
+For a desktop-like app frame, pair `gc-window--app-shell` with `gc-bottom-nav--window` and a scrollable `gc-window__body`; choose this **instead of** the viewport-fixed dock for a consuming app. The component library does not impose a window height or claim native OS chrome support. See [Windows and navigation](docs/WINDOWS_AND_NAVIGATION.md).

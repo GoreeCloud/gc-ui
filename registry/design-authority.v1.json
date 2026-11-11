@@ -90,7 +90,8 @@
     "radiusRole": "radius.xl",
     "compactRadiusRole": "radius.lg",
     "nativeEnforcement": "requires-platform-adapters",
-    "nativeStatus": "unverified"
+    "nativeStatus": "unverified",
+    "webAppShell": "gc-window--app-shell"
   },
   "bottomNavigation": {
     "requirement": "floating-at-application-bottom",
@@ -99,7 +100,14 @@
     "safeArea": "required",
     "keyboard": "arrow-home-end-rtl-aware",
     "nativeEnforcement": "requires-platform-adapters",
-    "nativeStatus": "unverified"
+    "nativeStatus": "unverified",
+    "webContexts": [
+      "viewport",
+      "window-scoped"
+    ],
+    "webWindowShellClass": "gc-window--app-shell",
+    "webWindowDockClass": "gc-bottom-nav--window",
+    "consumerPattern": "choose-one-context-no-duplicate-docks"
   },
   "colorPolicy": {
     "mandatoryGlobalHue": false,

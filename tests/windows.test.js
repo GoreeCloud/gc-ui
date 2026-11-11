@@ -46,3 +46,14 @@ test("reusable app shell does not force design-lab-only window dimensions",()=>{
  assert.match(windowBlock,/min-block-size:0/);
  assert.ok(load("lab/lab.css").includes("#demo-window { block-size:min(560px,70dvh)"));
 });
+
+test("machine-readable design authority distinguishes viewport vs window dock",()=>{
+ const registry=JSON.parse(load("registry/design-authority.v1.json"));
+ assert.deepEqual(registry.bottomNavigation.webContexts,["viewport","window-scoped"]);
+ assert.equal(registry.bottomNavigation.webWindowShellClass,"gc-window--app-shell");
+ assert.equal(registry.bottomNavigation.webWindowDockClass,"gc-bottom-nav--window");
+ assert.equal(registry.bottomNavigation.consumerPattern,"choose-one-context-no-duplicate-docks");
+ assert.equal(registry.windowShape.webAppShell,"gc-window--app-shell");
+ assert.equal(registry.bottomNavigation.nativeStatus,"unverified");
+ assert.equal(registry.nativeSdkStatus,"not-implemented");
+});
