@@ -37,3 +37,12 @@ test("window-owned navigation is a real distinct, bounded app-shell pattern",()=
  assert.ok(lab.includes('aria-label="Window preview destinations"'));
  assert.ok(lab.includes("gc-window--app-shell"));
 });
+
+test("reusable app shell does not force design-lab-only window dimensions",()=>{
+ const css=load("src/components.css");
+ const start=css.indexOf("/* Window-owned Cloud Lens dock:");
+ const windowBlock=css.slice(start).split("}")[0];
+ assert.ok(!windowBlock.includes("block-size:min("));
+ assert.match(windowBlock,/min-block-size:0/);
+ assert.ok(load("lab/lab.css").includes("#demo-window { block-size:min(560px,70dvh)"));
+});

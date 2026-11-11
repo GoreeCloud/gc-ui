@@ -927,10 +927,9 @@
 
 /* Window-owned Cloud Lens dock: no viewport positioning or inset leakage. */
 .gc-app .gc-window--app-shell {
-  block-size:min(720px,85dvh);
-  min-block-size:350px;
   display:flex;
   flex-direction:column;
+  min-block-size:0;
 }
 .gc-app .gc-window--app-shell > .gc-window__titlebar { flex:0 0 auto; }
 .gc-app .gc-window--app-shell > .gc-window__body {
@@ -954,7 +953,7 @@
   padding:var(--gc-space-2);
 }
 @media(max-width:600px) {
-  .gc-app .gc-window--app-shell { block-size:min(660px,85dvh); }
+  
   .gc-app .gc-window--app-shell > .gc-bottom-nav--window {
     inline-size:calc(100% - 2 * var(--gc-space-3));
     max-inline-size:calc(100% - 2 * var(--gc-space-3));
