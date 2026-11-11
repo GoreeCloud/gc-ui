@@ -325,6 +325,30 @@ try {
   },"Chromium combobox Home/End semantics regressed");
   console.log("Chromium combobox: Home/End preserve text navigation when closed");
 
+  // Real native <dialog> lifecycle: an earlier async command must not close
+  // a later reopened palette or steal its active focus.
+  await browser.setViewport(390,844);
+  await browser.navigate(base+"/lab/");
+  const commandAsync=JSON.parse(await browser.evaluate(
+    '(async()=>{const {initCommandPalette}=await import("/src/commands.js");'+
+    'const dialog=document.createElement("dialog"),input=document.createElement("input"),'+
+    'action=document.createElement("button"),invoker=document.createElement("button");'+
+    'input.type="search";action.dataset.gcCommand="1";action.textContent="Synthetic command";'+
+    'dialog.append(input,action);document.body.append(invoker,dialog);'+
+    'let finish;const pending=new Promise(resolve=>{finish=resolve});'+
+    'const palette=initCommandPalette(dialog,{shortcut:false,onSelect:()=>pending});'+
+    'invoker.focus();palette.open();action.click();'+
+    'const wasBusy=dialog.getAttribute("aria-busy")==="true";'+
+    'palette.close();palette.open();finish();'+
+    'await Promise.resolve();await Promise.resolve();await Promise.resolve();'+
+    'const result={wasBusy,open:dialog.open,focused:document.activeElement===input,'+
+    'clean:dialog.getAttribute("aria-busy")===null};'+
+    'palette.close();palette.dispose();dialog.remove();invoker.remove();'+
+    'return JSON.stringify(result);})()'));
+  assert.deepEqual(commandAsync,{wasBusy:true,open:true,focused:true,clean:true},
+    "Chromium stale command callback dismissed a newer native dialog session");
+  console.log("Chromium native command palette: stale async completion cannot dismiss a new session");
+
   const directory=join(root,"qa/screenshots");
   await mkdir(directory,{recursive:true});
 
