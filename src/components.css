@@ -256,3 +256,64 @@
   .gc-table th[aria-sort="ascending"] .gc-sort-button,
   .gc-table th[aria-sort="descending"] .gc-sort-button { color:Highlight; }
 }
+
+
+/* GoreeCloud UI hierarchical navigation: Canvas/Surface, semantic focus and touch sizing. */
+.gc-tree, .gc-tree [role="group"] {
+  margin:0;
+  padding:0;
+  list-style:none;
+}
+.gc-tree {
+  border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-lg);
+  padding:var(--gc-space-2);
+  background:var(--gc-surface);
+  color:var(--gc-text);
+  inline-size:100%;
+  min-inline-size:0;
+}
+.gc-tree [role="group"] { padding-inline-start:var(--gc-space-5); }
+.gc-tree [role="group"][hidden] { display:none !important; }
+.gc-tree [role="treeitem"] { min-inline-size:0; outline:0; }
+.gc-tree__row {
+  display:flex;
+  gap:var(--gc-space-3);
+  align-items:center;
+  min-block-size:var(--gc-touch-min);
+  padding:var(--gc-space-2) var(--gc-space-3);
+  border-radius:var(--gc-radius-sm);
+  cursor:pointer;
+  color:var(--gc-text);
+  overflow-wrap:anywhere;
+}
+.gc-tree [role="treeitem"][aria-expanded] > .gc-tree__row::before {
+  content:"▸";
+  color:var(--gc-text-soft);
+  font-size:var(--gc-type-label);
+  inline-size:1em;
+}
+.gc-tree [role="treeitem"][aria-expanded="true"] > .gc-tree__row::before { transform:rotate(90deg); }
+[dir="rtl"] .gc-tree [role="treeitem"][aria-expanded="true"] > .gc-tree__row::before { transform:rotate(-90deg); }
+.gc-tree [role="treeitem"]:not([aria-expanded]) > .gc-tree__row { padding-inline-start:calc(var(--gc-space-3) + 1em); }
+.gc-tree [role="treeitem"][aria-selected="true"] > .gc-tree__row {
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+  font-weight:700;
+}
+.gc-tree [role="treeitem"]:focus-visible > .gc-tree__row {
+  outline:2px solid var(--gc-focus-ring);
+  outline-offset:-2px;
+}
+.gc-tree [role="treeitem"][aria-disabled="true"] > .gc-tree__row {
+  opacity:var(--gc-opacity-disabled);
+  cursor:not-allowed;
+}
+.gc-tree [role="treeitem"]:not([aria-disabled="true"]) > .gc-tree__row:hover {
+  background:var(--gc-surface-tonal);
+}
+.gc-tree [role="treeitem"][aria-selected="true"] > .gc-tree__row:hover { background:var(--gc-brand-container); }
+@media (forced-colors:active) {
+  .gc-tree { border:1px solid CanvasText; }
+  .gc-tree [role="treeitem"][aria-selected="true"] > .gc-tree__row { border:1px solid Highlight; }
+}

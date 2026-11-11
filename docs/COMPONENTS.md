@@ -98,3 +98,15 @@ Place real column-header buttons inside native th elements with scope=col and da
 Clicking a header toggles ascending/descending and sets aria-sort on the appropriate th; other headers receive none. The returned controller exposes sortBy(columnIndex, direction), reset() and dispose(). Equal values retain their original row order; blank or invalid values remain last even in descending order. Text uses Intl.Collator with numeric substrings; numbers use strict decimal parsing; dates accept only real ISO YYYY-MM-DD calendar dates. Use data-sort-value on cells for formatted currency and localized dates.
 
 This is an intentionally client-only enhancement. It reorders the initial tbody rows and does not fetch, paginate or sort unseen records. Reinitialize after replacing rows. The consumer must implement server-side sorting, authorization, filtering, pagination, safe rendering and actual assistive-technology testing independently.
+
+## Hierarchical treeview for settings, files and application navigation
+
+initTreeView(tree, { onSelect, onActivate, locale }) is available from @goreecloud/ui/tree or the root module. It enhances a labeled role=tree container holding role=treeitem nodes with nested role=group subtrees. Provide visually labeled .gc-tree__row children; use data-gc-tree-label or aria-label for typeahead. Only branch nodes use aria-expanded, and aria-selected marks the single active item.
+
+Up/Down and Home/End move through visible enabled nodes with one roving Tab stop. Left/Right expand and collapse or enter/leave a subtree, reversed for RTL. First-letter typeahead moves to a matching visible item. Click or Enter/Space selects and activates leaves; branches expand/collapse. Use onSelect for navigation state and onActivate for actual actions. Both callbacks are consumer-owned.
+
+Hidden, disabled and aria-disabled entries are skipped. Collapsing a branch whose descendant is selected restores focus to the parent. The controller provides select(item), expand(item), collapse(item), and dispose(). Reinitialize after adding/removing nodes.
+
+Semantic token CSS uses Cloud Surface and brand container, 44px minimum rows, logical indentation, visible keyboard focus and forced-colors boundaries. Do not nest extra keyboard-interactive controls inside treeitem. Render untrusted labels with textContent instead of raw HTML.
+
+No filesystem permissions, network access, persistence, virtualization or external authorization are provided. Assistive technology, large-tree performance, RTL, native OS and real-device acceptance remain unverified.

@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 const root = document.documentElement;
@@ -121,3 +121,16 @@ const sorted = initSortableTable(document.querySelector("#demo-sort-table"), {
   }
 });
 document.querySelector("#demo-sort-reset").addEventListener("click", () => sorted.reset());
+
+
+// Hierarchical keyboard navigation over local inert sample data.
+const demoTreeStatus = document.querySelector("#demo-tree-status");
+initTreeView(document.querySelector("#demo-tree"), {
+  onSelect(item) {
+    demoTreeStatus.textContent = item.getAttribute("data-gc-tree-label") + " selected locally.";
+  },
+  onActivate(item) {
+    const label = item.getAttribute("data-gc-tree-label");
+    toast(label + " example activated locally. No file was opened.", { region, kind:"info" });
+  }
+});
