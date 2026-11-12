@@ -29,7 +29,7 @@ export declare function matchesCommand(query: string, label: string, keywords?: 
 export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
   trigger?: HTMLElement | null;
   shortcut?: boolean;
-  onSelect: (button: HTMLButtonElement) => void | Promise<void>;
+  onSelect: (button: HTMLButtonElement, context: { signal: AbortSignal }) => void | Promise<void>;
 }): { open: () => void; close: () => void; refresh: () => void; dispose: () => void };
 
 export declare function initActionMenu(trigger: HTMLElement, menu: HTMLElement, options: {
