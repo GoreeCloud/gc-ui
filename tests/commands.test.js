@@ -435,3 +435,79 @@ test("successful synchronous and asynchronous command actions are not falsely ma
   assert.equal(completedSignal.aborted,false,"Success must not look like cancellation");
   other.dispose();
 });
+
+test("opt-in command observer tracks native additions, removal and disabled state",async()=>{
+  const f=asyncPaletteFixture(),actions=[];
+  let observer;
+  class FakeObserver{
+    constructor(callback){this.callback=callback;observer=this;this.disconnected=false;}
+    observe(target,options){this.target=target;this.options=options;}
+    disconnect(){this.disconnected=true;}
+    emit(records){this.callback(records);}
+  }
+  f.owner.defaultView={MutationObserver:FakeObserver};
+  const api=initCommandPalette(f.dialog,{
+    shortcut:false,observeMutations:true,onSelect:button=>actions.push(button),
+  });
+  assert.equal(observer.target,f.dialog);
+  assert.equal(observer.options.subtree,true);
+  assert.equal(observer.options.attributeFilter.includes("disabled"),true);
+  f.invoker.focus();api.open();
+  f.input.value="mesh";f.input.emit("input");
+  assert.equal(f.status.textContent,"No matching commands");
+  const row=f.make(),added=f.make();
+  added.ownerDocument=f.owner;added.textContent="Mesh operations";
+  added.closest=()=>row;
+  added.matches=selector=>selector==='button[data-gc-command]';
+  f.commands.push(added);
+  observer.emit([{type:"childList",target:f.dialog,addedNodes:[added],removedNodes:[]}]);
+  assert.equal(f.status.textContent,"1 command available");
+  added.disabled=true;
+  observer.emit([{type:"attributes",target:added,attributeName:"disabled"}]);
+  assert.equal(f.status.textContent,"0 commands available");
+  added.disabled=false;
+  observer.emit([{type:"attributes",target:added,attributeName:"disabled"}]);
+  added.focus();f.commands.splice(f.commands.indexOf(added),1);
+  observer.emit([{type:"childList",target:f.dialog,addedNodes:[],removedNodes:[added]}]);
+  assert.equal(f.status.textContent,"No matching commands");
+  assert.equal(f.owner.activeElement,f.input);
+  added.emit("click");assert.deepEqual(actions,[]);
+  api.dispose();
+  assert.equal(observer.disconnected,true);
+});
+
+test("command observer ignores status mutations and unfinished IME composition",()=>{
+  const f=asyncPaletteFixture();
+  let observer,reads=0;
+  class FakeObserver{
+    constructor(callback){this.callback=callback;observer=this;}
+    observe(){} disconnect(){this.disconnected=true;}
+    emit(records){this.callback(records);}
+  }
+  f.owner.defaultView={MutationObserver:FakeObserver};
+  const original=f.dialog.querySelectorAll;
+  f.dialog.querySelectorAll=(selector)=>{reads++;return original(selector);};
+  const api=initCommandPalette(f.dialog,{observeMutations:true,shortcut:false,onSelect(){}});
+  const before=reads;
+  observer.emit([{type:"childList",target:f.status,
+    addedNodes:[{textContent:"1 command available"}],removedNodes:[]}]);
+  assert.equal(reads,before,"Own status mutations cannot retrigger a refresh");
+  f.input.emit("compositionstart");
+  observer.emit([{type:"attributes",target:f.button,attributeName:"disabled"}]);
+  assert.equal(reads,before,"Preedit input cannot cause automatic filtering");
+  f.input.emit("compositionend");
+  assert.equal(reads,before+1);
+  api.dispose();
+  observer.emit([{type:"attributes",target:f.button,attributeName:"disabled"}]);
+  assert.equal(reads,before+1,"Disposed observer must not refresh");
+});
+
+test("command observer validates opt-in configuration before registering listeners",()=>{
+  const f=asyncPaletteFixture();
+  assert.throws(()=>initCommandPalette(f.dialog,{
+    shortcut:false,observeMutations:"yes",onSelect(){},
+  }),TypeError);
+  assert.throws(()=>initCommandPalette(f.dialog,{
+    shortcut:false,observeMutations:true,onSelect(){},
+  }),/MutationObserver/);
+});

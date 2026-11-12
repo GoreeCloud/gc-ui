@@ -29,6 +29,7 @@ export declare function matchesCommand(query: string, label: string, keywords?: 
 export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
   trigger?: HTMLElement | null;
   shortcut?: boolean;
+  observeMutations?: boolean;
   onSelect: (button: HTMLButtonElement, context: { signal: AbortSignal }) => void | Promise<void>;
 }): { open: () => void; close: () => void; refresh: () => void; dispose: () => void };
 
