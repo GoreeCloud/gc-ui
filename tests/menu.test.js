@@ -337,3 +337,21 @@ test("successful synchronous menu selection keeps its signal un-aborted",()=>{
   api.dispose();
   assert.equal(signals[0].aborted,false);
 });
+
+test("native beforetoggle synchronously aborts pending work before delayed toggle notification",()=>{
+  const f=fixture(),signals=[];
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:(_item,{signal})=>{
+    signals.push(signal);return new Promise(()=>{});
+  }});
+  api.open();
+  f.menu.emit("click",{target:f.items[0]});
+  f.menu.emit("beforetoggle",{oldState:"open",newState:"closed"});
+  assert.equal(signals[0].aborted,true);
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  f.menu.hidePopover(); // toggle may arrive later in an actual browser
+  api.open();
+  assert.equal(f.isOpen(),true);
+  api.dispose();
+  f.menu.emit("beforetoggle",{newState:"closed"});
+  assert.equal(f.isOpen(),false);
+});
