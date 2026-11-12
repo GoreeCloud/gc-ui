@@ -365,3 +365,73 @@ test("rejected stale command cannot corrupt status or busy state of reopened ses
   assert.equal(f.dialog.open,true);
   api.dispose();
 });
+
+test("command callbacks receive a cancellable session signal on explicit and native close",async()=>{
+  const f=asyncPaletteFixture(),contexts=[],resolvers=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:(_button,context)=>{
+    contexts.push(context);
+    return new Promise(resolve=>resolvers.push(resolve));
+  }});
+  api.open();f.activate();
+  assert.equal(contexts.length,1);
+  assert.equal(contexts[0].signal.aborted,false);
+  api.close();
+  assert.equal(contexts[0].signal.aborted,true,"Explicit dismissal cancels pending session");
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+  api.open();f.activate();
+  assert.equal(contexts.length,2);
+  assert.equal(contexts[1].signal.aborted,false,"New session uses a fresh signal");
+  f.dialog.open=false;
+  f.dialog.emit("close");
+  assert.equal(contexts[1].signal.aborted,true,"Native Escape dismissal must cancel");
+  for(const resolve of resolvers)resolve();
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.dialog.open,false);
+  api.dispose();
+});
+
+test("disposal aborts active command while keeping unrelated focus and preventing stale status",async()=>{
+  const f=asyncPaletteFixture(),contexts=[];
+  let rejectOperation;
+  const pending=new Promise((_resolve,reject)=>{rejectOperation=reject;});
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:(_button,context)=>{
+    contexts.push(context);return pending;
+  }});
+  api.open();f.activate();
+  f.outside.focus();
+  api.dispose();
+  assert.equal(contexts[0].signal.aborted,true);
+  assert.equal(f.dialog.open,false);
+  assert.equal(f.owner.activeElement,f.outside);
+  const original=f.status.textContent;
+  rejectOperation(Error("sensitive detail must not leak"));
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.status.textContent,original);
+  assert.equal(f.dialog.getAttribute("aria-busy"),null);
+});
+
+test("successful synchronous and asynchronous command actions are not falsely marked cancelled",async()=>{
+  const f=asyncPaletteFixture(),signals=[];
+  f.invoker.focus();
+  const api=initCommandPalette(f.dialog,{shortcut:false,onSelect:(_button,{signal})=>{
+    signals.push(signal);
+  }});
+  api.open();f.activate();
+  assert.equal(f.dialog.open,false);
+  assert.equal(signals[0].aborted,false);
+  api.dispose();
+  assert.equal(signals[0].aborted,false);
+  const second=asyncPaletteFixture();let release,completedSignal;
+  const gate=new Promise(resolve=>{release=resolve});
+  const other=initCommandPalette(second.dialog,{shortcut:false,onSelect:(_button,{signal})=>{
+    completedSignal=signal;return gate;
+  }});
+  other.open();second.activate();
+  release();
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(second.dialog.open,false);
+  assert.equal(completedSignal.aborted,false,"Success must not look like cancellation");
+  other.dispose();
+});
