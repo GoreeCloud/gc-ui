@@ -11,15 +11,16 @@ export function matchesCommand(query, label, keywords = "") {
 
 /**
  * @param {HTMLDialogElement} dialog - Native modal with labeled search input and command buttons.
- * @param {{trigger?:HTMLElement,shortcut?:boolean,onSelect:(button:HTMLButtonElement,context:{signal:AbortSignal})=>void|Promise<void>}} options
+ * @param {{trigger?:HTMLElement,shortcut?:boolean,observeMutations?:boolean,onSelect:(button:HTMLButtonElement,context:{signal:AbortSignal})=>void|Promise<void>}} options
  * @returns {{open:()=>void,close:()=>void,refresh:()=>void,dispose:()=>void}}
  */
-export function initCommandPalette(dialog, { trigger = null, shortcut = true, onSelect } = {}) {
+export function initCommandPalette(dialog, { trigger = null, shortcut = true, observeMutations = false, onSelect } = {}) {
   if (!dialog || typeof dialog.showModal !== "function" || typeof dialog.close !== "function" ||
       typeof dialog.querySelector !== "function") {
     throw new TypeError("Command palette requires a native dialog");
   }
   if (typeof onSelect !== "function") throw new TypeError("Command palette requires an onSelect callback");
+  if (typeof observeMutations !== "boolean") throw new TypeError("observeMutations must be a boolean");
   const input = dialog.querySelector('input[type="search"]');
   if (!input || typeof input.addEventListener !== "function") {
     throw new Error("Command palette requires an input[type=search]");
@@ -29,12 +30,17 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   if (trigger && typeof trigger.addEventListener !== "function") throw new TypeError("Trigger must be a button-like element");
   const owner = dialog.ownerDocument;
   if (!owner || typeof owner.addEventListener !== "function") throw new TypeError("Dialog must be attached to a document");
+  const MutationObserverType = owner.defaultView?.MutationObserver;
+  if (observeMutations && typeof MutationObserverType !== "function") {
+    throw new TypeError("Command palette mutation observation requires MutationObserver");
+  }
   const status = dialog.querySelector("[data-gc-command-status]");
   const empty = dialog.querySelector("[data-gc-command-empty]");
   // Commands may be added or removed when a product enables a new local
   // capability. Keep bindings and focus in sync with the current native DOM.
   let entries = [];
   const boundButtons = new Set();
+  let commandObserver = null;
   let destroyed = false, pendingSession = null, activeController = null, restoreFocus = null;
   let composing = false;
   // A pending action must not close or announce errors in a later dialog
@@ -203,6 +209,28 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
       previous.focus();
     }
   };
+  // Optional native-DOM synchronization. Ignore our own status text and row
+  // visibility updates to avoid recursive MutationObserver refresh cycles.
+  const touchesCommand = node => {
+    const el = node?.nodeType === 3 ? node.parentElement : node;
+    return !!(el?.matches?.('button[data-gc-command]') ||
+      el?.closest?.('button[data-gc-command]') ||
+      el?.querySelector?.('button[data-gc-command]'));
+  };
+  const onMutations = records => {
+    if (destroyed || composing) return;
+    for (const change of records) {
+      if (change.type === "attributes" ||
+          (change.type === "characterData" && touchesCommand(change.target)) ||
+          (change.type === "childList" &&
+           (touchesCommand(change.target) ||
+            Array.from(change.addedNodes || []).some(touchesCommand) ||
+            Array.from(change.removedNodes || []).some(touchesCommand)))) {
+        refresh();
+        return;
+      }
+    }
+  };
   input.addEventListener("input", onInput);
   input.addEventListener("compositionstart", onCompositionStart);
   input.addEventListener("compositionend", onCompositionEnd);
@@ -211,6 +239,13 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   if (shortcut) owner.addEventListener("keydown", onGlobalKey);
   dialog.addEventListener("close", onClose);
   refresh();
+  if (observeMutations) {
+    commandObserver = new MutationObserverType(onMutations);
+    commandObserver.observe(dialog, {
+      subtree: true, childList: true, characterData: true, attributes: true,
+      attributeFilter: ["data-gc-command", "data-gc-keywords", "aria-disabled", "disabled"],
+    });
+  }
   return Object.freeze({
     open, close, refresh,
     dispose() {
@@ -231,6 +266,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
       abortPending(); // Also cover already-closed dialogs awaiting close events.
       restoreFocus = null;
       destroyed = true;
+      commandObserver?.disconnect();
+      commandObserver = null;
       dialog.removeAttribute("aria-busy");
       input.removeEventListener("input", onInput);
       input.removeEventListener("compositionstart", onCompositionStart);
