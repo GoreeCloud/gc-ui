@@ -182,6 +182,11 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     const item = event.target?.closest?.('button[role="menuitem"]');
     if (items.includes(item)) void activate(item);
   };
+  const onBeforeToggle = event => {
+    // Native beforetoggle fires synchronously. Do not allow a delayed toggle
+    // event or rapid reopen to leave old cooperative work un-cancelled.
+    if (event.newState === "closed") abortPending();
+  };
   const onToggle = () => {
     const showing = isOpen();
     if (!showing) {
@@ -205,6 +210,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   menu.addEventListener("compositionstart", onCompositionStart);
   menu.addEventListener("compositionend", onCompositionEnd);
   menu.addEventListener("click", onMenuClick);
+  menu.addEventListener("beforetoggle", onBeforeToggle);
   menu.addEventListener("toggle", onToggle);
   view.addEventListener("resize", position);
   doc.addEventListener("scroll", onScroll, true);
@@ -222,6 +228,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
       menu.removeEventListener("compositionstart", onCompositionStart);
       menu.removeEventListener("compositionend", onCompositionEnd);
       menu.removeEventListener("click", onMenuClick);
+      menu.removeEventListener("beforetoggle", onBeforeToggle);
       menu.removeEventListener("toggle", onToggle);
       view.removeEventListener("resize", position);
       doc.removeEventListener("scroll", onScroll, true);
