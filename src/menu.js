@@ -27,13 +27,20 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   if (!items.length) throw new Error("Action menu needs at least one menuitem button");
   const status = menu.querySelector("[data-gc-menu-status]");
   let disposed = false;
-  let busy = false;
+  let pendingSession = null, activeController = null;
   // A late asynchronous action must not reclaim focus or announce errors after
   // the person dismissed this popover or opened a fresh session.
   let session = 0;
   const isOpen = () => menu.matches(":popover-open");
   const enabledItems = () => items.filter(item => !item.disabled && !item.hidden &&
     item.getAttribute("aria-disabled") !== "true");
+  const abortPending = () => {
+    const controller = activeController;
+    activeController = null;
+    pendingSession = null;
+    menu.removeAttribute("aria-busy");
+    if (controller && !controller.signal.aborted) controller.abort();
+  };
   const position = () => {
     if (!isOpen()) return;
     const rect = trigger.getBoundingClientRect();
@@ -57,6 +64,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     if (disposed) throw new Error("Action menu has been disposed");
     if (!isOpen()) {
       session += 1;
+      menu.removeAttribute("aria-busy");
       menu.showPopover();
     }
     trigger.setAttribute("aria-expanded", "true");
@@ -66,6 +74,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   };
   const close = (returnFocus = true) => {
     if (isOpen()) {
+      abortPending(); // Consumers must honor the cooperative cancellation signal.
       session += 1;
       menu.hidePopover();
     }
@@ -76,25 +85,36 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     if (returnFocus && !disposed) trigger.focus();
   };
   const activate = async item => {
-    if (disposed || busy || !isOpen() || !enabledItems().includes(item)) return;
-    busy = true;
+    if (disposed || pendingSession === session || !isOpen() ||
+        !enabledItems().includes(item)) return;
     const activationSession = session;
+    const controller = new AbortController();
+    pendingSession = activationSession;
+    activeController = controller;
     if (status) status.textContent = "";
     try {
-      const outcome = onSelect(item);
+      const outcome = onSelect(item, { signal: controller.signal });
       if (outcome && typeof outcome.then === "function") {
-        menu.setAttribute("aria-busy", "true");
+        if (session === activationSession) menu.setAttribute("aria-busy", "true");
         await outcome;
       }
-      if (!disposed && isOpen() && session === activationSession) close(true);
+      if (!disposed && isOpen() && session === activationSession) {
+        // Successful completion must not look like cancellation.
+        if (activeController === controller) activeController = null;
+        close(true);
+      }
     } catch {
-      // An externally closed popover cannot write stale failure text.
+      // Dismissed or previous-session actions cannot announce stale errors.
       if (!disposed && isOpen() && session === activationSession && status) {
         status.textContent = "Action could not be completed. Try again.";
       }
     } finally {
-      busy = false;
-      menu.removeAttribute("aria-busy");
+      // Do not clear or abort the currently active action in a newer session.
+      if (activeController === controller) activeController = null;
+      if (pendingSession === activationSession) {
+        pendingSession = null;
+        menu.removeAttribute("aria-busy");
+      }
     }
   };
   const onTriggerClick = () => {
@@ -162,9 +182,15 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     const item = event.target?.closest?.('button[role="menuitem"]');
     if (items.includes(item)) void activate(item);
   };
+  const onBeforeToggle = event => {
+    // Native beforetoggle fires synchronously. Do not allow a delayed toggle
+    // event or rapid reopen to leave old cooperative work un-cancelled.
+    if (event.newState === "closed") abortPending();
+  };
   const onToggle = () => {
     const showing = isOpen();
     if (!showing) {
+      abortPending(); // Native Escape/light-dismiss invalidates this action.
       session += 1;
       typeahead = "";
       typeaheadAt = 0;
@@ -172,7 +198,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     }
     trigger.setAttribute("aria-expanded", String(showing));
     // Outside click should preserve where the person moved focus.
-    if (!showing && menu.contains(doc.activeElement)) trigger.focus();
+    if (!showing && !disposed && menu.contains(doc.activeElement)) trigger.focus();
   };
   const onScroll = () => { if (isOpen()) close(false); };
   trigger.setAttribute("aria-haspopup", "menu");
@@ -184,6 +210,7 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
   menu.addEventListener("compositionstart", onCompositionStart);
   menu.addEventListener("compositionend", onCompositionEnd);
   menu.addEventListener("click", onMenuClick);
+  menu.addEventListener("beforetoggle", onBeforeToggle);
   menu.addEventListener("toggle", onToggle);
   view.addEventListener("resize", position);
   doc.addEventListener("scroll", onScroll, true);
@@ -191,15 +218,17 @@ export function initActionMenu(trigger, menu, { onSelect } = {}) {
     open, close,
     dispose() {
       if (disposed) return;
-      // Close before changing state to avoid a visible orphaned popover.
-      if (isOpen()) menu.hidePopover();
+      // Stop the UI owner first; native hide still closes the top-layer popup.
       disposed = true;
+      abortPending();
+      if (isOpen()) menu.hidePopover();
       trigger.removeEventListener("click", onTriggerClick);
       trigger.removeEventListener("keydown", onTriggerKey);
       menu.removeEventListener("keydown", onMenuKey);
       menu.removeEventListener("compositionstart", onCompositionStart);
       menu.removeEventListener("compositionend", onCompositionEnd);
       menu.removeEventListener("click", onMenuClick);
+      menu.removeEventListener("beforetoggle", onBeforeToggle);
       menu.removeEventListener("toggle", onToggle);
       view.removeEventListener("resize", position);
       doc.removeEventListener("scroll", onScroll, true);

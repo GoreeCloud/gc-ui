@@ -255,3 +255,103 @@ test("native external dismissal clears stale composition before a new menu sessi
   assert.equal(f.doc.activeElement,f.items[1]);
   api.dispose();
 });
+
+test("menu dismiss and reopen aborts previous action without blocking new session",async()=>{
+  const f=fixture(),signals=[],resolvers=[];
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:(_item,{signal})=>{
+    signals.push(signal);
+    return new Promise(resolve=>resolvers.push(resolve));
+  }});
+  api.open();
+  f.menu.emit("click",{target:f.items[0]});
+  assert.equal(signals.length,1);
+  assert.equal(signals[0].aborted,false);
+  assert.equal(f.menu.getAttribute("aria-busy"),"true");
+  f.menu.hidePopover(); // native outside click / Escape
+  assert.equal(signals[0].aborted,true);
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  api.open();
+  f.menu.emit("click",{target:f.items[1]});
+  assert.equal(signals.length,2,"New session may run independently of old work");
+  assert.equal(signals[1].aborted,false);
+  assert.equal(f.menu.getAttribute("aria-busy"),"true");
+  resolvers[0]();
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.isOpen(),true,"Old completion cannot dismiss the new session");
+  assert.equal(f.menu.getAttribute("aria-busy"),"true","Old completion cannot clear new busy state");
+  resolvers[1]();
+  for(let i=0;i<6;i++)await Promise.resolve();
+  assert.equal(f.isOpen(),false);
+  assert.equal(signals[1].aborted,false,"Successful action cannot be misreported cancelled");
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  api.dispose();
+});
+
+test("menu explicit close, trigger toggle, scrolling and disposal cancel pending actions",()=>{
+  for(const exit of ["explicit","toggle","scroll","dispose"]){
+    const f=fixture(),signals=[];
+    const api=initActionMenu(f.trigger,f.menu,{onSelect:(_item,{signal})=>{
+      signals.push(signal);return new Promise(()=>{});
+    }});
+    api.open();f.menu.emit("click",{target:f.items[0]});
+    assert.equal(signals.length,1);
+    if(exit==="explicit")api.close(false);
+    else if(exit==="toggle")f.trigger.emit("click");
+    else if(exit==="scroll")f.doc.emit("scroll");
+    else api.dispose();
+    assert.equal(signals[0].aborted,true,exit+" should cancel");
+    assert.equal(f.isOpen(),false);
+    assert.equal(f.menu.getAttribute("aria-busy"),null);
+    api.dispose();
+  }
+});
+
+test("stale async menu rejection preserves newer session feedback and does not leak owner details",async()=>{
+  const f=fixture(),status={textContent:""},rejects=[];
+  f.menu.querySelector=()=>status;
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:()=>new Promise((_resolve,reject)=>{
+    rejects.push(reject);
+  })});
+  api.open();f.menu.emit("click",{target:f.items[0]});
+  api.close(false);
+  api.open();f.menu.emit("click",{target:f.items[1]});
+  rejects[0](Error("private owner response"));
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(f.isOpen(),true);
+  assert.equal(f.menu.getAttribute("aria-busy"),"true");
+  assert.equal(status.textContent,"");
+  rejects[1](Error("second private owner response"));
+  for(let i=0;i<7;i++)await Promise.resolve();
+  assert.equal(status.textContent,"Action could not be completed. Try again.");
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  assert.equal(f.isOpen(),true);
+  api.dispose();
+});
+
+test("successful synchronous menu selection keeps its signal un-aborted",()=>{
+  const f=fixture(),signals=[];
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:(_item,{signal})=>{signals.push(signal)}});
+  api.open();f.menu.emit("click",{target:f.items[0]});
+  assert.equal(f.isOpen(),false);
+  assert.equal(signals[0].aborted,false);
+  api.dispose();
+  assert.equal(signals[0].aborted,false);
+});
+
+test("native beforetoggle synchronously aborts pending work before delayed toggle notification",()=>{
+  const f=fixture(),signals=[];
+  const api=initActionMenu(f.trigger,f.menu,{onSelect:(_item,{signal})=>{
+    signals.push(signal);return new Promise(()=>{});
+  }});
+  api.open();
+  f.menu.emit("click",{target:f.items[0]});
+  f.menu.emit("beforetoggle",{oldState:"open",newState:"closed"});
+  assert.equal(signals[0].aborted,true);
+  assert.equal(f.menu.getAttribute("aria-busy"),null);
+  f.menu.hidePopover(); // toggle may arrive later in an actual browser
+  api.open();
+  assert.equal(f.isOpen(),true);
+  api.dispose();
+  f.menu.emit("beforetoggle",{newState:"closed"});
+  assert.equal(f.isOpen(),false);
+});
