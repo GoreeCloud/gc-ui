@@ -164,6 +164,7 @@ try{
   const commandDialog=document.querySelector("#command-dialog");
   const commandController=initCommandPalette(commandDialog,{
     trigger:document.querySelector("#command-trigger"),
+    observeMutations:true,
     onSelect(button) { selectedCommand=button.getAttribute("data-gc-command"); }
   });
   document.querySelector("#command-trigger").click();
@@ -177,6 +178,31 @@ try{
   verify(document.activeElement===commandButtons[1],"command keyboard navigation");
   commandButtons[1].click();
   verify(selectedCommand==="beta" && !commandDialog.open,"command action executes and closes");
+  // Exercise the real native MutationObserver, not just a mocked callback.
+  commandController.open();
+  queryInput.value="live";
+  queryInput.dispatchEvent(new Event("input",{bubbles:true}));
+  const liveRow=document.createElement("li");
+  const liveButton=document.createElement("button");
+  liveButton.type="button";
+  liveButton.setAttribute("data-gc-command","dynamic");
+  liveButton.textContent="Live command";
+  liveRow.append(liveButton);
+  commandDialog.querySelector("ul").append(liveRow);
+  await Promise.resolve();
+  verify(!liveRow.hidden &&
+    commandDialog.querySelector("[data-gc-command-status]").textContent==="1 command available",
+    "command native mutation observer discovers new action");
+  liveButton.click();
+  verify(selectedCommand==="dynamic" && !commandDialog.open,
+    "observed command activates and closes");
+  commandController.open();
+  queryInput.value="live";
+  queryInput.dispatchEvent(new Event("input",{bubbles:true}));
+  liveRow.remove();
+  await Promise.resolve();
+  verify(commandDialog.querySelector("[data-gc-command-status]").textContent==="No matching commands",
+    "command native mutation observer removes deleted action");
   commandController.dispose();
   let chosen="";
   const menuControl=initActionMenu(document.querySelector("#action-menu-trigger"),
