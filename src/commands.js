@@ -1,7 +1,7 @@
 /**
  * GoreeCloud UI command palette controller for a native <dialog>.
  * Uses textContent, never user-provided HTML, regex or network services.
- * Consumers supply meaningful actions via onSelect(button).
+ * Consumers supply meaningful actions via onSelect(button, { signal }).
  */
 const normalize = value => String(value ?? "").normalize("NFKC").toLocaleLowerCase().trim();
 
@@ -11,7 +11,7 @@ export function matchesCommand(query, label, keywords = "") {
 
 /**
  * @param {HTMLDialogElement} dialog - Native modal with labeled search input and command buttons.
- * @param {{trigger?:HTMLElement,shortcut?:boolean,onSelect:(button:HTMLButtonElement)=>void|Promise<void>}} options
+ * @param {{trigger?:HTMLElement,shortcut?:boolean,onSelect:(button:HTMLButtonElement,context:{signal:AbortSignal})=>void|Promise<void>}} options
  * @returns {{open:()=>void,close:()=>void,refresh:()=>void,dispose:()=>void}}
  */
 export function initCommandPalette(dialog, { trigger = null, shortcut = true, onSelect } = {}) {
@@ -35,7 +35,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
   // capability. Keep bindings and focus in sync with the current native DOM.
   let entries = [];
   const boundButtons = new Set();
-  let destroyed = false, pendingSession = null, restoreFocus = null;
+  let destroyed = false, pendingSession = null, activeController = null, restoreFocus = null;
   let composing = false;
   // A pending action must not close or announce errors in a later dialog
   // session after Escape, native close, or a deliberate reopen.
@@ -91,8 +91,18 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     dialog.removeAttribute("aria-busy");
     input.focus();
   };
+  const abortPending = () => {
+    const controller = activeController;
+    activeController = null;
+    pendingSession = null;
+    dialog.removeAttribute("aria-busy");
+    if (controller && !controller.signal.aborted) controller.abort();
+  };
   const close = () => {
     if (!dialog.open) return;
+    // Cancellation is advisory: consumer operations must honor the signal
+    // before doing any further work. Mesh/Identity permissions stay separate.
+    abortPending();
     dialog.close();
     session += 1; // Invalidate pending actions before queued close events.
   };
@@ -103,20 +113,27 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     if (destroyed || !dialog.open || pendingSession === session ||
         !selectable().includes(button)) return;
     const actionSession = session;
+    const controller = new AbortController();
     pendingSession = actionSession;
+    activeController = controller;
     try {
-      const operation = onSelect(button);
+      const operation = onSelect(button, { signal: controller.signal });
       if (operation && typeof operation.then === "function") {
         if (session === actionSession) dialog.setAttribute("aria-busy", "true");
         await operation;
       }
-      if (!destroyed && dialog.open && session === actionSession) close();
+      if (!destroyed && dialog.open && session === actionSession) {
+        // Successful work is finished, not cancelled by normal dismissal.
+        if (activeController === controller) activeController = null;
+        close();
+      }
     } catch {
       if (!destroyed && dialog.open && session === actionSession && status) {
         status.textContent = "Action could not be completed. Try again.";
       }
     } finally {
-      // Never clear a newer session's busy state or pending action.
+      // A stale completion cannot revoke or clear a newer session.
+      if (activeController === controller) activeController = null;
       if (pendingSession === actionSession) {
         pendingSession = null;
         dialog.removeAttribute("aria-busy");
@@ -172,8 +189,8 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
     // A delayed native close event from an older session must not interrupt
     // a dialog that has already been reopened.
     if (dialog.open) return;
+    abortPending(); // Native Escape and platform light-dismiss also cancel.
     session += 1;
-    dialog.removeAttribute("aria-busy");
     const previous = restoreFocus;
     restoreFocus = null;
     // Do not steal focus from a person who has moved to another control
@@ -211,6 +228,7 @@ export function initCommandPalette(dialog, { trigger = null, shortcut = true, on
             (!focusedBeforeClose || focusedBeforeClose === owner.body ||
              dialog.contains?.(focusedBeforeClose))) previous.focus();
       }
+      abortPending(); // Also cover already-closed dialogs awaiting close events.
       restoreFocus = null;
       destroyed = true;
       dialog.removeAttribute("aria-busy");

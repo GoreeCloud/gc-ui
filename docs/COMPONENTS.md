@@ -185,3 +185,7 @@ Calling `dispose()` on an open palette closes its native modal before detaching 
 ### Reopened command palette session isolation (alpha)
 
 A pending command action blocks repeat activation only inside the dialog session that started it. Closing and reopening the palette allows the new session to launch its own command even while an older callback remains unresolved. Old completions and failures cannot close, mark busy, or overwrite status in the new session; the current session retains its truthful busy/error state. The controller does not cancel the old action or undo any side effects: application-specific authorization, cancellation, and idempotency remain the product owner's responsibility.
+
+### Cancellable command actions (alpha)
+
+The native command palette now passes a second `onSelect(button, { signal })` argument. Each invocation receives a fresh `AbortSignal`, allowing consumers to cooperatively stop their own pending work after explicit close, native Escape/light-dismiss, or `dispose()`. A new dialog session has an independent signal, and successful actions are not falsely signaled as cancelled. Existing one-argument callbacks continue to work. **Aborting is a notification, not enforced cancellation or rollback**: consumers must check or forward the signal, verify actual Identity permissions, and apply owner-side idempotency and transaction rules. Do not claim that a cancelled UI session stopped a remote operation.
