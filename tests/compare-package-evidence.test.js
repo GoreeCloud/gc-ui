@@ -9,7 +9,7 @@ const candidate=(major)=>({
   bytes:192852,sha256,sha512Integrity:"sha512-/jnklXiMFQuqHa+OsHdm8Ue1nGFiYFl1OsSHvtY5YTwWviJbdmWoPsDdjLhmeAnSrQe3wcGAyKV5MlRYbEDjdg=="},
  runtime:{node:major+".1.2",npm:"10.9.9"},
  checks:{generatorOutputsChecked:true,everyPublicExportResolved:true,installedOffline:true,
-  installScriptsDisabled:true,publicExportCount:19,packedFileCount:2,
+  installScriptsDisabled:true,publicTypeGraphChecked:true,typeEntryCount:12,publicExportCount:19,packedFileCount:2,
   isolatedConsumerResult:"Verified 19 public specifiers from installed offline tarball"},
  packedFiles:[{path:"LICENSE",size:1067},{path:"src/foundation.js",size:386}]
 });
@@ -29,6 +29,8 @@ test("mismatched source, archive hash, file list, or missing runtime fail closed
   x=>x[1].package.bytes+=3,
   x=>x[1].packedFiles[1].size++,
   x=>x[1].checks.installedOffline=false,
+  x=>x[1].checks.publicTypeGraphChecked=false,
+  x=>x[1].checks.typeEntryCount=2,
   x=>x[1].checks.publicExportCount=18,
   x=>x[1].signed=true,
   x=>x[1].published=true,
