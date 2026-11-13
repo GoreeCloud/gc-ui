@@ -42,6 +42,10 @@ export function initSignalBoard(board) {
 
   const buttons = [...filters.querySelectorAll("button[data-gc-signal-filter]")];
   const selectedValues = new Set();
+  const everyToggle = [...filters.querySelectorAll("button[aria-pressed]")];
+  if(everyToggle.length !== buttons.length || everyToggle.some(button => !buttons.includes(button))) {
+    throw new TypeError("Signal filter group cannot contain unrecognized toggle buttons");
+  }
   for (const button of buttons) {
     const value = button.getAttribute("data-gc-signal-filter");
     if (!SIGNAL_FILTERS.includes(value) || selectedValues.has(value) ||
@@ -132,11 +136,22 @@ export function initSignalBoard(board) {
       button.getAttribute("data-gc-signal-filter") === filter)));
     disposeToggle = initToggleGroup(filters,{ onChange(button) {
       const next = button.getAttribute("data-gc-signal-filter");
-      const current = collect();
-      current.forEach(node => {
-        if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
-      });
-      render(next,current);
+      try {
+        const current = collect();
+        current.forEach(node => {
+          if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
+        });
+        render(next,current);
+      } catch(error) {
+        // The shared toggle group selects before invoking onChange.
+        // Roll it back if a consumer inserted invalid status markup.
+        for(const entry of buttons) {
+          const active = entry.getAttribute("data-gc-signal-filter") === filter;
+          entry.setAttribute("aria-pressed",String(active));
+          entry.tabIndex = active ? 0 : -1;
+        }
+        throw error;
+      }
     }});
     render(filter,nodes);
   } catch (error) {
