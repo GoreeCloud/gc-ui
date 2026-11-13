@@ -180,7 +180,11 @@ async function startBrowser() {
         properties:(node.properties || []).map(prop => ({name:prop.name,value:prop.value?.value}))
       }));
     };
-    return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree, bringToFront:()=>command("Page.bringToFront"), close:cleanup };
+    return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree,
+      dispatchHorizontalWheel:(x,y,deltaX)=>command("Input.dispatchMouseEvent",{
+        type:"mouseWheel",x,y,deltaX,deltaY:0,pointerType:"mouse"
+      }),
+      bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -779,6 +783,7 @@ try {
     'return JSON.stringify({ready:root.dataset.dockReady,font:getComputedStyle(root).fontSize,'+
     'width:root.clientWidth,scroll:root.scrollWidth,left:rect.left,right:rect.right,height:rect.height,'+
     'bottom:parseFloat(getComputedStyle(dock).bottom),padding:parseFloat(getComputedStyle(content).paddingBottom),'+
+    'scrollbar:getComputedStyle(dock).scrollbarWidth,dockScroll:dock.scrollWidth,dockClient:dock.clientWidth,'+
     'labels:[...dock.querySelectorAll("a > span")].map(x=>({text:x.textContent,'+
     'client:x.clientWidth,scroll:x.scrollWidth,lines:(()=>{const range=document.createRange();range.selectNodeContents(x);return range.getClientRects().length;})(),overflow:getComputedStyle(x).textOverflow}))});})()'));
   assert.equal(zoomDock.ready,"true","Isolated dock fixture did not initialize");
@@ -786,12 +791,121 @@ try {
   assert.ok(zoomDock.scroll<=zoomDock.width+1,"Dock-only horizontal page overflow "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.left>=0&&zoomDock.right<=zoomDock.width+1,"Dock escapes viewport "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.padding>=zoomDock.height+zoomDock.bottom+12,"Dock obscures content "+JSON.stringify(zoomDock));
+  assert.equal(zoomDock.scrollbar,"thin","Enlarged-text dock must expose a scroll affordance");
+  assert.ok(zoomDock.dockScroll>zoomDock.dockClient+1,"Zoom fixture did not exercise overflowing navigation");
   assert.ok(zoomDock.labels.every(x=>x.lines===1),"Short dock labels should stay intact, not break inside words: "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.labels.every(x=>x.client+1>=x.scroll&&x.overflow==="clip"),
     "Dock truncates destination labels "+JSON.stringify(zoomDock));
   const shotDock=await browser.screenshot(join(directory,"gc-ui-dock-400-percent-text.png"));
   assert.equal(shotDock.width,390);
+  const zoomKeyboard=JSON.parse(await browser.evaluate(
+    '(async()=>{const dock=document.querySelector("#zoom-dock"),links=[...dock.querySelectorAll("a")];'+
+    'const step=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+    'links[0].focus();links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"End",bubbles:true,cancelable:true}));'+
+    'await step();const navRect=dock.getBoundingClientRect(),lastRect=links.at(-1).getBoundingClientRect();'+
+    'const endFocused=document.activeElement===links.at(-1),endScroll=dock.scrollLeft,'+
+    'lastVisible=lastRect.left>=navRect.left-2&&lastRect.right<=navRect.right+2;'+
+    'links.at(-1).dispatchEvent(new KeyboardEvent("keydown",{key:"Home",bubbles:true,cancelable:true}));'+
+    'await step();return JSON.stringify({endFocused,endScroll,lastVisible,homeFocused:document.activeElement===links[0],homeScroll:dock.scrollLeft});})()'));
+  assert.equal(zoomKeyboard.endFocused,true,"Keyboard End did not focus the final dock destination");
+  assert.ok(zoomKeyboard.endScroll>0,"Keyboard focus did not reveal an offscreen destination");
+  assert.equal(zoomKeyboard.lastVisible,true,"Final destination remained clipped after keyboard focus");
+  assert.equal(zoomKeyboard.homeFocused,true,"Keyboard Home did not return to the first destination");
+  assert.ok(zoomKeyboard.homeScroll<zoomKeyboard.endScroll,"Keyboard Home failed to restore viewport position");
   console.log("Chromium isolated 400% root-font dock: labels, clearance, reflow passed");
+
+  // Verify RTL keyboard mirroring and scroll-to-focus on genuine 400% zoom.
+  // RTL scrollLeft may be negative in Chromium: evaluate element geometry
+  // rather than assuming an LTR-positive scroll coordinate.
+  await browser.setViewport(390,900,{dark:false});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  const rtlZoom=JSON.parse(await browser.evaluate(
+    '(async()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+    'const dock=document.querySelector("#zoom-dock"),links=[...dock.querySelectorAll("a")];'+
+    'const frames=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+    'const visible=link=>{const a=link.getBoundingClientRect(),b=dock.getBoundingClientRect();'+
+    'return a.left>=b.left-2&&a.right<=b.right+2};'+
+    'links[0].focus();links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowLeft",bubbles:true,cancelable:true}));'+
+    'const forward=document.activeElement===links[1];'+
+    'links[1].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true,cancelable:true}));'+
+    'const backward=document.activeElement===links[0];'+
+    'links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"End",bubbles:true,cancelable:true}));'+
+    'await frames();const endFocused=document.activeElement===links.at(-1),endVisible=visible(links.at(-1)),'+
+    'endScroll=dock.scrollLeft;'+
+    'links.at(-1).dispatchEvent(new KeyboardEvent("keydown",{key:"Home",bubbles:true,cancelable:true}));'+
+    'await frames();return JSON.stringify({dir:root.dir,forward,backward,endFocused,endVisible,endScroll,'+
+    'homeFocused:document.activeElement===links[0],homeVisible:visible(links[0]),homeScroll:dock.scrollLeft,'+
+    'pageWidth:root.clientWidth,pageScroll:root.scrollWidth,dockScroll:dock.scrollWidth,dockClient:dock.clientWidth});})()'));
+  assert.equal(rtlZoom.dir,"rtl","RTL zoom fixture did not apply the document direction");
+  assert.equal(rtlZoom.forward,true,"RTL ArrowLeft failed to advance to the next destination");
+  assert.equal(rtlZoom.backward,true,"RTL ArrowRight failed to return to previous destination");
+  assert.equal(rtlZoom.endFocused,true,"RTL End failed to focus final destination");
+  assert.equal(rtlZoom.endVisible,true,"RTL End left final destination clipped");
+  assert.ok(Math.abs(rtlZoom.endScroll)>1,"RTL End failed to scroll offscreen destinations into view");
+  assert.equal(rtlZoom.homeFocused,true,"RTL Home failed to focus first destination");
+  assert.equal(rtlZoom.homeVisible,true,"RTL Home left first destination clipped");
+  assert.ok(rtlZoom.pageScroll<=rtlZoom.pageWidth+1,"RTL navigation caused page-level overflow");
+  assert.ok(rtlZoom.dockScroll>rtlZoom.dockClient+1,"RTL test failed to exercise overflow");
+  console.log("Chromium RTL 400% dock: mirrored arrow keys, Home/End and scroll reachability passed");
+
+  // An actual Chromium horizontal wheel/trackpad-style input is distinct
+  // from keyboard traversal; touch acceptance still requires physical devices
+  // because headless synthetic touch gesture did not yield reliable movement.
+  await browser.setViewport(390,900,{dark:false});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  const wheelDock=JSON.parse(await browser.evaluate(
+    '(()=>{document.documentElement.style.fontSize="400%";'+
+    'const nav=document.querySelector("#zoom-dock"),r=nav.getBoundingClientRect();'+
+    'return JSON.stringify({x:Math.round(r.left+r.width/2),y:Math.round(r.top+r.height/2),'+
+    'scrollWidth:nav.scrollWidth,clientWidth:nav.clientWidth,scrollLeft:nav.scrollLeft});})()'));
+  assert.ok(wheelDock.scrollWidth>wheelDock.clientWidth+1,
+    "Horizontal wheel fixture did not contain offscreen navigation");
+  await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,320);
+  await delay(120);
+  const afterPositive=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,-320);
+  await delay(120);
+  const afterNegative=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  console.log("Chromium horizontal wheel metrics "+JSON.stringify({wheelDock,afterPositive,afterNegative}));
+  assert.ok(Math.abs(afterPositive-wheelDock.scrollLeft)>2 || Math.abs(afterNegative-afterPositive)>2,
+    "Chromium horizontal wheel failed to scroll the overflowing dock");
+  const wheelPage=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({width:document.documentElement.clientWidth,'+
+    'scrollWidth:document.documentElement.scrollWidth}))()'));
+  assert.ok(wheelPage.scrollWidth<=wheelPage.width+1,
+    "Wheel-scrollable dock created page-level horizontal overflow");
+  console.log("Chromium 400% floating dock: horizontal-wheel scroll reachable without page overflow");
+
+  // Real Chromium wheel input also needs to remain discoverable when the
+  // document is RTL. Chromium reports negative scrollLeft in that direction.
+  // This is a trackpad/wheel check, not a replacement for physical touch QA.
+  await browser.setViewport(390,900,{dark:true,forcedColors:true});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  const rtlWheel=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+    'const dock=document.querySelector("#zoom-dock"),r=dock.getBoundingClientRect();'+
+    'return JSON.stringify({x:Math.round(r.left+r.width/2),y:Math.round(r.top+r.height/2),'+
+    'start:dock.scrollLeft,width:dock.clientWidth,content:dock.scrollWidth,'+
+    'scrollbar:getComputedStyle(dock).scrollbarWidth,'+
+    'forced:matchMedia("(forced-colors: active)").matches})})()'));
+  assert.equal(rtlWheel.forced,true,"RTL wheel test did not enable forced colors");
+  assert.equal(rtlWheel.scrollbar,"thin","RTL forced-colors dock lost its scroll affordance");
+  assert.ok(rtlWheel.content>rtlWheel.width+1,"RTL wheel fixture did not overflow");
+  await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,-320);
+  await delay(150);
+  const rtlAfter=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,320);
+  await delay(150);
+  const rtlReturned=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  assert.ok(rtlAfter<rtlWheel.start-3,
+    "RTL wheel failed to reach earlier offscreen destinations: "+JSON.stringify({rtlWheel,rtlAfter}));
+  assert.ok(Math.abs(rtlReturned)<Math.abs(rtlAfter),
+    "Opposite RTL wheel gesture failed to restore the initial viewport");
+  const rtlPage=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({width:document.documentElement.clientWidth,'+
+    'scroll:document.documentElement.scrollWidth}))()'));
+  assert.ok(rtlPage.scroll<=rtlPage.width+1,"RTL wheel caused page-level overflow");
+  console.log("Chromium RTL forced-colors 400% dock: horizontal wheel reaches hidden items and returns");
 
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
