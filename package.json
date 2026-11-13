@@ -13,6 +13,10 @@
       "types": "./src/index.d.ts",
       "default": "./src/index.js"
     },
+    "./foundation": {
+      "types": "./src/foundation.d.ts",
+      "default": "./src/foundation.js"
+    },
     "./tokens": "./tokens/gc.tokens.json",
     "./tokens.css": "./src/tokens.css",
     "./components.css": "./src/components.css",

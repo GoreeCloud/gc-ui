@@ -18,6 +18,7 @@
     "status": "planned",
     "definition": "A tested and packaged web design foundation with a frozen, documented Stable API subset; not a native SDK or proof of adoption by applications",
     "candidateStableExports": [
+      "./foundation",
       "./tokens",
       "./tokens.css",
       "./components.css",
@@ -36,17 +37,57 @@
       "./combobox",
       "./bottom-nav",
       "./navigation-rail",
-      "./signal-board"
-    ],
-    "requiringClassification": [
+      "./signal-board",
       "."
     ],
+    "requiringClassification": [],
     "releaseLimitations": [
-      "Current root entry point re-exports preview controllers and must be audited before any 1.0 guarantee or publication",
+      "The legacy root entry point is explicitly preview-compatibility and re-exports preview controllers; @goreecloud/ui/foundation provides a narrow candidate Stable web entry, with final acceptance still open",
       "No default GoreeCloud hue or appearance mode is mandatory; each app can select its own",
       "Native token outputs are deterministic resources, not native component SDKs",
       "No native device or consumer app is certified by the web package"
-    ]
+    ],
+    "rootEntryStatus": "preview-compatibility",
+    "rootSymbolClassification": {
+      "candidateStable": [
+        "ACCENTS",
+        "ICON_NAMES",
+        "MODES",
+        "TRANSPARENCY_MODES",
+        "applyTheme",
+        "bindRangeOutput",
+        "contrastRatio",
+        "createThemeController",
+        "deriveAccent",
+        "getAccentColor",
+        "hasIcon",
+        "iconSvg",
+        "initAccordion",
+        "initDrawer",
+        "initToggleGroup"
+      ],
+      "deferredPreview": [
+        "SIGNAL_FILTERS",
+        "SIGNAL_STATES",
+        "bindThemeControls",
+        "closeDialog",
+        "defineCustomElements",
+        "initActionMenu",
+        "initAvailabilityFeedback",
+        "initBottomNavigation",
+        "initCombobox",
+        "initCommandPalette",
+        "initNavigationRail",
+        "initSignalBoard",
+        "initSortableTable",
+        "initTabs",
+        "initTreeView",
+        "matchesCommand",
+        "openDialog",
+        "summarizeSignals",
+        "toast"
+      ]
+    }
   },
   "gates": [
     {

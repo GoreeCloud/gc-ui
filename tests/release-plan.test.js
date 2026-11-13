@@ -24,7 +24,9 @@ test("every actual package export is classified while root review remains open",
   assert.deepEqual([...exports].sort(),Object.keys(pkg.exports).sort());
   assert.equal(new Set(exports).size,exports.length);
   for(const name of p.candidateStableExports) assert.ok(pkg.exports[name],name);
-  assert.ok(p.requiringClassification.includes("."),"Root's mixed experimental exports require review");
+  assert.equal(p.rootEntryStatus,"preview-compatibility");
+  assert.ok(p.deferredPreviewExports.includes("."),"Root remains backward-compatible preview");
+  assert.deepEqual(p.requiringClassification,[]);
   assert.ok(!p.candidateStableExports.includes("./signal-board"));
 });
 test("1.0 gates require evidence and report blockers without misrepresenting Stable",()=>{
@@ -43,4 +45,27 @@ test("1.0 gates require evidence and report blockers without misrepresenting Sta
   assert.equal(strict.status,1);
   assert.match(strict.stderr,/Stable 1.0.0 blocked/);
   assert.match(strict.stderr,/Open gate: public-api-contract/);
+});
+
+test("new dedicated JS foundation keeps root as explicitly preview compatibility",()=>{
+  const p=plan.webFoundations;
+  assert.ok(p.candidateStableExports.includes("./foundation"));
+  assert.deepEqual(pkg.exports["./foundation"],{types:"./src/foundation.d.ts",default:"./src/foundation.js"});
+  assert.equal(p.rootEntryStatus,"preview-compatibility");
+  assert.ok(p.deferredPreviewExports.includes("."));
+  assert.deepEqual(p.requiringClassification,[]);
+  const parseExports=source=>[...source.matchAll(/export\s*{\s*([^}]+)\s*}\s*from\s*["'][^"']+["'];/g)]
+    .flatMap(m=>m[1].split(",").map(s=>s.trim().split(/\s+as\s+/).pop().trim()));
+  const rootJs=parseExports(readFileSync(new URL("../src/index.js",import.meta.url),"utf8"));
+  const foundationJs=parseExports(readFileSync(new URL("../src/foundation.js",import.meta.url),"utf8"));
+  const foundationDts=parseExports(readFileSync(new URL("../src/foundation.d.ts",import.meta.url),"utf8"));
+  assert.equal(new Set(rootJs).size,rootJs.length);
+  assert.equal(new Set(foundationJs).size,foundationJs.length);
+  const classes=p.rootSymbolClassification;
+  assert.deepEqual(rootJs.slice().sort(),[...classes.candidateStable,...classes.deferredPreview].sort());
+  assert.deepEqual(foundationJs.slice().sort(),classes.candidateStable.slice().sort());
+  assert.deepEqual(foundationDts.slice().sort(),foundationJs.slice().sort());
+  assert.ok(classes.deferredPreview.includes("initSignalBoard"));
+  assert.ok(!foundationJs.includes("initSignalBoard"));
+  assert.match(readFileSync(new URL("../docs/PUBLIC_API_BOUNDARY.md",import.meta.url),"utf8"),/preview-compatibility|preview compatibility/i);
 });
