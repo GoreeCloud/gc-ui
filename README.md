@@ -9,6 +9,10 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 > **Maturity: 0.1.0-alpha.0, not Stable.** GoreeCloud UI is a new greenfield project, with no inherited code or releases. The initial alpha establishes its design language and implementation contracts. Semantic roles follow the founder-approved standard, while specific new palette values are provisional alpha candidates pending visual acceptance.
 
+## Targeted release strategy — web-first Stable 1.0
+
+Founder-directed target: stabilize the **web foundation** as **1.0.0** first, then add independently validated features, native platform adapters and verified consumer adoption in compatible **1.1.0, 1.2.0, 1.3.0, …** releases. **This is a roadmap, not a released 1.0 package.** See [Stable release roadmap](docs/RELEASE_ROADMAP.md), [machine-readable readiness gates](registry/release-plan.v1.json), and non-mutating `npm run release:status`. `npm run release:verify` deliberately fails until every 1.0 gate has evidence. The root package export mixes foundation and preview controllers, so it must be classified before a Stable API guarantee. Native components and consumer migrations are *not* 1.0 blockers and must never be claimed complete from the web source alone. No global hue or appearance mode is mandatory.
+
 ## Implemented here
 
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.

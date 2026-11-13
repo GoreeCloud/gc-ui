@@ -87,7 +87,9 @@
     "icons:generate": "node scripts/build-icon-assets.mjs --write",
     "icons:check": "node scripts/build-icon-assets.mjs --check",
     "browser:smoke": "node tests/browser-smoke.mjs",
-    "verify:package": "node scripts/verify-package.mjs"
+    "verify:package": "node scripts/verify-package.mjs",
+    "release:status": "node scripts/release-readiness.mjs --status",
+    "release:verify": "node scripts/release-readiness.mjs --require-ready"
   },
   "sideEffects": [
     "**/*.css"
