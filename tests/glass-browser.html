@@ -16,13 +16,16 @@ body.gc-app {
     var(--gc-canvas);
 }
 .gc-glass-base,.gc-glass-elevated,.gc-glass-overlay,.gc-glass-solid { padding:24px; }
+.gc-glass-preference-panel { padding:16px; }
+.gc-glass-preference-panel .gc-check { inline-size:fit-content; min-block-size:44px; }
+#gc-glass-preference-status { display:block; margin-block-start:var(--gc-space-1); color:var(--gc-text-soft); font-size:var(--gc-type-support); line-height:1.4; }
 </style>
 </head>
 <body class="gc-app">
 <main class="gc-container gc-stack" style="padding-block:24px">
 <h1>Atmospheric materials</h1>
-<div class="gc-glass-solid" style="padding:16px">
-  <label for="gc-glass-reduce"><input id="gc-glass-reduce" type="checkbox"> Reduce transparency</label>
+<div class="gc-glass-solid gc-glass-preference-panel">
+  <label class="gc-check" for="gc-glass-reduce"><input id="gc-glass-reduce" type="checkbox"> <span>Reduce transparency</span></label>
   <output id="gc-glass-preference-status" role="status" aria-live="polite">System transparency preference</output>
 </div>
 <section class="gc-glass-base" data-gc-translucent="true" style="padding:24px"><h2>Base</h2><p>Readable navigation surface.</p></section>
