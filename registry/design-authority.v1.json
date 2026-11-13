@@ -120,7 +120,11 @@
       "visible-focus",
       "forced-colors-fallbacks"
     ],
-    "nativeProductAdoption": "not-audited"
+    "nativeProductAdoption": "not-audited",
+    "mandatoryAppearanceTheme": false,
+    "independentApplicationAppearance": true,
+    "webThemeScope": "document-root-or-configured-gc-app",
+    "themeScopeStatus": "web-alpha-consumer-adoption-not-audited"
   },
   "navigationRail": {
     "requirement": "tablet-desktop-web-collapsible-icon-only",

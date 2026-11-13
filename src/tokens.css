@@ -1,5 +1,5 @@
 /* Generated from tokens/gc.tokens.json by scripts/generate-web-tokens.mjs — DO NOT EDIT. */
-:root {
+:root, .gc-app[data-gc-theme] {
   --gc-font-ui: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --gc-font-mono: ui-monospace, SFMono-Regular, Consolas, monospace;
   --gc-type-display: clamp(2.75rem, 4.5vw, 4.375rem);
@@ -79,25 +79,25 @@
   --gc-on-brand-container: #30266F;
   color-scheme: light;
 }
-:root[data-gc-accent="lagoon"] {
+:root[data-gc-accent="lagoon"], .gc-app[data-gc-theme][data-gc-accent="lagoon"] {
   --gc-brand: #00697A;
   --gc-on-brand: #FFFFFF;
   --gc-brand-container: #C4F2F4;
   --gc-on-brand-container: #064D58;
 }
-:root[data-gc-accent="ember"] {
+:root[data-gc-accent="ember"], .gc-app[data-gc-theme][data-gc-accent="ember"] {
   --gc-brand: #A43F1D;
   --gc-on-brand: #FFFFFF;
   --gc-brand-container: #FFE1D4;
   --gc-on-brand-container: #76270F;
 }
-:root[data-gc-accent="moss"] {
+:root[data-gc-accent="moss"], .gc-app[data-gc-theme][data-gc-accent="moss"] {
   --gc-brand: #326B42;
   --gc-on-brand: #FFFFFF;
   --gc-brand-container: #D5F3D9;
   --gc-on-brand-container: #1B502C;
 }
-:root[data-gc-theme="dark"] {
+:root[data-gc-theme="dark"], .gc-app[data-gc-theme="dark"] {
   --gc-canvas: #0D121D;
   --gc-surface: #171D2A;
   --gc-surface-tonal: #252D3D;
@@ -121,26 +121,26 @@
   --gc-on-brand-container: #E8E5FF;
   color-scheme: dark;
 }
-:root[data-gc-theme="dark"][data-gc-accent="lagoon"] {
+:root[data-gc-theme="dark"][data-gc-accent="lagoon"], .gc-app[data-gc-theme="dark"][data-gc-accent="lagoon"] {
   --gc-brand: #8BE7F1;
   --gc-on-brand: #003A42;
   --gc-brand-container: #19525B;
   --gc-on-brand-container: #D7FAFF;
 }
-:root[data-gc-theme="dark"][data-gc-accent="ember"] {
+:root[data-gc-theme="dark"][data-gc-accent="ember"], .gc-app[data-gc-theme="dark"][data-gc-accent="ember"] {
   --gc-brand: #FFB79F;
   --gc-on-brand: #4E1E0D;
   --gc-brand-container: #713922;
   --gc-on-brand-container: #FFE1D4;
 }
-:root[data-gc-theme="dark"][data-gc-accent="moss"] {
+:root[data-gc-theme="dark"][data-gc-accent="moss"], .gc-app[data-gc-theme="dark"][data-gc-accent="moss"] {
   --gc-brand: #A9E0B3;
   --gc-on-brand: #173B20;
   --gc-brand-container: #33553B;
   --gc-on-brand-container: #DBF7DF;
 }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-gc-theme]), :root[data-gc-theme="auto"] {
+  :root:not([data-gc-theme]), :root[data-gc-theme="auto"], .gc-app[data-gc-theme="auto"] {
   --gc-canvas: #0D121D;
   --gc-surface: #171D2A;
   --gc-surface-tonal: #252D3D;
@@ -164,26 +164,26 @@
   --gc-on-brand-container: #E8E5FF;
   color-scheme: dark;
 }
-  :root:not([data-gc-theme])[data-gc-accent="lagoon"], :root[data-gc-theme="auto"][data-gc-accent="lagoon"] {
+  :root:not([data-gc-theme])[data-gc-accent="lagoon"], :root[data-gc-theme="auto"][data-gc-accent="lagoon"], .gc-app[data-gc-theme="auto"][data-gc-accent="lagoon"] {
   --gc-brand: #8BE7F1;
   --gc-on-brand: #003A42;
   --gc-brand-container: #19525B;
   --gc-on-brand-container: #D7FAFF;
 }
-  :root:not([data-gc-theme])[data-gc-accent="ember"], :root[data-gc-theme="auto"][data-gc-accent="ember"] {
+  :root:not([data-gc-theme])[data-gc-accent="ember"], :root[data-gc-theme="auto"][data-gc-accent="ember"], .gc-app[data-gc-theme="auto"][data-gc-accent="ember"] {
   --gc-brand: #FFB79F;
   --gc-on-brand: #4E1E0D;
   --gc-brand-container: #713922;
   --gc-on-brand-container: #FFE1D4;
 }
-  :root:not([data-gc-theme])[data-gc-accent="moss"], :root[data-gc-theme="auto"][data-gc-accent="moss"] {
+  :root:not([data-gc-theme])[data-gc-accent="moss"], :root[data-gc-theme="auto"][data-gc-accent="moss"], .gc-app[data-gc-theme="auto"][data-gc-accent="moss"] {
   --gc-brand: #A9E0B3;
   --gc-on-brand: #173B20;
   --gc-brand-container: #33553B;
   --gc-on-brand-container: #DBF7DF;
 }
 }
-:root[data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }
-@media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }
-@media (prefers-reduced-transparency: reduce) { :root { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }
-@media (prefers-reduced-motion: reduce) { :root { --gc-motion-fast: 0ms; --gc-motion-base: 0ms; --gc-motion-slow: 0ms; } }
+:root[data-gc-contrast="more"], .gc-app[data-gc-theme][data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }
+@media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]), .gc-app[data-gc-theme]:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }
+@media (prefers-reduced-transparency: reduce) { :root, .gc-app[data-gc-theme] { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }
+@media (prefers-reduced-motion: reduce) { :root, .gc-app[data-gc-theme] { --gc-motion-fast: 0ms; --gc-motion-base: 0ms; --gc-motion-slow: 0ms; } }
