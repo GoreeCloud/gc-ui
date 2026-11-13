@@ -24,7 +24,7 @@ The `npm run check` aggregate additionally invokes `npm run export:platform`, wh
 | Theme independence | Light/dark/auto with each optional accent and app-defined custom accent | No forced global blue; legible semantic foregrounds and controls |
 | Material crosswalk | Canvas, Surface, Lens with Base/Elevated/Overlay usage patterns | Readability and consistent hierarchy; no breaking rename |
 | Variable glass backdrops | Light/dark content over flat, gradient and high-detail backgrounds | Contrast measured on *composited* pixels; switch to solid fallback when needed |
-| Reduced transparency | OS/browser transparency-reduction preference or documented override | Opaque readable surfaces, no hidden content |
+| Reduced transparency | OS/browser transparency-reduction preference or documented override; also manually toggle `data-gc-transparency="reduce"` then `"auto"` without an OS preference | Opaque, blur-free readable surfaces under reduction; original theme restored afterwards without losing focus or state |
 | Forced colors / increased contrast | Platform high-contrast mode | Focus, status, boundaries and dialogs remain perceivable |
 | Reduced motion | OS/browser reduced-motion preference | Essential state remains clear without animated transitions |
 | Keyboard | Tab/Shift+Tab, arrows where appropriate, Enter/Space, Escape | Visible focus, correct order, no traps, focus return |
