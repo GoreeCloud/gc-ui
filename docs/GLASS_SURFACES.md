@@ -1,6 +1,6 @@
 # Optional atmospheric glass utilities (alpha)
 
-Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before the optional `src/glass.css` stylesheet. The latter is available from source on the review branch; it is **not yet a published package export**. It provides opt-in CSS classes, not new material tokens or mandatory color choices.
+Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before the optional `@goreecloud/ui/glass.css` stylesheet. The package export is defined on this review branch but is **not yet released**. It provides opt-in CSS classes, not new material tokens or mandatory color choices.
 
 | CSS class | Intended use | Existing material mapping |
 | --- | --- | --- |
