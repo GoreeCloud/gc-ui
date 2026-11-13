@@ -1104,6 +1104,68 @@ try {
   }
   console.log("Chromium transparency preference UI: labeled, reversible, live and nonpersistent");
 
+  // The real design lab must honor the same preference on existing Cloud Lens
+  // and floating navigation, not only on the optional glass.css utilities.
+  for (const [width,dark] of [[320,false],[390,true]]) {
+    await browser.setViewport(width,844,{dark});
+    await browser.navigate(base+"/lab/");
+    const labPreference=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,control=document.querySelector("#transparency"),'+
+      'lens=document.querySelector(".gc-lab-toolbar.gc-lens"),nav=document.querySelector("#demo-bottom-nav");'+
+      'const css=el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,blur:s.backdropFilter||s.webkitBackdropFilter}};'+
+      'const snapshot=()=>({preference:root.dataset.gcTransparency,checked:control.checked,'+
+      'lens:css(lens),nav:css(nav),width:root.clientWidth,scroll:root.scrollWidth});'+
+      'const before=snapshot(),storageBefore=localStorage.length,cookieBefore=document.cookie;'+
+      'control.click();const reduced=snapshot();'+
+      'control.click();const restored=snapshot();'+
+      'return JSON.stringify({before,reduced,restored,storageUnchanged:localStorage.length===storageBefore,'+
+      'cookieUnchanged:document.cookie===cookieBefore,label:control.labels?.[0]?.textContent.trim()});})()'));
+    assert.match(labPreference.label,/Reduce transparency/,
+      "Live lab setting must keep a visible native accessible label");
+    assert.equal(labPreference.before.preference,"auto",
+      "Design lab should initially follow system transparency");
+    assert.equal(labPreference.reduced.preference,"reduce",
+      "Lab checkbox failed to apply manual transparency");
+    assert.equal(labPreference.reduced.checked,true,"Lab checkbox and theme state disagree");
+    for (const surface of ["lens","nav"]) {
+      assert.equal(labPreference.reduced[surface].blur,"none",
+        "Manual setting did not disable blur on existing "+surface);
+      assert.match(labPreference.reduced[surface].background,/^rgb\\(/,
+        "Manual setting did not restore opaque "+surface);
+      assert.deepEqual(labPreference.restored[surface],labPreference.before[surface],
+        "Lab did not restore original "+surface+" styling");
+    }
+    assert.equal(labPreference.restored.preference,"auto","Lab failed to return to auto");
+    assert.equal(labPreference.restored.checked,false,"Restored checkbox remains checked");
+    assert.equal(labPreference.storageUnchanged,true,"Lab preference wrote local storage");
+    assert.equal(labPreference.cookieUnchanged,true,"Lab preference wrote a cookie");
+    assert.ok(labPreference.reduced.scroll<=labPreference.reduced.width+1,
+      "Manual preference caused page overflow at "+width+"px");
+  }
+
+  // OS high-contrast colors must not be overwritten by a more specific app
+  // preference rule, including when both are active simultaneously.
+  await browser.setViewport(390,844,{dark:true,forcedColors:true});
+  await browser.navigate(base+"/lab/");
+  const labForced=JSON.parse(await browser.evaluate(
+    '(()=>{document.querySelector("#transparency").click();'+
+    'const swatch=document.createElement("span");swatch.style.background="Canvas";swatch.style.color="CanvasText";'+
+    'document.body.append(swatch);const sys=getComputedStyle(swatch);'+
+    'const colors={background:sys.backgroundColor,color:sys.color};swatch.remove();'+
+    'const surfaces=[".gc-lab-toolbar.gc-lens","#demo-bottom-nav"].map(selector=>{'+
+    'const s=getComputedStyle(document.querySelector(selector));'+
+    'return {selector,background:s.backgroundColor,color:s.color,blur:s.backdropFilter||s.webkitBackdropFilter}});'+
+    'return JSON.stringify({forced:matchMedia("(forced-colors: active)").matches,colors,surfaces})})()'));
+  assert.equal(labForced.forced,true,"Forced-colors mode was not emulated");
+  for(const surface of labForced.surfaces) {
+    assert.equal(surface.background,labForced.colors.background,
+      "Manual transparency overrode OS Canvas on "+surface.selector);
+    assert.equal(surface.color,labForced.colors.color,
+      "Manual transparency overrode OS CanvasText on "+surface.selector);
+    assert.equal(surface.blur,"none","Forced color/lab preference retained blur");
+  }
+  console.log("Chromium design lab transparency: existing Lens/nav, mobile reflow, reversible and forced-colors passed");
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
