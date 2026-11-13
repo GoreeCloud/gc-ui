@@ -1143,12 +1143,39 @@ try {
       "Manual preference caused page overflow at "+width+"px");
   }
 
+  // The existing More Contrast control must disable real compositing blur
+  // without requiring users to separately select reduced transparency.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/lab/");
+  const labContrast=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,control=document.querySelector("#contrast");'+
+    'const lens=document.querySelector(".gc-lab-toolbar.gc-lens"),nav=document.querySelector("#demo-bottom-nav");'+
+    'const read=el=>{const css=getComputedStyle(el);return {background:css.backgroundColor,'+
+    'blur:css.backdropFilter||css.webkitBackdropFilter}};'+
+    'const snapshot=()=>({contrast:root.dataset.gcContrast,transparency:root.dataset.gcTransparency,'+
+    'lens:read(lens),nav:read(nav)});'+
+    'const before=snapshot();control.click();const enabled=snapshot();'+
+    'control.click();return JSON.stringify({before,enabled,restored:snapshot()})})()'));
+  assert.equal(labContrast.before.contrast,"normal","Lab contrast should default to normal");
+  assert.equal(labContrast.enabled.contrast,"more","Contrast checkbox failed to update the theme");
+  assert.equal(labContrast.enabled.transparency,"auto",
+    "Contrast control unexpectedly changed the transparency preference");
+  for (const surface of ["lens","nav"]) {
+    assert.equal(labContrast.enabled[surface].blur,"none",
+      "More Contrast did not disable existing "+surface+" backdrop blur");
+    assert.ok(labContrast.enabled[surface].background.startsWith("rgb("),
+      "More Contrast did not restore opaque "+surface+" background");
+    assert.deepEqual(labContrast.restored[surface],labContrast.before[surface],
+      "More Contrast failed to restore "+surface+" appearance");
+  }
+  assert.equal(labContrast.restored.contrast,"normal","More Contrast did not reset");
+
   // OS high-contrast colors must not be overwritten by a more specific app
   // preference rule, including when both are active simultaneously.
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
   const labForced=JSON.parse(await browser.evaluate(
-    '(()=>{document.querySelector("#transparency").click();'+
+    '(()=>{document.querySelector("#transparency").click();document.querySelector("#contrast").click();'+
     'const swatch=document.createElement("span");swatch.style.background="Canvas";swatch.style.color="CanvasText";'+
     'document.body.append(swatch);const sys=getComputedStyle(swatch);'+
     'const colors={background:sys.backgroundColor,color:sys.color};swatch.remove();'+
