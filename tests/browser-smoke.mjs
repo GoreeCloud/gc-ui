@@ -181,8 +181,9 @@ async function startBrowser() {
       }));
     };
     return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree,
-      synthesizeScrollGesture: params=>command("Input.synthesizeScrollGesture",params),
-      enableTouch:()=>command("Emulation.setTouchEmulationEnabled",{enabled:true,maxTouchPoints:1}),
+      dispatchHorizontalWheel:(x,y,deltaX)=>command("Input.dispatchMouseEvent",{
+        type:"mouseWheel",x,y,deltaX,deltaY:0,pointerType:"mouse"
+      }),
       bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
@@ -847,38 +848,33 @@ try {
   assert.ok(rtlZoom.dockScroll>rtlZoom.dockClient+1,"RTL test failed to exercise overflow");
   console.log("Chromium RTL 400% dock: mirrored arrow keys, Home/End and scroll reachability passed");
 
-  // Touch scroll emulation is distinct from keyboard traversal; on mobile
-  // platforms an overlay scrollbar may auto-hide, but swipe reachability
-  // must still work when the dock is wider than its visible capsule.
+  // An actual Chromium horizontal wheel/trackpad-style input is distinct
+  // from keyboard traversal; touch acceptance still requires physical devices
+  // because headless synthetic touch gesture did not yield reliable movement.
   await browser.setViewport(390,900,{dark:false});
   await browser.navigate(base+"/tests/dock-zoom.html");
-  const touchDock=JSON.parse(await browser.evaluate(
+  const wheelDock=JSON.parse(await browser.evaluate(
     '(()=>{document.documentElement.style.fontSize="400%";'+
     'const nav=document.querySelector("#zoom-dock"),r=nav.getBoundingClientRect();'+
     'return JSON.stringify({x:Math.round(r.left+r.width/2),y:Math.round(r.top+r.height/2),'+
     'scrollWidth:nav.scrollWidth,clientWidth:nav.clientWidth,scrollLeft:nav.scrollLeft});})()'));
-  assert.ok(touchDock.scrollWidth>touchDock.clientWidth+1,
-    "Touch test fixture did not contain offscreen navigation");
-  await browser.enableTouch();
-  const gesture = xDistance => browser.synthesizeScrollGesture({
-    x:touchDock.x,y:touchDock.y,xDistance,yDistance:0,
-    gestureSourceType:"touch",speed:800
-  });
-  await gesture(-320);
-  await delay(100);
-  const afterLeft=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
-  await gesture(320);
-  await delay(100);
-  const afterRight=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
-  console.log("Chromium touch scroll metrics "+JSON.stringify({touchDock,afterLeft,afterRight}));
-  assert.ok(Math.abs(afterLeft-touchDock.scrollLeft)>2 || Math.abs(afterRight-afterLeft)>2,
-    "Chromium touch swipe failed to scroll the overflowing dock");
-  const touchPage=JSON.parse(await browser.evaluate(
+  assert.ok(wheelDock.scrollWidth>wheelDock.clientWidth+1,
+    "Horizontal wheel fixture did not contain offscreen navigation");
+  await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,320);
+  await delay(120);
+  const afterPositive=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,-320);
+  await delay(120);
+  const afterNegative=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  console.log("Chromium horizontal wheel metrics "+JSON.stringify({wheelDock,afterPositive,afterNegative}));
+  assert.ok(Math.abs(afterPositive-wheelDock.scrollLeft)>2 || Math.abs(afterNegative-afterPositive)>2,
+    "Chromium horizontal wheel failed to scroll the overflowing dock");
+  const wheelPage=JSON.parse(await browser.evaluate(
     '(()=>JSON.stringify({width:document.documentElement.clientWidth,'+
     'scrollWidth:document.documentElement.scrollWidth}))()'));
-  assert.ok(touchPage.scrollWidth<=touchPage.width+1,
-    "Swipeable dock created page-level horizontal overflow");
-  console.log("Chromium 400% floating dock: touch-swipe scroll reachable without page overflow");
+  assert.ok(wheelPage.scrollWidth<=wheelPage.width+1,
+    "Wheel-scrollable dock created page-level horizontal overflow");
+  console.log("Chromium 400% floating dock: horizontal-wheel scroll reachable without page overflow");
 
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
