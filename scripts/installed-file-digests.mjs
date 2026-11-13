@@ -5,7 +5,7 @@
 import { readFileSync,lstatSync } from "node:fs";
 import {createHash} from "node:crypto";
 import { resolve,sep } from "node:path";
-const safePath=/^(?:src\/[a-z0-9.-]+|tokens\/[a-z0-9.-]+|assets\/[a-z0-9.-]+|package\.json|LICENSE|README\.md)$/;
+const safePath=/^(?:src\/[a-z0-9][a-z0-9.-]*|tokens\/[a-z0-9][a-z0-9.-]*|assets\/[a-z0-9][a-z0-9.-]*|package\.json|LICENSE|README\.md)$/;
 export function digestInstalledFiles(root,packedFiles){
   if(typeof root!=="string"||!root.trim())throw new TypeError("Invalid installed root");
   if(!Array.isArray(packedFiles)||packedFiles.length<1||packedFiles.length>500)
@@ -15,7 +15,7 @@ export function digestInstalledFiles(root,packedFiles){
   const results=[];
   for(const record of packedFiles){
     const path=record?.path;
-    if(typeof path!=="string" || !safePath.test(path) || seen.has(path) ||
+    if(typeof path!=="string" || !safePath.test(path) || path.includes("..") || seen.has(path) ||
       !Number.isSafeInteger(record.size)||record.size<1||record.size>8*1024*1024)
       throw new Error("Invalid or duplicate packed file: "+String(path));
     seen.add(path);
