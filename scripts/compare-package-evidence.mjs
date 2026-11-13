@@ -46,11 +46,14 @@ export function comparePackageEvidence(records,{sourceSha,version="1.0.0"}={}){
       checks.installedOffline===true &&
       checks.installScriptsDisabled===true,
       "Missing offline verified consumer checks");
+    reject(checks.installedFileDigestsChecked===true,
+      "Missing installed per-file SHA-256 verification");
     const files=record.packedFiles;
     reject(Array.isArray(files) && files.length>0 &&
       files.every(f=>typeof f?.path==="string" && f.path.length>0 &&
         !f.path.startsWith("/") && !f.path.includes("..") &&
-        Number.isSafeInteger(f.size) && f.size>0) &&
+        Number.isSafeInteger(f.size) && f.size>0 &&
+        hex(f.sha256,64)) &&
       new Set(files.map(f=>f.path)).size===files.length,
       "Invalid packed-file inventory");
     reject(Number.isSafeInteger(checks.publicExportCount) && checks.publicExportCount>0 &&
