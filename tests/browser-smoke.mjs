@@ -810,6 +810,40 @@ try {
   assert.ok(zoomKeyboard.homeScroll<zoomKeyboard.endScroll,"Keyboard Home failed to restore viewport position");
   console.log("Chromium isolated 400% root-font dock: labels, clearance, reflow passed");
 
+  // Verify RTL keyboard mirroring and scroll-to-focus on genuine 400% zoom.
+  // RTL scrollLeft may be negative in Chromium: evaluate element geometry
+  // rather than assuming an LTR-positive scroll coordinate.
+  await browser.setViewport(390,900,{dark:false});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  const rtlZoom=JSON.parse(await browser.evaluate(
+    '(async()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+    'const dock=document.querySelector("#zoom-dock"),links=[...dock.querySelectorAll("a")];'+
+    'const frames=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+    'const visible=link=>{const a=link.getBoundingClientRect(),b=dock.getBoundingClientRect();'+
+    'return a.left>=b.left-2&&a.right<=b.right+2};'+
+    'links[0].focus();links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowLeft",bubbles:true,cancelable:true}));'+
+    'const forward=document.activeElement===links[1];'+
+    'links[1].dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true,cancelable:true}));'+
+    'const backward=document.activeElement===links[0];'+
+    'links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"End",bubbles:true,cancelable:true}));'+
+    'await frames();const endFocused=document.activeElement===links.at(-1),endVisible=visible(links.at(-1)),'+
+    'endScroll=dock.scrollLeft;'+
+    'links.at(-1).dispatchEvent(new KeyboardEvent("keydown",{key:"Home",bubbles:true,cancelable:true}));'+
+    'await frames();return JSON.stringify({dir:root.dir,forward,backward,endFocused,endVisible,endScroll,'+
+    'homeFocused:document.activeElement===links[0],homeVisible:visible(links[0]),homeScroll:dock.scrollLeft,'+
+    'pageWidth:root.clientWidth,pageScroll:root.scrollWidth,dockScroll:dock.scrollWidth,dockClient:dock.clientWidth});})()'));
+  assert.equal(rtlZoom.dir,"rtl","RTL zoom fixture did not apply the document direction");
+  assert.equal(rtlZoom.forward,true,"RTL ArrowLeft failed to advance to the next destination");
+  assert.equal(rtlZoom.backward,true,"RTL ArrowRight failed to return to previous destination");
+  assert.equal(rtlZoom.endFocused,true,"RTL End failed to focus final destination");
+  assert.equal(rtlZoom.endVisible,true,"RTL End left final destination clipped");
+  assert.ok(Math.abs(rtlZoom.endScroll)>1,"RTL End failed to scroll offscreen destinations into view");
+  assert.equal(rtlZoom.homeFocused,true,"RTL Home failed to focus first destination");
+  assert.equal(rtlZoom.homeVisible,true,"RTL Home left first destination clipped");
+  assert.ok(rtlZoom.pageScroll<=rtlZoom.pageWidth+1,"RTL navigation caused page-level overflow");
+  assert.ok(rtlZoom.dockScroll>rtlZoom.dockClient+1,"RTL test failed to exercise overflow");
+  console.log("Chromium RTL 400% dock: mirrored arrow keys, Home/End and scroll reachability passed");
+
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
   const forced=JSON.parse(await browser.evaluate(
