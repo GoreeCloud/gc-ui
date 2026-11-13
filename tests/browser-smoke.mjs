@@ -931,7 +931,8 @@ try {
     {name:"high-contrast",dark:false,forcedColors:false,contrast:true},
     {name:"reduced-transparency",dark:false,forcedColors:false,contrast:false,reducedTransparency:true},
     {name:"forced-colors",dark:false,forcedColors:true,contrast:false},
-    {name:"user-reduced-transparency",dark:true,forcedColors:false,contrast:false,manualTransparency:true}
+    {name:"user-reduced-transparency",dark:true,forcedColors:false,contrast:false,manualTransparency:true},
+    {name:"user-reduced-and-forced-colors",dark:true,forcedColors:true,contrast:false,manualTransparency:true}
   ]) {
     await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors,reducedTransparency:scenario.reducedTransparency});
     await browser.navigate(base+"/tests/glass-browser.html");
@@ -940,10 +941,13 @@ try {
       'if('+JSON.stringify(Boolean(scenario.manualTransparency))+')document.documentElement.dataset.gcTransparency="reduce";'+
       'const roles=["base","elevated","overlay","solid"];'+
       'const values=roles.map(role=>{const el=document.querySelector(".gc-glass-"+role);'+
-      'const style=getComputedStyle(el);return {role,background:style.backgroundColor,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
+      'const style=getComputedStyle(el);return {role,background:style.backgroundColor,color:style.color,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
+      'const probe=document.createElement("span");probe.style.background="Canvas";probe.style.color="CanvasText";document.body.append(probe);'+
+      'const sys=getComputedStyle(probe),systemBackground=sys.backgroundColor,systemText=sys.color;probe.remove();'+
       'const root=document.documentElement,rs=getComputedStyle(root);'+
       'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,values,'+
       'theme:root.dataset.gcTheme,emulatedDark:matchMedia("(prefers-color-scheme: dark)").matches,'+
+      'systemBackground,systemText,'+
       'canvas:rs.getPropertyValue("--gc-canvas").trim(),text:rs.getPropertyValue("--gc-text").trim()});})()'));
     const brightness=value=>{
       assert.match(value,/^#[0-9a-f]{6}$/i,"Unexpected semantic color format "+value);
@@ -961,6 +965,12 @@ try {
       assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
       assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
       assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
+      if(scenario.forcedColors) {
+        assert.equal(value.background,state.systemBackground,
+          "System Canvas background was overridden in "+scenario.name+" "+value.role);
+        assert.equal(value.color,state.systemText,
+          "System CanvasText foreground was overridden in "+scenario.name+" "+value.role);
+      }
       if(scenario.contrast||scenario.forcedColors||scenario.reducedTransparency||scenario.manualTransparency||value.role==="solid") {
         assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
       }
