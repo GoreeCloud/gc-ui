@@ -1129,6 +1129,28 @@ try {
         "gc-ui-signal-constellation-filtered-"+scenario.name+".png"));
       assert.equal(shot.width,scenario.width,"Linked Timeflow screenshot width mismatch");
     }
+    if (scenario.name==="mobile-dark") {
+      await browser.evaluate('document.querySelector("#signal-constellation .gc-timeflow-panel").scrollIntoView({block:"center",behavior:"instant"})');
+      const historyGeometry=JSON.parse(await browser.evaluate(
+        '(()=>{const root=document.documentElement,section=document.querySelector("#signal-constellation .gc-timeflow-panel");'+
+        'const r=section.getBoundingClientRect(),record=section.querySelector("[data-gc-timeflow-list] > li:not([hidden])");'+
+        'const entry=record.getBoundingClientRect();'+
+        'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+        'left:r.left,right:r.right,entryLeft:entry.left,entryRight:entry.right,'+
+        'entryTitle:record.querySelector("strong").textContent.trim()})})()'));
+      assert.ok(historyGeometry.scroll<=historyGeometry.width+1,
+        "Filtered Timeflow overflows narrow viewport");
+      assert.ok(historyGeometry.left>=0&&historyGeometry.right<=historyGeometry.width+1,
+        "Filtered Timeflow panel escapes narrow viewport");
+      assert.ok(historyGeometry.entryLeft>=historyGeometry.left-1 &&
+        historyGeometry.entryRight<=historyGeometry.right+1,
+        "Filtered Timeflow event escapes its panel");
+      assert.equal(historyGeometry.entryTitle,"Review suggested",
+        "Visual Timeflow record does not match selected Needs review event");
+      const historyShot=await browser.screenshot(join(directory,
+        "gc-ui-timeflow-filtered-mobile-dark.png"));
+      assert.equal(historyShot.width,scenario.width,"Timeflow-focused QA capture width mismatch");
+    }
     console.log("Chromium Signal Constellation "+scenario.name+": bounds, semantics, frosted fallback passed");
   }
 
