@@ -1114,7 +1114,7 @@ try {
       'lens=document.querySelector(".gc-lab-toolbar.gc-lens"),nav=document.querySelector("#demo-bottom-nav");'+
       'const css=el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,blur:s.backdropFilter||s.webkitBackdropFilter}};'+
       'const snapshot=()=>({preference:root.dataset.gcTransparency,checked:control.checked,'+
-      'lens:css(lens),nav:css(nav),width:root.clientWidth,scroll:root.scrollWidth});'+
+      'lens:css(lens),nav:css(nav),windowDock:css(document.querySelector("#demo-window-nav")),width:root.clientWidth,scroll:root.scrollWidth});'+
       'const before=snapshot(),storageBefore=localStorage.length,cookieBefore=document.cookie;'+
       'control.click();const reduced=snapshot();'+
       'control.click();const restored=snapshot();'+
@@ -1127,7 +1127,7 @@ try {
     assert.equal(labPreference.reduced.preference,"reduce",
       "Lab checkbox failed to apply manual transparency");
     assert.equal(labPreference.reduced.checked,true,"Lab checkbox and theme state disagree");
-    for (const surface of ["lens","nav"]) {
+    for (const surface of ["lens","nav","windowDock"]) {
       assert.equal(labPreference.reduced[surface].blur,"none",
         "Manual setting did not disable blur on existing "+surface);
       assert.match(labPreference.reduced[surface].background,/^rgb\(/,
@@ -1153,14 +1153,14 @@ try {
     'const read=el=>{const css=getComputedStyle(el);return {background:css.backgroundColor,'+
     'blur:css.backdropFilter||css.webkitBackdropFilter}};'+
     'const snapshot=()=>({contrast:root.dataset.gcContrast,transparency:root.dataset.gcTransparency,'+
-    'lens:read(lens),nav:read(nav)});'+
+    'lens:read(lens),nav:read(nav),windowDock:read(document.querySelector("#demo-window-nav"))});'+
     'const before=snapshot();control.click();const enabled=snapshot();'+
     'control.click();return JSON.stringify({before,enabled,restored:snapshot()})})()'));
   assert.equal(labContrast.before.contrast,"normal","Lab contrast should default to normal");
   assert.equal(labContrast.enabled.contrast,"more","Contrast checkbox failed to update the theme");
   assert.equal(labContrast.enabled.transparency,"auto",
     "Contrast control unexpectedly changed the transparency preference");
-  for (const surface of ["lens","nav"]) {
+  for (const surface of ["lens","nav","windowDock"]) {
     assert.equal(labContrast.enabled[surface].blur,"none",
       "More Contrast did not disable existing "+surface+" backdrop blur");
     assert.ok(labContrast.enabled[surface].background.startsWith("rgb("),
@@ -1179,7 +1179,7 @@ try {
     'const swatch=document.createElement("span");swatch.style.background="Canvas";swatch.style.color="CanvasText";'+
     'document.body.append(swatch);const sys=getComputedStyle(swatch);'+
     'const colors={background:sys.backgroundColor,color:sys.color};swatch.remove();'+
-    'const surfaces=[".gc-lab-toolbar.gc-lens","#demo-bottom-nav"].map(selector=>{'+
+    'const surfaces=[".gc-lab-toolbar.gc-lens","#demo-bottom-nav","#demo-window-nav"].map(selector=>{'+
     'const s=getComputedStyle(document.querySelector(selector));'+
     'return {selector,background:s.backgroundColor,color:s.color,blur:s.backdropFilter||s.webkitBackdropFilter}});'+
     'return JSON.stringify({forced:matchMedia("(forced-colors: active)").matches,colors,surfaces})})()'));
