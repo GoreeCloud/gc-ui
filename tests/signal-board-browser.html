@@ -21,7 +21,7 @@
       <button type="button" aria-pressed="false" data-gc-signal-filter="attention">Needs review</button>
       <button type="button" aria-pressed="false" data-gc-signal-filter="offline">Offline</button>
     </div>
-    <p role="status" aria-live="polite" data-gc-signal-summary>Showing 4 of 4 signals</p>
+    <p role="status" aria-live="polite" data-gc-signal-summary>Showing 4 of 4 signals; 3 of 3 related events</p>
     <ul class="gc-signal-board__list" data-gc-signal-list>
       <li class="gc-signal-card" data-gc-signal="ready"><h2>One</h2><a id="focusable-signal" href="#fixture-heading">Focus test link</a></li>
       <li class="gc-signal-card" data-gc-signal="attention"><h2>Two</h2><p>Needs review</p></li>
@@ -29,7 +29,12 @@
       <li class="gc-signal-card" data-gc-signal="ready"><h2>Four</h2><p>Ready</p></li>
     </ul>
     <p data-gc-signal-empty hidden>No matching signals</p>
-    <ol class="gc-timeflow" aria-label="Example timeflow"><li><time datetime="2026-11-12T08:10">08:10</time><strong>Example event</strong></li></ol>
+    <ol class="gc-timeflow" data-gc-timeflow-list aria-label="Example timeflow by signal state">
+      <li data-gc-signal="ready"><time datetime="2026-11-12T09:20">09:20</time><strong>Ready example</strong><a id="focusable-history" href="#fixture-heading">Focus history link</a></li>
+      <li data-gc-signal="attention"><time datetime="2026-11-12T08:40">08:40</time><strong>Attention example</strong></li>
+      <li data-gc-signal="offline"><time datetime="2026-11-12T08:10">08:10</time><strong>Offline example</strong></li>
+    </ol>
+    <p data-gc-timeflow-empty hidden>No related events</p>
   </div>
 </section>
 </main>
