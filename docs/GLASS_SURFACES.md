@@ -46,6 +46,28 @@ responsible for its settings UI, user consent, persistence (if desired),
 and contrast verification. Do not rely on preference CSS to replace meaningful
 solid surfaces for credentials, long-form text, or security/privacy alerts.
 
+## Accessible alpha demo control and browser evidence
+
+The isolated `tests/glass-browser.html` **review fixture** includes a native,
+keyboard-operable **Reduce transparency** checkbox. It updates the local
+`createThemeController` in memory, announces a plain-language status, and
+restores `"auto"` when unchecked. Reloading resets the demo; it does not
+persist preferences or enable an app-wide settings contract.
+
+Real Chromium tests check checkbox/label semantics in the accessibility tree,
+Space-key activation and focus preservation, reduced and restored blur,
+reversibility, and no unexpected persistence. At compact 320px and 390px
+viewports, browser geometry tests additionally require the preference label and
+status not to overlap and the document not to overflow horizontally.
+
+**Visual acceptance scope:** The screenshots
+`gc-ui-glass-preference-320.png` (light) and
+`gc-ui-glass-preference-390.png` (dark) were manually inspected after a
+mobile layout correction; the label, large native checkbox, and separate
+supporting status are readable with purposeful spacing. These screenshots
+do not replace actual human assistive-technology, operating-system, or native
+application acceptance.
+
 ## Worst-case opaque-backdrop text-contrast guard
 
 The review branch includes `scripts/glass-contrast-guard.mjs`, a dependency-free
