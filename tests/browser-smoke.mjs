@@ -930,12 +930,14 @@ try {
     {name:"dark",dark:true,forcedColors:false,contrast:false},
     {name:"high-contrast",dark:false,forcedColors:false,contrast:true},
     {name:"reduced-transparency",dark:false,forcedColors:false,contrast:false,reducedTransparency:true},
-    {name:"forced-colors",dark:false,forcedColors:true,contrast:false}
+    {name:"forced-colors",dark:false,forcedColors:true,contrast:false},
+    {name:"user-reduced-transparency",dark:true,forcedColors:false,contrast:false,manualTransparency:true}
   ]) {
     await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors,reducedTransparency:scenario.reducedTransparency});
     await browser.navigate(base+"/tests/glass-browser.html");
     const state=JSON.parse(await browser.evaluate(
       '(()=>{if('+JSON.stringify(scenario.contrast)+')document.documentElement.dataset.gcContrast="more";'+
+      'if('+JSON.stringify(Boolean(scenario.manualTransparency))+')document.documentElement.dataset.gcTransparency="reduce";'+
       'const roles=["base","elevated","overlay","solid"];'+
       'const values=roles.map(role=>{const el=document.querySelector(".gc-glass-"+role);'+
       'const style=getComputedStyle(el);return {role,background:style.backgroundColor,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
@@ -946,12 +948,30 @@ try {
       assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
       assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
       assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
-      if(scenario.contrast||scenario.forcedColors||scenario.reducedTransparency||value.role==="solid") {
+      if(scenario.contrast||scenario.forcedColors||scenario.reducedTransparency||scenario.manualTransparency||value.role==="solid") {
         assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
       }
     }
     console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback and bounds passed");
   }
+
+  // A user opt-out must take effect without OS support and restore the exact
+  // previous visual style when switched back to auto. This does not certify
+  // every possible photographic or high-detail backdrop.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const userToggle=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,el=document.querySelector(".gc-glass-base");'+
+    'const read=()=>{const s=getComputedStyle(el);return {background:s.backgroundColor,blur:s.backdropFilter||s.webkitBackdropFilter}};'+
+    'const before=read();root.dataset.gcTransparency="reduce";const reduced=read();'+
+    'root.dataset.gcTransparency="auto";const restored=read();return JSON.stringify({before,reduced,restored});})()'));
+  assert.equal(userToggle.reduced.blur,"none",
+    "User accessibility preference failed to disable compositing");
+  assert.match(userToggle.reduced.background,/^rgb\(/,
+    "User accessibility preference failed to restore an opaque material");
+  assert.deepEqual(userToggle.restored,userToggle.before,
+    "Restoring auto transparency did not restore the original glass style");
+  console.log("Chromium manual glass transparency: reversible, opaque and blur-free");
 
 } finally {
   if (browser) await browser.close();
