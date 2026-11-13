@@ -125,7 +125,10 @@ Cloud Surface for reliable reading. On narrow viewports the cards become a
 single column, and the Timeflow trail stacks below the status cards. RTL uses
 logical inline spacing.
 
-In reduced-transparency, more-contrast, manual `data-gc-contrast="more"`,
+The baseline Cloud Lens header is **solid**. Only browsers that
+support `backdrop-filter` or `-webkit-backdrop-filter` receive the true
+translucent `--gc-lens-fill` plus optical blur and decorative ambiance. In
+reduced-transparency, more-contrast, manual `data-gc-contrast="more"`,
 manual `data-gc-transparency="reduce"`, or forced-colors environments, the
 frosted header must become solid and blur-free. Forced-colors uses system
 Canvas and CanvasText and retains visible selected/focus indications.
