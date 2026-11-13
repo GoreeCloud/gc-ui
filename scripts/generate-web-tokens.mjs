@@ -20,17 +20,17 @@ function renderCss(t){
  }).join("\n");
  const block=(selector,values,extra="")=>selector+" {\n"+decl(values)+(extra?"\n  "+extra:"")+"\n}\n";
  let css="/* Generated from tokens/gc.tokens.json by scripts/generate-web-tokens.mjs — DO NOT EDIT. */\n";
- css+=block(":root",{...primitives,...t.semantic.light,...t.accents.iris.light},"color-scheme: light;");
- for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-accent="'+family+'"]',modes.light);
- css+=block(':root[data-gc-theme="dark"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
- for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-theme="dark"][data-gc-accent="'+family+'"]',modes.dark);
+ css+=block(":root, .gc-app[data-gc-theme]",{...primitives,...t.semantic.light,...t.accents.iris.light},"color-scheme: light;");
+ for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-accent="'+family+'"], .gc-app[data-gc-theme][data-gc-accent="'+family+'"]',modes.light);
+ css+=block(':root[data-gc-theme="dark"], .gc-app[data-gc-theme="dark"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
+ for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-theme="dark"][data-gc-accent="'+family+'"], .gc-app[data-gc-theme="dark"][data-gc-accent="'+family+'"]',modes.dark);
  css+="@media (prefers-color-scheme: dark) {\n";
- css+=block('  :root:not([data-gc-theme]), :root[data-gc-theme="auto"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
- for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block('  :root:not([data-gc-theme])[data-gc-accent="'+family+'"], :root[data-gc-theme="auto"][data-gc-accent="'+family+'"]',modes.dark);
+ css+=block('  :root:not([data-gc-theme]), :root[data-gc-theme="auto"], .gc-app[data-gc-theme="auto"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
+ for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block('  :root:not([data-gc-theme])[data-gc-accent="'+family+'"], :root[data-gc-theme="auto"][data-gc-accent="'+family+'"], .gc-app[data-gc-theme="auto"][data-gc-accent="'+family+'"]',modes.dark);
  css+="}\n";
- css+=':root[data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }\n';
- css+='@media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }\n';
- css+='@media (prefers-reduced-transparency: reduce) { :root { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }\n';
+ css+=':root[data-gc-contrast="more"], .gc-app[data-gc-theme][data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }\n';
+ css+='@media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]), .gc-app[data-gc-theme]:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }\n';
+ css+='@media (prefers-reduced-transparency: reduce) { :root, .gc-app[data-gc-theme] { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }\n';
  css+='@media (prefers-reduced-motion: reduce) { :root { --gc-motion-fast: 0ms; --gc-motion-base: 0ms; --gc-motion-slow: 0ms; } }\n';
  return css;
 }

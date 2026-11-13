@@ -921,6 +921,27 @@ try {
     assert.equal(screenshot.height,height,"PNG pixel height does not match tested viewport");
     console.log("Captured "+filename+" ("+width+"×"+height+", "+screenshot.size+" bytes)");
   }
+  // A parent application may embed sibling products with independent palettes.
+  // Test both OS appearance preferences against actual Chromium computed styles.
+  for(const osDark of [false,true]){
+    await browser.setViewport(900,760,{dark:osDark});
+    await browser.navigate(base+"/lab/");
+    const actual=JSON.parse(await browser.evaluate("(async()=>{\n const {applyTheme,deriveAccent}=await import(\"/src/theme.js\");\n const host=document.createElement(\"div\"),parts=[];\n for(let i=0;i<3;i++){const app=document.createElement(\"section\");app.className=\"gc-app\";const action=document.createElement(\"button\");action.className=\"gc-button\";action.textContent=\"Action\";app.append(action);host.append(app);parts.push(app);}\n document.body.append(host);\n const [a,b,c]=parts;\n applyTheme(a,{mode:\"dark\",accent:\"lagoon\"});\n applyTheme(b,{mode:\"light\",customAccent:\"#B13571\"});\n applyTheme(c,{mode:\"auto\",accent:\"moss\"});\n const read=el=>{const s=getComputedStyle(el);return {canvas:s.getPropertyValue(\"--gc-canvas\").trim(),brand:s.getPropertyValue(\"--gc-brand\").trim(),scheme:s.colorScheme,button:getComputedStyle(el.querySelector(\".gc-button\")).backgroundColor};};\n const parentBefore=getComputedStyle(document.documentElement).getPropertyValue(\"--gc-brand\").trim();\n const before={a:read(a),b:read(b),c:read(c)};\n applyTheme(a,{mode:\"light\",accent:\"ember\",contrast:\"more\"});\n const after={a:read(a),b:read(b),c:read(c)};\n const parentUnchanged=getComputedStyle(document.documentElement).getPropertyValue(\"--gc-brand\").trim()===parentBefore;\n const expectedCustom=deriveAccent(\"#B13571\",\"light\").brand;\n host.remove();\n return JSON.stringify({before,after,parentUnchanged,expectedCustom});\n})()"));
+    assert.equal(actual.before.a.canvas,"#0D121D","Dark scope Canvas inherited the host");
+    assert.equal(actual.before.a.brand,"#8BE7F1","Dark Lagoon scope lost its palette");
+    assert.equal(actual.before.a.scheme,"dark");
+    assert.equal(actual.before.b.canvas,"#F6F7FB","Light scope Canvas inherited dark");
+    assert.equal(actual.before.b.brand,actual.expectedCustom,"Arbitrary custom hue missing");
+    assert.equal(actual.before.b.scheme,"light");
+    assert.equal(actual.before.c.brand,osDark?"#A9E0B3":"#326B42","Auto scope ignored OS appearance");
+    assert.equal(actual.after.a.canvas,"#F6F7FB","Local scope did not switch appearance");
+    assert.equal(actual.after.a.brand,"#A43F1D","Local scope did not switch accent");
+    assert.deepEqual(actual.after.b,actual.before.b,"Sibling custom scope leaked changes");
+    assert.deepEqual(actual.after.c,actual.before.c,"Sibling auto scope leaked changes");
+    assert.equal(actual.parentUnchanged,true,"Scoped theme mutated document palette");
+    console.log("Chromium independent app color/appearance "+(osDark?"dark":"light")+": passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
