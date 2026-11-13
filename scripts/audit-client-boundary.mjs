@@ -15,6 +15,10 @@ const checks=[
   ["persistent-cookie", /\b(?:document|globalThis\.document)\s*\.\s*cookie\b/g],
   ["persistent-serviceworker", /\bserviceWorker\s*\.\s*register\s*\(/g],
   ["remote-dynamic-import", /\bimport\s*\(\s*["'](?:https?:|\/\/)/g],
+  ["dynamic-code-eval", /\beval\s*\(/g],
+  ["dynamic-code-constructor", /\bnew\s+Function\s*\(/g],
+  ["dynamic-document-write", /\bdocument\s*\.\s*write(?:ln)?\s*\(/g],
+  ["dynamic-string-timer", /\bset(?:Timeout|Interval)\s*\(\s*["'`]/g],
   ["unsafe-dom-write", /\b(?:innerHTML|outerHTML)\s*=/g]
 ];
 const svgException=/\bthis\.shadowRoot\.innerHTML\s*=\s*iconSvg\(name,\s*\{\s*size,\s*decorative:\s*true\s*\}\s*\);/g;
