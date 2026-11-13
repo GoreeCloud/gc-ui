@@ -1,6 +1,6 @@
 # GoreeCloud UI — extended isolated QA evidence
 
-**Status:** Verified local QA evidence for review branch; no merge, deployment, native-device certification, or founder design approval.
+**Historical status (November 12, 2026):** Verified isolated QA evidence for the then-unmerged review branch; no deployment, native-device certification or founder design approval was established. **Subsequent November 13 source change:** [PR #75](https://github.com/GoreeCloud/gc-ui/pull/75) merged to public main after passing CI; this does not retroactively upgrade the November 12 review evidence or establish any release/deployment.
 
 ## Source and environment
 

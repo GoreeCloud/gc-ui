@@ -5,7 +5,7 @@
 ## Scope and environment
 
 - Repository: `GoreeCloud/gc-ui`
-- Review branch: `docs/unified-atmospheric-glass-standard-20261112`
+- Historical review branch at this November 12 checkpoint: `docs/unified-atmospheric-glass-standard-20261112` (subsequently merged in [PR #75](https://github.com/GoreeCloud/gc-ui/pull/75) on November 13, 2026; not a Stable or deployed release)
 - Checked commit: `728440f790a9bb3c841a47fe25b6dccbc614bb59`
 - Device: authorized `personal-laptop-ideapad3-01` (Linux); no production service changes
 - Isolated checkout: `/tmp/gc-ui-review-K2LqeC/repo`
