@@ -1049,6 +1049,22 @@ try {
     "Dispose failed to restore original linked Timeflow visibility and empty state");
   assert.equal(disposed.cookie,signalStart.cookie,"Board unexpectedly changed cookies");
   assert.equal(disposed.storage,signalStart.storage,"Board unexpectedly wrote local storage");
+  const backwardsCompatible=JSON.parse(await browser.evaluate(
+    '(()=>{const board=document.querySelector("#fixture-board"),timeline=board.querySelector(".gc-timeflow"),'+
+    'empty=board.querySelector("[data-gc-timeflow-empty]");'+
+    'empty.removeAttribute("data-gc-timeflow-empty");'+
+    'let missingEmptyRejected=false;try{window.initSignalBoard(board)}'+
+    'catch(error){missingEmptyRejected=error instanceof TypeError;}'+
+    'timeline.removeAttribute("data-gc-timeflow-list");'+
+    'const controller=window.initSignalBoard(board);controller.setFilter("ready");'+
+    'const status=board.querySelector("[data-gc-signal-summary]").textContent;'+
+    'const events=[...timeline.children].filter(node=>!node.hidden).length;'+
+    'const selected=controller.filter;controller.dispose();'+
+    'return JSON.stringify({missingEmptyRejected,status,events,selected})})()'));
+  assert.deepEqual(backwardsCompatible,{
+    missingEmptyRejected:true,status:"Showing 3 of 4 signals",
+    events:3,selected:"ready"
+  },"Optional linked Timeflow broke existing signal-only consumers");
   console.log("Chromium Signal Constellation: native filters, keyboard, dynamic refresh, focus, empty, disposal and privacy passed");
 
   // The real lab uses the same component without fake service backends.
