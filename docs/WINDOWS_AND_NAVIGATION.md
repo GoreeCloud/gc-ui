@@ -2,6 +2,28 @@
 
 **Status:** Founder requirements mandatory. Web alpha primitives implemented incrementally; native adapters and consumer adoption remain unverified.
 
+## Desktop startup state: normal window by default
+
+**Founder directive (November 13, 2026):** Native Linux, Windows and macOS
+GoreeCloud desktop applications open in a **normal, resizable, non-maximized,
+non-full-screen window by default**. The operating system retains control over
+window placement, native title bars and focus. Users can deliberately maximize,
+restore or enter full-screen; a supported saved state should only override the
+first-run normal default when the user explicitly chose it.
+
+Apps must keep normal-window bounds usable as monitor layouts, scale factors
+and panel/work-area dimensions change. Secondary dialogs should follow native
+transient-window conventions, not automatically become immersive. A deliberately
+user-invoked presentation/kiosk mode is a documented exception.
+
+This behavior is independent of the rounded-frame requirement below: it does
+not authorize replacing OS-managed windows with full-screen CSS mockups. The
+machine-readable [design authority](../registry/design-authority.v1.json)
+records this desktop policy, and the [native adapter contract](PLATFORM_ADAPTERS.md)
+defines per-platform acceptance. GoreeCloud UI's web-first Stable 1.0 candidate
+still does **not** certify native desktop SDKs, complete consumer adoption,
+actual window-manager acceptance or new OS support.
+
 ## Rounded windows: all application windows, all four corners
 
 Every GoreeCloud application window, dialog, secondary surface, drawer and compact/maximized window should have rounded corners. The web gc-window shell uses canonical --gc-radius-xl (36px); gc-window--compact uses --gc-radius-lg (26px). gc-window--maximized retains rounded corners. Window titlebar, identity, controls, body and status bar use gc-window__titlebar, gc-window__identity, gc-window__controls, gc-window__body and gc-window__statusbar. Choose real buttons only for implemented actions; do not present fake close/minimize/resize controls.
