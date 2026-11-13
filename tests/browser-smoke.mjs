@@ -136,7 +136,7 @@ async function startBrowser() {
       if (result.exceptionDetails) throw new Error("Browser JS exception: " + JSON.stringify(result.exceptionDetails));
       return result.result?.value;
     };
-    const setViewport = async (width, height, { dark=false, reducedMotion=false, forcedColors=false }={}) => {
+    const setViewport = async (width, height, { dark=false, reducedMotion=false, reducedTransparency=false, forcedColors=false }={}) => {
       await command("Emulation.setDeviceMetricsOverride", {
         width, height, screenWidth:width, screenHeight:height,
         mobile:width<=600, deviceScaleFactor:1
@@ -144,7 +144,8 @@ async function startBrowser() {
       await command("Emulation.setEmulatedMedia", {
         features:[{ name:"prefers-color-scheme", value:dark ? "dark" : "light" },
           { name:"prefers-reduced-motion", value:reducedMotion ? "reduce" : "no-preference" },
-          { name:"forced-colors", value:forcedColors ? "active" : "none" }]
+          { name:"forced-colors", value:forcedColors ? "active" : "none" },
+          { name:"prefers-reduced-transparency", value:reducedTransparency ? "reduce" : "no-preference" }]
       });
     };
     const navigate = async url => {
@@ -928,9 +929,10 @@ try {
     {name:"light",dark:false,forcedColors:false,contrast:false},
     {name:"dark",dark:true,forcedColors:false,contrast:false},
     {name:"high-contrast",dark:false,forcedColors:false,contrast:true},
+    {name:"reduced-transparency",dark:false,forcedColors:false,contrast:false,reducedTransparency:true},
     {name:"forced-colors",dark:false,forcedColors:true,contrast:false}
   ]) {
-    await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors});
+    await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors,reducedTransparency:scenario.reducedTransparency});
     await browser.navigate(base+"/tests/glass-browser.html");
     const state=JSON.parse(await browser.evaluate(
       '(()=>{if('+JSON.stringify(scenario.contrast)+')document.documentElement.dataset.gcContrast="more";'+
@@ -944,7 +946,7 @@ try {
       assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
       assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
       assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
-      if(scenario.contrast||scenario.forcedColors||value.role==="solid") {
+      if(scenario.contrast||scenario.forcedColors||scenario.reducedTransparency||value.role==="solid") {
         assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
       }
     }
