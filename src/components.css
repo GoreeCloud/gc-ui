@@ -1058,6 +1058,32 @@
   .gc-navigation-rail__links a[aria-current="page"] { outline:2px solid Highlight; }
 }
 
+
+/* App-level accessible transparency / increased-contrast preferences. They apply to the existing
+ * Cloud Lens primitives as well as optional glass roles from glass.css.
+ * The default appearance remains unchanged; no browser storage or telemetry.
+ * Never turn readable Cloud Surface or Canvas content into glass. */
+:is(:root, .gc-app[data-gc-theme]):is([data-gc-transparency="reduce"],[data-gc-contrast="more"]) :is(.gc-lens, .gc-bottom-nav) {
+  background:var(--gc-lens-solid);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-dialog,.gc-command)::backdrop {
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+/* Native OS forced-colors must outrank the app preference, including if the
+ * user activates both settings at once. */
+@media(forced-colors:active) {
+  :is(:root, .gc-app[data-gc-theme]):is([data-gc-transparency="reduce"],[data-gc-contrast="more"]) :is(.gc-lens,.gc-bottom-nav) {
+    color:CanvasText;
+    background:Canvas;
+    border-color:CanvasText;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}
+
 /* Signal Constellation + Timeflow: native-first application status patterns.
  * All colors and depth are semantic; decorative geometry never communicates
  * severity alone. Consumers own actual service data and authorization. */
@@ -1187,8 +1213,8 @@
   .gc-signal-board__lens { background:var(--gc-lens-solid); backdrop-filter:none; -webkit-backdrop-filter:none; }
   .gc-signal-board__lens::before { display:none; }
 }
-:root[data-gc-contrast="more"] .gc-signal-board__lens,
-:root[data-gc-transparency="reduce"] .gc-signal-board__lens {
+:is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"] .gc-signal-board__lens,
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] .gc-signal-board__lens {
   background:var(--gc-lens-solid); backdrop-filter:none; -webkit-backdrop-filter:none;
 }
 :root:is([data-gc-contrast="more"],[data-gc-transparency="reduce"]) .gc-signal-board__lens::before { display:none; }
@@ -1200,4 +1226,12 @@
   .gc-signal-board__filters > button[aria-pressed="true"] { outline:2px solid Highlight; background:Canvas; color:CanvasText; }
   .gc-signal-card__state::before,.gc-timeflow > li::before { background:CanvasText; border-color:Canvas; box-shadow:0 0 0 1px CanvasText; }
   .gc-signal-card:focus-within { border-color:Highlight; box-shadow:none; }
+}
+
+/* Keep native forced-colors authority above manually scoped Lens settings. */
+@media(forced-colors:active) {
+  :is(:root, .gc-app[data-gc-theme]):is([data-gc-transparency="reduce"],[data-gc-contrast="more"]) .gc-signal-board__lens {
+    color:CanvasText; background:Canvas; border-color:CanvasText;
+    -webkit-backdrop-filter:none; backdrop-filter:none;
+  }
 }

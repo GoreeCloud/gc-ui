@@ -18,7 +18,9 @@ GoreeCloud UI combines ergonomic reach and content hierarchy, adaptable semantic
 | Cloud Surface | 1 | Readable cards, forms, workspaces and tonal grouping |
 | Cloud Lens | 2 | Floating navigation, menus, overlays and transient controls |
 
-Glass must be purposeful; provide solid fallback and maintain contrast. Never put essential reading content over unpredictable photographs or translucent layers.
+Frosted glass is a **signature, elegant expression of Cloud Lens**, central to the intended GoreeCloud UI experience wherever elevated navigation or transient controls benefit from contextual depth. The material uses real backdrop blur, a softly translucent semantic surface, precise outlines and restrained optical highlights; its design importance does **not** require every card, page or private reading area to become transparent. Cloud Canvas and Cloud Surface remain calm, principally opaque materials. Keep accent colors application- and user-controlled, not globally blue by default.
+
+Glass must be purposeful; provide solid fallback and maintain contrast. Never put essential reading content over unpredictable photographs or translucent layers. The alpha review branch provides reusable `@goreecloud/ui/glass.css` roles and a responsive frosted composition in the [design lab](../lab/index.html), with browser-verified reduced-transparency, increased-contrast and forced-colors alternatives. See [Frosted Cloud Lens materials](GLASS_SURFACES.md); these review-branch assets are not yet a release or cross-product adoption claim.
 
 ## Authoritative token roles and alpha values
 
@@ -89,3 +91,7 @@ No GoreeCloud color hue **or light/dark appearance mode** is mandatory. Each pro
 For a full-page product, use `applyTheme(document.documentElement, { mode: "auto", customAccent: "#B13571" })`. In a shared page or embedded host, give **each independent application root** `class="gc-app"`, then call `applyTheme(appRoot, { mode: "dark", accent: "lagoon" })` or provide an authorized custom hex color. Import generated `tokens.css` before `components.css`. A configured scope's `data-gc-theme` selects its own Canvas, Surface, Lens, semantic roles, accent, appearance and contrast without mutating its host or sibling roots. An unconfigured `.gc-app` inherits its host theme instead of silently imposing a different palette.
 
 The `auto` mode follows CSS `prefers-color-scheme`. Use `createThemeController` with `dispose()` on unmount when a custom accent must respond to OS appearance changes. Scoped theme configuration introduces no persistence, telemetry or network calls. Native token exports remain example palettes rather than mandatory themes. Test contrast, state indicators, forced-colors, reduced transparency and portaled overlays for each consumer; an overlay mounted outside the scoped subtree must receive its intended theme explicitly.
+
+### Explicit per-application transparency
+
+Optional frosted Cloud Lens components use the shared semantic material roles, but neither hue nor glass is required on every surface. A configured `.gc-app[data-gc-theme]` can independently apply `data-gc-transparency="reduce"` or `data-gc-contrast="more"`, including through `applyTheme(appRoot, { transparency: "reduce" })`. The document root and other application scopes remain unchanged. Forced-colors takes precedence even when a manual preference is enabled. The web alpha checks are not consumer or native-device acceptance.

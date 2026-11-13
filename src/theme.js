@@ -5,6 +5,7 @@
 /** Browser/SSR safe GoreeCloud UI theme utilities. No telemetry or persistence. */
 export const ACCENTS = Object.freeze(["iris", "lagoon", "ember", "moss"]);
 export const MODES = Object.freeze(["light", "dark", "auto"]);
+export const TRANSPARENCY_MODES = Object.freeze(["auto", "reduce"]);
 
 const LIGHT = Object.freeze({
   iris: "#5146C8", lagoon: "#00697A", ember: "#A43F1D", moss: "#326B42"
@@ -63,19 +64,21 @@ export function getAccentColor(name, mode = "light") {
  * Sets theme attributes on a supplied root. Opt-in persistence belongs to consumers.
  * In auto mode CSS resolves prefers-color-scheme without JS event listeners.
  */
-export function applyTheme(root, { mode = "auto", accent = "iris", contrast = "normal", customAccent } = {}) {
+export function applyTheme(root, { mode = "auto", accent = "iris", contrast = "normal", transparency = "auto", customAccent } = {}) {
   if (!root || typeof root.setAttribute !== "function" || !root.style) {
     throw new TypeError("Supply a DOM root element");
   }
   if (!MODES.includes(mode)) throw new RangeError("Unknown theme mode");
   if (!ACCENTS.includes(accent)) throw new RangeError("Unknown accent family");
   if (!["normal", "more"].includes(contrast)) throw new RangeError("Unknown contrast mode");
+  if (!TRANSPARENCY_MODES.includes(transparency)) throw new RangeError("Unknown transparency preference");
   // Validate all user-supplied values before mutating the root.
   const dark = mode === "dark" || (mode === "auto" && typeof matchMedia === "function" && matchMedia("(prefers-color-scheme: dark)").matches);
   const colors = customAccent === undefined || customAccent === null ? null : deriveAccent(customAccent, dark ? "dark" : "light");
   root.setAttribute("data-gc-theme", mode);
   root.setAttribute("data-gc-accent", accent);
   root.setAttribute("data-gc-contrast", contrast);
+  root.setAttribute("data-gc-transparency", transparency);
   const names = ["--gc-brand", "--gc-on-brand", "--gc-brand-container", "--gc-on-brand-container"];
   for (const key of names) root.style.removeProperty(key);
   if (colors) {
@@ -94,7 +97,7 @@ export function applyTheme(root, { mode = "auto", accent = "iris", contrast = "n
  * No storage, telemetry, or background polling; dispose on unmount.
  */
 export function createThemeController(root, options = {}) {
-  let state = { mode: "auto", accent: "iris", contrast: "normal", ...options };
+  let state = { mode: "auto", accent: "iris", contrast: "normal", transparency: "auto", ...options };
   let disposed = false;
   const media = typeof globalThis.matchMedia === "function"
     ? globalThis.matchMedia("(prefers-color-scheme: dark)") : null;

@@ -14,12 +14,13 @@ import { tmpdir } from "node:os";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
+import { assertGlassTextContrast } from "../scripts/glass-contrast-guard.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const candidates = process.env.GC_CHROME_BIN ? [process.env.GC_CHROME_BIN] :
   ["google-chrome", "chromium", "chromium-browser"];
 const binary = candidates.find(name => spawnSync("which", [name], { encoding:"utf8" }).status === 0);
-if (!binary) throw new Error("Google Chrome or Chromium is required for browser smoke tests");
+if (!binary) throw new Error("Chrome/Chromium not found in PATH. Set GC_CHROME_BIN to an existing executable path (for example a trusted Playwright Chromium binary) and rerun npm run browser:smoke; no browser is downloaded automatically.");
 if (typeof WebSocket !== "function") throw new Error("Node 22+ WebSocket support is required");
 const mime = {
   ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8",
@@ -136,7 +137,7 @@ async function startBrowser() {
       if (result.exceptionDetails) throw new Error("Browser JS exception: " + JSON.stringify(result.exceptionDetails));
       return result.result?.value;
     };
-    const setViewport = async (width, height, { dark=false, reducedMotion=false, forcedColors=false }={}) => {
+    const setViewport = async (width, height, { dark=false, reducedMotion=false, reducedTransparency=false, forcedColors=false }={}) => {
       await command("Emulation.setDeviceMetricsOverride", {
         width, height, screenWidth:width, screenHeight:height,
         mobile:width<=600, deviceScaleFactor:1
@@ -144,7 +145,8 @@ async function startBrowser() {
       await command("Emulation.setEmulatedMedia", {
         features:[{ name:"prefers-color-scheme", value:dark ? "dark" : "light" },
           { name:"prefers-reduced-motion", value:reducedMotion ? "reduce" : "no-preference" },
-          { name:"forced-colors", value:forcedColors ? "active" : "none" }]
+          { name:"forced-colors", value:forcedColors ? "active" : "none" },
+          { name:"prefers-reduced-transparency", value:reducedTransparency ? "reduce" : "no-preference" }]
       });
     };
     const navigate = async url => {
@@ -190,6 +192,11 @@ async function startBrowser() {
         return command("Input.dispatchMouseEvent",{
           type:"mouseWheel",x,y,deltaX,deltaY:0,pointerType:"mouse"
         });
+      },
+      pressSpace:async()=>{
+        const key={key:" ",code:"Space",windowsVirtualKeyCode:32,nativeVirtualKeyCode:32};
+        await command("Input.dispatchKeyEvent",{type:"keyDown",...key});
+        await command("Input.dispatchKeyEvent",{type:"keyUp",...key});
       },
       bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
@@ -1330,6 +1337,398 @@ try {
   for(const role of scopedMotion.roles) assert.deepEqual(role,
     {fast:"0ms",base:"0ms",slow:"0ms"},"Configured application bypassed reduced motion");
   console.log("Chromium app-scoped reduced-motion tokens: passed");
+
+
+  // Real Chromium computed-style acceptance for the optional glass package.
+  // Tests solid defaults, opt-in blur, explicit high contrast and forced colors.
+  for (const scenario of [
+    {name:"light",dark:false,forcedColors:false,contrast:false},
+    {name:"dark",dark:true,forcedColors:false,contrast:false},
+    {name:"high-contrast",dark:false,forcedColors:false,contrast:true},
+    {name:"reduced-transparency",dark:false,forcedColors:false,contrast:false,reducedTransparency:true},
+    {name:"forced-colors",dark:false,forcedColors:true,contrast:false},
+    {name:"user-reduced-transparency",dark:true,forcedColors:false,contrast:false,manualTransparency:true},
+    {name:"user-reduced-and-forced-colors",dark:true,forcedColors:true,contrast:false,manualTransparency:true}
+  ]) {
+    await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors,reducedTransparency:scenario.reducedTransparency});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const state=JSON.parse(await browser.evaluate(
+      '(()=>{if('+JSON.stringify(scenario.contrast)+')document.documentElement.dataset.gcContrast="more";'+
+      'if('+JSON.stringify(Boolean(scenario.manualTransparency))+')document.documentElement.dataset.gcTransparency="reduce";'+
+      'const roles=["base","elevated","overlay","solid"];'+
+      'const values=roles.map(role=>{const el=document.querySelector(".gc-glass-"+role);'+
+      'const style=getComputedStyle(el);return {role,background:style.backgroundColor,color:style.color,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
+      'const probe=document.createElement("span");probe.style.background="Canvas";probe.style.color="CanvasText";document.body.append(probe);'+
+      'const sys=getComputedStyle(probe),systemBackground=sys.backgroundColor,systemText=sys.color;probe.remove();'+
+      'const root=document.documentElement,rs=getComputedStyle(root);'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,values,'+
+      'theme:root.dataset.gcTheme,emulatedDark:matchMedia("(prefers-color-scheme: dark)").matches,'+
+      'systemBackground,systemText,'+
+      'canvas:rs.getPropertyValue("--gc-canvas").trim(),text:rs.getPropertyValue("--gc-text").trim()});})()'));
+    const brightness=value=>{
+      assert.match(value,/^#[0-9a-f]{6}$/i,"Unexpected semantic color format "+value);
+      return ([1,3,5].reduce((sum,i)=>sum+Number.parseInt(value.slice(i,i+2),16),0))/3;
+    };
+    assert.equal(state.theme,"auto","Glass fixture must respect the emulated appearance");
+    assert.equal(state.emulatedDark,scenario.dark,"Browser did not emulate the requested appearance");
+    assert.ok(scenario.dark
+      ? brightness(state.text)>brightness(state.canvas)
+      : brightness(state.text)<brightness(state.canvas),
+      "Glass fixture failed to apply the effective "+(scenario.dark?"dark":"light")+" semantic palette: "+JSON.stringify(state));
+    assert.ok(state.scroll<=state.width+1,"Glass fixture horizontal overflow: "+JSON.stringify({scenario:scenario.name,state}));
+    assert.equal(state.values.length,4,"Missing material roles");
+    const modeledRatios = [];
+    for(const value of state.values) {
+      const contrast = assertGlassTextContrast(value.color, value.background, 4.5);
+      modeledRatios.push(contrast.ratio);
+      assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
+      assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
+      assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
+      if(scenario.forcedColors) {
+        assert.equal(value.background,state.systemBackground,
+          "System Canvas background was overridden in "+scenario.name+" "+value.role);
+        assert.equal(value.color,state.systemText,
+          "System CanvasText foreground was overridden in "+scenario.name+" "+value.role);
+      }
+      if(scenario.contrast||scenario.forcedColors||scenario.reducedTransparency||scenario.manualTransparency||value.role==="solid") {
+        assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
+      }
+    }
+    const glassShot=await browser.screenshot(join(directory,"gc-ui-glass-"+scenario.name+".png"));
+    assert.equal(glassShot.width,390,"Glass evidence viewport mismatch");
+    assert.equal(glassShot.height,844,"Glass evidence height mismatch");
+    console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback, bounds and minimum modeled text contrast "+Math.min(...modeledRatios).toFixed(2)+":1 passed");
+  }
+
+  // All four existing accent families retain independent light/dark glass
+  // readability; selecting an accent must never lock the ecosystem to one hue.
+  for(const dark of [false,true]) {
+    await browser.setViewport(390,844,{dark});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const brands=[];
+    for(const accent of ["iris","lagoon","ember","moss"]) {
+      const palette=JSON.parse(await browser.evaluate(
+        '(()=>{document.documentElement.dataset.gcAccent='+JSON.stringify(accent)+';'+
+        'const root=document.documentElement,cs=getComputedStyle(root);'+
+        'return JSON.stringify({accent:root.dataset.gcAccent,brand:cs.getPropertyValue("--gc-brand").trim(),'+
+        'text:getComputedStyle(document.querySelector(".gc-glass-base")).color,'+
+        'surfaces:["base","elevated","overlay","solid"].map(role=>{'+
+        'const s=getComputedStyle(document.querySelector(".gc-glass-"+role));'+
+        'return {role,foreground:s.color,background:s.backgroundColor}})});})()'));
+      assert.equal(palette.accent,accent,"Accent selection was lost");
+      assert.match(palette.brand,/^#[0-9a-f]{6}$/i,"Accent semantic token missing");
+      brands.push(palette.brand);
+      for(const {role,foreground,background} of palette.surfaces) {
+        assertGlassTextContrast(foreground,background,4.5);
+      }
+    }
+    assert.equal(new Set(brands).size,4,
+      "Preset accent colors collapsed to a mandatory global hue in "+(dark?"dark":"light")+" mode");
+    console.log("Chromium glass preset accents "+(dark?"dark":"light")+": four independent hues, all 4 roles >= 4.5:1 modeled contrast");
+  }
+
+  // A user opt-out must take effect without OS support and restore the exact
+  // previous visual style when switched back to auto. This does not certify
+  // every possible photographic or high-detail backdrop.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const userToggle=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,el=document.querySelector(".gc-glass-base");'+
+    'const read=()=>{const s=getComputedStyle(el);return {background:s.backgroundColor,blur:s.backdropFilter||s.webkitBackdropFilter}};'+
+    'const before=read();root.dataset.gcTransparency="reduce";const reduced=read();'+
+    'root.dataset.gcTransparency="auto";const restored=read();return JSON.stringify({before,reduced,restored});})()'));
+  assert.equal(userToggle.reduced.blur,"none",
+    "User accessibility preference failed to disable compositing");
+  assert.match(userToggle.reduced.background,/^rgb\(/,
+    "User accessibility preference failed to restore an opaque material");
+  assert.deepEqual(userToggle.restored,userToggle.before,
+    "Restoring auto transparency did not restore the original glass style");
+  console.log("Chromium manual glass transparency: reversible, opaque and blur-free");
+
+  // Real keyboard-operable UI for the optional preference, not just a test
+  // mutating root dataset. It intentionally retains no state after reload.
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const livePreference=JSON.parse(await browser.evaluate(
+    '(()=>{const input=document.querySelector("#gc-glass-reduce"),'+
+    'status=document.querySelector("#gc-glass-preference-status"),'+
+    'el=document.querySelector(".gc-glass-base");'+
+    'const read=()=>({preference:document.documentElement.dataset.gcTransparency,'+
+    'checked:input.checked,status:status.textContent.trim(),'+
+    'blur:getComputedStyle(el).backdropFilter||getComputedStyle(el).webkitBackdropFilter});'+
+    'const initial=read();input.click();const reduced=read();'+
+    'input.click();const restored=read();'+
+    'return JSON.stringify({initial,reduced,restored,name:input.labels?.[0]?.textContent.trim()});})()'));
+  assert.equal(livePreference.initial.checked,false,"Manual preference must default to off");
+  assert.equal(livePreference.initial.preference,"auto","System setting should be active by default");
+  assert.match(livePreference.name,/Reduce transparency/,"Toggle lacks a native accessible label");
+  assert.equal(livePreference.reduced.checked,true,"UI did not select reduced transparency");
+  assert.equal(livePreference.reduced.preference,"reduce","UI failed to update the theme controller");
+  assert.match(livePreference.reduced.status,/Solid surfaces/,"Preference action lacks visible status");
+  assert.ok(["none",""].includes(livePreference.reduced.blur),"Preference UI failed to disable blur");
+  assert.equal(livePreference.restored.preference,"auto","UI failed to restore system transparency");
+  assert.equal(livePreference.restored.checked,false,"UI restored state disagrees with the control");
+  assert.equal(livePreference.restored.blur,livePreference.initial.blur,"UI did not restore visual style");
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const localOnly=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.equal(localOnly.checked,false,"Lab preference unexpectedly persisted after navigation");
+  assert.equal(localOnly.preference,"auto","Theme preference unexpectedly persisted after navigation");
+  const checkboxAX=(await browser.accessibilityTree()).filter(n=>
+    n.role==="checkbox" && n.name==="Reduce transparency");
+  assert.equal(checkboxAX.length,1,"Toggle must appear exactly once with its native accessible name");
+  await browser.evaluate('document.querySelector("#gc-glass-reduce").focus()');
+  await browser.pressSpace();
+  const selectedByKeyboard=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="gc-glass-reduce",'+
+    'checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'transparency:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(selectedByKeyboard,{focused:true,checked:true,transparency:"reduce"},
+    "Native Space key must activate the transparency preference without stealing focus");
+  await browser.pressSpace();
+  const restoredByKeyboard=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'transparency:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(restoredByKeyboard,{checked:false,transparency:"auto"},
+    "Native Space key must restore system transparency");
+  // Screenshot-led visual review found the label and live status touching at
+  // compact sizes. Keep the block separation in real Chromium at 320/390px.
+  for(const width of [320,390]) {
+    await browser.setViewport(width,760,{dark:width===390});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const layout=JSON.parse(await browser.evaluate(
+      '(()=>{const label=document.querySelector("label[for=gc-glass-reduce]").getBoundingClientRect(),'+
+      'status=document.querySelector("#gc-glass-preference-status").getBoundingClientRect();'+
+      'return JSON.stringify({width:document.documentElement.clientWidth,'+
+      'scroll:document.documentElement.scrollWidth,'+
+      'labelBottom:label.bottom,labelRight:label.right,statusTop:status.top,statusRight:status.right})})()'));
+    assert.ok(layout.statusTop>=layout.labelBottom+2,
+      "Live preference status collides with its label at "+width+"px");
+    assert.ok(layout.labelRight<=layout.width+1&&layout.statusRight<=layout.width+1,
+      "Glass preference content escapes viewport "+JSON.stringify(layout));
+    assert.ok(layout.scroll<=layout.width+1,
+      "Glass preference causes document overflow at "+width+"px");
+    const shot=await browser.screenshot(join(directory,"gc-ui-glass-preference-"+width+".png"));
+    assert.equal(shot.width,width,"Preference QA screenshot width mismatch");
+  }
+  console.log("Chromium transparency preference UI: labeled, reversible, live and nonpersistent");
+
+  // The real design lab must honor the same preference on existing Cloud Lens
+  // and floating navigation, not only on the optional glass.css utilities.
+  for (const [width,dark] of [[320,false],[390,true]]) {
+    await browser.setViewport(width,844,{dark});
+    await browser.navigate(base+"/lab/");
+    const labPreference=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,control=document.querySelector("#transparency"),'+
+      'lens=document.querySelector(".gc-lab-toolbar.gc-lens"),nav=document.querySelector("#demo-bottom-nav");'+
+      'const css=el=>{const s=getComputedStyle(el);return {background:s.backgroundColor,blur:s.backdropFilter||s.webkitBackdropFilter}};'+
+      'const snapshot=()=>({preference:root.dataset.gcTransparency,checked:control.checked,'+
+      'lens:css(lens),nav:css(nav),windowDock:css(document.querySelector("#demo-window-nav")),width:root.clientWidth,scroll:root.scrollWidth});'+
+      'const before=snapshot(),storageBefore=localStorage.length,cookieBefore=document.cookie;'+
+      'control.click();const reduced=snapshot();'+
+      'control.click();const restored=snapshot();'+
+      'return JSON.stringify({before,reduced,restored,storageUnchanged:localStorage.length===storageBefore,'+
+      'cookieUnchanged:document.cookie===cookieBefore,label:control.labels?.[0]?.textContent.trim()});})()'));
+    assert.match(labPreference.label,/Reduce transparency/,
+      "Live lab setting must keep a visible native accessible label");
+    assert.equal(labPreference.before.preference,"auto",
+      "Design lab should initially follow system transparency");
+    assert.equal(labPreference.reduced.preference,"reduce",
+      "Lab checkbox failed to apply manual transparency");
+    assert.equal(labPreference.reduced.checked,true,"Lab checkbox and theme state disagree");
+    for (const surface of ["lens","nav","windowDock"]) {
+      assert.equal(labPreference.reduced[surface].blur,"none",
+        "Manual setting did not disable blur on existing "+surface);
+      assert.match(labPreference.reduced[surface].background,/^rgb\(/,
+        "Manual setting did not restore opaque "+surface);
+      assert.deepEqual(labPreference.restored[surface],labPreference.before[surface],
+        "Lab did not restore original "+surface+" styling");
+    }
+    assert.equal(labPreference.restored.preference,"auto","Lab failed to return to auto");
+    assert.equal(labPreference.restored.checked,false,"Restored checkbox remains checked");
+    assert.equal(labPreference.storageUnchanged,true,"Lab preference wrote local storage");
+    assert.equal(labPreference.cookieUnchanged,true,"Lab preference wrote a cookie");
+    assert.ok(labPreference.reduced.scroll<=labPreference.reduced.width+1,
+      "Manual preference caused page overflow at "+width+"px");
+  }
+
+  // Keyboard and accessibility-tree acceptance for the full design lab,
+  // distinct from the isolated glass test fixture's smaller demo toggle.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/lab/");
+  const labTransparencyAX=(await browser.accessibilityTree()).filter(node=>
+    node.role==="checkbox" && node.name==="Reduce transparency");
+  assert.equal(labTransparencyAX.length,1,
+    "Full design lab transparency switch must have one accessible checkbox name");
+  await browser.evaluate('document.querySelector("#transparency").focus()');
+  await browser.pressSpace();
+  const labKeyboardOn=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="transparency",'+
+    'checked:document.querySelector("#transparency").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(labKeyboardOn,{focused:true,checked:true,preference:"reduce"},
+    "Space should enable the design lab transparency setting without stealing focus");
+  await browser.pressSpace();
+  const labKeyboardOff=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="transparency",'+
+    'checked:document.querySelector("#transparency").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(labKeyboardOff,{focused:true,checked:false,preference:"auto"},
+    "Space should restore the system setting without losing keyboard focus");
+  await browser.evaluate('document.documentElement.style.fontSize="400%"');
+  const enlargedPreference=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,control=document.querySelector("#transparency"),'+
+    'label=control.closest("label"),r=label.getBoundingClientRect();'+
+    'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,left:r.left,'+
+    'right:r.right,visibleLabel:label.textContent.trim(),display:getComputedStyle(label).display})})()'));
+  assert.ok(enlargedPreference.left>=0&&enlargedPreference.right<=enlargedPreference.width+1,
+    "Full lab transparency switch escapes the 400% text viewport");
+  assert.ok(enlargedPreference.scroll<=enlargedPreference.width+1,
+    "Full lab transparency switch causes 400% horizontal overflow");
+  assert.match(enlargedPreference.visibleLabel,/Reduce transparency/,
+    "Enlarged transparency preference lost its visible label");
+  console.log("Chromium full lab preference: named checkbox, native Space activation and 400% reflow passed");
+
+  // The existing More Contrast control must disable real compositing blur
+  // without requiring users to separately select reduced transparency.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/lab/");
+  const labContrast=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,control=document.querySelector("#contrast");'+
+    'const lens=document.querySelector(".gc-lab-toolbar.gc-lens"),nav=document.querySelector("#demo-bottom-nav");'+
+    'const read=el=>{const css=getComputedStyle(el);return {background:css.backgroundColor,'+
+    'blur:css.backdropFilter||css.webkitBackdropFilter}};'+
+    'const snapshot=()=>({contrast:root.dataset.gcContrast,transparency:root.dataset.gcTransparency,'+
+    'lens:read(lens),nav:read(nav),windowDock:read(document.querySelector("#demo-window-nav"))});'+
+    'const before=snapshot();control.click();const enabled=snapshot();'+
+    'control.click();return JSON.stringify({before,enabled,restored:snapshot()})})()'));
+  assert.equal(labContrast.before.contrast,"normal","Lab contrast should default to normal");
+  assert.equal(labContrast.enabled.contrast,"more","Contrast checkbox failed to update the theme");
+  assert.equal(labContrast.enabled.transparency,"auto",
+    "Contrast control unexpectedly changed the transparency preference");
+  for (const surface of ["lens","nav","windowDock"]) {
+    assert.equal(labContrast.enabled[surface].blur,"none",
+      "More Contrast did not disable existing "+surface+" backdrop blur");
+    assert.ok(labContrast.enabled[surface].background.startsWith("rgb("),
+      "More Contrast did not restore opaque "+surface+" background");
+    assert.deepEqual(labContrast.restored[surface],labContrast.before[surface],
+      "More Contrast failed to restore "+surface+" appearance");
+  }
+  assert.equal(labContrast.restored.contrast,"normal","More Contrast did not reset");
+
+  // OS high-contrast colors must not be overwritten by a more specific app
+  // preference rule, including when both are active simultaneously.
+  await browser.setViewport(390,844,{dark:true,forcedColors:true});
+  await browser.navigate(base+"/lab/");
+  const labForced=JSON.parse(await browser.evaluate(
+    '(()=>{document.querySelector("#transparency").click();document.querySelector("#contrast").click();'+
+    'const swatch=document.createElement("span");swatch.style.background="Canvas";swatch.style.color="CanvasText";'+
+    'document.body.append(swatch);const sys=getComputedStyle(swatch);'+
+    'const colors={background:sys.backgroundColor,color:sys.color};swatch.remove();'+
+    'const surfaces=[".gc-lab-toolbar.gc-lens","#demo-bottom-nav","#demo-window-nav"].map(selector=>{'+
+    'const s=getComputedStyle(document.querySelector(selector));'+
+    'return {selector,background:s.backgroundColor,color:s.color,blur:s.backdropFilter||s.webkitBackdropFilter}});'+
+    'return JSON.stringify({forced:matchMedia("(forced-colors: active)").matches,colors,surfaces})})()'));
+  assert.equal(labForced.forced,true,"Forced-colors mode was not emulated");
+  for(const surface of labForced.surfaces) {
+    assert.equal(surface.background,labForced.colors.background,
+      "Manual transparency overrode OS Canvas on "+surface.selector);
+    assert.equal(surface.color,labForced.colors.color,
+      "Manual transparency overrode OS CanvasText on "+surface.selector);
+    assert.equal(surface.blur,"none","Forced color/lab preference retained blur");
+  }
+  console.log("Chromium design lab transparency: existing Lens/nav, mobile reflow, reversible and forced-colors passed");
+
+  // Signature frosted Cloud Lens stage must be a real composited scene, not
+  // decorative copy or an opaque card styled to imitate glass.
+  for(const scenario of [
+    {name:"light",width:1440,dark:false,forcedColors:false,manual:false,contrast:false},
+    {name:"dark-mobile",width:390,dark:true,forcedColors:false,manual:false,contrast:false},
+    {name:"solid-preference",width:390,dark:true,forcedColors:false,manual:true,contrast:false},
+    {name:"contrast-more",width:390,dark:false,forcedColors:false,manual:false,contrast:true},
+    {name:"forced-colors",width:390,dark:true,forcedColors:true,manual:true,contrast:true}
+  ]) {
+    await browser.setViewport(scenario.width,900,{dark:scenario.dark,forcedColors:scenario.forcedColors});
+    await browser.navigate(base+"/lab/");
+    const scene=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;'+
+      'if('+JSON.stringify(scenario.manual)+')document.querySelector("#transparency").click();'+
+      'if('+JSON.stringify(scenario.contrast)+')document.querySelector("#contrast").click();'+
+      'const panel=document.querySelector(".gc-frost-demo"),stage=panel.querySelector(".gc-frost-stage");'+
+      'stage.scrollIntoView({block:"center",behavior:"instant"});'+
+      'const role=selector=>{const el=stage.querySelector(selector),s=getComputedStyle(el),r=el.getBoundingClientRect();'+
+      'return {blur:s.backdropFilter||s.webkitBackdropFilter,background:s.backgroundColor,'+
+      'border:s.borderTopStyle,shadow:s.boxShadow,width:r.width,right:r.right,left:r.left,'+
+      'label:el.querySelector("h4")?.textContent.trim()}};'+
+      'const rect=stage.getBoundingClientRect();'+
+      'return JSON.stringify({documentWidth:root.clientWidth,scroll:root.scrollWidth,'+
+      'stage:{width:rect.width,left:rect.left,right:rect.right},'+
+      'translucent:[...stage.querySelectorAll("[data-gc-translucent=true]")].length,'+
+      'base:role(".gc-glass-elevated"),overlay:role(".gc-glass-overlay"),solid:role(".gc-glass-solid"),'+
+      'ambient:getComputedStyle(stage,"::before").display})})()'));
+    assert.equal(scene.translucent,2,"Frost scene must opt into exactly two real translucent panels");
+    assert.ok(scene.stage.width>0&&scene.stage.left>=0&&scene.stage.right<=scene.documentWidth+1,
+      "Signature frosted scene escaped the viewport "+scenario.name);
+    assert.ok(scene.scroll<=scene.documentWidth+1,"Frost scene caused document overflow "+scenario.name);
+    assert.match(scene.base.label,/quieter kind of depth/i,"Primary frost panel lost its accessible heading");
+    assert.match(scene.overlay.label,/Elegant, not distracting/,"Floating frost panel lost its heading");
+    assert.match(scene.solid.label,/Solid where it matters/,"Opaque reading card lost its heading");
+    for(const role of [scene.base,scene.overlay,scene.solid]) {
+      assert.notEqual(role.border,"none","Frost scene lost a semantic material boundary");
+      assert.ok(role.width>0&&role.left>=0&&role.right<=scene.documentWidth+1,
+        "Frost role escapes the viewport "+scenario.name);
+    }
+    assert.ok(scene.solid.blur==="none"||scene.solid.blur==="",
+      "Essential reading content must not blur the background");
+    const fallback=scenario.manual||scenario.contrast||scenario.forcedColors;
+    for(const role of [scene.base,scene.overlay]) {
+      if(fallback) {
+        assert.equal(role.blur,"none","Accessibility fallback retained optical blur in "+scenario.name);
+        assert.ok(role.background.startsWith("rgb("),"Frost fallback is not opaque "+scenario.name);
+        assert.equal(role.shadow,"none","Frost fallback retained optical highlight/shadow "+scenario.name);
+      } else {
+        assert.ok(role.blur.includes("blur("),"Frosted material lost real backdrop blur "+scenario.name);
+        assert.ok(role.background.startsWith("rgba("),
+          "Frosted material must allow the ambient scene to show through "+scenario.name);
+      }
+    }
+    if(fallback)assert.equal(scene.ambient,"none",
+      "Accessible solid fallback should suppress ambient decorative shapes");
+    const shot=await browser.screenshot(join(directory,"gc-ui-frost-stage-"+scenario.name+".png"));
+    assert.equal(shot.width,scenario.width,"Frosted visual QA screenshot width mismatch");
+    console.log("Chromium signature frosted stage "+scenario.name+": material depth, fallback, bounds and screenshot passed");
+  }
+
+  // Long text and RTL combined with 400% CSS-root font are a component
+  // stress case, not proof of actual browser 400% zoom or AT acceptance.
+  for(const width of [320,390]) {
+    await browser.setViewport(width,900,{dark:width===390});
+    await browser.navigate(base+"/lab/");
+    const legibility=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+      'const stage=document.querySelector(".gc-frost-stage");'+
+      'const panels=[...stage.querySelectorAll(".gc-frost-panel")].map(el=>{'+
+      'const bounds=el.getBoundingClientRect();'+
+      'const title=el.querySelector("h4").getBoundingClientRect();'+
+      'return {width:el.clientWidth,scroll:el.scrollWidth,left:bounds.left,right:bounds.right,'+
+      'titleLeft:title.left,titleRight:title.right}});'+
+      'const box=stage.getBoundingClientRect();'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+      'sceneLeft:box.left,sceneRight:box.right,panels})})()'));
+    assert.ok(legibility.scroll<=legibility.width+1,
+      "RTL 400% signature frost stage overflows the page at "+width+"px");
+    assert.ok(legibility.sceneLeft>=0&&legibility.sceneRight<=legibility.width+1,
+      "RTL 400% signature frost stage escapes viewport "+width+"px");
+    for(const panel of legibility.panels) {
+      assert.ok(panel.left>=0&&panel.right<=legibility.width+1,
+        "Frost panel clips against viewport at 400% and "+width+"px");
+      assert.ok(panel.scroll<=panel.width+1,
+        "Frost panel hides content at 400% and "+width+"px: "+JSON.stringify(panel));
+      assert.ok(panel.titleLeft>=panel.left-1&&panel.titleRight<=panel.right+1,
+        "Frost heading escapes its panel at 400% and "+width+"px");
+    }
+    console.log("Chromium signature frosted stage: RTL 400% CSS-root content reflow @ "+width+"px passed");
+  }
 
 } finally {
   if (browser) await browser.close();

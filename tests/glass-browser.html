@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-gc-theme="auto" data-gc-accent="lagoon">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>GC UI glass browser contract</title>
+<link rel="stylesheet" href="/src/tokens.css">
+<link rel="stylesheet" href="/src/components.css">
+<link rel="stylesheet" href="/src/glass.css">
+<style>
+/* Visual QA only: thematic atmospheric backdrops without hardcoded brand hues. */
+body.gc-app {
+  min-block-size:100vh;
+  background:
+    radial-gradient(ellipse at 18% 12%,var(--gc-brand-container),transparent 64%),
+    radial-gradient(ellipse at 84% 80%,var(--gc-surface-tonal),transparent 60%),
+    var(--gc-canvas);
+}
+.gc-glass-base,.gc-glass-elevated,.gc-glass-overlay,.gc-glass-solid { padding:24px; }
+.gc-glass-preference-panel { padding:16px; }
+.gc-glass-preference-panel .gc-check { inline-size:fit-content; min-block-size:44px; }
+#gc-glass-preference-status { display:block; margin-block-start:var(--gc-space-1); color:var(--gc-text-soft); font-size:var(--gc-type-support); line-height:1.4; }
+</style>
+</head>
+<body class="gc-app">
+<main class="gc-container gc-stack" style="padding-block:24px">
+<h1>Atmospheric materials</h1>
+<div class="gc-glass-solid gc-glass-preference-panel">
+  <label class="gc-check" for="gc-glass-reduce"><input id="gc-glass-reduce" type="checkbox"> <span>Reduce transparency</span></label>
+  <output id="gc-glass-preference-status" role="status" aria-live="polite">System transparency preference</output>
+</div>
+<section class="gc-glass-base" data-gc-translucent="true" style="padding:24px"><h2>Base</h2><p>Readable navigation surface.</p></section>
+<section class="gc-glass-elevated" data-gc-translucent="true" style="padding:24px"><h2>Elevated</h2><button class="gc-button">Action</button></section>
+<section class="gc-glass-overlay" data-gc-translucent="true" style="padding:24px"><h2>Overlay</h2><p>Transient controls.</p></section>
+<section class="gc-glass-solid" data-gc-translucent="true" style="padding:24px"><h2>Solid</h2><p>Sensitive reading content.</p></section>
+</main>
+<script type="module">
+import { createThemeController } from "/src/theme.js";
+const root = document.documentElement;
+const input = document.querySelector("#gc-glass-reduce");
+const status = document.querySelector("#gc-glass-preference-status");
+const theme = createThemeController(root, { mode:"auto", accent:root.dataset.gcAccent || "iris" });
+input.addEventListener("change", () => {
+  const mode = input.checked ? "reduce" : "auto";
+  theme.update({ transparency:mode });
+  status.textContent = mode === "reduce"
+    ? "Solid surfaces selected; glass blur disabled"
+    : "System transparency preference";
+});
+</script>
+</body></html>

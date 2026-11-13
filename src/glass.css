@@ -1,0 +1,135 @@
+/* Optional GoreeCloud UI atmospheric materials. Import after tokens.css and components.css.
+ * This stylesheet adds visual roles; it does not replace Cloud Canvas/Surface/Lens
+ * or impose a global brand color. Every role starts with a readable solid surface.
+ */
+.gc-glass-base,
+.gc-glass-elevated,
+.gc-glass-overlay,
+.gc-glass-solid {
+  color: var(--gc-text);
+  background: var(--gc-lens-solid, var(--gc-surface));
+  border: 1px solid var(--gc-outline-soft);
+  border-radius: var(--gc-radius-lg);
+}
+.gc-glass-base {
+  box-shadow: var(--gc-shadow-1);
+}
+.gc-glass-elevated {
+  box-shadow: var(--gc-shadow-2);
+}
+.gc-glass-overlay {
+  box-shadow: var(--gc-shadow-3);
+}
+.gc-glass-solid {
+  background: var(--gc-surface);
+}
+/* Opt in to translucency explicitly, not automatically for every readable panel. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .gc-glass-base[data-gc-translucent="true"],
+  .gc-glass-elevated[data-gc-translucent="true"],
+  .gc-glass-overlay[data-gc-translucent="true"] {
+    background: var(--gc-lens-fill, var(--gc-lens-solid));
+    -webkit-backdrop-filter: blur(var(--gc-blur-lens, 0px)) saturate(1.12);
+    backdrop-filter: blur(var(--gc-blur-lens, 0px)) saturate(1.12);
+  }
+}
+/* A restrained optical rim makes genuine frosted Cloud Lens surfaces
+ * distinct without a fixed brand hue. Color mixes derive from existing
+ * semantic tokens; the plain border/shadow declarations above are fallbacks.
+ * This treatment is opt-in and decorative, never a contrast indicator. */
+@supports (color: color-mix(in srgb, white, transparent)) {
+  .gc-glass-base[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-1), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+  .gc-glass-elevated[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-2), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+  .gc-glass-overlay[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-3), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+}
+/* Solid material is required for system accessibility preferences. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  .gc-glass-base,
+  .gc-glass-elevated,
+  .gc-glass-overlay,
+  .gc-glass-solid {
+    background: var(--gc-lens-solid, var(--gc-surface));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+:is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+@media (forced-colors: active) {
+  .gc-glass-base,
+  .gc-glass-elevated,
+  .gc-glass-overlay,
+  .gc-glass-solid {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}
+
+/* Keep this override last: the opt-in @supports declaration has higher
+ * specificity than the generic fallback selector. Match that specificity
+ * here so accessibility preferences always win the cascade. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--gc-lens-solid, var(--gc-surface));
+    box-shadow: none;
+  }
+}
+:is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--gc-lens-solid, var(--gc-surface));
+  box-shadow: none;
+}
+@media (forced-colors: active) {
+  :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* User/app-level transparency preference, independent of browser support for
+ * prefers-reduced-transparency. Explicitly restores opaque painted surfaces.
+ * Keep selector specificity at least as high as the translucent opt-in rules. */
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+/* Forced-colors always has final authority, including when the application
+ * simultaneously requests reduced transparency. Never let a later semantic
+ * solid override conceal operating-system Canvas/CanvasText colors. */
+@media (forced-colors: active) {
+  :is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid),
+  :is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    background: Canvas;
+    color: CanvasText;
+    border-color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}

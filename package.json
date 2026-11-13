@@ -61,7 +61,8 @@
     "./signal-board": {
       "types": "./src/signal-board.d.ts",
       "default": "./src/signal-board.js"
-    }
+    },
+    "./glass.css": "./src/glass.css"
   },
   "files": [
     "src/",
