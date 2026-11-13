@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "product": "GoreeCloud UI",
+  "releaseTarget": "1.0.0",
+  "status": "proposed-acceptance-scope-not-stable",
+  "governingSource": "docs/RELEASE_ROADMAP.md",
+  "supportedConfiguration": {
+    "browserEngine": "Chromium",
+    "platform": "Ubuntu 24.04 GitHub Actions runner",
+    "headless": true,
+    "versionPolicy": "Exact installed CI Chromium binary, not an unqualified Chrome/Edge version range",
+    "runtime": "Node.js 22 for browser runner; offline package checks separately on Node 20/22/24",
+    "status": "automated-baseline-verified-not-release-candidate"
+  },
+  "verifiedAutomatedMatrix": {
+    "layoutCssWidths": [
+      320,
+      390,
+      600,
+      900,
+      1440
+    ],
+    "appearance": [
+      "light",
+      "dark"
+    ],
+    "optionalAccentSamples": [
+      "iris",
+      "lagoon",
+      "ember",
+      "moss"
+    ],
+    "independentAppScopes": true,
+    "features": [
+      "CSS token resolution",
+      "layout overflow and bounds",
+      "keyboard interaction",
+      "floating navigation",
+      "native dialog and controls",
+      "reduced motion",
+      "reduced transparency",
+      "forced colors",
+      "RTL",
+      "installed tarball import and scoped theme+toggle"
+    ],
+    "limitations": [
+      "CI viewport sizes are browser emulation and NOT physical iOS/Android device acceptance",
+      "CSS root-font 200%/400% checks are NOT actual browser zoom 200%/400%",
+      "Human AT not performed; advisory for personal Stable scope but do not certify",
+      "Chromium CI is not proof of Safari, Firefox, Chrome Windows/macOS or Edge compatibility"
+    ]
+  },
+  "provisionallyUnsupportedOrUnverified": [
+    {
+      "name": "Firefox / Gecko",
+      "status": "not-tested",
+      "releaseClaim": false
+    },
+    {
+      "name": "Safari / WebKit",
+      "status": "not-tested",
+      "releaseClaim": false
+    },
+    {
+      "name": "iOS Safari / Android Chrome physical devices",
+      "status": "not-tested",
+      "releaseClaim": false
+    },
+    {
+      "name": "Windows/macOS Chrome or Edge physical desktop",
+      "status": "not-tested",
+      "releaseClaim": false
+    },
+    {
+      "name": "True browser zoom 200%/400% at OS browser setting",
+      "status": "not-tested",
+      "releaseClaim": false
+    }
+  ],
+  "visualEvidence": {
+    "status": "AI-reviewed-selected-baseline-views-not-candidate-acceptance",
+    "baselineSourceSha": "c235f9b5e2577c440465de0d455372c363f4d01d",
+    "runUrl": "https://github.com/GoreeCloud/gc-ui/actions/runs/43447990325",
+    "artifactId": 14049316403,
+    "artifactName": "gc-ui-browser-evidence",
+    "artifactDigestSha256": "b9bf21d350391fbf481902ab93421b0088e24062f43b2713e7d22e39585bba37",
+    "pngCount": 53,
+    "reviewed": [
+      {
+        "file": "gc-ui-light-desktop.png",
+        "size": [
+          1440,
+          900
+        ],
+        "result": "baseline composition visually coherent",
+        "observations": "Readable hierarchy and clear Canvas/Surface/Lens separation; desktop navigation and controls visible"
+      },
+      {
+        "file": "gc-ui-dark-mobile.png",
+        "size": [
+          390,
+          844
+        ],
+        "result": "baseline composition visually coherent",
+        "observations": "Readable dark typography, distinct bottom navigation and intentional Lens surface; screenshot captures only first scroll viewport"
+      },
+      {
+        "file": "gc-ui-light-mobile-320.png",
+        "size": [
+          320,
+          760
+        ],
+        "result": "baseline composition visually coherent",
+        "observations": "Narrow control stack and primary heading reflow; bottom navigation overlays a scrollable portion of content as designed"
+      }
+    ],
+    "reviewerType": "AI-assisted visual inspection",
+    "reviewDate": "2026-11-13",
+    "limitations": [
+      "Visual review inspected selected source-baseline screenshots, not a 1.0.0 candidate",
+      "Viewport PNGs do not show an entire scrollable page, keyboard/focus path, animation or actual physical devices",
+      "400% root-font screenshots are reference only, not actual browser zoom; cropped frame can conceal other content",
+      "No human screen-reader or founder external approval claimed"
+    ]
+  },
+  "acceptancePolicy": {
+    "web1_0ProvisionalSupport": "Chromium-based reference lab and offline-installed foundation verified on Ubuntu 24.04 CI only",
+    "candidateReviewStatus": "pending-exact-1.0.0-commit-and-artifact",
+    "deferredHumanAT": "advisory-per-founder-governance-13.2.1",
+    "nativeSdkStatus": "not-implemented",
+    "consumerMigrationStatus": "not-audited",
+    "mandatoryGlobalHue": false,
+    "mandatoryAppearanceTheme": false
+  }
+}
