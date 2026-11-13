@@ -34,8 +34,15 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
     }
   };
   const onClick = event => {
+    // Composed paths expose the actual control inside an open shadow root;
+    // event.target alone can be retargeted to its host.
+    const path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+    const nodes = Array.isArray(path) && path.includes(root)
+      ? path.slice(0, path.indexOf(root) + 1)
+      : null;
     let element = event.target;
-    while (element && element !== root) {
+    let index = 0;
+    while (element) {
       if (typeof element.getAttribute === 'function') {
         const state = element.getAttribute('data-gc-availability');
         const tag = element.tagName?.toUpperCase();
@@ -46,7 +53,8 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
           return;
         }
       }
-      element = element.parentNode || element.host || null;
+      if (element === root) break;
+      element = nodes ? nodes[++index] : (element.parentNode || element.host || null);
     }
   };
   // Implicit Enter submissions and form.requestSubmit() can bypass click
