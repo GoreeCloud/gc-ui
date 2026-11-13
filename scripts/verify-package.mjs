@@ -54,7 +54,7 @@ import { readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 const entries=${JSON.stringify(entries)};
 const identity=${JSON.stringify({name:pkg.name,version:pkg.version})};
-const pkg=JSON.parse(readFileSync(fileURLToPath(import.meta.resolve("@goreecloud/ui/../package.json")),"utf8"));
+const pkg=JSON.parse(readFileSync(fileURLToPath(new URL("../package.json", import.meta.resolve("@goreecloud/ui"))),"utf8"));
 assert.equal(pkg.name,identity.name);
 assert.equal(pkg.version,identity.version);
 for(const entry of entries) {
