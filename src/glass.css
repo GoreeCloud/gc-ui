@@ -100,3 +100,18 @@
   backdrop-filter: none;
   box-shadow: none;
 }
+
+/* Forced-colors always has final authority, including when the application
+ * simultaneously requests reduced transparency. Never let a later semantic
+ * solid override conceal operating-system Canvas/CanvasText colors. */
+@media (forced-colors: active) {
+  :root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid),
+  :root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    background: Canvas;
+    color: CanvasText;
+    border-color: CanvasText;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
