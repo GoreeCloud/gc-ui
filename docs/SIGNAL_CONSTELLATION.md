@@ -1,6 +1,6 @@
 # Signal Constellation & Timeflow — GoreeCloud UI (alpha)
 
-**Status:** review-branch web UI pattern. Not deployed, not a live monitor, and not a
+**Status:** merged alpha web UI source; not deployed, published as Stable, or a live monitor. Not a
 GoreeCloud Mesh, Wardveil, GoreeShield or Identity enforcement component.
 
 ## Purpose
@@ -148,3 +148,7 @@ Testing includes unit contracts and Chromium keyboard, dynamic refresh, empty,
 focus-transfer, disposal, mobile, dark, forced-colors and RTL/400% CSS-root
 reflow checks. These do **not** establish actual 400% browser zoom, native
 platform adapters, OS screen-reader acceptance or WCAG certification.
+
+### Dated integration checkpoint — November 13, 2026
+
+This component entered public `main` through [PR #77](https://github.com/GoreeCloud/gc-ui/pull/77), commit [`9d8380d`](https://github.com/GoreeCloud/gc-ui/commit/9d8380d3de8637cbdbd270b43d9a0a53f1fff664). Its [branch source/package and browser smoke jobs passed](https://github.com/GoreeCloud/gc-ui/actions/runs/43424884496); a later Chromium horizontal-wheel fixture failure was independently corrected through [PR #79](https://github.com/GoreeCloud/gc-ui/pull/79) and [subsequent passing main CI](https://github.com/GoreeCloud/gc-ui/actions/runs/43429549803). Material isolation checks were expanded in [PR #80](https://github.com/GoreeCloud/gc-ui/pull/80). These are tested source components, not verified live service-health data, consumer authorization, native adapters or deployed products.

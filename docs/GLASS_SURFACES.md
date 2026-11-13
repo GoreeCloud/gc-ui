@@ -1,6 +1,6 @@
 # Frosted Cloud Lens materials — signature GoreeCloud UI expression (alpha)
 
-Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before the optional `@goreecloud/ui/glass.css` stylesheet. The package export is defined on this review branch but is **not yet released**. It provides opt-in CSS classes, not new material tokens or mandatory color choices.
+Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before the optional `@goreecloud/ui/glass.css` stylesheet. The package export is merged into the public alpha source on `main`, but **not published to npm or released as Stable**. It provides opt-in CSS classes, not new material tokens or mandatory color choices.
 
 | CSS class | Intended use | Existing material mapping |
 | --- | --- | --- |
@@ -64,7 +64,7 @@ the glass hierarchy is visually distinct, text readable at the observed sizes,
 and solid fallbacks visibly remain high contrast. These checks do **not**
 establish universal pixel-perfect contrast, photo-overlay safety, GPU/battery
 performance, Android/native system materials, or screen-reader certification.
-The work is a review-branch alpha, not a consumer migration or deployment.
+The merged source remains alpha, not a completed consumer migration, npm publication or deployment.
 
 ## Explicit reduced-transparency preference
 
@@ -137,11 +137,11 @@ styles. Additional forced-colors checks (including concurrent More Contrast and
 reduced-transparency preferences) enforce the OS system palette for the
 Lens toolbar and both dock variants, and verify unchanged local storage and cookies. The tests check page
 horizontal overflow but do not certify real touch/OS screen readers.
-**This is a review-branch capability; no production rollout occurred.**
+**This capability is merged alpha source; no production rollout occurred.**
 
 ## Worst-case opaque-backdrop text-contrast guard
 
-The review branch includes `scripts/glass-contrast-guard.mjs`, a dependency-free
+The merged source includes `scripts/glass-contrast-guard.mjs`, a dependency-free
 QA utility (not a public browser export) for **opaque CSS text over one RGBA
 glass fill**, with any fully opaque sRGB background. It computes the minimum
 WCAG relative-luminance contrast over the entire RGB backdrop cube using the
@@ -178,3 +178,7 @@ and accessibility audits remain mandatory, especially over high-detail media.
 ## Independently configured application roots
 
 When multiple products share a document, apply `applyTheme(appRoot, { mode: "dark", accent: "lagoon", transparency: "reduce" })` to each relevant `.gc-app` element. Manual `data-gc-transparency="reduce"` and `data-gc-contrast="more"` are scoped to that application subtree, not applied globally; sibling applications can choose completely different colors and materials. A configured root is required for independent appearance. Native forced colors always wins over a manually selected solid material. The shared Signal Constellation Lens follows the same scoped reduction rules. Automated Chromium fixture coverage tests this behavior; physical devices, screen readers and complete consumer visual acceptance remain open.
+
+### Dated source integration checkpoint — November 13, 2026
+
+The original proposal was reconciled in [PR #75](https://github.com/GoreeCloud/gc-ui/pull/75) and merged as [commit `01fe102`](https://github.com/GoreeCloud/gc-ui/commit/01fe1029d9d8564e9319c6d3d03e6b37ddca1215) after the [source/contract and Chromium CI checks passed](https://github.com/GoreeCloud/gc-ui/actions/runs/43430134681). [Post-merge main CI](https://github.com/GoreeCloud/gc-ui/actions/runs/43430319003) passed. The independent scoped-material browser acceptance followed in [PR #80](https://github.com/GoreeCloud/gc-ui/pull/80) and is source-level evidence, not proof of accessibility certification, physical hardware validation, Stable publication or deployment. Each app remains free to choose a different hue or appearance.
