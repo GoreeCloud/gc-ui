@@ -1,0 +1,23 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+const read=path=>readFileSync(new URL("../"+path,import.meta.url),"utf8");
+test("packed Chromium fixture uses published foundation export and local assets",()=>{
+  const html=read("tests/packed-foundation.html");
+  const runner=read("tests/packed-foundation-browser.mjs");
+  const ci=read(".github/workflows/ci.yml");
+  assert.match(html,/import \{ applyTheme, initToggleGroup, ICON_NAMES \} from "@goreecloud\/ui\/foundation"/);
+  assert.match(html,/gc-app" id="sample-one"/);
+  assert.match(html,/gc-app" id="sample-two"/);
+  assert.match(html,/brandOne===brandTwo/);
+  assert.match(html,/data-gc-transparency/);
+  assert.match(html,/data-gc-packed="pending"/);
+  assert.match(runner,/node_modules","@goreecloud","ui"/);
+  assert.match(runner,/--ignore-scripts/);
+  assert.match(runner,/--offline/);
+  assert.match(runner,/--dump-dom/);
+  assert.match(runner,/server.listen\(0,"127.0.0.1",ok\)/);
+  assert.match(runner,/Content-Security-Policy/);
+  assert.match(ci,/Exercise offline-installed foundation inside Chromium/);
+  assert.ok(!runner.includes("https://"),"No remote origin in local verification driver");
+});

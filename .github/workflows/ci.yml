@@ -52,6 +52,8 @@ jobs:
           node-version: "22"
       - name: Exercise native browser interaction fixture and capture two viewports
         run: npm run browser:smoke
+      - name: Exercise offline-installed foundation inside Chromium
+        run: node tests/packed-foundation-browser.mjs
       - name: Preserve generated screenshots
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
