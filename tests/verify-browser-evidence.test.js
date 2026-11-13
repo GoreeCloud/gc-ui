@@ -13,7 +13,7 @@ function receipt(){
   const names=["gc-ui-light-desktop.png","gc-ui-dark-mobile.png","gc-ui-light-mobile-320.png",
     ...Array.from({length:50},(_,i)=>"gc-ui-independent-"+i+".png")];
   const map=new Map(names.map((name,i)=>[name,i===0?png(1440,900):i===1?png(390,844):i===2?png(320,760):png(390,844)]));
-  const screenshots=[...map].map(([name,bytes])=>pngReceipt(name,bytes));
+  const screenshots=[...map].map(([name,bytes])=>({...pngReceipt(name,bytes)}));
   const manifest={schemaVersion:1,kind:"chromium-screenshot-evidence",
     status:"development-evidence-not-stable",published:false,signed:false,
     sourceSha:sha,browserVersion:"Google Chrome 157.0.8103.50",
