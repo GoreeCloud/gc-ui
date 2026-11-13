@@ -21,9 +21,27 @@ body.gc-app {
 <body class="gc-app">
 <main class="gc-container gc-stack" style="padding-block:24px">
 <h1>Atmospheric materials</h1>
+<div class="gc-glass-solid" style="padding:16px">
+  <label for="gc-glass-reduce"><input id="gc-glass-reduce" type="checkbox"> Reduce transparency</label>
+  <output id="gc-glass-preference-status" role="status" aria-live="polite">System transparency preference</output>
+</div>
 <section class="gc-glass-base" data-gc-translucent="true" style="padding:24px"><h2>Base</h2><p>Readable navigation surface.</p></section>
 <section class="gc-glass-elevated" data-gc-translucent="true" style="padding:24px"><h2>Elevated</h2><button class="gc-button">Action</button></section>
 <section class="gc-glass-overlay" data-gc-translucent="true" style="padding:24px"><h2>Overlay</h2><p>Transient controls.</p></section>
 <section class="gc-glass-solid" data-gc-translucent="true" style="padding:24px"><h2>Solid</h2><p>Sensitive reading content.</p></section>
 </main>
+<script type="module">
+import { createThemeController } from "/src/theme.js";
+const root = document.documentElement;
+const input = document.querySelector("#gc-glass-reduce");
+const status = document.querySelector("#gc-glass-preference-status");
+const theme = createThemeController(root, { mode:"auto", accent:root.dataset.gcAccent || "iris" });
+input.addEventListener("change", () => {
+  const mode = input.checked ? "reduce" : "auto";
+  theme.update({ transparency:mode });
+  status.textContent = mode === "reduce"
+    ? "Solid surfaces selected; glass blur disabled"
+    : "System transparency preference";
+});
+</script>
 </body></html>
