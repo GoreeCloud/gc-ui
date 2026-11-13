@@ -985,6 +985,33 @@ try {
     console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback, bounds and minimum modeled text contrast "+Math.min(...modeledRatios).toFixed(2)+":1 passed");
   }
 
+  // All four existing accent families retain independent light/dark glass
+  // readability; selecting an accent must never lock the ecosystem to one hue.
+  for(const dark of [false,true]) {
+    await browser.setViewport(390,844,{dark});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const brands=[];
+    for(const accent of ["iris","lagoon","ember","moss"]) {
+      const palette=JSON.parse(await browser.evaluate(
+        '(()=>{document.documentElement.dataset.gcAccent='+JSON.stringify(accent)+';'+
+        'const root=document.documentElement,cs=getComputedStyle(root);'+
+        'return JSON.stringify({accent:root.dataset.gcAccent,brand:cs.getPropertyValue("--gc-brand").trim(),'+
+        'text:getComputedStyle(document.querySelector(".gc-glass-base")).color,'+
+        'surfaces:["base","elevated","overlay","solid"].map(role=>{'+
+        'const s=getComputedStyle(document.querySelector(".gc-glass-"+role));'+
+        'return {role,foreground:s.color,background:s.backgroundColor}})});})()'));
+      assert.equal(palette.accent,accent,"Accent selection was lost");
+      assert.match(palette.brand,/^#[0-9a-f]{6}$/i,"Accent semantic token missing");
+      brands.push(palette.brand);
+      for(const {role,foreground,background} of palette.surfaces) {
+        assertGlassTextContrast(foreground,background,4.5);
+      }
+    }
+    assert.equal(new Set(brands).size,4,
+      "Preset accent colors collapsed to a mandatory global hue in "+(dark?"dark":"light")+" mode");
+    console.log("Chromium glass preset accents "+(dark?"dark":"light")+": four independent hues, all 4 roles >= 4.5:1 modeled contrast");
+  }
+
   // A user opt-out must take effect without OS support and restore the exact
   // previous visual style when switched back to auto. This does not certify
   // every possible photographic or high-detail backdrop.
