@@ -1082,6 +1082,26 @@ try {
     'transparency:document.documentElement.dataset.gcTransparency}))()'));
   assert.deepEqual(restoredByKeyboard,{checked:false,transparency:"auto"},
     "Native Space key must restore system transparency");
+  // Screenshot-led visual review found the label and live status touching at
+  // compact sizes. Keep the block separation in real Chromium at 320/390px.
+  for(const width of [320,390]) {
+    await browser.setViewport(width,760,{dark:width===390});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const layout=JSON.parse(await browser.evaluate(
+      '(()=>{const label=document.querySelector("label[for=gc-glass-reduce]").getBoundingClientRect(),'+
+      'status=document.querySelector("#gc-glass-preference-status").getBoundingClientRect();'+
+      'return JSON.stringify({width:document.documentElement.clientWidth,'+
+      'scroll:document.documentElement.scrollWidth,'+
+      'labelBottom:label.bottom,labelRight:label.right,statusTop:status.top,statusRight:status.right})})()'));
+    assert.ok(layout.statusTop>=layout.labelBottom+2,
+      "Live preference status collides with its label at "+width+"px");
+    assert.ok(layout.labelRight<=layout.width+1&&layout.statusRight<=layout.width+1,
+      "Glass preference content escapes viewport "+JSON.stringify(layout));
+    assert.ok(layout.scroll<=layout.width+1,
+      "Glass preference causes document overflow at "+width+"px");
+    const shot=await browser.screenshot(join(directory,"gc-ui-glass-preference-"+width+".png"));
+    assert.equal(shot.width,width,"Preference QA screenshot width mismatch");
+  }
   console.log("Chromium transparency preference UI: labeled, reversible, live and nonpersistent");
 
 } finally {
