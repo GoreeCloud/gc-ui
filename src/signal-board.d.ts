@@ -7,6 +7,6 @@ export declare function summarizeSignals(states: GcSignalState[]): Readonly<{ al
 export declare function initSignalBoard(board: HTMLElement): Readonly<{
   readonly filter: GcSignalFilter;
   setFilter(value: GcSignalFilter): boolean;
-  refresh(): Readonly<{filter:GcSignalFilter; visible:number; total:number; counts:Readonly<{all:number;ready:number;attention:number;offline:number}>}>;
+  refresh(): Readonly<{filter:GcSignalFilter; visible:number; total:number; counts:Readonly<{all:number;ready:number;attention:number;offline:number}>; historyVisible:number; historyTotal:number}>;
   dispose(): void;
 }>;
