@@ -1207,6 +1207,35 @@ try {
   },"Optional linked Timeflow broke existing signal-only consumers");
   console.log("Chromium Signal Constellation: native filters, keyboard, dynamic refresh, focus, empty, disposal and privacy passed");
 
+  // Disabled filter transitions must not strand keyboard users on an inert tab stop.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/tests/signal-board-browser.html");
+  const disabledFilters=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const group=document.querySelector("[data-gc-signal-filters]");'+
+    'const buttons=[...group.querySelectorAll("button")];const by=v=>buttons.find(x=>x.dataset.gcSignalFilter===v);'+
+    'b.setFilter("attention");by("attention").disabled=true;const first=b.refresh();'+
+    'const firstPressed=buttons.filter(x=>x.getAttribute("aria-pressed")==="true").map(x=>x.dataset.gcSignalFilter);'+
+    'const firstTabbable=buttons.filter(x=>x.tabIndex===0).map(x=>x.dataset.gcSignalFilter);'+
+    'by("all").disabled=true;b.setFilter("ready");by("ready").setAttribute("aria-disabled","true");'+
+    'const second=b.refresh();const secondTabbable=buttons.filter(x=>x.tabIndex===0).map(x=>x.dataset.gcSignalFilter);'+
+    'by("offline").disabled=true;let allDisabledRejected=false;try{b.refresh()}'+
+    'catch(e){allDisabledRejected=/enabled filter/.test(e.message);};'+
+    'const unchanged=b.filter;by("all").disabled=false;by("attention").disabled=false;'+
+    'by("ready").removeAttribute("aria-disabled");by("offline").disabled=false;const recovery=b.refresh();'+
+    'return JSON.stringify({first,firstPressed,firstTabbable,second,secondTabbable,'+
+    'allDisabledRejected,unchanged,recovery,summary:document.querySelector("[data-gc-signal-summary]").textContent})})()'));
+  assert.equal(disabledFilters.first.filter,"all","Disabling the selected filter did not choose enabled All");
+  assert.deepEqual(disabledFilters.firstPressed,["all"],"Disabled filter retained aria-pressed");
+  assert.deepEqual(disabledFilters.firstTabbable,["all"],"Roving Tab stop remained on a disabled choice");
+  assert.equal(disabledFilters.first.visible,4);
+  assert.equal(disabledFilters.second.filter,"offline","Expected fallback to only enabled filter");
+  assert.deepEqual(disabledFilters.secondTabbable,["offline"]);
+  assert.equal(disabledFilters.allDisabledRejected,true,"All-disabled refresh must fail closed");
+  assert.equal(disabledFilters.unchanged,"offline","A rejected refresh changed active filter");
+  assert.equal(disabledFilters.recovery.filter,"offline","Recovery changed a valid selected filter");
+  assert.equal(disabledFilters.summary,"Showing 1 of 4 signals; 1 of 3 related events");
+  console.log("Chromium Signal Board: disabled active filter fallback, no Tab-stop stranding, recovery passed");
+
   // The real lab uses the same component without fake service backends.
   for (const scenario of [
     {name:"desktop-light",width:1440,dark:false,forcedColors:false,zoom:false},

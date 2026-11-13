@@ -216,8 +216,19 @@ export function initSignalBoard(board) {
     if (disposed) throw new Error("Signal board disposed");
     const nodes = collect();
     const events = collectHistory();
+    // Applications may disable filters when their data or permissions change.
+    // Never leave aria-pressed and the roving Tab stop on a disabled button.
+    // Validate all entries before mutating the board, and fail closed if
+    // consumers have disabled every choice.
+    const available = buttons.filter(button =>
+      !button.disabled && button.getAttribute("aria-disabled") !== "true");
+    if (!available.length) throw new Error("Signal board needs an enabled filter");
+    const chosen = available.find(button =>
+      button.getAttribute("data-gc-signal-filter") === filter) ||
+      available.find(button => button.getAttribute("data-gc-signal-filter") === "all") ||
+      available[0];
     remember(nodes,events);
-    return render(filter,nodes,events);
+    return render(chosen.getAttribute("data-gc-signal-filter"),nodes,events);
   };
   const setFilter = (value) => {
     if (disposed) throw new Error("Signal board disposed");
