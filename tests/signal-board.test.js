@@ -35,9 +35,9 @@ test("semantic design and package exports include filter, timeflow and accessibi
   const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
   assert.match(css,/\.gc-signal-board__lens/);
   const glassBlock=css.slice(css.indexOf("/* Signal Constellation + Timeflow:"));
-  assert.match(glassBlock,/\.gc-signal-board__lens\\s*\\{[^}]*background:var\\(--gc-lens-solid\\)/,
+  assert.match(glassBlock,/\.gc-signal-board__lens\s*\{[^}]*background:var\(--gc-lens-solid\)/,
     "Unsupported backdrop-filter browsers must get opaque Lens baseline");
-  assert.match(glassBlock,/@supports[^\\n]*backdrop-filter:[^\\n]*\\{[\\s\\S]*?background:var\\(--gc-lens-fill\\)/,
+  assert.match(glassBlock,/@supports[^\n]*backdrop-filter:[^\n]*\{[\s\S]*?background:var\(--gc-lens-fill\)/,
     "Only supported blurred rendering may receive translucent Lens fill");
   assert.match(css,/\.gc-timeflow > li/);
   assert.match(css,/prefers-reduced-transparency:reduce/);
