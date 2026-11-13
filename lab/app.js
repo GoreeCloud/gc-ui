@@ -8,16 +8,19 @@ const root = document.documentElement;
 const appearance = document.querySelector("#appearance");
 const accent = document.querySelector("#accent");
 const contrast = document.querySelector("#contrast");
+const transparency = document.querySelector("#transparency");
 const customEnabled = document.querySelector("#demo-custom-accent");
 const customColor = document.querySelector("#demo-custom-color");
 const themeController = createThemeController(root);
 const updateTheme = () => themeController.update({
   mode: appearance.value, accent: accent.value, contrast: contrast.checked ? "more" : "normal",
+  transparency: transparency.checked ? "reduce" : "auto",
   customAccent: customEnabled.checked ? customColor.value : null
 });
 appearance.addEventListener("change", updateTheme);
 accent.addEventListener("change", updateTheme);
 contrast.addEventListener("change", updateTheme);
+transparency.addEventListener("change", updateTheme);
 customEnabled.addEventListener("change", () => { customColor.disabled = !customEnabled.checked; updateTheme(); });
 customColor.addEventListener("input", updateTheme);
 updateTheme();
