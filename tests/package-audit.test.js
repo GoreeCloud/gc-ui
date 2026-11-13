@@ -26,3 +26,15 @@ test("package export audit rejects unsafe/missing content and hidden dependency 
   const noLicense=new Set([...files].filter(x=>x!=="LICENSE"));
   assert.throws(()=>auditPackageExports(basic,noLicense),/Missing package metadata/);
 });
+
+test("public 1.0 library ships generated functional glyphs but excludes logo/trademark artwork",()=>{
+  const items=pkg.files;
+  assert.ok(items.includes("assets/gc-icons.svg"));
+  assert.ok(items.includes("assets/gc-icons.json"));
+  assert.ok(!items.includes("assets/"),"Broad assets/ would accidentally bundle marks");
+  assert.ok(!items.some(x=>x.startsWith("assets/identity")),
+    "Official identity assets belong to separate authorized distribution");
+  assert.equal(pkg.exports["./icon-sprite"],"./assets/gc-icons.svg");
+  assert.equal(pkg.exports["./icon-registry"],"./assets/gc-icons.json");
+  assert.ok(!Object.values(pkg.exports).some(x=>typeof x==="string" && x.includes("/identity/")));
+});
