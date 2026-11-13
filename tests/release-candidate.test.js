@@ -1,0 +1,21 @@
+import {test} from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync} from "node:fs";
+const j=p=>JSON.parse(readFileSync(new URL("../"+p,import.meta.url),"utf8"));
+test("exact 1.0.0 tarball candidate never implies accepted Stable/publish",()=>{
+ const pkg=j("package.json"),plan=j("registry/release-plan.v1.json"),manifest=j("registry/release-candidate.v1.json");
+ assert.equal(pkg.version,"1.0.0");
+ assert.equal(manifest.targetVersion,pkg.version);
+ assert.equal(plan.currentPackageVersion,pkg.version);
+ assert.equal(plan.status,"candidate-unverified");
+ assert.equal(plan.webFoundations.status,"candidate");
+ assert.equal(manifest.status,"draft-candidate-unverified-unpublished");
+ assert.equal(manifest.sourceCommitSha,null);
+ assert.equal(manifest.npmPublished,false);
+ assert.equal(manifest.githubTagCreated,false);
+ assert.equal(manifest.releasePublished,false);
+ assert.equal(manifest.candidateEvidence.allGatesVerified,false);
+ assert.equal(pkg.scripts.prepublishOnly,"npm run release:verify");
+ assert.deepEqual(manifest.frozenExports,plan.webFoundations.candidateStableExports);
+ assert.ok(plan.gates.every(g=>g.blocking===true&&g.status==="open"&&g.evidence.length===0));
+});

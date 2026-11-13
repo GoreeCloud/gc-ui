@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "targetVersion": "1.0.0",
+  "name": "@goreecloud/ui",
+  "status": "draft-candidate-unverified-unpublished",
+  "sourceBaseSha": "f8f5616a0108ea8766e1c76d96026130296989e2",
+  "sourceBranch": "release/stable-web-1.0.0-candidate-20261113",
+  "sourceCommitSha": null,
+  "sourceCommitNote": "A commit cannot embed its own SHA; exact tested head SHA and hash evidence are recorded externally in GitHub issue #85",
+  "date": "2026-11-13",
+  "releasePublished": false,
+  "githubTagCreated": false,
+  "npmPublished": false,
+  "frozenExports": [
+    "./foundation",
+    "./tokens",
+    "./tokens.css",
+    "./components.css",
+    "./glass.css",
+    "./icons",
+    "./icon-sprite",
+    "./icon-registry",
+    "./theme",
+    "./patterns"
+  ],
+  "legacyRoot": "preview-compatibility",
+  "baselineOnly": {
+    "sha": "c235f9b5e2577c440465de0d455372c363f4d01d",
+    "run": "https://github.com/GoreeCloud/gc-ui/actions/runs/43447990325",
+    "archiveSha256": "bde192a69fc0eab6c78726c6e05c4116e3b5a9338ce7dbaeecda0be6bbbad2b3"
+  },
+  "candidateEvidence": {
+    "testedSha": null,
+    "runUrl": null,
+    "artifactSha256": null,
+    "screenshotArtifactId": null,
+    "allGatesVerified": false
+  },
+  "blocking": [
+    "Repository main remains unprotected and required checks are not provider-enforced",
+    "All eight mandatory Stable release gate decisions remain open; external owner authorization missing",
+    "Current exact 1.0.0 candidate source SHA must pass all five checks and obtain same-SHA per-file/package/browser evidence",
+    "No signed/published release asset or authenticated registry readback"
+  ],
+  "rollback": {
+    "sourceBaselineSha": "c235f9b5e2577c440465de0d455372c363f4d01d",
+    "runbook": "docs/RELEASE_1_0_RUNBOOK.md"
+  }
+}

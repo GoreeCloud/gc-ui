@@ -11,9 +11,9 @@ test("web-first release targets preserve the mandatory 1.0 scope and subsequent 
   assert.equal(plan.schemaVersion,1);
   assert.equal(plan.strategy,"web-first-incremental-stable");
   assert.equal(plan.currentPackageVersion,pkg.version);
-  assert.equal(pkg.version,"0.1.0-alpha.0","Planning must not silently promote package");
+  assert.equal(pkg.version,"1.0.0","Draft must pack the exact 1.0.0 candidate version");
   assert.equal(plan.targetStableVersion,"1.0.0");
-  assert.equal(plan.status,"planned-not-released");
+  assert.equal(plan.status,"candidate-unverified");
   assert.deepEqual(plan.followOnReleases.map(x=>x.version),["1.1.0","1.2.0","1.3.0","1.4.0","1.5.0"]);
   assert.ok(plan.advisoryNotStableBlockers.some(x=>/screen-reader/.test(x)));
   assert.ok(plan.advisoryNotStableBlockers.some(x=>/native/.test(x)));
@@ -40,7 +40,7 @@ test("1.0 gates require evidence and report blockers without misrepresenting Sta
   }
   const report=JSON.parse(execFileSync(process.execPath,["scripts/release-readiness.mjs","--status"],{cwd:root,encoding:"utf8"}));
   assert.equal(report.ready,false);
-  assert.ok(report.blockers.some(x=>/version 1.0.0/.test(x)));
+  assert.ok(report.blockers.some(x=>/Candidate has not been verified/.test(x)));
   const strict=spawnSync(process.execPath,["scripts/release-readiness.mjs","--require-ready"],{cwd:root,encoding:"utf8"});
   assert.equal(strict.status,1);
   assert.match(strict.stderr,/Stable 1.0.0 blocked/);
