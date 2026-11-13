@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 1,
+  "authority": "GoreeCloud UI",
+  "strategy": "web-first-incremental-stable",
+  "status": "planned-not-released",
+  "currentPackageVersion": "0.1.0-alpha.0",
+  "targetStableVersion": "1.0.0",
+  "versioning": {
+    "scheme": "Semantic Versioning",
+    "stableTagPrefix": "v",
+    "patch": "Compatible corrections to the supported Stable contract",
+    "minor": "Backward-compatible, independently verified additions",
+    "major": "Intentionally breaking Stable API changes require a major version and migration guidance",
+    "prerelease": "Alpha/beta/RC labels are not Stable"
+  },
+  "webFoundations": {
+    "target": "1.0.0",
+    "status": "planned",
+    "definition": "A tested and packaged web design foundation with a frozen, documented Stable API subset; not a native SDK or proof of adoption by applications",
+    "candidateStableExports": [
+      "./tokens",
+      "./tokens.css",
+      "./components.css",
+      "./glass.css",
+      "./icons",
+      "./icon-sprite",
+      "./icon-registry",
+      "./theme",
+      "./patterns"
+    ],
+    "deferredPreviewExports": [
+      "./commands",
+      "./menu",
+      "./table",
+      "./tree",
+      "./combobox",
+      "./bottom-nav",
+      "./navigation-rail",
+      "./signal-board"
+    ],
+    "requiringClassification": [
+      "."
+    ],
+    "releaseLimitations": [
+      "Current root entry point re-exports preview controllers and must be audited before any 1.0 guarantee or publication",
+      "No default GoreeCloud hue or appearance mode is mandatory; each app can select its own",
+      "Native token outputs are deterministic resources, not native component SDKs",
+      "No native device or consumer app is certified by the web package"
+    ]
+  },
+  "gates": [
+    {
+      "id": "public-api-contract",
+      "requirement": "Classify every currently exported entry point and root symbol; document frozen Stable API, preview API, compatibility policy and supported browser/Node matrix",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "reproducible-package",
+      "requirement": "Verify exact candidate 1.0.0 tarball, LICENSE, all referenced CSS/icons/types and offline installed consumer with provenance; no broken exports",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "candidate-ci",
+      "requirement": "Run Node tests, contracts, token and contrast checks, package verifier and Chromium smoke on the exact 1.0 release candidate commit",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "real-web-acceptance",
+      "requirement": "Record supported-browser and representative mobile/tablet/desktop visual and functional evidence, including dark/light and independent per-app hue; document unsupported engines rather than imply support",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "source-security-privacy",
+      "requirement": "Review dependency licenses, assets, malicious or unsafe code, client-side privacy guarantees and absence of unintended network, storage and credential behavior",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "quality-and-recovery",
+      "requirement": "Verify real-state functionality and premium visual quality in the supported web scope, establish issue triage, downgrade/rollback instructions and a maintenance owner",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "repository-release-controls",
+      "requirement": "Verify effective branch protections and required checks on main, or record an explicit founder-authorized, risk-reviewed substitute prior to Stable",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    },
+    {
+      "id": "release-record",
+      "requirement": "Prepare audited 1.0.0 version, migration/upgrade notes, changelog, release candidate SHA, verified asset hashes and publish/tag procedure; record actual release only after it happens",
+      "blocking": true,
+      "status": "open",
+      "evidence": []
+    }
+  ],
+  "advisoryNotStableBlockers": [
+    "Unfinished human screen-reader and optional accessibility enhancement work under founder instructions 13.2.1; technical/legal/platform requirements still apply",
+    "Unbuilt Android, iOS, Windows, Linux and macOS native component SDKs",
+    "Unmigrated or unaudited GoreeCloud consumer applications",
+    "Later advanced web controller stability beyond the frozen 1.0 API"
+  ],
+  "followOnReleases": [
+    {
+      "version": "1.1.0",
+      "status": "planned",
+      "scope": "Expand and stabilize advanced web controllers, consumer setup recipes, initial independently verified web adoption pilots; never imply all consumers migrated"
+    },
+    {
+      "version": "1.2.0",
+      "status": "candidate-scope",
+      "scope": "First independently compiled, exercised and documented native adapter (Android Compose is a candidate); ship only validated platform capability and keep other platforms explicitly unsupported"
+    },
+    {
+      "version": "1.3.0",
+      "status": "candidate-scope",
+      "scope": "Expand supported native desktop integration to independently verified Windows WinUI and/or Linux GTK4/Qt adapters; do not claim parity from token resources"
+    },
+    {
+      "version": "1.4.0",
+      "status": "candidate-scope",
+      "scope": "Independently validate SwiftUI iOS/macOS integration when native toolchains and device evidence exist; expand product adoption"
+    },
+    {
+      "version": "1.5.0",
+      "status": "candidate-scope",
+      "scope": "Additional authorized consumer integrations, cross-platform consistency and targeted mature features; reprioritize based on verified dependencies"
+    }
+  ],
+  "releaseRules": [
+    "A release may advance only when its declared features meet their own acceptance gates; if a platform is unverified, move it to a later target rather than claim support",
+    "Stable 1.0.0 is scoped to web foundations only; native support and consumer adoption are separate deliverables",
+    "Do not publish, tag or change the package version to 1.0.0 merely because this roadmap is merged",
+    "Before any Stable release confirm the exact release revision and publish independently verifiable artifacts"
+  ]
+}
