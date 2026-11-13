@@ -27,5 +27,7 @@ test("TypeScript subpaths and sprite assets are included in npm export surface",
   }
   assert.ok(pkg.exports["./icon-sprite"]);
   assert.ok(pkg.exports["./icon-registry"]);
-  assert.ok(pkg.files.includes("assets/"));
+  assert.ok(pkg.files.includes("assets/gc-icons.svg"));
+  assert.ok(pkg.files.includes("assets/gc-icons.json"));
+  assert.ok(!pkg.files.includes("assets/"),"Do not bundle official brand masters by broad assets directory");
 });
