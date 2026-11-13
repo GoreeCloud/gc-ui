@@ -1049,3 +1049,29 @@
   .gc-navigation-rail__toggle { border:1px solid CanvasText; }
   .gc-navigation-rail__links a[aria-current="page"] { outline:2px solid Highlight; }
 }
+
+
+/* App-level accessible transparency preference. It applies to the existing
+ * Cloud Lens primitives as well as optional glass roles from glass.css.
+ * The default appearance remains unchanged; no browser storage or telemetry.
+ * Never turn readable Cloud Surface or Canvas content into glass. */
+:root[data-gc-transparency="reduce"] :is(.gc-lens, .gc-bottom-nav) {
+  background:var(--gc-lens-solid);
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+:root[data-gc-transparency="reduce"] :is(.gc-dialog,.gc-command)::backdrop {
+  -webkit-backdrop-filter:none;
+  backdrop-filter:none;
+}
+/* Native OS forced-colors must outrank the app preference, including if the
+ * user activates both settings at once. */
+@media(forced-colors:active) {
+  :root[data-gc-transparency="reduce"] :is(.gc-lens,.gc-bottom-nav) {
+    color:CanvasText;
+    background:Canvas;
+    border-color:CanvasText;
+    -webkit-backdrop-filter:none;
+    backdrop-filter:none;
+  }
+}
