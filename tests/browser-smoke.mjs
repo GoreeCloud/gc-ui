@@ -871,7 +871,7 @@ try {
   assert.ok(Math.abs(afterLeft-touchDock.scrollLeft)>2 || Math.abs(afterRight-afterLeft)>2,
     "Chromium touch swipe failed to scroll the overflowing dock");
   const touchPage=JSON.parse(await browser.evaluate(
-    '(()=>({width:document.documentElement.clientWidth,'+
+    '(()=>JSON.stringify({width:document.documentElement.clientWidth,'+
     'scrollWidth:document.documentElement.scrollWidth}))()'));
   assert.ok(touchPage.scrollWidth<=touchPage.width+1,
     "Swipeable dock created page-level horizontal overflow");
