@@ -1051,11 +1051,11 @@
 }
 
 
-/* App-level accessible transparency preference. It applies to the existing
+/* App-level accessible transparency / increased-contrast preferences. They apply to the existing
  * Cloud Lens primitives as well as optional glass roles from glass.css.
  * The default appearance remains unchanged; no browser storage or telemetry.
  * Never turn readable Cloud Surface or Canvas content into glass. */
-:root[data-gc-transparency="reduce"] :is(.gc-lens, .gc-bottom-nav) {
+:root:is([data-gc-transparency="reduce"],[data-gc-contrast="more"]) :is(.gc-lens, .gc-bottom-nav) {
   background:var(--gc-lens-solid);
   -webkit-backdrop-filter:none;
   backdrop-filter:none;
@@ -1067,7 +1067,7 @@
 /* Native OS forced-colors must outrank the app preference, including if the
  * user activates both settings at once. */
 @media(forced-colors:active) {
-  :root[data-gc-transparency="reduce"] :is(.gc-lens,.gc-bottom-nav) {
+  :root:is([data-gc-transparency="reduce"],[data-gc-contrast="more"]) :is(.gc-lens,.gc-bottom-nav) {
     color:CanvasText;
     background:Canvas;
     border-color:CanvasText;
