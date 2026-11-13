@@ -921,6 +921,36 @@ try {
     assert.equal(screenshot.height,height,"PNG pixel height does not match tested viewport");
     console.log("Captured "+filename+" ("+width+"×"+height+", "+screenshot.size+" bytes)");
   }
+
+  // Real Chromium computed-style acceptance for the optional glass package.
+  // Tests solid defaults, opt-in blur, explicit high contrast and forced colors.
+  for (const scenario of [
+    {name:"light",dark:false,forcedColors:false,contrast:false},
+    {name:"dark",dark:true,forcedColors:false,contrast:false},
+    {name:"high-contrast",dark:false,forcedColors:false,contrast:true},
+    {name:"forced-colors",dark:false,forcedColors:true,contrast:false}
+  ]) {
+    await browser.setViewport(390,844,{dark:scenario.dark,forcedColors:scenario.forcedColors});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const state=JSON.parse(await browser.evaluate(
+      '(()=>{if('+JSON.stringify(scenario.contrast)+')document.documentElement.dataset.gcContrast="more";'+
+      'const roles=["base","elevated","overlay","solid"];'+
+      'const values=roles.map(role=>{const el=document.querySelector(".gc-glass-"+role);'+
+      'const style=getComputedStyle(el);return {role,background:style.backgroundColor,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
+      'return JSON.stringify({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,values});})()'));
+    assert.ok(state.scroll<=state.width+1,"Glass fixture horizontal overflow: "+JSON.stringify({scenario:scenario.name,state}));
+    assert.equal(state.values.length,4,"Missing material roles");
+    for(const value of state.values) {
+      assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
+      assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
+      assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
+      if(scenario.contrast||scenario.forcedColors||value.role==="solid") {
+        assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
+      }
+    }
+    console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback and bounds passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
