@@ -33,6 +33,14 @@ export function initSignalBoard(board) {
   const list = board.querySelector("[data-gc-signal-list]");
   const summary = board.querySelector("[data-gc-signal-summary]");
   const empty = board.querySelector("[data-gc-signal-empty]");
+  // Optional linked Timeflow. Existing signal-only consumers remain unchanged.
+  const history = board.querySelector("[data-gc-timeflow-list]");
+  const historyEmpty = board.querySelector("[data-gc-timeflow-empty]");
+  if ((history && (!historyEmpty || history.tagName?.toUpperCase() !== "OL" ||
+        !(history.getAttribute("aria-label") || history.getAttribute("aria-labelledby")))) ||
+      (!history && historyEmpty)) {
+    throw new TypeError("Linked Timeflow requires a labeled native ol and empty message");
+  }
   if (!filters || !["group", "toolbar"].includes(filters.getAttribute("role")) ||
       !(filters.getAttribute("aria-label") || filters.getAttribute("aria-labelledby")) ||
       !list || !["OL", "UL"].includes(list.tagName?.toUpperCase()) ||
@@ -69,6 +77,7 @@ export function initSignalBoard(board) {
   }]));
   const originalStatus = summary.textContent;
   const originalEmpty = empty?.hidden;
+  const originalHistoryEmpty = historyEmpty?.hidden;
   const counts = [...board.querySelectorAll("[data-gc-signal-count]")];
   const originalCounts = new Map();
   for (const node of counts) {
@@ -78,6 +87,7 @@ export function initSignalBoard(board) {
     originalCounts.set(node,node.textContent);
   }
   const initialHidden = new Map();
+  const initialHistoryHidden = new Map();
   let disposed = false;
   let filter = allButton.getAttribute("data-gc-signal-filter");
 
@@ -94,22 +104,55 @@ export function initSignalBoard(board) {
     return nodes;
   };
 
-  const render = (nextFilter, nodes) => {
+  const collectHistory = () => {
+    if (!history) return [];
+    const events = [...history.children];
+    for (const event of events) {
+      const time = event.querySelector?.("time[datetime]");
+      if (event.tagName?.toUpperCase() !== "LI" ||
+          !SIGNAL_STATES.includes(event.getAttribute("data-gc-signal")) ||
+          !time || !time.getAttribute("datetime")?.trim()) {
+        throw new TypeError("Each Timeflow entry must have a known status and a dated time element");
+      }
+    }
+    return events;
+  };
+
+  const remember = (nodes, events) => {
+    nodes.forEach(node => {
+      if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
+    });
+    events.forEach(event => {
+      if (!initialHistoryHidden.has(event)) initialHistoryHidden.set(event,Boolean(event.hidden));
+    });
+  };
+
+  const render = (nextFilter, nodes, events) => {
     const states = nodes.filter(node => !initialHidden.get(node)).map(node =>
       node.getAttribute("data-gc-signal"));
     const totals = summarizeSignals(states);
     const visible = nextFilter === "all" ? totals.all : totals[nextFilter];
+    const eligibleEvents = events.filter(event => !initialHistoryHidden.get(event));
+    const historyTotal = eligibleEvents.length;
+    const historyVisible = eligibleEvents.filter(event => nextFilter === "all" ||
+      event.getAttribute("data-gc-signal") === nextFilter).length;
     const focused = board.ownerDocument?.activeElement;
-    for (const node of nodes) {
-      const shouldHide = initialHidden.get(node) ||
-        (nextFilter !== "all" && node.getAttribute("data-gc-signal") !== nextFilter);
-      if (shouldHide && focused && node.contains(focused)) {
-        buttons.find(b => b.getAttribute("data-gc-signal-filter") === nextFilter)?.focus();
-      }
+    const chosen = buttons.find(button =>
+      button.getAttribute("data-gc-signal-filter") === nextFilter);
+    const reconcileItem = (node, shouldHide) => {
+      if (shouldHide && focused && node.contains(focused)) chosen?.focus();
       node.hidden = shouldHide;
+    };
+    for (const node of nodes) {
+      reconcileItem(node,initialHidden.get(node) ||
+        (nextFilter !== "all" && node.getAttribute("data-gc-signal") !== nextFilter));
+    }
+    for (const event of events) {
+      reconcileItem(event,initialHistoryHidden.get(event) ||
+        (nextFilter !== "all" && event.getAttribute("data-gc-signal") !== nextFilter));
     }
     buttons.forEach(button => {
-      const active = button.getAttribute("data-gc-signal-filter") === nextFilter;
+      const active = button === chosen;
       button.setAttribute("aria-pressed", String(active));
       button.tabIndex = active ? 0 : -1;
     });
@@ -118,15 +161,21 @@ export function initSignalBoard(board) {
       node.textContent = String(totals[key]);
     }
     if (empty) empty.hidden = visible > 0;
-    summary.textContent = "Showing " + visible + " of " + totals.all + " signals";
+    if (historyEmpty) historyEmpty.hidden = historyVisible > 0;
+    summary.textContent = "Showing " + visible + " of " + totals.all + " signals" +
+      (history ? "; " + historyVisible + " of " + historyTotal + " related events" : "");
     filter = nextFilter;
-    return Object.freeze({ filter, visible, total:totals.all, counts:totals });
+    return Object.freeze({
+      filter, visible, total:totals.all, counts:totals,
+      historyVisible, historyTotal
+    });
   };
 
   let disposeToggle = null;
   try {
     const nodes = collect();
-    nodes.forEach(node => initialHidden.set(node,Boolean(node.hidden)));
+    const events = collectHistory();
+    remember(nodes,events);
     // Discard disabled or conflicting initial pressed states in favor of All.
     const initial = buttons.find(button =>
       button.getAttribute("aria-pressed") === "true" &&
@@ -138,10 +187,9 @@ export function initSignalBoard(board) {
       const next = button.getAttribute("data-gc-signal-filter");
       try {
         const current = collect();
-        current.forEach(node => {
-          if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
-        });
-        render(next,current);
+        const currentEvents = collectHistory();
+        remember(current,currentEvents);
+        render(next,current,currentEvents);
       } catch(error) {
         // The shared toggle group selects before invoking onChange.
         // Roll it back if a consumer inserted invalid status markup.
@@ -153,7 +201,7 @@ export function initSignalBoard(board) {
         throw error;
       }
     }});
-    render(filter,nodes);
+    render(filter,nodes,events);
   } catch (error) {
     disposeToggle?.();
     for (const [button, original] of originalButtons) {
@@ -167,10 +215,9 @@ export function initSignalBoard(board) {
   const refresh = () => {
     if (disposed) throw new Error("Signal board disposed");
     const nodes = collect();
-    nodes.forEach(node => {
-      if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
-    });
-    return render(filter,nodes);
+    const events = collectHistory();
+    remember(nodes,events);
+    return render(filter,nodes,events);
   };
   const setFilter = (value) => {
     if (disposed) throw new Error("Signal board disposed");
@@ -178,10 +225,9 @@ export function initSignalBoard(board) {
     const target = buttons.find(button => button.getAttribute("data-gc-signal-filter") === value);
     if (!target || target.disabled || target.getAttribute("aria-disabled") === "true") return false;
     const nodes = collect();
-    nodes.forEach(node => {
-      if (!initialHidden.has(node)) initialHidden.set(node,Boolean(node.hidden));
-    });
-    render(value,nodes);
+    const events = collectHistory();
+    remember(nodes,events);
+    render(value,nodes,events);
     return true;
   };
   const dispose = () => {
@@ -189,6 +235,7 @@ export function initSignalBoard(board) {
     disposed = true;
     disposeToggle?.();
     for(const [node,hidden] of initialHidden) node.hidden = hidden;
+    for(const [event,hidden] of initialHistoryHidden) event.hidden = hidden;
     for(const [node,content] of originalCounts) node.textContent = content;
     for(const [button,original] of originalButtons) {
       button.setAttribute("aria-pressed",original.pressed);
@@ -196,6 +243,7 @@ export function initSignalBoard(board) {
       else button.setAttribute("tabindex",original.tabindex);
     }
     if(empty) empty.hidden = originalEmpty;
+    if(historyEmpty) historyEmpty.hidden = originalHistoryEmpty;
     summary.textContent = originalStatus;
   };
   return Object.freeze({ get filter(){return filter;}, setFilter, refresh, dispose });
