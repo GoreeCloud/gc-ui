@@ -31,3 +31,9 @@ Do not record users' names, accounts, search terms, precise location, tokens, sc
 ## Acceptance review
 
 When real evidence is available, update the matching registry entries only after replay and check that all `pass` entries include non-empty evidence and a dated reviewer/build record. Keep unsupported platforms marked `not-tested` or reasoned `not-applicable`, not falsely certified. Link unresolved failures to the repository's [visual/AT acceptance issue](https://github.com/GoreeCloud/gc-ui/issues/7), [interaction hardening issue](https://github.com/GoreeCloud/gc-ui/issues/37) or a narrowly scoped defect.
+
+## November 13, 2026 — source-complete, device-acceptance-open additions
+
+The source now contains **Signal Constellation, linked Timeflow, independent per-application appearance, and optional frosted Cloud Lens**. Automated Chromium and package checks on the shared library do not establish physical-device or human-assistive-technology results. The machine-readable acceptance matrix now separately tracks five specific `not-tested` scenarios: Windows/NVDA status filtering after selected filter disablement, iOS/VoiceOver chronological Timeflow, Android/TalkBack independent appearance/transparency, Windows/Chrome **actual browser zoom** at 200% and 400%, and Windows high-contrast forced colors with sibling application themes.
+
+For actual 400% browser zoom, capture the **browser zoom setting** as evidence; a CSS root `font-size:400%`, reduced viewport width or emulated device scale does not establish that behavior. Keep related [issues #7](https://github.com/GoreeCloud/gc-ui/issues/7), [#28](https://github.com/GoreeCloud/gc-ui/issues/28) and [#37](https://github.com/GoreeCloud/gc-ui/issues/37) open until their distinct acceptance requirements are independently met. Do not record a pass without a reproducible real-client observation.
