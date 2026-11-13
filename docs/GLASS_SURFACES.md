@@ -66,8 +66,11 @@ const result = assertGlassTextContrast(
 
 Chromium `browser:smoke` now feeds **computed** foreground and background
 colors from all four material roles into the guard in light/dark, high contrast,
-reduced-transparency, forced-colors and manual-preference scenarios. It fails
-closed for unsupported CSS color formats, which must be audited separately.
+reduced-transparency, forced-colors and manual-preference scenarios. The
+browser runner also sweeps Iris, Lagoon, Ember and Moss in both light and dark,
+checking all four material roles for modeled 4.5:1 normal-text contrast and
+verifying that distinct accent selection remains functional. It fails closed
+for unsupported CSS color formats, which must be audited separately.
 
 **Limitations:** The calculation assumes one uniform RGBA surface, opaque
 foreground text, a fully opaque sRGB backdrop, and standard alpha compositing.
