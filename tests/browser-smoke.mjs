@@ -922,8 +922,10 @@ try {
   assert.equal(signalStart.ready,"true","Signal Constellation fixture did not initialize");
   assert.equal(signalStart.filter,"all","Signal Constellation must start with All selected");
   assert.equal(signalStart.visible,4,"Board did not initially expose all four sample statuses");
-  assert.equal(signalStart.summary,"Showing 4 of 4 signals");
+  assert.equal(signalStart.summary,"Showing 4 of 4 signals; 3 of 3 related events");
   assert.equal(signalStart.count,"2");
+  assert.ok(signalStart.summary.endsWith("3 of 3 related events"),
+    "Initial Timeflow events were not included in accessible summary");
 
   const signalAX=(await browser.accessibilityTree()).filter(node=>
     node.role==="button" && ["All","Ready","Needs review","Offline"].includes(node.name));
@@ -937,7 +939,7 @@ try {
     'status:document.querySelector("[data-gc-signal-summary]").textContent,'+
     'empty:document.querySelector("[data-gc-signal-empty]").hidden})})()'));
   assert.deepEqual(attention,{filter:"attention",visible:1,selected:["attention"],
-    status:"Showing 1 of 4 signals",empty:true},"Status filter did not select only attention items");
+    status:"Showing 1 of 4 signals; 1 of 3 related events",empty:true},"Status filter did not select only attention items");
 
   const arrow=JSON.parse(await browser.evaluate(
     '(()=>{const b=document.querySelector("[data-gc-signal-filter=attention]");b.focus();'+
@@ -959,7 +961,7 @@ try {
   assert.equal(changed.refreshed.total,5,"Board refresh did not account for inserted item");
   assert.equal(changed.visible,3,"Board failed to show the new Ready status");
   assert.equal(changed.readyCount,"3","Board did not reconcile semantic counts");
-  assert.equal(changed.summary,"Showing 3 of 5 signals");
+  assert.equal(changed.summary,"Showing 3 of 5 signals; 1 of 3 related events");
 
   const safeFocus=JSON.parse(await browser.evaluate(
     '(()=>{const link=document.querySelector("#focusable-signal");link.focus();'+
@@ -971,6 +973,45 @@ try {
   assert.deepEqual(safeFocus,{focus:"attention",linkHidden:true,invalidRejected:true,filter:"attention"},
     "Filtering hid focused content or accepted an unsupported state");
 
+  const historyFocus=JSON.parse(await browser.evaluate(
+    '(()=>{const link=document.querySelector("#focusable-history");link.focus();'+
+    'window.testBoard.setFilter("offline");'+
+    'const timeline=document.querySelector("[data-gc-timeflow-list]");'+
+    'return JSON.stringify({focus:document.activeElement.dataset.gcSignalFilter,'+
+    'historyLinkHidden:link.closest("li").hidden,'+
+    'visibleHistory:[...timeline.children].filter(x=>!x.hidden).length,'+
+    'summary:document.querySelector("[data-gc-signal-summary]").textContent})})()'));
+  assert.deepEqual(historyFocus,{
+    focus:"offline",historyLinkHidden:true,visibleHistory:1,
+    summary:"Showing 1 of 5 signals; 1 of 3 related events"
+  },"Linked history filtering hid focused content or lost its live counts");
+
+  const historyEmpty=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const history=document.querySelector("[data-gc-timeflow-list]");'+
+    'const offline=history.querySelector("[data-gc-signal=offline]");'+
+    'offline.setAttribute("data-gc-signal","attention");'+
+    'const reduced=b.refresh();const empty=document.querySelector("[data-gc-timeflow-empty]");'+
+    'const snapshot={emptyVisible:!empty.hidden,historyVisible:reduced.historyVisible,'+
+    'historyTotal:reduced.historyTotal,summary:document.querySelector("[data-gc-signal-summary]").textContent};'+
+    'offline.setAttribute("data-gc-signal","offline");b.refresh();'+
+    'return JSON.stringify(snapshot)})()'));
+  assert.deepEqual(historyEmpty,{
+    emptyVisible:true,historyVisible:0,historyTotal:3,
+    summary:"Showing 1 of 5 signals; 0 of 3 related events"
+  },"Missing related events did not show clear Timeflow empty feedback");
+
+  const invalidHistory=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const history=document.querySelector("[data-gc-timeflow-list]");'+
+    'const bad=document.createElement("li");bad.setAttribute("data-gc-signal","unknown");'+
+    'const time=document.createElement("time");time.setAttribute("datetime","2026-11-12T12:00");'+
+    'bad.append(time);history.append(bad);'+
+    'let rejected=false;try{b.refresh()}catch(error){rejected=error instanceof TypeError;}'+
+    'bad.remove();const state=b.refresh();'+
+    'return JSON.stringify({rejected,historyVisible:state.historyVisible,historyTotal:state.historyTotal,'+
+    'filter:b.filter})})()'));
+  assert.deepEqual(invalidHistory,{rejected:true,historyVisible:1,historyTotal:3,filter:"offline"},
+    "Malformed Timeflow entry corrupted filter state");
+
   const emptyState=JSON.parse(await browser.evaluate(
     '(()=>{const list=document.querySelector("[data-gc-signal-list]");'+
     'list.querySelector("[data-gc-signal=offline]").remove();window.testBoard.refresh();'+
@@ -978,7 +1019,7 @@ try {
     'return JSON.stringify({summary:document.querySelector("[data-gc-signal-summary]").textContent,'+
     'visible:[...list.children].filter(x=>!x.hidden).length,'+
     'emptyHidden:document.querySelector("[data-gc-signal-empty]").hidden})})()'));
-  assert.deepEqual(emptyState,{summary:"Showing 0 of 4 signals",visible:0,emptyHidden:false},
+  assert.deepEqual(emptyState,{summary:"Showing 0 of 4 signals; 1 of 3 related events",visible:0,emptyHidden:false},
     "Empty status feedback failed after removing all offline sample items");
 
   const disposed=JSON.parse(await browser.evaluate(
@@ -998,8 +1039,14 @@ try {
   assert.equal(disposed.disposedRejected,true,"Disposed board still permits new filtering");
   assert.equal(disposed.visible,4,"Dispose failed to restore original list visibility");
   assert.equal(disposed.readyCount,"2","Dispose failed to restore consumer-owned original count");
-  assert.equal(disposed.summary,"Showing 4 of 4 signals","Dispose failed to restore status text");
+  assert.equal(disposed.summary,"Showing 4 of 4 signals; 3 of 3 related events","Dispose failed to restore status text");
   assert.equal(disposed.selected,"true","Dispose did not restore original native button states");
+  const historyRestored=JSON.parse(await browser.evaluate(
+    '(()=>{const list=document.querySelector("[data-gc-timeflow-list]");'+
+    'return JSON.stringify({visible:[...list.children].filter(x=>!x.hidden).length,'+
+    'emptyHidden:document.querySelector("[data-gc-timeflow-empty]").hidden})})()'));
+  assert.deepEqual(historyRestored,{visible:3,emptyHidden:true},
+    "Dispose failed to restore original linked Timeflow visibility and empty state");
   assert.equal(disposed.cookie,signalStart.cookie,"Board unexpectedly changed cookies");
   assert.equal(disposed.storage,signalStart.storage,"Board unexpectedly wrote local storage");
   console.log("Chromium Signal Constellation: native filters, keyboard, dynamic refresh, focus, empty, disposal and privacy passed");
