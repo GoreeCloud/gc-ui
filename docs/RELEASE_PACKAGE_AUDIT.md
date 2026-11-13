@@ -13,3 +13,9 @@ This is **source and package-integrity QA**, not registry publication, Stable ac
 The test uses whichever public paths are in the current `package.json`, including newly introduced foundation paths. Its independently imported consumer does **not** prove browser cross-engine correctness, TypeScript compiler integration, file provenance from a signed release, vulnerability absence or actual downstream GoreeCloud app adoption.
 
 The Stable 1.0 `reproducible-package` gate remains **open** until the exact 1.0.0 release candidate, source SHA, asset/license/security audit and target-version evidence are verified.
+
+## Node and browser coverage boundary
+
+The `package.json` alpha currently advertises `node >=20`. GitHub CI now runs the source contract, token/color checks, tests and **offline installed package consumer** on Node **20, 22 and 24 independently**, with fail-fast disabled so a single major-version incompatibility does not hide other results. The Chromium fixture stays on a separate Node 22 browser job. The extra Node checks validate these three CI-runtime families; they do **not** certify every Node minor, runtime/OS combination, Firefox or Safari, nor actual mobile touch hardware. Each distinct main-branch check is a separate quality signal; required GitHub branch-check names must be reconciled if branch protection becomes available.
+
+Stable 1.0 browser support and release candidate gates remain open until the exact candidate commit and defined browser/device matrix are independently verified. Node 20 is retained as an existing alpha compatibility contract rather than expanded security-lifecycle advice; the 1.0 support policy must explicitly decide retained engine minimum before publication.
