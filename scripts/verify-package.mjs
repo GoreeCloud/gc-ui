@@ -12,10 +12,12 @@ import { fileURLToPath } from "node:url";
 import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary, auditPackageInstallSafety } from "./package-audit.mjs";
 import { auditTypeGraph } from "./audit-type-graph.mjs";
 import { digestInstalledFiles } from "./installed-file-digests.mjs";
+import { assertCleanGitCheckout } from "./source-checkout-provenance.mjs";
 
 const jsonMode=process.argv.length===3 && process.argv[2]==="--json";
 if(!jsonMode && process.argv.length!==2) throw new Error("Use --json or no options");
 const root=fileURLToPath(new URL("../",import.meta.url));
+const checkedSourceSha=assertCleanGitCheckout(root);
 const pkg=JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
 auditPackageInstallSafety(pkg);
 const temp=mkdtempSync(join(tmpdir(),"gc-ui-package-audit-"));
@@ -90,9 +92,12 @@ console.log("Verified "+entries.length+" public specifiers from installed offlin
 `;
   writeFileSync(join(consumer,"verify.mjs"),consumerSource,"utf8");
   const consumerResult=run(process.execPath,["verify.mjs"],consumer).trim();
+  if(assertCleanGitCheckout(root)!==checkedSourceSha)
+    throw new Error("Git HEAD changed during offline installed-package checks");
   if(jsonMode){
     // Checked-out Git SHA identifies tested source; this is NOT a signed release.
-    const sourceSha=run("git",["rev-parse","--verify","HEAD"],root).trim();
+    const sourceSha=assertCleanGitCheckout(root);
+    if(sourceSha!==checkedSourceSha)throw new Error("Git HEAD changed during package verification");
     if(!/^[a-f0-9]{40}$/.test(sourceSha))throw new Error("Missing checked-out Git SHA");
     const evidence={
       schemaVersion:1,
