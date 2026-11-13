@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "target": "1.0.0",
+  "status": "baseline-reviewed-candidate-pending",
+  "sourceSha": "c235f9b5e2577c440465de0d455372c363f4d01d",
+  "reviewDate": "2026-11-13",
+  "reviewerType": "AI-assisted-source-inspection",
+  "sourceInventory": {
+    "clientJsModules": 15,
+    "clientCssFiles": 3,
+    "liveRuntimeDependencies": 0,
+    "developmentDependencies": 0,
+    "firstPartyIconSprite": true
+  },
+  "licenseInventory": {
+    "packageSpdx": "MIT",
+    "rootLicense": true,
+    "systemFontsOnly": true,
+    "identityAssets": {
+      "count": 6,
+      "masterRepo": "GoreeCloud/brand-assets",
+      "masterSha": "29be2e70201bd12adfcdcb3c25106abf9408c6d1",
+      "sha256Pinned": true,
+      "masterSpdxLicense": "not-declared",
+      "masterLicenseFile": "not-present",
+      "trademarkPolicy": "unresolved-before-external-stable-publication"
+    }
+  },
+  "observations": [
+    "All published src/*.js were inspected for explicit network, persistence, dynamic code and suspicious remote imports; no direct runtime calls observed",
+    "Shipped CSS has no remote import; original SVG glyphs are generated locally; official identity SVGs carry exact SHA-256 pins",
+    "The locally-generated iconSvg innerHTML assignment in src/elements.js is the reviewed scoped exception",
+    "Offline package verification uses no dependencies, no scripts and rechecks all export paths and archive digest; CI records per-Node package evidence",
+    "GitHub Actions use SHA-pinned official actions on hosted runners, not independently audited CI image binaries"
+  ],
+  "limitations": [
+    "Static source inspection does not prove absence of malicious behavior, obfuscated APIs or compromised CI",
+    "Brand-assets master has no separate LICENSE/SPDX at inspected commit; do not infer trademark permission from package MIT declaration",
+    "Exact 1.0.0 candidate source SHA, tarball and assets must be independently rerun after final changes",
+    "Branch main is unprotected (GitHub branches/main protected=false, required checks off); admin-only protection endpoint returns 403",
+    "No released npm package, verified consumer migration, deployed production UI, or native SDK exists"
+  ],
+  "candidateGate": "open",
+  "signedOrPublished": false
+}

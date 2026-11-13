@@ -18,6 +18,14 @@ test("published CSS roles contain no off-origin import or image URL",()=>{
   }
 });
 test("static boundary detects network, storage, remote stylesheet, and HTML injection drift",()=>{
+  const risky=[
+    ["eval('alert(1)')","dynamic-code-eval"],
+    ["new Function('return secret')","dynamic-code-constructor"],
+    ["document.write(userData)","dynamic-document-write"],
+    ["setTimeout('alert(1)',10)","dynamic-string-timer"]
+  ];
+  for(const [src,kind] of risky)assert.ok(
+    scanClientSource("src/new.js",src).some(x=>x.category===kind),src);
   const examples=[
     ["fetch('https://remote.test')","network-fetch"],
     ["window.fetch('/private')","network-fetch"],
