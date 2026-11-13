@@ -4,7 +4,7 @@ import { readFileSync } from "node:fs";
 const path = new URL("../registry/acceptance-matrix.v1.json", import.meta.url);
 const data = JSON.parse(readFileSync(path,"utf8"));
 const states = new Set(["pass","fail","inconclusive","not-tested","not-applicable"]);
-const required = new Set(["theme","tabs","accordion","toggle-group","drawer","command-palette","action-menu","sortable-table","treeview","combobox","bottom-navigation","toast","responsive-shell"]);
+const required = new Set(["theme","tabs","accordion","toggle-group","drawer","command-palette","action-menu","sortable-table","treeview","combobox","bottom-navigation","toast","responsive-shell","signal-constellation","timeflow","scoped-glass","browser-zoom"]);
 
 test("manual and physical-device acceptance matrix has explicit scope and full component inventory", () => {
   assert.equal(data.schemaVersion,1);
@@ -36,5 +36,21 @@ test("human acceptance cannot pass on a bare checklist without reproducible evid
     if (entry.status==="not-tested") {
       assert.deepEqual(entry.evidence,[],entry.id+" must not imply prior evidence");
     }
+  }
+});
+
+test("newly scoped manual platform scenarios retain honest untested evidence", () => {
+  const ids = [
+    "signal-nvda-disabled-filter", "timeflow-voiceover-mobile", "scoped-glass-talkback",
+    "real-browser-zoom-400", "scoped-glass-forced-colors"
+  ];
+  for (const id of ids) {
+    const record = data.entries.find(x => x.id === id);
+    assert.ok(record, "missing manual acceptance gate " + id);
+    assert.equal(record.status,"not-tested");
+    assert.deepEqual(record.evidence,[]);
+    assert.equal(record.sourceSha,null);
+    assert.equal(record.testedAt,null);
+    assert.equal(record.reviewer,null);
   }
 });

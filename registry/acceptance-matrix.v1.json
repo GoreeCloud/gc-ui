@@ -315,6 +315,71 @@
       "reviewer": null,
       "testedAt": null,
       "sourceSha": null
+    },
+    {
+      "id": "signal-nvda-disabled-filter",
+      "surface": "signal-constellation",
+      "platform": "Windows / Chrome / NVDA physical desktop",
+      "modality": "screen-reader and keyboard",
+      "steps": "Open real Signal Constellation lab; traverse labeled status filter group with Tab and arrows; activate each filter and hear summary; disable selected filter using a controlled local test and refresh; traverse remaining choices.",
+      "expected": "Native button names and pressed state are announced, dynamic visible signal count is communicated without duplicate chatter, and an enabled filter remains keyboard reachable after selection is disabled.",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "timeflow-voiceover-mobile",
+      "surface": "timeflow",
+      "platform": "iOS / Safari / VoiceOver physical handset",
+      "modality": "screen-reader and touch gesture",
+      "steps": "Browse the optional linked Timeflow list, examine dated entries and status text, switch status filter to a no-results timeline, then restore All; review focus and reading order at larger Dynamic Type.",
+      "expected": "Dated chronological list items and status words remain intelligible; filtered entries are omitted; a no-related-events message and updated summary are announced without losing the reading position.",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "scoped-glass-talkback",
+      "surface": "scoped-glass",
+      "platform": "Android / Chrome / TalkBack physical handset",
+      "modality": "screen-reader, visual and touch",
+      "steps": "Open two independent app scopes with different user-selected accents/light-dark appearances; enable Reduce transparency on one application only; inspect both opt-in frosted Lens and solid reading surfaces in browser and with TalkBack.",
+      "expected": "One app's transparency and color preferences do not mutate the other; solid fallbacks remain fully readable and operable; no status is communicated by hue or blur alone.",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "real-browser-zoom-400",
+      "surface": "browser-zoom",
+      "platform": "Windows / Chrome physical desktop",
+      "modality": "keyboard, browser zoom and visual",
+      "steps": "Set actual browser zoom to 200% and 400% using browser controls (not CSS font-size or DevTools viewport emulation); at effective 320/390 CSS-px wide content, test navigation, filters, all four palettes, both appearances, keyboard focus, dialogs and data lists; capture exact zoom/browser version.",
+      "expected": "No page-level two-dimensional scrolling or clipped controls from enlarged browser zoom; any internally scrollable widget stays keyboard reachable and no content is obscured by the floating dock.",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
+    },
+    {
+      "id": "scoped-glass-forced-colors",
+      "surface": "scoped-glass",
+      "platform": "Windows / Edge / Windows High Contrast physical desktop",
+      "modality": "visual and keyboard",
+      "steps": "Enable OS forced colors with one app set to Reduce transparency and another set to Auto, inspect opt-in glass/navigation and status Lens, use Tab and Shift+Tab across interactive controls.",
+      "expected": "Forced-colors system Canvas/CanvasText/Highlight override decorative glass while focus and text remain legible; independent app appearance settings cannot defeat system accessibility preferences.",
+      "status": "not-tested",
+      "evidence": [],
+      "reviewer": null,
+      "testedAt": null,
+      "sourceSha": null
     }
   ]
 }
