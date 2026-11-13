@@ -952,6 +952,9 @@ try {
         assert.ok(value.blur==="none"||value.blur==="","Glass blur must be disabled "+scenario.name+" "+value.role+": "+value.blur);
       }
     }
+    const glassShot=await browser.screenshot(join(directory,"gc-ui-glass-"+scenario.name+".png"));
+    assert.equal(glassShot.width,390,"Glass evidence viewport mismatch");
+    assert.equal(glassShot.height,844,"Glass evidence height mismatch");
     console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback and bounds passed");
   }
 
