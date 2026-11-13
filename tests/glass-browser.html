@@ -6,6 +6,17 @@
 <link rel="stylesheet" href="/src/tokens.css">
 <link rel="stylesheet" href="/src/components.css">
 <link rel="stylesheet" href="/src/glass.css">
+<style>
+/* Visual QA only: thematic atmospheric backdrops without hardcoded brand hues. */
+body.gc-app {
+  min-block-size:100vh;
+  background:
+    radial-gradient(ellipse at 18% 12%,var(--gc-brand-container),transparent 64%),
+    radial-gradient(ellipse at 84% 80%,var(--gc-surface-tonal),transparent 60%),
+    var(--gc-canvas);
+}
+.gc-glass-base,.gc-glass-elevated,.gc-glass-overlay,.gc-glass-solid { padding:24px; }
+</style>
 </head>
 <body class="gc-app">
 <main class="gc-container gc-stack" style="padding-block:24px">
