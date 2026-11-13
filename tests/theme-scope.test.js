@@ -16,6 +16,7 @@ test("generated palettes isolate explicitly configured application roots",()=>{
     '.gc-app[data-gc-theme]:not([data-gc-contrast="normal"])'
   ]) assert.ok(css.includes(selector),selector);
   assert.ok(generator.includes(".gc-app[data-gc-theme]"),"Generator must retain app scoping");
+  assert.ok(css.includes("@media (prefers-reduced-motion: reduce) { :root, .gc-app[data-gc-theme] {"),"Scoped apps must honor reduced motion");
   assert.ok(!css.includes("\n.gc-app {"),"An unconfigured app must inherit the host's palette");
 });
 

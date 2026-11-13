@@ -942,6 +942,16 @@ try {
     console.log("Chromium independent app color/appearance "+(osDark?"dark":"light")+": passed");
   }
 
+  // Reduced-motion preferences must override primitives on each configured app root.
+  await browser.setViewport(900,760,{dark:true,reducedMotion:true});
+  await browser.navigate(base+"/lab/");
+  const scopedMotion=JSON.parse(await browser.evaluate("(async()=> {\n  const {applyTheme}=await import(\"/src/theme.js\");\n  const host=document.createElement(\"div\"),apps=[];\n  for(const mode of [\"light\",\"dark\",\"auto\"]){\n    const app=document.createElement(\"section\");app.className=\"gc-app\";host.append(app);\n    applyTheme(app,{mode,accent:\"lagoon\"});apps.push(app);\n  }\n  document.body.append(host);\n  const roles=apps.map(app=>{const s=getComputedStyle(app);return {fast:s.getPropertyValue(\"--gc-motion-fast\").trim(),base:s.getPropertyValue(\"--gc-motion-base\").trim(),slow:s.getPropertyValue(\"--gc-motion-slow\").trim()};});\n  host.remove();\n  return JSON.stringify({active:matchMedia(\"(prefers-reduced-motion: reduce)\").matches,roles});\n})()"));
+  assert.equal(scopedMotion.active,true,"Reduced-motion emulation did not activate");
+  assert.equal(scopedMotion.roles.length,3);
+  for(const role of scopedMotion.roles) assert.deepEqual(role,
+    {fast:"0ms",base:"0ms",slow:"0ms"},"Configured application bypassed reduced motion");
+  console.log("Chromium app-scoped reduced-motion tokens: passed");
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
