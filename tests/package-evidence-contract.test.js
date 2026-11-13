@@ -6,7 +6,7 @@ test("offline package verifier explicitly labels persisted results as developmen
   const script=content("scripts/verify-package.mjs");
   for(const term of ["--json","development-evidence-not-stable","sourceSha",
     'sha256:createHash("sha256")',"sha512Integrity:sha512","installedOffline:true",
-    "installScriptsDisabled:true","published:false","signed:false","packedFiles:fileDigests",
+    "installScriptsDisabled:true","assertCleanGitCheckout(root)","published:false","signed:false","packedFiles:fileDigests",
     "installedFileDigestsChecked:true","digestInstalledFiles(installRoot,meta.files)"]){
     assert.ok(script.includes(term),term);
   }

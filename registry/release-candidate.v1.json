@@ -3,7 +3,7 @@
   "targetVersion": "1.0.0",
   "name": "@goreecloud/ui",
   "status": "draft-candidate-unverified-unpublished",
-  "sourceBaseSha": "a0018131930ffc73d58471de8e0f07551ce27743",
+  "sourceBaseSha": "f8f5616a0108ea8766e1c76d96026130296989e2",
   "sourceBranch": "release/stable-web-1.0.0-candidate-20261113",
   "sourceCommitSha": null,
   "sourceCommitNote": "A commit cannot embed its own SHA; exact tested head SHA and hash evidence are recorded externally in GitHub issue #85",
@@ -37,10 +37,10 @@
     "allGatesVerified": false
   },
   "blocking": [
-    "GitHub main.protected=false and required status checks off; owner enforcement unverified",
-    "Eight mandatory 1.0 release gates not yet independently accepted or approved",
-    "Exact refreshed candidate commit must pass all five CI jobs with per-file hash, typed export graph and screenshot evidence",
-    "Signed and published artifact authorization/registry readback is absent"
+    "Repository main remains unprotected and required checks are not provider-enforced",
+    "All eight mandatory Stable release gate decisions remain open; external owner authorization missing",
+    "Current exact 1.0.0 candidate source SHA must pass all five checks and obtain same-SHA per-file/package/browser evidence",
+    "No signed/published release asset or authenticated registry readback"
   ],
   "rollback": {
     "sourceBaselineSha": "c235f9b5e2577c440465de0d455372c363f4d01d",

@@ -19,3 +19,8 @@ This candidate has incorporated merged source hardening through PR #108, includi
 ## 2026-11-13 updated source integrity qualification
 
 This exact `1.0.0` draft candidate now tracks reviewed `main` through [PR #109](https://github.com/GoreeCloud/gc-ui/pull/109) (offline-installed JavaScript/TypeScript export graph) and [PR #110](https://github.com/GoreeCloud/gc-ui/pull/110) (per-file SHA-256 installed-package evidence and Node 20/22/24 parity). Previous candidate hashes are **historical**, not authorization or evidence for this source SHA. The draft remains **UNVERIFIED and UNPUBLISHED** until new five-job CI, independent evidence review and the eight external gates are completed. GitHub main branch protection is not verified. Source main checkpoint: `a0018131930ffc73d58471de8e0f07551ce27743`. The exact new candidate SHA is read back from GitHub, never embedded self-referentially.
+
+
+## Source provenance and final CI hardening update — 2026-11-13
+
+Source baseline now includes [PR #111](https://github.com/GoreeCloud/gc-ui/pull/111) with fail-closed clean Git checkout verification before and after `npm pack`. The base `main` source SHA at preparation is `f8f5616a0108ea8766e1c76d96026130296989e2`. All prior draft-candidate hashes and CI receipts are historical; only a newly passing five-job run on the exact current PR head may be referenced as this draft's test evidence. **Do not merge or publish this candidate**: repository branch protections and eight external acceptance gates remain open.
