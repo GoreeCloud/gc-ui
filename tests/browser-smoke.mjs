@@ -14,6 +14,7 @@ import { tmpdir } from "node:os";
 import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
+import { assertGlassTextContrast } from "../scripts/glass-contrast-guard.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const candidates = process.env.GC_CHROME_BIN ? [process.env.GC_CHROME_BIN] :
@@ -961,7 +962,10 @@ try {
       "Glass fixture failed to apply the effective "+(scenario.dark?"dark":"light")+" semantic palette: "+JSON.stringify(state));
     assert.ok(state.scroll<=state.width+1,"Glass fixture horizontal overflow: "+JSON.stringify({scenario:scenario.name,state}));
     assert.equal(state.values.length,4,"Missing material roles");
+    const modeledRatios = [];
     for(const value of state.values) {
+      const contrast = assertGlassTextContrast(value.color, value.background, 4.5);
+      modeledRatios.push(contrast.ratio);
       assert.notEqual(value.background,"rgba(0, 0, 0, 0)","Transparent material background "+scenario.name+" "+value.role);
       assert.notEqual(value.border,"none","Missing material boundary "+scenario.name+" "+value.role);
       assert.ok(value.rect.width>0&&value.rect.right<=state.width+1,"Material escaped viewport "+scenario.name+" "+value.role);
@@ -978,7 +982,7 @@ try {
     const glassShot=await browser.screenshot(join(directory,"gc-ui-glass-"+scenario.name+".png"));
     assert.equal(glassShot.width,390,"Glass evidence viewport mismatch");
     assert.equal(glassShot.height,844,"Glass evidence height mismatch");
-    console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback and bounds passed");
+    console.log("Chromium atmospheric materials "+scenario.name+": 4 roles, boundaries, fallback, bounds and minimum modeled text contrast "+Math.min(...modeledRatios).toFixed(2)+":1 passed");
   }
 
   // A user opt-out must take effect without OS support and restore the exact
