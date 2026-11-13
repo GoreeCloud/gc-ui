@@ -39,8 +39,11 @@ test("semantic design and package exports include filter, timeflow and accessibi
   assert.match(css,/forced-colors:active/);
   assert.match(html,/id="signal-constellation"/);
   assert.match(html,/data-gc-signal-filter="attention"/);
-  assert.match(html,/<ol class="gc-timeflow">/);
+  assert.match(html,/<ol class="gc-timeflow" data-gc-timeflow-list/);
+  assert.match(html, /data-gc-timeflow-empty hidden/);
+  assert.match(html, /<li data-gc-signal="attention"><time datetime=/);
   assert.match(html,/illustrative local records, not live GoreeCloud service checks/);
+  assert.match(css,/\.gc-timeflow__empty/);
   assert.equal(pkg.exports["./signal-board"].types,"./src/signal-board.d.ts");
   assert.equal(pkg.exports["./signal-board"].default,"./src/signal-board.js");
 });
