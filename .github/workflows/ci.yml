@@ -40,6 +40,35 @@ jobs:
           if-no-files-found: warn
           retention-days: 7
 
+  cross-node-package-reproducibility:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: [source-and-contract]
+    steps:
+      - name: Checkout exact source used in Node jobs
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup Node for independent manifest comparison
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - name: Download same-run Node package evidence
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          pattern: gc-ui-package-evidence-node-*
+          path: qa/node-package-evidence
+          merge-multiple: false
+      - name: Reject artifact hash or provenance divergence
+        run: |
+          node scripts/compare-package-evidence.mjs \
+            --source-sha "$(git rev-parse HEAD)" \
+            --version "$(node -p "JSON.parse(require('node:fs').readFileSync('package.json', 'utf8')).version")" \
+            qa/node-package-evidence/gc-ui-package-evidence-node-20/package-evidence.json \
+            qa/node-package-evidence/gc-ui-package-evidence-node-22/package-evidence.json \
+            qa/node-package-evidence/gc-ui-package-evidence-node-24/package-evidence.json
+
   browser-smoke:
     runs-on: ubuntu-24.04
     timeout-minutes: 10
