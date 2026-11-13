@@ -974,7 +974,7 @@ try {
     "Filtering hid focused content or accepted an unsupported state");
 
   const historyFocus=JSON.parse(await browser.evaluate(
-    '(()=>{const link=document.querySelector("#focusable-history");link.focus();'+
+    '(()=>{window.testBoard.setFilter("ready");const link=document.querySelector("#focusable-history");link.focus();'+
     'window.testBoard.setFilter("offline");'+
     'const timeline=document.querySelector("[data-gc-timeflow-list]");'+
     'return JSON.stringify({focus:document.activeElement.dataset.gcSignalFilter,'+
