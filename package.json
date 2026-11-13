@@ -77,7 +77,8 @@
     "README.md",
     "platform/generated/",
     "scripts/",
-    "assets/"
+    "assets/gc-icons.json",
+    "assets/gc-icons.svg"
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",

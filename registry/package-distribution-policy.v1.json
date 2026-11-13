@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "name": "GoreeCloud UI web foundation package distribution",
+  "releaseTarget": "1.0.0",
+  "status": "source-policy-not-yet-stable",
+  "npmPackage": "@goreecloud/ui",
+  "approvedPublicExportAssets": [
+    "assets/gc-icons.json",
+    "assets/gc-icons.svg"
+  ],
+  "excludedFromNpm": [
+    "assets/identity/"
+  ],
+  "authoritativeBrandMaster": "GoreeCloud/brand-assets",
+  "brandMasterReviewedSha": "29be2e70201bd12adfcdcb3c25106abf9408c6d1",
+  "brandMarkDistribution": "source-repository-only-until-explicit-permission",
+  "licensePolicy": "MIT package license applies to shipped library code and its original generated icon glyphs; no automatic trademark permission is represented",
+  "scopeLimits": [
+    "The six original identity assets remain unchanged in the public GitHub source checkout and reference lab",
+    "This policy does not change copyright/trademark rights or automatically relicense GoreeCloud brand marks",
+    "No host OS/native SDK assets or consumer adoption implied"
+  ],
+  "releaseReady": false
+}
