@@ -1230,6 +1230,66 @@ try {
   }
   console.log("Chromium design lab transparency: existing Lens/nav, mobile reflow, reversible and forced-colors passed");
 
+  // Signature frosted Cloud Lens stage must be a real composited scene, not
+  // decorative copy or an opaque card styled to imitate glass.
+  for(const scenario of [
+    {name:"light",width:1440,dark:false,forcedColors:false,manual:false,contrast:false},
+    {name:"dark-mobile",width:390,dark:true,forcedColors:false,manual:false,contrast:false},
+    {name:"solid-preference",width:390,dark:true,forcedColors:false,manual:true,contrast:false},
+    {name:"contrast-more",width:390,dark:false,forcedColors:false,manual:false,contrast:true},
+    {name:"forced-colors",width:390,dark:true,forcedColors:true,manual:true,contrast:true}
+  ]) {
+    await browser.setViewport(scenario.width,900,{dark:scenario.dark,forcedColors:scenario.forcedColors});
+    await browser.navigate(base+"/lab/");
+    const scene=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;'+
+      'if('+JSON.stringify(scenario.manual)+')document.querySelector("#transparency").click();'+
+      'if('+JSON.stringify(scenario.contrast)+')document.querySelector("#contrast").click();'+
+      'const panel=document.querySelector(".gc-frost-demo"),stage=panel.querySelector(".gc-frost-stage");'+
+      'stage.scrollIntoView({block:"center",behavior:"instant"});'+
+      'const role=selector=>{const el=stage.querySelector(selector),s=getComputedStyle(el),r=el.getBoundingClientRect();'+
+      'return {blur:s.backdropFilter||s.webkitBackdropFilter,background:s.backgroundColor,'+
+      'border:s.borderTopStyle,shadow:s.boxShadow,width:r.width,right:r.right,left:r.left,'+
+      'label:el.querySelector("h4")?.textContent.trim()}};'+
+      'const rect=stage.getBoundingClientRect();'+
+      'return JSON.stringify({documentWidth:root.clientWidth,scroll:root.scrollWidth,'+
+      'stage:{width:rect.width,left:rect.left,right:rect.right},'+
+      'translucent:[...stage.querySelectorAll("[data-gc-translucent=true]")].length,'+
+      'base:role(".gc-glass-elevated"),overlay:role(".gc-glass-overlay"),solid:role(".gc-glass-solid"),'+
+      'ambient:getComputedStyle(stage,"::before").display})})()'));
+    assert.equal(scene.translucent,2,"Frost scene must opt into exactly two real translucent panels");
+    assert.ok(scene.stage.width>0&&scene.stage.left>=0&&scene.stage.right<=scene.documentWidth+1,
+      "Signature frosted scene escaped the viewport "+scenario.name);
+    assert.ok(scene.scroll<=scene.documentWidth+1,"Frost scene caused document overflow "+scenario.name);
+    assert.match(scene.base.label,/quieter kind of depth/i,"Primary frost panel lost its accessible heading");
+    assert.match(scene.overlay.label,/Elegant, not distracting/,"Floating frost panel lost its heading");
+    assert.match(scene.solid.label,/Solid where it matters/,"Opaque reading card lost its heading");
+    for(const role of [scene.base,scene.overlay,scene.solid]) {
+      assert.notEqual(role.border,"none","Frost scene lost a semantic material boundary");
+      assert.ok(role.width>0&&role.left>=0&&role.right<=scene.documentWidth+1,
+        "Frost role escapes the viewport "+scenario.name);
+    }
+    assert.ok(scene.solid.blur==="none"||scene.solid.blur==="",
+      "Essential reading content must not blur the background");
+    const fallback=scenario.manual||scenario.contrast||scenario.forcedColors;
+    for(const role of [scene.base,scene.overlay]) {
+      if(fallback) {
+        assert.equal(role.blur,"none","Accessibility fallback retained optical blur in "+scenario.name);
+        assert.ok(role.background.startsWith("rgb("),"Frost fallback is not opaque "+scenario.name);
+        assert.equal(role.shadow,"none","Frost fallback retained optical highlight/shadow "+scenario.name);
+      } else {
+        assert.ok(role.blur.includes("blur("),"Frosted material lost real backdrop blur "+scenario.name);
+        assert.ok(role.background.startsWith("rgba("),
+          "Frosted material must allow the ambient scene to show through "+scenario.name);
+      }
+    }
+    if(fallback)assert.equal(scene.ambient,"none",
+      "Accessible solid fallback should suppress ambient decorative shapes");
+    const shot=await browser.screenshot(join(directory,"gc-ui-frost-stage-"+scenario.name+".png"));
+    assert.equal(shot.width,scenario.width,"Frosted visual QA screenshot width mismatch");
+    console.log("Chromium signature frosted stage "+scenario.name+": material depth, fallback, bounds and screenshot passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
