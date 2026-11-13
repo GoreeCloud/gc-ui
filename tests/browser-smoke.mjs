@@ -1090,6 +1090,29 @@ try {
       const shot=await browser.screenshot(join(directory,"gc-ui-signal-constellation-"+scenario.name+".png"));
       assert.equal(shot.width,scenario.width,"Signal QA screenshot width mismatch");
     }
+    const linked=JSON.parse(await browser.evaluate(
+      '(()=>{const board=document.querySelector("#signal-constellation");'+
+      'board.querySelector("[data-gc-signal-filter=attention]").click();'+
+      'const visible=selector=>[...board.querySelectorAll(selector)].filter(x=>!x.hidden);'+
+      'return JSON.stringify({filter:board.querySelector("[data-gc-signal-filter=attention]").getAttribute("aria-pressed"),'+
+      'cards:visible("[data-gc-signal-list] > li").map(x=>x.getAttribute("data-gc-signal")),'+
+      'history:visible("[data-gc-timeflow-list] > li").map(x=>x.getAttribute("data-gc-signal")),'+
+      'summary:board.querySelector("[data-gc-signal-summary]").textContent,'+
+      'historyEmpty:board.querySelector("[data-gc-timeflow-empty]").hidden,'+
+      'width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth})})()'));
+    assert.deepEqual(linked.cards,["attention"],"Live lab signal filter did not update cards "+scenario.name);
+    assert.deepEqual(linked.history,["attention"],"Live lab Timeflow did not follow selected status "+scenario.name);
+    assert.equal(linked.filter,"true","Live lab status filter lost selected semantics "+scenario.name);
+    assert.equal(linked.summary,"Showing 1 of 4 signals; 1 of 3 related events",
+      "Live lab summary did not coordinate cards and history "+scenario.name);
+    assert.equal(linked.historyEmpty,true,"Live lab Timeflow incorrectly displays empty message");
+    assert.ok(linked.scroll<=linked.width+1,
+      "Filtered lab status view introduced horizontal overflow "+scenario.name);
+    if (scenario.name==="desktop-light" || scenario.name==="mobile-dark") {
+      const shot=await browser.screenshot(join(directory,
+        "gc-ui-signal-constellation-filtered-"+scenario.name+".png"));
+      assert.equal(shot.width,scenario.width,"Linked Timeflow screenshot width mismatch");
+    }
     console.log("Chromium Signal Constellation "+scenario.name+": bounds, semantics, frosted fallback passed");
   }
 
