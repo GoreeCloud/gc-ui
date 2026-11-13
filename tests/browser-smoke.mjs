@@ -1290,6 +1290,37 @@ try {
     console.log("Chromium signature frosted stage "+scenario.name+": material depth, fallback, bounds and screenshot passed");
   }
 
+  // Long text and RTL combined with 400% CSS-root font are a component
+  // stress case, not proof of actual browser 400% zoom or AT acceptance.
+  for(const width of [320,390]) {
+    await browser.setViewport(width,900,{dark:width===390});
+    await browser.navigate(base+"/lab/");
+    const legibility=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+      'const stage=document.querySelector(".gc-frost-stage");'+
+      'const panels=[...stage.querySelectorAll(".gc-frost-panel")].map(el=>{'+
+      'const bounds=el.getBoundingClientRect();'+
+      'const title=el.querySelector("h4").getBoundingClientRect();'+
+      'return {width:el.clientWidth,scroll:el.scrollWidth,left:bounds.left,right:bounds.right,'+
+      'titleLeft:title.left,titleRight:title.right}});'+
+      'const box=stage.getBoundingClientRect();'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+      'sceneLeft:box.left,sceneRight:box.right,panels})})()'));
+    assert.ok(legibility.scroll<=legibility.width+1,
+      "RTL 400% signature frost stage overflows the page at "+width+"px");
+    assert.ok(legibility.sceneLeft>=0&&legibility.sceneRight<=legibility.width+1,
+      "RTL 400% signature frost stage escapes viewport "+width+"px");
+    for(const panel of legibility.panels) {
+      assert.ok(panel.left>=0&&panel.right<=legibility.width+1,
+        "Frost panel clips against viewport at 400% and "+width+"px");
+      assert.ok(panel.scroll<=panel.width+1,
+        "Frost panel hides content at 400% and "+width+"px: "+JSON.stringify(panel));
+      assert.ok(panel.titleLeft>=panel.left-1&&panel.titleRight<=panel.right+1,
+        "Frost heading escapes its panel at 400% and "+width+"px");
+    }
+    console.log("Chromium signature frosted stage: RTL 400% CSS-root content reflow @ "+width+"px passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
