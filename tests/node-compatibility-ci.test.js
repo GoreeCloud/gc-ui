@@ -9,7 +9,9 @@ test("package declared supported Node majors have isolated CI quality checks",()
   assert.match(ci,/source-and-contract:\s*\n(?:.|\n)*?strategy:\s*\n\s*fail-fast: false\s*\n\s*matrix:\s*\n\s*node: \["20", "22", "24"\]/);
   assert.match(ci,/node-version: \$\{\{ matrix\.node \}\}/);
   assert.match(ci,/Validate JavaScript and token contracts\s*\n\s*run: npm run check/);
-  assert.match(ci,/Verify isolated offline package consumer\s*\n\s*run: npm run verify:package/);
+  assert.match(ci,/Verify isolated offline package consumer\\s*\\n\\s*run: \\|\\s*\\n\\s*mkdir -p qa\\s*\\n\\s*node scripts\\/verify-package\\.mjs --json > qa\\/package-evidence\\.json/);
+  assert.match(ci,/name: gc-ui-package-evidence-node-\\$\\{\\{ matrix\\.node \\}\\}/);
+  assert.match(ci,/path: qa\\/package-evidence\\.json/);
   assert.match(ci,/browser-smoke:\s*\n(?:.|\n)*?node-version: "22"/);
   assert.match(ci,/persist-credentials: false/);
   assert.match(ci,/permissions:\s*\n\s*contents: read/);

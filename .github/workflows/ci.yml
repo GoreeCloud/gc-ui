@@ -25,7 +25,18 @@ jobs:
       - name: Validate JavaScript and token contracts
         run: npm run check
       - name: Verify isolated offline package consumer
-        run: npm run verify:package
+        run: |
+          mkdir -p qa
+          node scripts/verify-package.mjs --json > qa/package-evidence.json
+          cat qa/package-evidence.json
+      - name: Preserve nonpublishing package evidence
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: gc-ui-package-evidence-node-${{ matrix.node }}
+          path: qa/package-evidence.json
+          if-no-files-found: warn
+          retention-days: 7
 
   browser-smoke:
     runs-on: ubuntu-24.04
