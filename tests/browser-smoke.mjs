@@ -182,7 +182,13 @@ async function startBrowser() {
         properties:(node.properties || []).map(prop => ({name:prop.name,value:prop.value?.value}))
       }));
     };
-    return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree, bringToFront:()=>command("Page.bringToFront"), close:cleanup };
+    return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree,
+      pressSpace:async()=>{
+        const key={key:" ",code:"Space",windowsVirtualKeyCode:32,nativeVirtualKeyCode:32};
+        await command("Input.dispatchKeyEvent",{type:"keyDown",...key});
+        await command("Input.dispatchKeyEvent",{type:"keyUp",...key});
+      },
+      bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -1059,6 +1065,23 @@ try {
     'preference:document.documentElement.dataset.gcTransparency}))()'));
   assert.equal(localOnly.checked,false,"Lab preference unexpectedly persisted after navigation");
   assert.equal(localOnly.preference,"auto","Theme preference unexpectedly persisted after navigation");
+  const checkboxAX=(await browser.accessibilityTree()).filter(n=>
+    n.role==="checkbox" && n.name==="Reduce transparency");
+  assert.equal(checkboxAX.length,1,"Toggle must appear exactly once with its native accessible name");
+  await browser.evaluate('document.querySelector("#gc-glass-reduce").focus()');
+  await browser.pressSpace();
+  const selectedByKeyboard=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="gc-glass-reduce",'+
+    'checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'transparency:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(selectedByKeyboard,{focused:true,checked:true,transparency:"reduce"},
+    "Native Space key must activate the transparency preference without stealing focus");
+  await browser.pressSpace();
+  const restoredByKeyboard=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'transparency:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(restoredByKeyboard,{checked:false,transparency:"auto"},
+    "Native Space key must restore system transparency");
   console.log("Chromium transparency preference UI: labeled, reversible, live and nonpersistent");
 
 } finally {
