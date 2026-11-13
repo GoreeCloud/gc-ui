@@ -11,3 +11,6 @@ qa/screenshots/
 
 # Local, device-specific visual QA outputs
 evidence/
+
+# Locally generated CI-only package source/hash receipt
+qa/package-evidence.json
