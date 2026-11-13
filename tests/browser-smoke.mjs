@@ -1143,6 +1143,43 @@ try {
       "Manual preference caused page overflow at "+width+"px");
   }
 
+  // Keyboard and accessibility-tree acceptance for the full design lab,
+  // distinct from the isolated glass test fixture's smaller demo toggle.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/lab/");
+  const labTransparencyAX=(await browser.accessibilityTree()).filter(node=>
+    node.role==="checkbox" && node.name==="Reduce transparency");
+  assert.equal(labTransparencyAX.length,1,
+    "Full design lab transparency switch must have one accessible checkbox name");
+  await browser.evaluate('document.querySelector("#transparency").focus()');
+  await browser.pressSpace();
+  const labKeyboardOn=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="transparency",'+
+    'checked:document.querySelector("#transparency").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(labKeyboardOn,{focused:true,checked:true,preference:"reduce"},
+    "Space should enable the design lab transparency setting without stealing focus");
+  await browser.pressSpace();
+  const labKeyboardOff=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({focused:document.activeElement.id==="transparency",'+
+    'checked:document.querySelector("#transparency").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.deepEqual(labKeyboardOff,{focused:true,checked:false,preference:"auto"},
+    "Space should restore the system setting without losing keyboard focus");
+  await browser.evaluate('document.documentElement.style.fontSize="400%"');
+  const enlargedPreference=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement,control=document.querySelector("#transparency"),'+
+    'label=control.closest("label"),r=label.getBoundingClientRect();'+
+    'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,left:r.left,'+
+    'right:r.right,visibleLabel:label.textContent.trim(),display:getComputedStyle(label).display})})()'));
+  assert.ok(enlargedPreference.left>=0&&enlargedPreference.right<=enlargedPreference.width+1,
+    "Full lab transparency switch escapes the 400% text viewport");
+  assert.ok(enlargedPreference.scroll<=enlargedPreference.width+1,
+    "Full lab transparency switch causes 400% horizontal overflow");
+  assert.match(enlargedPreference.visibleLabel,/Reduce transparency/,
+    "Enlarged transparency preference lost its visible label");
+  console.log("Chromium full lab preference: named checkbox, native Space activation and 400% reflow passed");
+
   // The existing More Contrast control must disable real compositing blur
   // without requiring users to separately select reduced transparency.
   await browser.setViewport(390,844,{dark:false});
