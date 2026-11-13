@@ -21,4 +21,29 @@ The stylesheet uses existing semantic surface, outline, shadow and blur tokens. 
 
 Reduced transparency, increased contrast, forced colors, and the explicit `data-gc-contrast="more"` mode disable blur and restore opaque surfaces. Forced colors additionally use system color keywords. Consumers still own semantic dialog behavior, scrims, Escape/focus management, real data state, responsive layout and manual accessibility review.
 
+## Explicit reduced-transparency preference
+
+Consumers can offer an accessible, in-app transparency preference even when the
+browser does not implement the `prefers-reduced-transparency` media query.
+Import `applyTheme` from `@goreecloud/ui/theme` and request
+`transparency: "reduce"`, or set
+`data-gc-transparency="reduce"` on the root element. Example:
+
+```js
+import { applyTheme } from "@goreecloud/ui/theme";
+applyTheme(document.documentElement, {
+  mode: "auto", accent: "lagoon", transparency: "reduce"
+});
+```
+
+The default is `transparency: "auto"`, which restores system-driven behavior.
+The theme controller also supports `update({ transparency: "auto" })` without
+storage or telemetry. An unknown value is rejected before changing theme attributes.
+This optional setting affects the four glass utility roles when
+`@goreecloud/ui/glass.css` is loaded; it is **not** a promise that unrelated
+native, operating-system, or product surfaces become opaque. A consuming app is
+responsible for its settings UI, user consent, persistence (if desired),
+and contrast verification. Do not rely on preference CSS to replace meaningful
+solid surfaces for credentials, long-form text, or security/privacy alerts.
+
 **Verification limits:** The Node contract tests check stylesheet invariants; CI browser smoke tests are not a complete matrix for these new classes. Before publication, verify computed styles and real contrast across light/dark, reduced transparency, forced colors, zoom and multiple compositing backdrops. This change does not assert WCAG certification or native platform integration.
