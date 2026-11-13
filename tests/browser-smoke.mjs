@@ -1030,6 +1030,37 @@ try {
     "Restoring auto transparency did not restore the original glass style");
   console.log("Chromium manual glass transparency: reversible, opaque and blur-free");
 
+  // Real keyboard-operable UI for the optional preference, not just a test
+  // mutating root dataset. It intentionally retains no state after reload.
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const livePreference=JSON.parse(await browser.evaluate(
+    '(()=>{const input=document.querySelector("#gc-glass-reduce"),'+
+    'status=document.querySelector("#gc-glass-preference-status"),'+
+    'el=document.querySelector(".gc-glass-base");'+
+    'const read=()=>({preference:document.documentElement.dataset.gcTransparency,'+
+    'checked:input.checked,status:status.textContent.trim(),'+
+    'blur:getComputedStyle(el).backdropFilter||getComputedStyle(el).webkitBackdropFilter});'+
+    'const initial=read();input.click();const reduced=read();'+
+    'input.click();const restored=read();'+
+    'return JSON.stringify({initial,reduced,restored,name:input.labels?.[0]?.textContent.trim()});})()'));
+  assert.equal(livePreference.initial.checked,false,"Manual preference must default to off");
+  assert.equal(livePreference.initial.preference,"auto","System setting should be active by default");
+  assert.match(livePreference.name,/Reduce transparency/,"Toggle lacks a native accessible label");
+  assert.equal(livePreference.reduced.checked,true,"UI did not select reduced transparency");
+  assert.equal(livePreference.reduced.preference,"reduce","UI failed to update the theme controller");
+  assert.match(livePreference.reduced.status,/Solid surfaces/,"Preference action lacks visible status");
+  assert.ok(["none",""].includes(livePreference.reduced.blur),"Preference UI failed to disable blur");
+  assert.equal(livePreference.restored.preference,"auto","UI failed to restore system transparency");
+  assert.equal(livePreference.restored.checked,false,"UI restored state disagrees with the control");
+  assert.equal(livePreference.restored.blur,livePreference.initial.blur,"UI did not restore visual style");
+  await browser.navigate(base+"/tests/glass-browser.html");
+  const localOnly=JSON.parse(await browser.evaluate(
+    '(()=>({checked:document.querySelector("#gc-glass-reduce").checked,'+
+    'preference:document.documentElement.dataset.gcTransparency}))()'));
+  assert.equal(localOnly.checked,false,"Lab preference unexpectedly persisted after navigation");
+  assert.equal(localOnly.preference,"auto","Theme preference unexpectedly persisted after navigation");
+  console.log("Chromium transparency preference UI: labeled, reversible, live and nonpersistent");
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
