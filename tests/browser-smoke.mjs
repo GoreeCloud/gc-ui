@@ -182,6 +182,7 @@ async function startBrowser() {
     };
     return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree,
       synthesizeScrollGesture: params=>command("Input.synthesizeScrollGesture",params),
+      enableTouch:()=>command("Emulation.setTouchEmulationEnabled",{enabled:true,maxTouchPoints:1}),
       bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
@@ -858,6 +859,7 @@ try {
     'scrollWidth:nav.scrollWidth,clientWidth:nav.clientWidth,scrollLeft:nav.scrollLeft});})()'));
   assert.ok(touchDock.scrollWidth>touchDock.clientWidth+1,
     "Touch test fixture did not contain offscreen navigation");
+  await browser.enableTouch();
   const gesture = xDistance => browser.synthesizeScrollGesture({
     x:touchDock.x,y:touchDock.y,xDistance,yDistance:0,
     gestureSourceType:"touch",speed:800
@@ -868,6 +870,7 @@ try {
   await gesture(320);
   await delay(100);
   const afterRight=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  console.log("Chromium touch scroll metrics "+JSON.stringify({touchDock,afterLeft,afterRight}));
   assert.ok(Math.abs(afterLeft-touchDock.scrollLeft)>2 || Math.abs(afterRight-afterLeft)>2,
     "Chromium touch swipe failed to scroll the overflowing dock");
   const touchPage=JSON.parse(await browser.evaluate(
