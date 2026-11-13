@@ -1,4 +1,4 @@
-# Optional atmospheric glass utilities (alpha)
+# Frosted Cloud Lens materials — signature GoreeCloud UI expression (alpha)
 
 Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before the optional `@goreecloud/ui/glass.css` stylesheet. The package export is defined on this review branch but is **not yet released**. It provides opt-in CSS classes, not new material tokens or mandatory color choices.
 
@@ -9,7 +9,18 @@ Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css` before th
 | `.gc-glass-overlay` | Transient popovers and dialog panels | Cloud Lens; consumer supplies modal scrim and focus handling |
 | `.gc-glass-solid` | Dense reading, sensitive content and fallback | Cloud Surface |
 
-Each class is **opaque by default**. To request translucency on a supported device, add `data-gc-translucent="true"` to a base/elevated/overlay element. Example:
+**Frosted glass is an important signature material of GoreeCloud UI.** The
+distinctive Cloud Lens expression uses selective real backdrop blur, softly
+translucent fill, restrained elevation and a subtle luminous optical rim,
+composed over Cloud Canvas and Cloud Surface. This is a core visual-language
+priority, not a mandate to make every reading panel transparent. Existing
+Canvas/Surface/Lens roles and application-controlled accent colors stay
+authoritative.
+
+The CSS classes are **opaque by default** so critical text, privacy controls
+and fallback environments remain usable. To request the signature frosted
+treatment on a supported device, add `data-gc-translucent="true"` to a
+base/elevated/overlay element. Example:
 
 ```html
 <aside class="gc-glass-base" data-gc-translucent="true" aria-label="Workspace navigation">
@@ -17,9 +28,43 @@ Each class is **opaque by default**. To request translucency on a supported devi
 </aside>
 ```
 
-The stylesheet uses existing semantic surface, outline, shadow and blur tokens. It does not impose navy, blue or any other brand hue. Do not put critical content over unpredictable imagery or translucent backdrops. Prefer solid materials for dense text, privacy controls, security alerts and unsupported platforms.
+The stylesheet uses existing semantic surface, outline, shadow and blur tokens.
+Opted-in frosted roles use the browser's `backdrop-filter` for real soft
+diffusion and token-derived `color-mix()` for a restrained inner optical rim.
+Without `color-mix()`, the normal semantic border and shadows still render;
+without supported backdrop filtering, the surface stays opaque. Higher contrast,
+reduced transparency, and forced-colors preferences suppress decorative
+highlights/shadows along with blur. It does not impose navy, blue or any other brand hue. Do not put critical content over unpredictable imagery or translucent backdrops. Prefer solid materials for dense text, privacy controls, security alerts and unsupported platforms.
 
 Reduced transparency, increased contrast, forced colors, and the explicit `data-gc-contrast="more"` mode disable blur and restore opaque surfaces. **Forced colors always retains final precedence**, including when an app simultaneously requests `data-gc-transparency="reduce"`: the rendered foreground, background, and borders use system `CanvasText`/`Canvas` rather than the app's semantic glass colors. This combined preference is covered by Chromium computed-style checks; it does not prove full screen-reader or device certification. Consumers still own semantic dialog behavior, scrims, Escape/focus management, real data state, responsive layout and manual accessibility review.
+
+## Signature frosted composition and visual verification
+
+The alpha design lab's **Signature / Core Components** area now contains a
+responsive frosted Cloud Lens composition, implemented with the same
+`.gc-glass-elevated`, `.gc-glass-overlay`, and `.gc-glass-solid` utilities
+that consumers can import. The two elevated panels genuinely opt into
+translucency, while the dense-reading card remains solid. Ambient geometry
+uses only approved semantic accent and surface tokens: Iris, Lagoon, Ember and
+Moss remain independent application choices.
+
+Local-only Chromium checks cover desktop light, mobile dark, explicit reduced
+transparency, increased contrast, and forced colors. They assert computed
+backdrop blur for frosted roles, opaque blur-free surfaces when required,
+suppressed optical shadows and ambient decoration in accessibility modes,
+full headings, bounding geometry and screenshot generation. Relevant review
+artifacts are `gc-ui-frost-stage-light.png`,
+`gc-ui-frost-stage-dark-mobile.png`,
+`gc-ui-frost-stage-solid-preference.png`,
+`gc-ui-frost-stage-contrast-more.png`, and
+`gc-ui-frost-stage-forced-colors.png`.
+
+Screenshots were inspected at 1440px light and 390px dark/reduced/forced:
+the glass hierarchy is visually distinct, text readable at the observed sizes,
+and solid fallbacks visibly remain high contrast. These checks do **not**
+establish universal pixel-perfect contrast, photo-overlay safety, GPU/battery
+performance, Android/native system materials, or screen-reader certification.
+The work is a review-branch alpha, not a consumer migration or deployment.
 
 ## Explicit reduced-transparency preference
 
