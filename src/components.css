@@ -1064,19 +1064,22 @@
   position:relative; isolation:isolate; overflow:hidden;
   padding:clamp(var(--gc-space-5),3.5vw,var(--gc-space-10));
   border-block-end:1px solid var(--gc-outline-soft);
-  background:var(--gc-lens-fill);
+  /* A readable solid material is the baseline on browsers without blur. */
+  background:var(--gc-lens-solid);
 }
 .gc-signal-board__lens::before {
-  content:""; pointer-events:none; position:absolute;
+  content:""; pointer-events:none; position:absolute; display:none;
   inline-size:min(40%,230px); aspect-ratio:1; border-radius:50%;
   inset-inline-end:6%; inset-block-start:-46%;
   background:var(--gc-brand-container); opacity:.48; z-index:-1;
 }
 @supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
   .gc-signal-board__lens {
+    background:var(--gc-lens-fill);
     -webkit-backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.12);
     backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.12);
   }
+  .gc-signal-board__lens::before { display:block; }
 }
 .gc-signal-board__intro { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--gc-space-4); }
 .gc-signal-board__intro > * { min-inline-size:0; }
