@@ -1130,7 +1130,7 @@ try {
     for (const surface of ["lens","nav"]) {
       assert.equal(labPreference.reduced[surface].blur,"none",
         "Manual setting did not disable blur on existing "+surface);
-      assert.match(labPreference.reduced[surface].background,/^rgb\\(/,
+      assert.match(labPreference.reduced[surface].background,/^rgb\(/,
         "Manual setting did not restore opaque "+surface);
       assert.deepEqual(labPreference.restored[surface],labPreference.before[surface],
         "Lab did not restore original "+surface+" styling");
