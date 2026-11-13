@@ -57,7 +57,8 @@
     "./navigation-rail": {
       "types": "./src/navigation-rail.d.ts",
       "default": "./src/navigation-rail.js"
-    }
+    },
+    "./glass.css": "./src/glass.css"
   },
   "files": [
     "src/",
