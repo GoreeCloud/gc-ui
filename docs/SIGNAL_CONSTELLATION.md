@@ -149,6 +149,10 @@ focus-transfer, disposal, mobile, dark, forced-colors and RTL/400% CSS-root
 reflow checks. These do **not** establish actual 400% browser zoom, native
 platform adapters, OS screen-reader acceptance or WCAG certification.
 
+### Filter availability changes
+
+If an application disables the selected filter after initialization, call `refresh()`. It validates both lists, then preserves the current filter if enabled; otherwise it chooses enabled **All**, or the first enabled state if All is also disabled. It updates `aria-pressed` and the roving keyboard Tab stop together. If every filter is disabled, `refresh()` throws without changing the selected view until the application restores at least one enabled choice. Programmatic `setFilter()` continues to return `false` for a disabled or absent filter. No polling or permission decision is performed by this presentation controller.
+
 ### Dated integration checkpoint — November 13, 2026
 
 This component entered public `main` through [PR #77](https://github.com/GoreeCloud/gc-ui/pull/77), commit [`9d8380d`](https://github.com/GoreeCloud/gc-ui/commit/9d8380d3de8637cbdbd270b43d9a0a53f1fff664). Its [branch source/package and browser smoke jobs passed](https://github.com/GoreeCloud/gc-ui/actions/runs/43424884496); a later Chromium horizontal-wheel fixture failure was independently corrected through [PR #79](https://github.com/GoreeCloud/gc-ui/pull/79) and [subsequent passing main CI](https://github.com/GoreeCloud/gc-ui/actions/runs/43429549803). Material isolation checks were expanded in [PR #80](https://github.com/GoreeCloud/gc-ui/pull/80). These are tested source components, not verified live service-health data, consumer authorization, native adapters or deployed products.
