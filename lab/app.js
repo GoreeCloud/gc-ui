@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, initSignalBoard, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 // A single reusable rail controller owns expansion and route announcements.
@@ -160,3 +160,6 @@ initCombobox(document.querySelector("#demo-combobox"),
 // Real local hash destinations; the floating dock tracks URL history automatically.
 initBottomNavigation(document.querySelector("#demo-bottom-nav"), { content:document.querySelector("#main") });
 initBottomNavigation(document.querySelector("#demo-window-nav"));
+
+// Signal Constellation reads illustrative DOM records only; no live service polling.
+initSignalBoard(document.querySelector("#signal-constellation"));

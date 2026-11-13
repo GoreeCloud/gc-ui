@@ -19,6 +19,33 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
 | Identity and icons | gc-avatar; gc-icon, iconSvg() | Image alt and icon-only button names |
 
+## Signature pattern: Signal Constellation & Timeflow
+
+**Signal Constellation** is an alpha, locally filtered application status
+composition: a frosted Cloud Lens header, native count list, labeled
+`aria-pressed` filters, readable Cloud Surface status cards and an accessible
+native Timeflow chronology. With an opt-in `data-gc-timeflow-list`, that
+chronology now follows the selected signal state, reports related-event counts
+through the same live summary, protects keyboard focus on filtered events,
+and shows its own explanatory empty state without any data fetching. It is genuinely different from a decorative
+status badge: it supports actual filter choices, live count summaries, dynamic
+`refresh()`, empty results and focus-safe hiding of status cards.
+
+Use `initSignalBoard(board)` from `@goreecloud/ui/signal-board` or the root
+package, with `data-gc-signal-filter="all|ready|attention|offline"` native
+buttons and direct `li[data-gc-signal]` children in a native list. Buttons
+remain keyboard-operable; the existing `initToggleGroup` supplies RTL-aware
+horizontal Arrow/Home/End navigation. Call `refresh()` whenever the consuming
+application changes the DOM. Call `dispose()` on unmount to restore visibility,
+counts, summary and original button states. `setFilter(value)` supports
+programmatic selection and rejects unknown values. No code in this pattern
+contacts or audits services, caches private data or performs authorization.
+
+See [Signal Constellation & Timeflow](SIGNAL_CONSTELLATION.md) for full markup,
+usage, limits, reduced-transparency, forced-colors, accessibility and native
+acceptance requirements. The design lab's fictional statuses must not be
+mistaken for live GoreeCloud Mesh, Wardveil or device monitoring.
+
 ### Field example
 
     <div class="gc-field">
@@ -134,9 +161,9 @@ Initialize initBottomNavigation(nav, {onNavigate}) from @goreecloud/ui/bottom-na
 
 Disabled choices are skipped. Non-HTTP(S), cross-origin, empty and duplicate destinations are rejected. No telemetry, persistence, backend authority or server route is provided by the controller. Integrating applications retain GoreeCloud Identity authorization, GoreeShield privacy, Wardveil cybersecurity and Mesh boundaries.
 
-Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. On this alpha review branch, `applyTheme(root, { transparency: "reduce" })` or `createThemeController(root).update({ transparency: "reduce" })` also disables the backdrop blur of existing `.gc-lens` and `.gc-bottom-nav` surfaces (including floating navigation), and the native dialog/command scrim blur; `"auto"` restores system behavior. Explicit `data-gc-contrast="more"` likewise disables shared Lens/viewport/window-dock blur without requiring manual transparency reduction. The built-in option is opt-in, no storage or telemetry is added, and OS forced colors remains authoritative. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
+Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. In this alpha source, `applyTheme(root, { transparency: "reduce" })` or `createThemeController(root).update({ transparency: "reduce" })` also disables the backdrop blur of existing `.gc-lens` and `.gc-bottom-nav` surfaces (including floating navigation), and the native dialog/command scrim blur; `"auto"` restores system behavior. Explicit `data-gc-contrast="more"` likewise disables shared Lens/viewport/window-dock blur without requiring manual transparency reduction. The built-in option is opt-in, no storage or telemetry is added, and OS forced colors remains authoritative. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
 
-For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). Long single-line labels are safely ellipsized; the native link text remains available to assistive technology. Do not rely on truncation as a substitute for meaningful short labels.
+For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). At enlarged text sizes or with translated labels, links must keep the full readable label rather than ellipsizing it; the dock may overflow **within its capsule** and become horizontally scrollable without scrolling the entire document. A thin, semantic-token-colored scrollbar is exposed when content overflows in browsers that render scrollbars; some touch operating systems automatically hide it, so consumers must still verify touch-swipe and keyboard reachability. Focus, active state and native link semantics remain independent. Browser QA now also exercises genuine 400% RTL navigation, confirming mirrored ArrowLeft/ArrowRight semantics and Home/End offscreen reachability, while preserving page-level reflow. Chromium also verifies horizontal-wheel scrolling on a 390px viewport with 400% CSS-root text (scroll position changed from 0 to 328 pixels) without page overflow. A separate RTL + forced-colors browser case drives horizontal-wheel input in both directions, checks negative RTL scroll coordinates and verifies that navigation remains internal rather than scrolling the page. Headless synthetic touch gestures did **not** produce reliable movement in this runner; touch input remains **unverified** and requires actual mobile/device testing. Chromium emulation is not real screen-reader, physical touch-gesture, OS-overlay-scrollbar, or device acceptance.
 
 ### Navigation callback fail-closed behavior
 

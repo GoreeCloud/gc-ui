@@ -52,7 +52,8 @@ test("live theme-controller changes preserve or clear the user preference withou
 
 test("manual reduction provides explicit solid fallback even for opt-in glass", () => {
   const css = readFileSync(new URL("../src/glass.css", import.meta.url), "utf8");
-  assert.match(css, /:root\[data-gc-transparency="reduce"\]/);
+  assert.ok(css.includes(':is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"]'));
+  assert.ok(css.includes(':is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"]'));
   assert.match(css, /\[data-gc-translucent="true"\]\s*\{\s*background:\s*var\(--gc-lens-solid/);
   assert.doesNotMatch(css, /#[0-9a-f]{3,8}\b/i, "material layer must remain theme agnostic");
 });

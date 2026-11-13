@@ -120,3 +120,9 @@ When a browser `hashchange` or `popstate` leaves the dock's known same-origin de
 ### Floating navigation in rounded application windows
 
 For a desktop-like app frame, pair `gc-window--app-shell` with `gc-bottom-nav--window` and a scrollable `gc-window__body`; choose this **instead of** the viewport-fixed dock for a consuming app. The component library does not impose a window height or claim native OS chrome support. See [Windows and navigation](docs/WINDOWS_AND_NAVIGATION.md).
+
+## Independent application color and appearance (web alpha)
+
+GoreeCloud UI has **no required hue, optional-preset restriction or mandatory light/dark theme**. Applications may independently select a curated example accent, an arbitrary six-digit hex color, and light, dark or auto appearance. Iris is a technical fallback, not the brand mandate.
+
+Use `applyTheme(document.documentElement, { mode: "auto", customAccent: "#B13571" })` for full-page apps, or `applyTheme(appRoot, { mode: "dark", accent: "lagoon" })` on separate `.gc-app` elements to isolate palette roles. A scoped root must be explicitly configured; unconfigured apps inherit the host's palette. Verify contrast, OS appearance updates, overlays, forced colors and reduced-transparency on actual consumers. See the [scoped theme contract](docs/DESIGN_LANGUAGE.md#per-application-color-and-appearance-scope-web-alpha).

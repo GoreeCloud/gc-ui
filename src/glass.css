@@ -60,7 +60,7 @@
     box-shadow: none;
   }
 }
-:root[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+:is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
   background: var(--gc-lens-solid, var(--gc-surface));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -88,7 +88,7 @@
     box-shadow: none;
   }
 }
-:root[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+:is(:root, .gc-app[data-gc-theme])[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: var(--gc-lens-solid, var(--gc-surface));
@@ -106,13 +106,13 @@
 /* User/app-level transparency preference, independent of browser support for
  * prefers-reduced-transparency. Explicitly restores opaque painted surfaces.
  * Keep selector specificity at least as high as the translucent opt-in rules. */
-:root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
   background: var(--gc-lens-solid, var(--gc-surface));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   box-shadow: none;
 }
-:root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+:is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
   background: var(--gc-lens-solid, var(--gc-surface));
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
@@ -123,8 +123,8 @@
  * simultaneously requests reduced transparency. Never let a later semantic
  * solid override conceal operating-system Canvas/CanvasText colors. */
 @media (forced-colors: active) {
-  :root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid),
-  :root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+  :is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid),
+  :is(:root, .gc-app[data-gc-theme])[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
     background: Canvas;
     color: CanvasText;
     border-color: CanvasText;
