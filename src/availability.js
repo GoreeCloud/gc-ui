@@ -40,7 +40,7 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
     const nodes = Array.isArray(path) && path.includes(root)
       ? path.slice(0, path.indexOf(root) + 1)
       : null;
-    let element = event.target;
+    let element = nodes ? nodes[0] : event.target;
     let index = 0;
     while (element) {
       if (typeof element.getAttribute === 'function') {
