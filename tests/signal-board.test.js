@@ -1,0 +1,46 @@
+import { test } from "node:test";
+import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "../src/signal-board.js";
+
+test("Signal Constellation enumerates only documented local states", () => {
+  assert.deepEqual(SIGNAL_STATES, ["ready","attention","offline"]);
+  assert.deepEqual(SIGNAL_FILTERS, ["all","ready","attention","offline"]);
+  assert.equal(Object.isFrozen(SIGNAL_STATES),true);
+});
+
+test("counts are correct, immutable, and handle empty collections", () => {
+  const counts = summarizeSignals(["ready","offline","attention","ready"]);
+  assert.deepEqual(counts,{all:4,ready:2,attention:1,offline:1});
+  assert.equal(Object.isFrozen(counts),true);
+  assert.deepEqual(summarizeSignals([]),{all:0,ready:0,attention:0,offline:0});
+});
+
+test("unknown or unsafe signals fail closed without coercion", () => {
+  for(const input of [null,{},new Set(), "ready"]) assert.throws(()=>summarizeSignals(input),TypeError);
+  for(const state of ["error","online","READY","",null,undefined,42,"<script>"]) {
+    assert.throws(()=>summarizeSignals([state]),RangeError);
+  }
+});
+
+test("controller rejects unsupported roots and does not require browser globals on import", () => {
+  for(const node of [null,{}, {querySelector(){}}, {querySelector(){},querySelectorAll(){}}]) {
+    assert.throws(()=>initSignalBoard(node),TypeError);
+  }
+});
+
+test("semantic design and package exports include filter, timeflow and accessibility fallbacks", () => {
+  const css=readFileSync(new URL("../src/components.css",import.meta.url),"utf8");
+  const html=readFileSync(new URL("../lab/index.html",import.meta.url),"utf8");
+  const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
+  assert.match(css,/\.gc-signal-board__lens/);
+  assert.match(css,/\.gc-timeflow > li/);
+  assert.match(css,/prefers-reduced-transparency:reduce/);
+  assert.match(css,/forced-colors:active/);
+  assert.match(html,/id="signal-constellation"/);
+  assert.match(html,/data-gc-signal-filter="attention"/);
+  assert.match(html,/<ol class="gc-timeflow">/);
+  assert.match(html,/illustrative local records, not live GoreeCloud service checks/);
+  assert.equal(pkg.exports["./signal-board"].types,"./src/signal-board.d.ts");
+  assert.equal(pkg.exports["./signal-board"].default,"./src/signal-board.js");
+});
