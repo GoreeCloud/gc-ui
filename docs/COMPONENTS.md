@@ -19,6 +19,33 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
 | Identity and icons | gc-avatar; gc-icon, iconSvg() | Image alt and icon-only button names |
 
+## Signature pattern: Signal Constellation & Timeflow
+
+**Signal Constellation** is an alpha, locally filtered application status
+composition: a frosted Cloud Lens header, native count list, labeled
+`aria-pressed` filters, readable Cloud Surface status cards and an accessible
+native Timeflow chronology. With an opt-in `data-gc-timeflow-list`, that
+chronology now follows the selected signal state, reports related-event counts
+through the same live summary, protects keyboard focus on filtered events,
+and shows its own explanatory empty state without any data fetching. It is genuinely different from a decorative
+status badge: it supports actual filter choices, live count summaries, dynamic
+`refresh()`, empty results and focus-safe hiding of status cards.
+
+Use `initSignalBoard(board)` from `@goreecloud/ui/signal-board` or the root
+package, with `data-gc-signal-filter="all|ready|attention|offline"` native
+buttons and direct `li[data-gc-signal]` children in a native list. Buttons
+remain keyboard-operable; the existing `initToggleGroup` supplies RTL-aware
+horizontal Arrow/Home/End navigation. Call `refresh()` whenever the consuming
+application changes the DOM. Call `dispose()` on unmount to restore visibility,
+counts, summary and original button states. `setFilter(value)` supports
+programmatic selection and rejects unknown values. No code in this pattern
+contacts or audits services, caches private data or performs authorization.
+
+See [Signal Constellation & Timeflow](SIGNAL_CONSTELLATION.md) for full markup,
+usage, limits, reduced-transparency, forced-colors, accessibility and native
+acceptance requirements. The design lab's fictional statuses must not be
+mistaken for live GoreeCloud Mesh, Wardveil or device monitoring.
+
 ### Field example
 
     <div class="gc-field">

@@ -74,3 +74,5 @@ export declare function initAvailabilityFeedback(root: HTMLElement | Document, o
   region?: HTMLElement;
   notify?: (message: string) => void;
 }): () => void;
+export { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "./signal-board.js";
+export type { GcSignalState, GcSignalFilter } from "./signal-board.js";

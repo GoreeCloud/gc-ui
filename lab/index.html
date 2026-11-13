@@ -301,6 +301,71 @@
             <p id="demo-tree-status" role="status" aria-live="polite" class="gc-support">Workspaces selected locally.</p>
           </article>
         </div>
+        <section id="signal-constellation" class="gc-signal-board" aria-labelledby="signal-board-heading" style="margin-block-start:var(--gc-space-6)">
+          <header class="gc-signal-board__lens">
+            <div class="gc-signal-board__intro">
+              <div>
+                <span class="gc-signal-board__eyebrow">GOREECLOUD UI / SIGNAL CONSTELLATION</span>
+                <h3 class="gc-signal-board__title" id="signal-board-heading">Know what needs your attention.</h3>
+                <p class="gc-signal-board__description">A distinctive, calm way to explore app health and recent activity. These are illustrative local records, not live GoreeCloud service checks.</p>
+              </div>
+              <span class="gc-badge gc-badge--brand">LOCAL PREVIEW</span>
+            </div>
+            <dl class="gc-signal-board__counts" aria-label="Sample signal counts">
+              <div><dt>All signals</dt><dd data-gc-signal-count="all">4</dd></div>
+              <div><dt>Ready</dt><dd data-gc-signal-count="ready">2</dd></div>
+              <div><dt>Needs review</dt><dd data-gc-signal-count="attention">1</dd></div>
+              <div><dt>Offline</dt><dd data-gc-signal-count="offline">1</dd></div>
+            </dl>
+          </header>
+          <div class="gc-signal-board__body">
+            <div class="gc-signal-board__layout">
+              <div>
+                <h4 class="gc-heading">Workspace signals</h4>
+                <div class="gc-signal-board__filters" role="group" aria-label="Filter sample signals" data-gc-signal-filters>
+                  <button type="button" aria-pressed="true" data-gc-signal-filter="all">All</button>
+                  <button type="button" aria-pressed="false" data-gc-signal-filter="ready">Ready</button>
+                  <button type="button" aria-pressed="false" data-gc-signal-filter="attention">Needs review</button>
+                  <button type="button" aria-pressed="false" data-gc-signal-filter="offline">Offline</button>
+                </div>
+                <p class="gc-signal-board__summary" data-gc-signal-summary role="status" aria-live="polite" aria-atomic="true">Showing 4 of 4 signals; 3 of 3 related events</p>
+                <ul class="gc-signal-board__list" data-gc-signal-list aria-label="Illustrative workspace status">
+                  <li class="gc-signal-card" data-gc-signal="ready">
+                    <span class="gc-signal-card__state">Ready</span>
+                    <h4 class="gc-heading">Aster notes</h4>
+                    <p>Illustrative reading space, ready for review.</p>
+                  </li>
+                  <li class="gc-signal-card" data-gc-signal="attention">
+                    <span class="gc-signal-card__state">Needs review</span>
+                    <h4 class="gc-heading">Boreal queue</h4>
+                    <p>Example item awaiting a deliberate decision.</p>
+                  </li>
+                  <li class="gc-signal-card" data-gc-signal="offline">
+                    <span class="gc-signal-card__state">Offline</span>
+                    <h4 class="gc-heading">Coast device</h4>
+                    <p>Example unavailable endpoint, not a real device.</p>
+                  </li>
+                  <li class="gc-signal-card" data-gc-signal="ready">
+                    <span class="gc-signal-card__state">Ready</span>
+                    <h4 class="gc-heading">Delta journal</h4>
+                    <p>Illustrative activity stream with no network calls.</p>
+                  </li>
+                </ul>
+                <p class="gc-signal-board__empty" data-gc-signal-empty hidden>No signals in this view. Select another status to continue.</p>
+              </div>
+              <aside class="gc-timeflow-panel" aria-label="Illustrative chronological activity">
+                <span class="gc-signal-board__eyebrow">TIMEFLOW / LOCAL EXAMPLE</span>
+                <h4 class="gc-heading">A trail of what changed.</h4>
+                <ol class="gc-timeflow" data-gc-timeflow-list aria-label="Illustrative related activity by status">
+                  <li data-gc-signal="ready"><time datetime="2026-11-12T09:20">09:20 · illustrative</time><span class="gc-timeflow__state">Ready</span><strong>Activity summarized</strong><p>Human-readable changes remain visible without relying on motion.</p></li>
+                  <li data-gc-signal="attention"><time datetime="2026-11-12T08:40">08:40 · illustrative</time><span class="gc-timeflow__state">Needs review</span><strong>Review suggested</strong><p>A model of a status requiring attention, not a live alert.</p></li>
+                  <li data-gc-signal="offline"><time datetime="2026-11-12T08:10">08:10 · illustrative</time><span class="gc-timeflow__state">Offline</span><strong>Workspace unavailable</strong><p>A semantic timeline that works even without JavaScript.</p></li>
+                </ol>
+                <p class="gc-timeflow__empty" data-gc-timeflow-empty hidden>No related activity for this status. The other statuses remain available.</p>
+              </aside>
+            </div>
+          </div>
+        </section>
       </section>
       <section id="forms" class="gc-lab-section" aria-labelledby="forms-heading">
         <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INPUT & PREFERENCE</p><h2 class="gc-title" id="forms-heading">Controls that just work.</h2></div><p class="gc-support">Full labels, logical focus, native validation and understandable feedback.</p></div>

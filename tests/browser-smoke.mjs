@@ -1022,6 +1022,252 @@ try {
     console.log("Chromium signature composition "+filename+": material, bounds and capture passed");
   }
 
+  // Signal Constellation is a native-first pattern, not live service telemetry.
+  // Exercise actual Chromium buttons, keyboard input, dynamic data and disposal.
+  await browser.setViewport(390,844,{dark:false});
+  await browser.navigate(base+"/tests/signal-board-browser.html");
+  const signalStart=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard,items=[...document.querySelectorAll("[data-gc-signal-list] > li")];'+
+    'return JSON.stringify({ready:document.documentElement.dataset.ready,filter:b?.filter,'+
+    'visible:items.filter(item=>!item.hidden).length,'+
+    'summary:document.querySelector("[data-gc-signal-summary]").textContent,'+
+    'count:document.querySelector("[data-gc-signal-count=ready]").textContent,'+
+    'cookie:document.cookie,storage:localStorage.length})})()'));
+  assert.equal(signalStart.ready,"true","Signal Constellation fixture did not initialize");
+  assert.equal(signalStart.filter,"all","Signal Constellation must start with All selected");
+  assert.equal(signalStart.visible,4,"Board did not initially expose all four sample statuses");
+  assert.equal(signalStart.summary,"Showing 4 of 4 signals; 3 of 3 related events");
+  assert.equal(signalStart.count,"2");
+  assert.ok(signalStart.summary.endsWith("3 of 3 related events"),
+    "Initial Timeflow events were not included in accessible summary");
+
+  const signalAX=(await browser.accessibilityTree()).filter(node=>
+    node.role==="button" && ["All","Ready","Needs review","Offline"].includes(node.name));
+  assert.equal(signalAX.length,4,"Signal filter buttons lost accessible native names");
+  const attention=JSON.parse(await browser.evaluate(
+    '(()=>{document.querySelector("[data-gc-signal-filter=attention]").click();'+
+    'const items=[...document.querySelectorAll("[data-gc-signal-list] > li")];'+
+    'const buttons=[...document.querySelectorAll("[data-gc-signal-filters] button")];'+
+    'return JSON.stringify({filter:window.testBoard.filter,visible:items.filter(i=>!i.hidden).length,'+
+    'selected:buttons.filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>b.dataset.gcSignalFilter),'+
+    'status:document.querySelector("[data-gc-signal-summary]").textContent,'+
+    'empty:document.querySelector("[data-gc-signal-empty]").hidden})})()'));
+  assert.deepEqual(attention,{filter:"attention",visible:1,selected:["attention"],
+    status:"Showing 1 of 4 signals; 1 of 3 related events",empty:true},"Status filter did not select only attention items");
+
+  const arrow=JSON.parse(await browser.evaluate(
+    '(()=>{const b=document.querySelector("[data-gc-signal-filter=attention]");b.focus();'+
+    'b.dispatchEvent(new KeyboardEvent("keydown",{key:"ArrowRight",bubbles:true,cancelable:true}));'+
+    'return JSON.stringify({filter:window.testBoard.filter,focus:document.activeElement.dataset.gcSignalFilter,'+
+    'pressed:document.activeElement.getAttribute("aria-pressed")})})()'));
+  assert.deepEqual(arrow,{filter:"offline",focus:"offline",pressed:"true"},
+    "Native roving filter keyboard behavior failed");
+
+  const changed=JSON.parse(await browser.evaluate(
+    '(()=>{const list=document.querySelector("[data-gc-signal-list]");'+
+    'const li=document.createElement("li");li.className="gc-signal-card";'+
+    'li.setAttribute("data-gc-signal","ready");li.textContent="Fifth local signal";list.append(li);'+
+    'const refreshed=window.testBoard.refresh();window.testBoard.setFilter("ready");'+
+    'return JSON.stringify({refreshed,filter:window.testBoard.filter,'+
+    'visible:[...list.children].filter(x=>!x.hidden).length,'+
+    'readyCount:document.querySelector("[data-gc-signal-count=ready]").textContent,'+
+    'summary:document.querySelector("[data-gc-signal-summary]").textContent})})()'));
+  assert.equal(changed.refreshed.total,5,"Board refresh did not account for inserted item");
+  assert.equal(changed.visible,3,"Board failed to show the new Ready status");
+  assert.equal(changed.readyCount,"3","Board did not reconcile semantic counts");
+  assert.equal(changed.summary,"Showing 3 of 5 signals; 1 of 3 related events");
+
+  const safeFocus=JSON.parse(await browser.evaluate(
+    '(()=>{const link=document.querySelector("#focusable-signal");link.focus();'+
+    'window.testBoard.setFilter("attention");'+
+    'let invalidRejected=false;try{window.testBoard.setFilter("url(javascript:alert(1))")}'+
+    'catch(error){invalidRejected=error instanceof RangeError;}'+
+    'return JSON.stringify({focus:document.activeElement.dataset.gcSignalFilter,'+
+    'linkHidden:link.closest("li").hidden,invalidRejected,filter:window.testBoard.filter})})()'));
+  assert.deepEqual(safeFocus,{focus:"attention",linkHidden:true,invalidRejected:true,filter:"attention"},
+    "Filtering hid focused content or accepted an unsupported state");
+
+  const historyFocus=JSON.parse(await browser.evaluate(
+    '(()=>{window.testBoard.setFilter("ready");const link=document.querySelector("#focusable-history");link.focus();'+
+    'window.testBoard.setFilter("offline");'+
+    'const timeline=document.querySelector("[data-gc-timeflow-list]");'+
+    'return JSON.stringify({focus:document.activeElement.dataset.gcSignalFilter,'+
+    'historyLinkHidden:link.closest("li").hidden,'+
+    'visibleHistory:[...timeline.children].filter(x=>!x.hidden).length,'+
+    'summary:document.querySelector("[data-gc-signal-summary]").textContent})})()'));
+  assert.deepEqual(historyFocus,{
+    focus:"offline",historyLinkHidden:true,visibleHistory:1,
+    summary:"Showing 1 of 5 signals; 1 of 3 related events"
+  },"Linked history filtering hid focused content or lost its live counts");
+
+  const historyEmpty=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const history=document.querySelector("[data-gc-timeflow-list]");'+
+    'const offline=history.querySelector("[data-gc-signal=offline]");'+
+    'offline.setAttribute("data-gc-signal","attention");'+
+    'const reduced=b.refresh();const empty=document.querySelector("[data-gc-timeflow-empty]");'+
+    'const snapshot={emptyVisible:!empty.hidden,historyVisible:reduced.historyVisible,'+
+    'historyTotal:reduced.historyTotal,summary:document.querySelector("[data-gc-signal-summary]").textContent};'+
+    'offline.setAttribute("data-gc-signal","offline");b.refresh();'+
+    'return JSON.stringify(snapshot)})()'));
+  assert.deepEqual(historyEmpty,{
+    emptyVisible:true,historyVisible:0,historyTotal:3,
+    summary:"Showing 1 of 5 signals; 0 of 3 related events"
+  },"Missing related events did not show clear Timeflow empty feedback");
+
+  const invalidHistory=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const history=document.querySelector("[data-gc-timeflow-list]");'+
+    'const bad=document.createElement("li");bad.setAttribute("data-gc-signal","unknown");'+
+    'const time=document.createElement("time");time.setAttribute("datetime","2026-11-12T12:00");'+
+    'bad.append(time);history.append(bad);'+
+    'let rejected=false;try{b.refresh()}catch(error){rejected=error instanceof TypeError;}'+
+    'bad.remove();const state=b.refresh();'+
+    'return JSON.stringify({rejected,historyVisible:state.historyVisible,historyTotal:state.historyTotal,'+
+    'filter:b.filter})})()'));
+  assert.deepEqual(invalidHistory,{rejected:true,historyVisible:1,historyTotal:3,filter:"offline"},
+    "Malformed Timeflow entry corrupted filter state");
+
+  const emptyState=JSON.parse(await browser.evaluate(
+    '(()=>{const list=document.querySelector("[data-gc-signal-list]");'+
+    'list.querySelector("[data-gc-signal=offline]").remove();window.testBoard.refresh();'+
+    'window.testBoard.setFilter("offline");'+
+    'return JSON.stringify({summary:document.querySelector("[data-gc-signal-summary]").textContent,'+
+    'visible:[...list.children].filter(x=>!x.hidden).length,'+
+    'emptyHidden:document.querySelector("[data-gc-signal-empty]").hidden})})()'));
+  assert.deepEqual(emptyState,{summary:"Showing 0 of 4 signals; 1 of 3 related events",visible:0,emptyHidden:false},
+    "Empty status feedback failed after removing all offline sample items");
+
+  const disposed=JSON.parse(await browser.evaluate(
+    '(()=>{const b=window.testBoard;const list=document.querySelector("[data-gc-signal-list]");'+
+    'const bad=document.createElement("li");bad.setAttribute("data-gc-signal","unknown");list.append(bad);'+
+    'let rejected=false;try{b.refresh()}catch(error){rejected=error instanceof TypeError;}bad.remove();'+
+    'b.dispose();b.dispose();'+
+    'document.querySelector("[data-gc-signal-filter=ready]").click();'+
+    'let disposedRejected=false;try{b.setFilter("ready")}catch(error){disposedRejected=/disposed/.test(error.message);};'+
+    'return JSON.stringify({rejected,disposedRejected,'+
+    'visible:[...list.children].filter(x=>!x.hidden).length,'+
+    'readyCount:document.querySelector("[data-gc-signal-count=ready]").textContent,'+
+    'summary:document.querySelector("[data-gc-signal-summary]").textContent,'+
+    'selected:document.querySelector("[data-gc-signal-filter=all]").getAttribute("aria-pressed"),'+
+    'cookie:document.cookie,storage:localStorage.length})})()'));
+  assert.equal(disposed.rejected,true,"Refresh accepted invalid dynamic status");
+  assert.equal(disposed.disposedRejected,true,"Disposed board still permits new filtering");
+  assert.equal(disposed.visible,4,"Dispose failed to restore original list visibility");
+  assert.equal(disposed.readyCount,"2","Dispose failed to restore consumer-owned original count");
+  assert.equal(disposed.summary,"Showing 4 of 4 signals; 3 of 3 related events","Dispose failed to restore status text");
+  assert.equal(disposed.selected,"true","Dispose did not restore original native button states");
+  const historyRestored=JSON.parse(await browser.evaluate(
+    '(()=>{const list=document.querySelector("[data-gc-timeflow-list]");'+
+    'return JSON.stringify({visible:[...list.children].filter(x=>!x.hidden).length,'+
+    'emptyHidden:document.querySelector("[data-gc-timeflow-empty]").hidden})})()'));
+  assert.deepEqual(historyRestored,{visible:3,emptyHidden:true},
+    "Dispose failed to restore original linked Timeflow visibility and empty state");
+  assert.equal(disposed.cookie,signalStart.cookie,"Board unexpectedly changed cookies");
+  assert.equal(disposed.storage,signalStart.storage,"Board unexpectedly wrote local storage");
+  const backwardsCompatible=JSON.parse(await browser.evaluate(
+    '(()=>{const board=document.querySelector("#fixture-board"),timeline=board.querySelector(".gc-timeflow"),'+
+    'empty=board.querySelector("[data-gc-timeflow-empty]");'+
+    'empty.removeAttribute("data-gc-timeflow-empty");'+
+    'let missingEmptyRejected=false;try{window.initSignalBoard(board)}'+
+    'catch(error){missingEmptyRejected=error instanceof TypeError;}'+
+    'timeline.removeAttribute("data-gc-timeflow-list");'+
+    'const controller=window.initSignalBoard(board);controller.setFilter("ready");'+
+    'const status=board.querySelector("[data-gc-signal-summary]").textContent;'+
+    'const events=[...timeline.children].filter(node=>!node.hidden).length;'+
+    'const selected=controller.filter;controller.dispose();'+
+    'return JSON.stringify({missingEmptyRejected,status,events,selected})})()'));
+  assert.deepEqual(backwardsCompatible,{
+    missingEmptyRejected:true,status:"Showing 3 of 4 signals",
+    events:3,selected:"ready"
+  },"Optional linked Timeflow broke existing signal-only consumers");
+  console.log("Chromium Signal Constellation: native filters, keyboard, dynamic refresh, focus, empty, disposal and privacy passed");
+
+  // The real lab uses the same component without fake service backends.
+  for (const scenario of [
+    {name:"desktop-light",width:1440,dark:false,forcedColors:false,zoom:false},
+    {name:"mobile-dark",width:390,dark:true,forcedColors:false,zoom:false},
+    {name:"mobile-forced-colors",width:390,dark:true,forcedColors:true,zoom:false},
+    {name:"mobile-rtl-enlarged",width:320,dark:false,forcedColors:false,zoom:true}
+  ]) {
+    await browser.setViewport(scenario.width,900,{dark:scenario.dark,forcedColors:scenario.forcedColors});
+    await browser.navigate(base+"/lab/");
+    const visual=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,board=document.querySelector("#signal-constellation");'+
+      'if('+String(scenario.zoom)+'){root.dir="rtl";root.style.fontSize="400%";}'+
+      'board.scrollIntoView({block:"start",behavior:"instant"});'+
+      'window.scrollBy({top:-Math.max(0,document.querySelector(".gc-lab-toolbar").getBoundingClientRect().height),behavior:"instant"});'+
+      'const r=board.getBoundingClientRect(),lens=board.querySelector(".gc-signal-board__lens");'+
+      'const css=getComputedStyle(lens),cards=[...board.querySelectorAll("[data-gc-signal-list] > li")];'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+      'rect:{left:r.left,right:r.right,width:r.width},'+
+      'cards:cards.map(c=>({width:c.scrollWidth,client:c.clientWidth,hidden:c.hidden})),'+
+      'filters:board.querySelectorAll("[data-gc-signal-filter]").length,'+
+      'text:board.querySelector(".gc-signal-board__description").textContent,'+
+      'blur:css.backdropFilter||css.webkitBackdropFilter,'+
+      'color:css.color,background:css.backgroundColor})})()'));
+    assert.ok(visual.rect.left>=0&&visual.rect.right<=visual.width+1,
+      "Signal board escaped viewport "+scenario.name);
+    assert.ok(visual.scroll<=visual.width+1,"Signal board caused page overflow "+scenario.name);
+    assert.equal(visual.filters,4,"Live design lab signal filters are missing "+scenario.name);
+    assert.ok(visual.cards.every(card=>!card.hidden&&card.width<=card.client+1),
+      "Signal card content hidden or clipped "+scenario.name);
+    assert.match(visual.text,/illustrative local records/i,"Preview is misrepresented as live");
+    if(scenario.forcedColors) {
+      assert.equal(visual.blur,"none","Forced-colors signal header retained blur");
+    } else {
+      assert.ok(visual.blur.includes("blur("),"Cloud Lens signal header lost frosted blur");
+    }
+    if(!scenario.zoom) {
+      const shot=await browser.screenshot(join(directory,"gc-ui-signal-constellation-"+scenario.name+".png"));
+      assert.equal(shot.width,scenario.width,"Signal QA screenshot width mismatch");
+    }
+    const linked=JSON.parse(await browser.evaluate(
+      '(()=>{const board=document.querySelector("#signal-constellation");'+
+      'board.querySelector("[data-gc-signal-filter=attention]").click();'+
+      'const visible=selector=>[...board.querySelectorAll(selector)].filter(x=>!x.hidden);'+
+      'return JSON.stringify({filter:board.querySelector("[data-gc-signal-filter=attention]").getAttribute("aria-pressed"),'+
+      'cards:visible("[data-gc-signal-list] > li").map(x=>x.getAttribute("data-gc-signal")),'+
+      'history:visible("[data-gc-timeflow-list] > li").map(x=>x.getAttribute("data-gc-signal")),'+
+      'summary:board.querySelector("[data-gc-signal-summary]").textContent,'+
+      'historyEmpty:board.querySelector("[data-gc-timeflow-empty]").hidden,'+
+      'width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth})})()'));
+    assert.deepEqual(linked.cards,["attention"],"Live lab signal filter did not update cards "+scenario.name);
+    assert.deepEqual(linked.history,["attention"],"Live lab Timeflow did not follow selected status "+scenario.name);
+    assert.equal(linked.filter,"true","Live lab status filter lost selected semantics "+scenario.name);
+    assert.equal(linked.summary,"Showing 1 of 4 signals; 1 of 3 related events",
+      "Live lab summary did not coordinate cards and history "+scenario.name);
+    assert.equal(linked.historyEmpty,true,"Live lab Timeflow incorrectly displays empty message");
+    assert.ok(linked.scroll<=linked.width+1,
+      "Filtered lab status view introduced horizontal overflow "+scenario.name);
+    if (scenario.name==="desktop-light" || scenario.name==="mobile-dark") {
+      const shot=await browser.screenshot(join(directory,
+        "gc-ui-signal-constellation-filtered-"+scenario.name+".png"));
+      assert.equal(shot.width,scenario.width,"Linked Timeflow screenshot width mismatch");
+    }
+    if (scenario.name==="mobile-dark") {
+      await browser.evaluate('document.querySelector("#signal-constellation .gc-timeflow-panel").scrollIntoView({block:"center",behavior:"instant"})');
+      const historyGeometry=JSON.parse(await browser.evaluate(
+        '(()=>{const root=document.documentElement,section=document.querySelector("#signal-constellation .gc-timeflow-panel");'+
+        'const r=section.getBoundingClientRect(),record=section.querySelector("[data-gc-timeflow-list] > li:not([hidden])");'+
+        'const entry=record.getBoundingClientRect();'+
+        'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
+        'left:r.left,right:r.right,entryLeft:entry.left,entryRight:entry.right,'+
+        'entryTitle:record.querySelector("strong").textContent.trim()})})()'));
+      assert.ok(historyGeometry.scroll<=historyGeometry.width+1,
+        "Filtered Timeflow overflows narrow viewport");
+      assert.ok(historyGeometry.left>=0&&historyGeometry.right<=historyGeometry.width+1,
+        "Filtered Timeflow panel escapes narrow viewport");
+      assert.ok(historyGeometry.entryLeft>=historyGeometry.left-1 &&
+        historyGeometry.entryRight<=historyGeometry.right+1,
+        "Filtered Timeflow event escapes its panel");
+      assert.equal(historyGeometry.entryTitle,"Review suggested",
+        "Visual Timeflow record does not match selected Needs review event");
+      const historyShot=await browser.screenshot(join(directory,
+        "gc-ui-timeflow-filtered-mobile-dark.png"));
+      assert.equal(historyShot.width,scenario.width,"Timeflow-focused QA capture width mismatch");
+    }
+    console.log("Chromium Signal Constellation "+scenario.name+": bounds, semantics, frosted fallback passed");
+  }
+
   for (const [filename,width,height,dark] of [
     ["gc-ui-light-desktop.png",1440,900,false],
     ["gc-ui-dark-mobile.png",390,844,true],

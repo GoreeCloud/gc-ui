@@ -13,3 +13,4 @@ export { initBottomNavigation } from "./bottom-nav.js";
 export { initNavigationRail } from "./navigation-rail.js";
 
 export { initAvailabilityFeedback } from "./availability.js";
+export { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "./signal-board.js";

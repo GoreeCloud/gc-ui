@@ -1057,3 +1057,147 @@
   .gc-navigation-rail__toggle { border:1px solid CanvasText; }
   .gc-navigation-rail__links a[aria-current="page"] { outline:2px solid Highlight; }
 }
+
+/* Signal Constellation + Timeflow: native-first application status patterns.
+ * All colors and depth are semantic; decorative geometry never communicates
+ * severity alone. Consumers own actual service data and authorization. */
+.gc-signal-board {
+  min-inline-size:0; overflow:hidden;
+  border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-xl);
+  background:var(--gc-surface); color:var(--gc-text);
+  box-shadow:var(--gc-shadow-2);
+}
+.gc-signal-board__lens {
+  position:relative; isolation:isolate; overflow:hidden;
+  padding:clamp(var(--gc-space-5),3.5vw,var(--gc-space-10));
+  border-block-end:1px solid var(--gc-outline-soft);
+  /* A readable solid material is the baseline on browsers without blur. */
+  background:var(--gc-lens-solid);
+}
+.gc-signal-board__lens::before {
+  content:""; pointer-events:none; position:absolute; display:none;
+  inline-size:min(40%,230px); aspect-ratio:1; border-radius:50%;
+  inset-inline-end:6%; inset-block-start:-46%;
+  background:var(--gc-brand-container); opacity:.48; z-index:-1;
+}
+@supports ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+  .gc-signal-board__lens {
+    background:var(--gc-lens-fill);
+    -webkit-backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.12);
+    backdrop-filter:blur(var(--gc-blur-lens)) saturate(1.12);
+  }
+  .gc-signal-board__lens::before { display:block; }
+}
+.gc-signal-board__intro { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:var(--gc-space-4); }
+.gc-signal-board__intro > * { min-inline-size:0; }
+.gc-signal-board__eyebrow { font-size:var(--gc-type-label); font-weight:730; letter-spacing:.1em; text-transform:uppercase; color:var(--gc-text-soft); }
+.gc-signal-board__title { margin:var(--gc-space-2) 0; font-size:var(--gc-type-section); line-height:1.2; }
+.gc-signal-board__description { max-inline-size:65ch; margin:0; color:var(--gc-text-soft); }
+.gc-signal-board__counts {
+  display:flex; flex-wrap:wrap; gap:var(--gc-space-4);
+  padding:var(--gc-space-4) 0 0; margin:0;
+}
+.gc-signal-board__counts > div { display:grid; gap:2px; min-inline-size:72px; }
+.gc-signal-board__counts dt { font-size:var(--gc-type-label); color:var(--gc-text-soft); }
+.gc-signal-board__counts dd { margin:0; font-size:var(--gc-type-heading); font-weight:750; font-variant-numeric:tabular-nums; }
+.gc-signal-board__body { padding:var(--gc-space-6); }
+.gc-signal-board__layout { display:grid; grid-template-columns:minmax(0,1.4fr) minmax(0,.86fr); gap:var(--gc-space-6); }
+.gc-signal-board__layout > * { min-inline-size:0; }
+.gc-signal-board__filters {
+  display:flex; flex-wrap:wrap; gap:var(--gc-space-2);
+  margin-block:var(--gc-space-3) var(--gc-space-5);
+}
+.gc-signal-board__filters > button {
+  min-block-size:var(--gc-touch-min); min-inline-size:0;
+  padding:var(--gc-space-2) var(--gc-space-4);
+  color:var(--gc-text); background:var(--gc-surface-tonal);
+  border:1px solid var(--gc-outline-soft); border-radius:var(--gc-radius-full);
+  font:inherit; font-weight:660; cursor:pointer;
+}
+.gc-signal-board__filters > button[aria-pressed="true"] {
+  color:var(--gc-on-brand-container); background:var(--gc-brand-container);
+  border-color:var(--gc-brand);
+}
+.gc-signal-board__filters > button:disabled,
+.gc-signal-board__filters > button[aria-disabled="true"] { cursor:not-allowed; opacity:var(--gc-opacity-disabled); }
+.gc-signal-board__summary { min-block-size:1.5em; color:var(--gc-text-soft); font-size:var(--gc-type-support); }
+.gc-signal-board__list {
+  list-style:none; padding:0; margin:0;
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:var(--gc-space-3);
+}
+.gc-signal-card {
+  min-inline-size:0; padding:var(--gc-space-5);
+  background:var(--gc-surface-tonal); color:var(--gc-text);
+  border:1px solid var(--gc-outline-soft); border-radius:var(--gc-radius-lg);
+  box-shadow:var(--gc-shadow-1); overflow-wrap:anywhere;
+}
+.gc-signal-card h4 { margin:var(--gc-space-3) 0 var(--gc-space-2); }
+.gc-signal-card p { margin-block-end:0; color:var(--gc-text-soft); }
+.gc-signal-card__state {
+  display:inline-flex; align-items:center; gap:var(--gc-space-2);
+  font-size:var(--gc-type-support); font-weight:700;
+}
+.gc-signal-card__state::before {
+  content:""; display:block; inline-size:10px; block-size:10px;
+  border-radius:50%; background:var(--gc-outline);
+  border:2px solid var(--gc-surface);
+  box-shadow:0 0 0 1px var(--gc-outline);
+}
+.gc-signal-card[data-gc-signal="ready"] .gc-signal-card__state::before { background:var(--gc-positive); }
+.gc-signal-card[data-gc-signal="attention"] .gc-signal-card__state::before { background:var(--gc-warning); border-radius:var(--gc-radius-sm); }
+.gc-signal-card[data-gc-signal="offline"] .gc-signal-card__state::before { background:var(--gc-negative); border-radius:2px; }
+.gc-signal-card:focus-within { border-color:var(--gc-brand); box-shadow:var(--gc-shadow-2); }
+.gc-signal-board__empty { padding:var(--gc-space-4); border:1px dashed var(--gc-outline); border-radius:var(--gc-radius-md); }
+.gc-timeflow-panel {
+  padding:var(--gc-space-5); border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-lg); background:var(--gc-surface);
+}
+.gc-timeflow-panel > h3 { margin-block-end:var(--gc-space-4); }
+.gc-timeflow { list-style:none; margin:0; padding-block:0; padding-inline-start:var(--gc-space-8); padding-inline-end:0; border-inline-start:2px solid var(--gc-outline-soft); }
+.gc-timeflow > li {
+  position:relative; min-inline-size:0;
+  padding:0 0 var(--gc-space-5); overflow-wrap:anywhere;
+}
+.gc-timeflow > li:last-child { padding-block-end:0; }
+.gc-timeflow > li::before {
+  content:""; position:absolute; inline-size:12px; block-size:12px;
+  inset-inline-start:calc(-1 * var(--gc-space-8) - 7px); inset-block-start:5px;
+  border:3px solid var(--gc-surface); border-radius:50%;
+  background:var(--gc-brand); box-shadow:0 0 0 1px var(--gc-outline);
+}
+.gc-timeflow time { display:block; font-size:var(--gc-type-label); color:var(--gc-text-soft); font-variant-numeric:tabular-nums; }
+.gc-timeflow > li[data-gc-signal="ready"]::before { background:var(--gc-positive); }
+.gc-timeflow > li[data-gc-signal="attention"]::before { background:var(--gc-warning); border-radius:3px; }
+.gc-timeflow > li[data-gc-signal="offline"]::before { background:var(--gc-negative); border-radius:2px; }
+.gc-timeflow__state { display:inline-flex; font-size:var(--gc-type-label); font-weight:700; color:var(--gc-text); }
+.gc-timeflow strong { display:block; font-weight:700; margin-block:var(--gc-space-1); }
+.gc-timeflow p { margin:0; font-size:var(--gc-type-support); color:var(--gc-text-soft); }
+.gc-timeflow__empty { margin:var(--gc-space-4) 0 0; padding:var(--gc-space-4); border:1px dashed var(--gc-outline); border-radius:var(--gc-radius-md); color:var(--gc-text-soft); }
+@media(max-width:920px) {
+  .gc-signal-board__layout { grid-template-columns:minmax(0,1fr); }
+}
+@media(max-width:560px) {
+  .gc-signal-board__body { padding:var(--gc-space-4); }
+  .gc-signal-board__list { grid-template-columns:minmax(0,1fr); }
+  .gc-timeflow-panel,.gc-signal-card { padding:var(--gc-space-4); }
+}
+@media(prefers-reduced-transparency:reduce), (prefers-contrast:more) {
+  .gc-signal-board__lens { background:var(--gc-lens-solid); backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .gc-signal-board__lens::before { display:none; }
+}
+:root[data-gc-contrast="more"] .gc-signal-board__lens,
+:root[data-gc-transparency="reduce"] .gc-signal-board__lens {
+  background:var(--gc-lens-solid); backdrop-filter:none; -webkit-backdrop-filter:none;
+}
+:root:is([data-gc-contrast="more"],[data-gc-transparency="reduce"]) .gc-signal-board__lens::before { display:none; }
+@media(forced-colors:active) {
+  .gc-signal-board,.gc-signal-card,.gc-timeflow-panel,
+  .gc-signal-board__filters > button { border-color:CanvasText; box-shadow:none; }
+  .gc-signal-board__lens { background:Canvas; color:CanvasText; backdrop-filter:none; -webkit-backdrop-filter:none; }
+  .gc-signal-board__lens::before { display:none; }
+  .gc-signal-board__filters > button[aria-pressed="true"] { outline:2px solid Highlight; background:Canvas; color:CanvasText; }
+  .gc-signal-card__state::before,.gc-timeflow > li::before { background:CanvasText; border-color:Canvas; box-shadow:0 0 0 1px CanvasText; }
+  .gc-signal-card:focus-within { border-color:Highlight; box-shadow:none; }
+}
