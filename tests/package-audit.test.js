@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { auditPackageExports, auditPackedBrandBoundary } from "../scripts/package-audit.mjs";
+import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary } from "../scripts/package-audit.mjs";
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
 const files=new Set(["package.json","README.md","LICENSE","src/index.js","src/index.d.ts",
   "src/theme.js","src/theme.d.ts","src/foundation.js","src/foundation.d.ts","src/tokens.css"]);
@@ -49,4 +49,24 @@ test("packed tarball must not contain official brand marks even if npm files all
  assert.throws(()=>auditPackedBrandBoundary(new Set(["assets/gc-icons.svg"])),
   /Missing required public glyph asset/);
  assert.throws(()=>auditPackedBrandBoundary(null),/Set/);
+});
+
+test("npm file allowlist contains only verified web runtime resources",()=>{
+ const expected=["src/","tokens/gc.tokens.json","LICENSE","README.md",
+   "assets/gc-icons.json","assets/gc-icons.svg"];
+ assert.deepEqual(pkg.files,expected);
+ const allowed=new Set(["package.json","LICENSE","README.md",
+   "tokens/gc.tokens.json","assets/gc-icons.json","assets/gc-icons.svg",
+   "src/foundation.js","src/foundation.d.ts","src/tokens.css",
+   "src/icons.js","src/icons.d.ts","src/glass.css"]);
+ assert.equal(auditPackedRuntimeBoundary(allowed),true);
+ for(const unwanted of ["scripts/release-readiness.mjs",
+   "registry/release-plan.v1.json","docs/EXTERNAL_RELEASE_EVIDENCE.md",
+   "platform/generated/android/colors.xml","tests/release-plan.test.js",
+   "assets/identity/logo-light.svg","src/secret/.env"]){
+   const bad=new Set([...allowed,unwanted]);
+   assert.throws(()=>auditPackedRuntimeBoundary(bad),/Non-runtime file/,unwanted);
+ }
+ const missing=new Set([...allowed]);missing.delete("src/foundation.d.ts");
+ assert.throws(()=>auditPackedRuntimeBoundary(missing),/Missing minimal web foundation files/);
 });

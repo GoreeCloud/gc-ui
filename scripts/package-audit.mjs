@@ -60,3 +60,23 @@ export function auditPackedBrandBoundary(filePaths){
   }
   return true;
 }
+
+/**
+ * Minimal, runtime-only npm distribution policy.
+ * Future public assets require an explicit review of this allowlist.
+ */
+export function auditPackedRuntimeBoundary(filePaths){
+  if(!(filePaths instanceof Set)) throw new TypeError("Expected packed Set");
+  const root=new Set(["package.json","LICENSE","README.md",
+    "tokens/gc.tokens.json","assets/gc-icons.json","assets/gc-icons.svg"]);
+  const allowed=path=>root.has(path) ||
+    /^src\/[a-z0-9-]+(?:\.d)?\.(?:js|ts|css)$/.test(path);
+  for(const path of filePaths){
+    if(typeof path!=="string" || !allowed(path))
+      throw new Error("Non-runtime file in public UI package: "+String(path));
+  }
+  if(!filePaths.has("src/foundation.js") || !filePaths.has("src/foundation.d.ts") ||
+    !filePaths.has("src/tokens.css") || !filePaths.has("tokens/gc.tokens.json"))
+    throw new Error("Missing minimal web foundation files");
+  return true;
+}
