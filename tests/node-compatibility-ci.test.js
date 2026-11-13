@@ -15,7 +15,7 @@ test("package declared supported Node majors have isolated CI quality checks",()
   assert.match(ci,/browser-smoke:\s*\n(?:.|\n)*?node-version: "22"/);
   assert.match(ci,/persist-credentials: false/);
   const checkoutRefs=ci.split("ref: ${{ github.event.pull_request.head.sha || github.sha }}").length-1;
-  assert.equal(checkoutRefs,2,"Both source and browser jobs must test exact PR head SHA");
+  assert.equal(checkoutRefs,3,"Source, browser and cross-Node jobs must all test exact PR head SHA");
   assert.match(ci,/permissions:\s*\n\s*contents: read/);
   assert.ok(!ci.includes("npm publish"));
 });
