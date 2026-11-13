@@ -28,3 +28,18 @@ GoreeCloud apps with multiple primary destinations require a rounded floating bo
 ## Distinguish viewport navigation from individual-window navigation
 
 The alpha web reference has two alternatives: a viewport bar for a full-screen application and a separate bar owned by a rounded app window with independent scrolling. Native adapters must preserve the same visual hierarchy while using native platform navigation, gesture safe areas, focus, window lifecycle and accessibility semantics. Do not duplicate the two bars within one consuming app. The machine-readable authority records both contexts but still declares native SDKs unimplemented and OS/device acceptance unverified.
+
+## Desktop startup window state — founder directive (November 13, 2026)
+
+**Default:** GoreeCloud desktop application windows on Windows, Linux and macOS must initially open in a **normal, windowed (neither maximized nor full-screen)** OS-managed state. Choose a usable, responsive starting size rather than filling the display; keep the application, surrounding desktop and other windows available. This is a **behavior contract** for future native implementations, not evidence that those implementations currently exist.
+
+- Provide native window controls for resizing, minimizing, maximizing, restoring and full-screen where the operating system supports them. Do not disable or disguise native window-management affordances solely to enforce GC UI styling.
+- The *default* applies on first run, when no valid user preference exists, or after resetting window preferences. Honor a user's **explicitly chosen** maximized or full-screen state when reopening if the app supports and documents local window-state restoration; do not continually force normal mode against the user's choice.
+- Keep normal window geometry on-screen and usable after resolution, display, scale or multi-monitor changes. Clamp saved bounds to the currently available work area, maintain reasonable minimum sizes, and never restore a window entirely off-screen.
+- Open secondary dialogs and tool windows according to native transient-window conventions. Do not unexpectedly maximize them or force an immersive experience.
+- An intentionally immersive mode (such as a user-invoked presentation, video or kiosk session) is an **explicit exception**, not the generic startup default. Product-specific exceptions must be documented, justified and user-controllable when feasible.
+- Respect native desktop focus, accessibility and keyboard conventions. A visual web mockup or CSS-framed app window is not proof of operating-system window behavior.
+
+**Native acceptance:** For each supported desktop platform, verify clean-profile launch is normal-windowed; explicit maximize/full-screen and restore transitions work; intentional saved states are honored without overriding the default; disconnected-monitor or DPI changes cannot leave the app inaccessible; and dialogs behave correctly. Record actual native build/runtime evidence separately from web examples and token exports.
+
+This policy does **not** expand the narrowly scoped web Stable 1.0.0 foundation. Desktop adapters remain candidates for independently qualified 1.1+ releases, subject to the current release roadmap.
