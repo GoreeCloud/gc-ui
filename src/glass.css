@@ -84,3 +84,19 @@
     border-color: CanvasText;
   }
 }
+
+/* User/app-level transparency preference, independent of browser support for
+ * prefers-reduced-transparency. Explicitly restores opaque painted surfaces.
+ * Keep selector specificity at least as high as the translucent opt-in rules. */
+:root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+:root[data-gc-transparency="reduce"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
