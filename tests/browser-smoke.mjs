@@ -876,6 +876,37 @@ try {
     "Wheel-scrollable dock created page-level horizontal overflow");
   console.log("Chromium 400% floating dock: horizontal-wheel scroll reachable without page overflow");
 
+  // Real Chromium wheel input also needs to remain discoverable when the
+  // document is RTL. Chromium reports negative scrollLeft in that direction.
+  // This is a trackpad/wheel check, not a replacement for physical touch QA.
+  await browser.setViewport(390,900,{dark:true,forcedColors:true});
+  await browser.navigate(base+"/tests/dock-zoom.html");
+  const rtlWheel=JSON.parse(await browser.evaluate(
+    '(()=>{const root=document.documentElement;root.dir="rtl";root.style.fontSize="400%";'+
+    'const dock=document.querySelector("#zoom-dock"),r=dock.getBoundingClientRect();'+
+    'return JSON.stringify({x:Math.round(r.left+r.width/2),y:Math.round(r.top+r.height/2),'+
+    'start:dock.scrollLeft,width:dock.clientWidth,content:dock.scrollWidth,'+
+    'scrollbar:getComputedStyle(dock).scrollbarWidth,'+
+    'forced:matchMedia("(forced-colors: active)").matches})})()'));
+  assert.equal(rtlWheel.forced,true,"RTL wheel test did not enable forced colors");
+  assert.equal(rtlWheel.scrollbar,"thin","RTL forced-colors dock lost its scroll affordance");
+  assert.ok(rtlWheel.content>rtlWheel.width+1,"RTL wheel fixture did not overflow");
+  await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,-320);
+  await delay(150);
+  const rtlAfter=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,320);
+  await delay(150);
+  const rtlReturned=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  assert.ok(rtlAfter<rtlWheel.start-3,
+    "RTL wheel failed to reach earlier offscreen destinations: "+JSON.stringify({rtlWheel,rtlAfter}));
+  assert.ok(Math.abs(rtlReturned)<Math.abs(rtlAfter),
+    "Opposite RTL wheel gesture failed to restore the initial viewport");
+  const rtlPage=JSON.parse(await browser.evaluate(
+    '(()=>JSON.stringify({width:document.documentElement.clientWidth,'+
+    'scroll:document.documentElement.scrollWidth}))()'));
+  assert.ok(rtlPage.scroll<=rtlPage.width+1,"RTL wheel caused page-level overflow");
+  console.log("Chromium RTL forced-colors 400% dock: horizontal wheel reaches hidden items and returns");
+
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
   await browser.navigate(base+"/lab/");
   const forced=JSON.parse(await browser.evaluate(
