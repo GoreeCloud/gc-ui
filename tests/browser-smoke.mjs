@@ -779,6 +779,7 @@ try {
     'return JSON.stringify({ready:root.dataset.dockReady,font:getComputedStyle(root).fontSize,'+
     'width:root.clientWidth,scroll:root.scrollWidth,left:rect.left,right:rect.right,height:rect.height,'+
     'bottom:parseFloat(getComputedStyle(dock).bottom),padding:parseFloat(getComputedStyle(content).paddingBottom),'+
+    'scrollbar:getComputedStyle(dock).scrollbarWidth,dockScroll:dock.scrollWidth,dockClient:dock.clientWidth,'+
     'labels:[...dock.querySelectorAll("a > span")].map(x=>({text:x.textContent,'+
     'client:x.clientWidth,scroll:x.scrollWidth,lines:(()=>{const range=document.createRange();range.selectNodeContents(x);return range.getClientRects().length;})(),overflow:getComputedStyle(x).textOverflow}))});})()'));
   assert.equal(zoomDock.ready,"true","Isolated dock fixture did not initialize");
@@ -786,11 +787,27 @@ try {
   assert.ok(zoomDock.scroll<=zoomDock.width+1,"Dock-only horizontal page overflow "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.left>=0&&zoomDock.right<=zoomDock.width+1,"Dock escapes viewport "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.padding>=zoomDock.height+zoomDock.bottom+12,"Dock obscures content "+JSON.stringify(zoomDock));
+  assert.equal(zoomDock.scrollbar,"thin","Enlarged-text dock must expose a scroll affordance");
+  assert.ok(zoomDock.dockScroll>zoomDock.dockClient+1,"Zoom fixture did not exercise overflowing navigation");
   assert.ok(zoomDock.labels.every(x=>x.lines===1),"Short dock labels should stay intact, not break inside words: "+JSON.stringify(zoomDock));
   assert.ok(zoomDock.labels.every(x=>x.client+1>=x.scroll&&x.overflow==="clip"),
     "Dock truncates destination labels "+JSON.stringify(zoomDock));
   const shotDock=await browser.screenshot(join(directory,"gc-ui-dock-400-percent-text.png"));
   assert.equal(shotDock.width,390);
+  const zoomKeyboard=JSON.parse(await browser.evaluate(
+    '(async()=>{const dock=document.querySelector("#zoom-dock"),links=[...dock.querySelectorAll("a")];'+
+    'const step=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+    'links[0].focus();links[0].dispatchEvent(new KeyboardEvent("keydown",{key:"End",bubbles:true,cancelable:true}));'+
+    'await step();const navRect=dock.getBoundingClientRect(),lastRect=links.at(-1).getBoundingClientRect();'+
+    'const endFocused=document.activeElement===links.at(-1),endScroll=dock.scrollLeft,'+
+    'lastVisible=lastRect.left>=navRect.left-2&&lastRect.right<=navRect.right+2;'+
+    'links.at(-1).dispatchEvent(new KeyboardEvent("keydown",{key:"Home",bubbles:true,cancelable:true}));'+
+    'await step();return JSON.stringify({endFocused,endScroll,lastVisible,homeFocused:document.activeElement===links[0],homeScroll:dock.scrollLeft});})()'));
+  assert.equal(zoomKeyboard.endFocused,true,"Keyboard End did not focus the final dock destination");
+  assert.ok(zoomKeyboard.endScroll>0,"Keyboard focus did not reveal an offscreen destination");
+  assert.equal(zoomKeyboard.lastVisible,true,"Final destination remained clipped after keyboard focus");
+  assert.equal(zoomKeyboard.homeFocused,true,"Keyboard Home did not return to the first destination");
+  assert.ok(zoomKeyboard.homeScroll<zoomKeyboard.endScroll,"Keyboard Home failed to restore viewport position");
   console.log("Chromium isolated 400% root-font dock: labels, clearance, reflow passed");
 
   await browser.setViewport(390,844,{dark:true,forcedColors:true});
