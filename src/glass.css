@@ -33,6 +33,21 @@
     backdrop-filter: blur(var(--gc-blur-lens, 0px)) saturate(1.12);
   }
 }
+/* A restrained optical rim makes genuine frosted Cloud Lens surfaces
+ * distinct without a fixed brand hue. Color mixes derive from existing
+ * semantic tokens; the plain border/shadow declarations above are fallbacks.
+ * This treatment is opt-in and decorative, never a contrast indicator. */
+@supports (color: color-mix(in srgb, white, transparent)) {
+  .gc-glass-base[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-1), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+  .gc-glass-elevated[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-2), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+  .gc-glass-overlay[data-gc-translucent="true"] {
+    box-shadow:var(--gc-shadow-3), inset 0 1px 0 color-mix(in srgb, var(--gc-text) 12%, transparent);
+  }
+}
 /* Solid material is required for system accessibility preferences. */
 @media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
   .gc-glass-base,
@@ -70,18 +85,21 @@
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
     background: var(--gc-lens-solid, var(--gc-surface));
+    box-shadow: none;
   }
 }
 :root[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   background: var(--gc-lens-solid, var(--gc-surface));
+  box-shadow: none;
 }
 @media (forced-colors: active) {
   :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
     color: CanvasText;
     background: Canvas;
     border-color: CanvasText;
+    box-shadow: none;
   }
 }
 
