@@ -11,6 +11,8 @@ import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { auditPackageExports } from "./package-audit.mjs";
 
+const jsonMode=process.argv.length===3 && process.argv[2]==="--json";
+if(!jsonMode && process.argv.length!==2) throw new Error("Use --json or no options");
 const root=fileURLToPath(new URL("../",import.meta.url));
 const pkg=JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
 const temp=mkdtempSync(join(tmpdir(),"gc-ui-package-audit-"));
@@ -79,8 +81,39 @@ assert.equal(typeof root.initSignalBoard,"function");
 console.log("Verified "+entries.length+" public specifiers from installed offline tarball");
 `;
   writeFileSync(join(consumer,"verify.mjs"),consumerSource,"utf8");
-  console.log(run(process.execPath,["verify.mjs"],consumer).trim());
-  console.log("Packaged "+files.size+" files; SHA512 digest rechecked locally; no script execution");
+  const consumerResult=run(process.execPath,["verify.mjs"],consumer).trim();
+  if(jsonMode){
+    // Checked-out Git SHA identifies tested source; this is NOT a signed release.
+    const sourceSha=run("git",["rev-parse","--verify","HEAD"],root).trim();
+    if(!/^[a-f0-9]{40}$/.test(sourceSha))throw new Error("Missing checked-out Git SHA");
+    const evidence={
+      schemaVersion:1,
+      kind:"offline-verified-package-candidate",
+      status:"development-evidence-not-stable",
+      published:false,
+      signed:false,
+      sourceSha,
+      checkedAt:new Date().toISOString(),
+      package:{
+        name:meta.name,version:meta.version,tarball:meta.filename,
+        bytes:archive.byteLength,
+        sha256:createHash("sha256").update(archive).digest("hex"),
+        sha512Integrity:sha512
+      },
+      runtime:{node:process.versions.node,npm:run(npm,["--version"],root).trim()},
+      checks:{
+        generatorOutputsChecked:true,everyPublicExportResolved:true,
+        installedOffline:true,installScriptsDisabled:true,
+        publicExportCount:entries.length,packedFileCount:files.size,
+        isolatedConsumerResult:consumerResult
+      },
+      packedFiles:meta.files.map(file=>({path:file.path,size:file.size})).sort((a,b)=>a.path.localeCompare(b.path))
+    };
+    console.log(JSON.stringify(evidence,null,2));
+  }else{
+    console.log(consumerResult);
+    console.log("Packaged "+files.size+" files; SHA512 digest rechecked locally; no script execution");
+  }
 }finally {
   rmSync(temp,{recursive:true,force:true});
 }
