@@ -1730,6 +1730,43 @@ try {
     console.log("Chromium signature frosted stage: RTL 400% CSS-root content reflow @ "+width+"px passed");
   }
 
+  // Multiple applications in one host must retain independent manual material preferences.
+  // The fixture uses real stylesheet-computed values, never scripted blur/scroll mutations.
+  for(const forcedColors of [false,true]){
+    await browser.setViewport(900,800,{dark:true,forcedColors});
+    await browser.navigate(base+"/tests/glass-browser.html");
+    const scoped=JSON.parse(await browser.evaluate("(async()=>{\n const {applyTheme}=await import(\"/src/theme.js\");\n const host=document.createElement(\"section\");host.id=\"gc-scoped-glass-qa\";\n host.style.cssText=\"display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:24px;\";\n const make=(label,opts)=>{\n   const app=document.createElement(\"article\");app.className=\"gc-app\";\n   app.style.cssText=\"padding:18px;border:1px solid var(--gc-outline);border-radius:24px;min-width:0;\";\n   const heading=document.createElement(\"h2\");heading.textContent=label;\n   const glass=document.createElement(\"div\");glass.className=\"gc-glass-base\";\n   glass.dataset.gcTranslucent=\"true\";glass.textContent=\"Scoped Cloud Lens\";\n   glass.style.padding=\"18px\";\n   const signal=document.createElement(\"div\");signal.className=\"gc-signal-board__lens\";\n   signal.textContent=\"Local signal lens\";\n   app.append(heading,glass,signal);host.append(app);applyTheme(app,opts);return app;\n };\n const first=make(\"Independent light product\",{mode:\"light\",accent:\"moss\",transparency:\"reduce\"});\n const second=make(\"Independent dark product\",{mode:\"dark\",accent:\"lagoon\",transparency:\"auto\"});\n document.body.append(host);\n const probe=document.createElement(\"div\");probe.style.background=\"Canvas\";document.body.append(probe);\n const systemBackground=getComputedStyle(probe).backgroundColor;probe.remove();\n const read=app=>{\n   const g=getComputedStyle(app.querySelector(\".gc-glass-base\"));\n   const s=getComputedStyle(app.querySelector(\".gc-signal-board__lens\"));\n   const tokens=getComputedStyle(app);\n   return {scheme:tokens.colorScheme,brand:tokens.getPropertyValue(\"--gc-brand\").trim(),\n     transparency:app.dataset.gcTransparency,contrast:app.dataset.gcContrast,\n     blur:g.backdropFilter||g.webkitBackdropFilter,background:g.backgroundColor,\n     signalBlur:s.backdropFilter||s.webkitBackdropFilter,signalBackground:s.backgroundColor};\n };\n const parentBefore=getComputedStyle(document.documentElement).getPropertyValue(\"--gc-brand\").trim();\n const before={first:read(first),second:read(second)};\n applyTheme(first,{mode:\"light\",accent:\"ember\",contrast:\"more\",transparency:\"auto\"});\n const after={first:read(first),second:read(second)};\n const parentUnchanged=parentBefore===getComputedStyle(document.documentElement).getPropertyValue(\"--gc-brand\").trim();\n return JSON.stringify({before,after,parentUnchanged,systemBackground,\n   supportsBlur:CSS.supports(\"backdrop-filter\",\"blur(1px)\")||CSS.supports(\"-webkit-backdrop-filter\",\"blur(1px)\")});\n})()"));
+    assert.equal(scoped.before.first.scheme,"light");
+    assert.equal(scoped.before.second.scheme,"dark");
+    assert.equal(scoped.before.first.brand,"#326B42","Independent light app lost Moss");
+    assert.equal(scoped.before.second.brand,"#8BE7F1","Independent dark app lost Lagoon");
+    assert.equal(scoped.before.first.blur,"none","Local reduced transparency retained blur");
+    assert.equal(scoped.before.first.signalBlur,"none","Status Lens ignored local reduction");
+    assert.ok(scoped.before.first.background.startsWith("rgb("),"Reduced glass was translucent");
+    assert.equal(scoped.after.first.blur,"none","Local higher contrast retained blur");
+    assert.equal(scoped.after.first.signalBlur,"none","Status Lens ignored local contrast");
+    assert.equal(scoped.after.first.brand,"#A43F1D","Local theme update failed");
+    assert.deepEqual(scoped.after.second,scoped.before.second,"Sibling glass leaked theme changes");
+    assert.equal(scoped.parentUnchanged,true,"Scoped material settings changed parent theme");
+    if(forcedColors){
+      for(const a of [scoped.before.first,scoped.before.second,scoped.after.first,scoped.after.second]){
+        assert.equal(a.blur,"none","Forced colors retained material blur");
+        assert.equal(a.signalBlur,"none","Forced colors retained Status Lens blur");
+        assert.equal(a.background,scoped.systemBackground,"Forced-colors glass ignored Canvas");
+        assert.equal(a.signalBackground,scoped.systemBackground,"Forced-colors Status Lens ignored Canvas");
+      }
+    }else if(scoped.supportsBlur){
+      assert.ok(scoped.before.second.blur.includes("blur("),"Unreduced sibling lost frosted Lens");
+      assert.ok(scoped.before.second.signalBlur.includes("blur("),"Unreduced Status Lens lost blur");
+    }
+    await browser.evaluate('document.querySelector("#gc-scoped-glass-qa").scrollIntoView({block:"center",behavior:"instant"})');
+    await delay(100);
+    const shot=await browser.screenshot(join(directory,
+      "gc-ui-scoped-glass-"+(forcedColors?"forced-colors":"light-dark")+".png"));
+    assert.equal(shot.width,900);
+    console.log("Chromium scoped glass / Signal Lens "+(forcedColors?"forced colors":"mixed appearances")+": passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
