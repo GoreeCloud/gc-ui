@@ -39,9 +39,15 @@ applyTheme(document.documentElement, {
 The default is `transparency: "auto"`, which restores system-driven behavior.
 The theme controller also supports `update({ transparency: "auto" })` without
 storage or telemetry. An unknown value is rejected before changing theme attributes.
-This optional setting affects the four glass utility roles when
-`@goreecloud/ui/glass.css` is loaded; it is **not** a promise that unrelated
-native, operating-system, or product surfaces become opaque. A consuming app is
+This setting now affects the four glass utility roles when
+`@goreecloud/ui/glass.css` is loaded **and** existing `.gc-lens` and
+`.gc-bottom-nav` Cloud Lens surfaces via
+`@goreecloud/ui/components.css`. Dialog and command-palette backdrop blur
+is also disabled. The default `"auto"` leaves existing visual treatment
+untouched. Forced-colors `Canvas` / `CanvasText` has final precedence,
+including if the app simultaneously selects manual reduction. This is **not**
+a promise that unrelated native, operating-system, or product surfaces become
+opaque. A consuming app is
 responsible for its settings UI, user consent, persistence (if desired),
 and contrast verification. Do not rely on preference CSS to replace meaningful
 solid surfaces for credentials, long-form text, or security/privacy alerts.
@@ -67,6 +73,22 @@ mobile layout correction; the label, large native checkbox, and separate
 supporting status are readable with purposeful spacing. These screenshots
 do not replace actual human assistive-technology, operating-system, or native
 application acceptance.
+
+## Full design lab integration
+
+The `lab/` alpha demonstration now includes a local **Reduce transparency**
+switch alongside its existing Appearance, Accent and More Contrast settings.
+It uses the same nonpersistent `createThemeController`, without changing
+brand tokens or involving GoreeShield, Identity or Mesh service operations.
+It applies to the lab's normal Cloud Lens toolbar and floating navigation,
+not just the isolated four-material test fixture.
+
+Chromium checks at 320px light and 390px dark confirm immediate opaque
+backgrounds and no backdrop blur; unchecking restores original computed
+styles. Additional forced-colors checks enforce the OS system palette,
+and verify unchanged local storage and cookies. The tests check page
+horizontal overflow but do not certify real touch/OS screen readers.
+**This is a review-branch capability; no production rollout occurred.**
 
 ## Worst-case opaque-backdrop text-contrast guard
 
