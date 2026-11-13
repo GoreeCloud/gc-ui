@@ -43,7 +43,7 @@ jobs:
   cross-node-package-reproducibility:
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    needs: [source-and-contract]
+    needs: [source-and-contract, browser-smoke]
     steps:
       - name: Checkout exact source used in Node jobs
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -60,6 +60,17 @@ jobs:
           pattern: gc-ui-package-evidence-node-*
           path: qa/node-package-evidence
           merge-multiple: false
+      - name: Download same-run Chromium screenshot evidence
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6
+        with:
+          name: gc-ui-browser-evidence
+          path: qa/browser-artifact
+      - name: Verify screenshot file hashes, browser version and exact source
+        run: |
+          node scripts/verify-browser-evidence.mjs \
+            --source-sha "$(git rev-parse HEAD)" \
+            --manifest qa/browser-artifact/browser-evidence.json \
+            --screenshots qa/browser-artifact/screenshots
       - name: Reject artifact hash or provenance divergence
         run: |
           node scripts/compare-package-evidence.mjs \
