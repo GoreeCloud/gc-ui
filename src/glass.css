@@ -1,0 +1,63 @@
+/* Optional GoreeCloud UI atmospheric materials. Import after tokens.css and components.css.
+ * This stylesheet adds visual roles; it does not replace Cloud Canvas/Surface/Lens
+ * or impose a global brand color. Every role starts with a readable solid surface.
+ */
+.gc-glass-base,
+.gc-glass-elevated,
+.gc-glass-overlay,
+.gc-glass-solid {
+  color: var(--gc-text);
+  background: var(--gc-lens-solid, var(--gc-surface));
+  border: 1px solid var(--gc-outline-soft);
+  border-radius: var(--gc-radius-lg);
+}
+.gc-glass-base {
+  box-shadow: var(--gc-shadow-1);
+}
+.gc-glass-elevated {
+  box-shadow: var(--gc-shadow-2);
+}
+.gc-glass-overlay {
+  box-shadow: var(--gc-shadow-3);
+}
+.gc-glass-solid {
+  background: var(--gc-surface);
+}
+/* Opt in to translucency explicitly, not automatically for every readable panel. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .gc-glass-base[data-gc-translucent="true"],
+  .gc-glass-elevated[data-gc-translucent="true"],
+  .gc-glass-overlay[data-gc-translucent="true"] {
+    background: var(--gc-lens-fill, var(--gc-lens-solid));
+    -webkit-backdrop-filter: blur(var(--gc-blur-lens, 0px)) saturate(1.12);
+    backdrop-filter: blur(var(--gc-blur-lens, 0px)) saturate(1.12);
+  }
+}
+/* Solid material is required for system accessibility preferences. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  .gc-glass-base,
+  .gc-glass-elevated,
+  .gc-glass-overlay,
+  .gc-glass-solid {
+    background: var(--gc-lens-solid, var(--gc-surface));
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none;
+  }
+}
+:root[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay, .gc-glass-solid) {
+  background: var(--gc-lens-solid, var(--gc-surface));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+@media (forced-colors: active) {
+  .gc-glass-base,
+  .gc-glass-elevated,
+  .gc-glass-overlay,
+  .gc-glass-solid {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}
