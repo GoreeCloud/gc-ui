@@ -80,9 +80,8 @@ test("cannot silently promote preview exports or omit root API classification",(
   mixed.plan.webFoundations.candidateStableExports.push("./commands");
   mixed.plan.webFoundations.deferredPreviewExports=
     mixed.plan.webFoundations.deferredPreviewExports.filter(x=>x!=="./commands");
-  // Presence in candidateStable alone is NOT a guarantee; explicit locked API
-  // contract tests must still review a promotion at the release candidate.
-  assert.equal(check(mixed).ready,true);
+  assert.equal(check(mixed).ready,false,
+    "Silently promoting preview routes must not pass the frozen 1.0 contract");
   const missing=setup();
   missing.plan.webFoundations.rootSymbolClassification.candidateStable=[];
   assert.equal(check(missing).ready,false);

@@ -9,6 +9,15 @@ export const REQUIRED_RELEASE_GATES=Object.freeze([
   "repository-release-controls",
   "release-record"
 ]);
+export const STABLE_1_0_PATHS=Object.freeze([
+  "./foundation","./tokens","./tokens.css","./components.css","./glass.css",
+  "./icons","./icon-sprite","./icon-registry","./theme","./patterns"
+]);
+export const STABLE_1_0_SYMBOLS=Object.freeze([
+  "ACCENTS","ICON_NAMES","MODES","TRANSPARENCY_MODES","applyTheme",
+  "bindRangeOutput","contrastRatio","createThemeController","deriveAccent",
+  "getAccentColor","hasIcon","iconSvg","initAccordion","initDrawer","initToggleGroup"
+]);
 const shaPattern=/^[a-f0-9]{40}$/;
 const fail=(failures,condition,message)=>{if(!condition) failures.push(message);};
 const safeHttpsUrl=text=>{
@@ -58,6 +67,10 @@ export function evaluateReleaseReadiness(plan,pkg,{sourceSha=null,cleanTree=fals
   fail(blockers,Array.isArray(stable)&&stable.includes("./foundation") &&
     Array.isArray(preview)&&preview.includes(".") &&
     Array.isArray(review)&&review.length===0,"Stable/preview entry-point boundary unresolved");
+  fail(blockers,exactSet(STABLE_1_0_PATHS,stable),
+    "Stable 1.0 public export contract changed without explicit core review");
+  fail(blockers,exactSet(STABLE_1_0_SYMBOLS,foundation?.rootSymbolClassification?.candidateStable),
+    "Stable 1.0 JS symbol contract changed without explicit core review");
   fail(blockers,pkg?.exports && typeof pkg.exports==="object" && !Array.isArray(pkg.exports) &&
     exactSet(Object.keys(pkg.exports),all),"Public package exports not completely classified");
   const classes=foundation?.rootSymbolClassification;
