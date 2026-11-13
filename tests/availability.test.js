@@ -93,3 +93,33 @@ test('a planned submitter is blocked even when its parent form is implemented', 
   assert.deepEqual(f.messages, ['Export is not available yet.']);
   f.dispose();
 });
+
+
+test('planned action on the event root itself cannot escape interception', () => {
+  const f=fixture();
+  f.root.tagName='BUTTON';
+  f.root.getAttribute=key=>key==='data-gc-availability'?'planned':key==='data-gc-feature'?'Root action':null;
+  const event=f.fire(f.root);
+  assert.equal(event.prevented,true);
+  assert.equal(event.stopped,true);
+  assert.deepEqual(f.messages,['Root action is not available yet.']);
+  f.dispose();
+});
+
+test('composed shadow DOM paths intercept inner planned actions even when retargeted', () => {
+  const f=fixture();
+  const host=node('GC-ACTION',{},f.root);
+  const inner=node('BUTTON',{'data-gc-availability':'planned','data-gc-feature':'Private export'},host);
+  const event={
+    target:host,
+    composedPath:()=>[inner,host,f.root],
+    prevented:false,stopped:false,
+    preventDefault(){this.prevented=true;},
+    stopImmediatePropagation(){this.stopped=true;}
+  };
+  f.handlers.get('click')(event);
+  assert.equal(event.prevented,true);
+  assert.equal(event.stopped,true);
+  assert.deepEqual(f.messages,['Private export is not available yet.']);
+  f.dispose();
+});
