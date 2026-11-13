@@ -1055,7 +1055,7 @@ try {
   assert.equal(livePreference.restored.blur,livePreference.initial.blur,"UI did not restore visual style");
   await browser.navigate(base+"/tests/glass-browser.html");
   const localOnly=JSON.parse(await browser.evaluate(
-    '(()=>({checked:document.querySelector("#gc-glass-reduce").checked,'+
+    '(()=>JSON.stringify({checked:document.querySelector("#gc-glass-reduce").checked,'+
     'preference:document.documentElement.dataset.gcTransparency}))()'));
   assert.equal(localOnly.checked,false,"Lab preference unexpectedly persisted after navigation");
   assert.equal(localOnly.preference,"auto","Theme preference unexpectedly persisted after navigation");
