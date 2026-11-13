@@ -39,7 +39,7 @@ Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css`, then
       <button type="button" aria-pressed="false" data-gc-signal-filter="attention">Needs review</button>
     </div>
     <p role="status" aria-live="polite" aria-atomic="true"
-       data-gc-signal-summary>Showing 2 of 2 signals</p>
+       data-gc-signal-summary>Showing 2 of 2 signals; 1 of 1 related events</p>
     <ul class="gc-signal-board__list" data-gc-signal-list>
       <li class="gc-signal-card" data-gc-signal="ready">
         <span class="gc-signal-card__state">Ready</span>
@@ -51,10 +51,17 @@ Import `@goreecloud/ui/tokens.css` and `@goreecloud/ui/components.css`, then
       </li>
     </ul>
     <p data-gc-signal-empty hidden>No matching signals.</p>
-    <ol class="gc-timeflow" aria-label="Workspace activity">
-      <li><time datetime="2026-11-12T09:20">09:20</time>
-          <strong>Example status changed</strong></li>
+    <ol class="gc-timeflow" data-gc-timeflow-list
+        aria-label="Workspace activity by status">
+      <li data-gc-signal="attention">
+        <time datetime="2026-11-12T09:20">09:20</time>
+        <span class="gc-timeflow__state">Needs review</span>
+        <strong>Example status changed</strong>
+      </li>
     </ol>
+    <p class="gc-timeflow__empty" data-gc-timeflow-empty hidden>
+      No activity for this status.
+    </p>
   </div>
 </section>
 ```
@@ -64,7 +71,7 @@ import { initSignalBoard } from "@goreecloud/ui/signal-board";
 
 const board = initSignalBoard(document.querySelector("#signals"));
 board.setFilter("attention");  // select a present, enabled filter
-board.refresh();               // call after controlled DOM insert/removal/state change
+board.refresh();               // call after controlled card/event insert/removal/state change
 board.dispose();               // restore original presentation and listeners
 ```
 
@@ -81,7 +88,8 @@ unverified global service registry.
   tab semantics; optional arrow and Home/End selection come from the existing
   `initToggleGroup` helper. Horizontal arrows honor RTL.
 - The selected filter uses `aria-pressed`; an in-document `role="status"`
-  announces counts. The initial All filter must be enabled.
+  announces counts and, when Timeflow is linked, the matching event total.
+  The initial All filter must be enabled.
 - Filtering uses `hidden` on direct `li` children of a native list.
   An item containing focus cannot be hidden without first moving focus to the
   chosen visible filter. Empty filter results expose written empty guidance.
@@ -91,9 +99,23 @@ unverified global service registry.
 - `dispose()` removes interaction listeners and restores captured pre-existing
   visibility, button attributes, count text and summary. Repeated disposal is
   harmless. Calling `refresh()` or `setFilter()` afterward throws.
-- Timeline entries use native `<ol>`, `<li>` and `<time datetime>` markup;
-  they are **not** sorted or fetched by the library. Consumers ensure that the
-  documented order and timestamps match their actual authorized source.
+- **Optional linked Timeflow:** mark a labeled native `<ol>` with
+  `data-gc-timeflow-list`, every direct `li` with a known
+  `data-gc-signal="ready|attention|offline"` and a dated `<time datetime>`,
+  and add `data-gc-timeflow-empty` to a visible-text empty message.
+  Selecting a status filters **both** cards and related events; the single
+  live summary announces visible/total signals and history. A status with no
+  events displays the Timeflow empty message even when it has active signals.
+  Without these opt-in attributes, the existing timeline remains static.
+- `refresh()` validates both lists **before** changing either set. Unknown
+  timeline states or missing dates fail closed, and failed user selection
+  restores the previous toggle state. If focus is inside a history event that
+  becomes hidden, it moves to the selected filter first.
+- Timeflow entries are **not** sorted, fetched, timestamp-interpreted or
+  authenticated by the library. Consumers ensure that the displayed chronology,
+  dates, state mappings, missing/stale indicators, and labels match an authorized
+  data source. `dispose()` restores originally hidden history items and the
+  caller's empty message, including when events were filtered away.
 
 ### Visual language and fallbacks
 
