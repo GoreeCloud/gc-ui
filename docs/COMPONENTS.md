@@ -136,7 +136,7 @@ Disabled choices are skipped. Non-HTTP(S), cross-origin, empty and duplicate des
 
 Use original meaningful visible labels, high-contrast and reduced-transparency fallbacks, safe-area insets, touch minimums and scroll-space padding. Do not duplicate bottom docks or show faux tabs on one-destination screens. Native platform adapters and screen-reader/gesture-device acceptance remain unverified.
 
-For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). Long single-line labels are safely ellipsized; the native link text remains available to assistive technology. Do not rely on truncation as a substitute for meaningful short labels.
+For premium mobile layouts, use concise visible destination names (for example, Library instead of Components). At enlarged text sizes or with translated labels, links must keep the full readable label rather than ellipsizing it; the dock may overflow **within its capsule** and become horizontally scrollable without scrolling the entire document. A thin, semantic-token-colored scrollbar is exposed when content overflows in browsers that render scrollbars; some touch operating systems automatically hide it, so consumers must still verify touch-swipe and keyboard reachability. Focus, active state and native link semantics remain independent; do not assume a 400% screenshot proves complete screen-reader or device acceptance.
 
 ### Navigation callback fail-closed behavior
 
