@@ -61,3 +61,26 @@
     border-color: CanvasText;
   }
 }
+
+/* Keep this override last: the opt-in @supports declaration has higher
+ * specificity than the generic fallback selector. Match that specificity
+ * here so accessibility preferences always win the cascade. */
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more), (forced-colors: active) {
+  :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--gc-lens-solid, var(--gc-surface));
+  }
+}
+:root[data-gc-contrast="more"] :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--gc-lens-solid, var(--gc-surface));
+}
+@media (forced-colors: active) {
+  :is(.gc-glass-base, .gc-glass-elevated, .gc-glass-overlay)[data-gc-translucent="true"] {
+    color: CanvasText;
+    background: Canvas;
+    border-color: CanvasText;
+  }
+}
