@@ -9,7 +9,7 @@ import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { auditPackageExports, auditPackedBrandBoundary } from "./package-audit.mjs";
+import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary } from "./package-audit.mjs";
 
 const jsonMode=process.argv.length===3 && process.argv[2]==="--json";
 if(!jsonMode && process.argv.length!==2) throw new Error("Use --json or no options");
@@ -36,6 +36,7 @@ try {
   const files=new Set(meta.files.map(f=>f.path));
   const entries=auditPackageExports(pkg,files);
   auditPackedBrandBoundary(files);
+  auditPackedRuntimeBoundary(files);
   for(const f of meta.files){
     if(!Number.isSafeInteger(f.size)||f.size<=0)throw new Error("Empty or invalid packed file: "+f.path);
     if(/(?:^|\/)(?:\.env(?:\.|$)|\.github|node_modules|tests)(?:\/|$)/.test(f.path))

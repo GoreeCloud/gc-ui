@@ -70,13 +70,9 @@
   },
   "files": [
     "src/",
-    "tokens/",
-    "docs/",
-    "registry/",
+    "tokens/gc.tokens.json",
     "LICENSE",
     "README.md",
-    "platform/generated/",
-    "scripts/",
     "assets/gc-icons.json",
     "assets/gc-icons.svg"
   ],
