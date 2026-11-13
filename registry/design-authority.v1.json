@@ -137,5 +137,23 @@
     "nativeStatus": "requires-native-adapters",
     "acceptance": "per-consumer-evidence-required",
     "privacy": "no-storage-no-telemetry"
+  },
+  "desktopWindowing": {
+    "requirement": "normal-windowed-by-default",
+    "platforms": [
+      "linux",
+      "windows",
+      "macos"
+    ],
+    "firstLaunchState": "normal",
+    "maximize": "user-invoked-native-action",
+    "fullscreen": "user-invoked-native-action",
+    "restoreSavedState": "only-explicit-user-choice-when-supported",
+    "onDisplayChange": "clamp-normal-window-to-available-work-area",
+    "secondaryWindows": "native-transient-no-forced-immersive-state",
+    "integrationStatus": "native-consumer-validation-required",
+    "docs": "docs/PLATFORM_ADAPTERS.md",
+    "nativeSdkStatus": "not-implemented",
+    "webStableScope": "not-applicable"
   }
 }
