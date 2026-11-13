@@ -90,10 +90,29 @@ async function startBrowser() {
       await delay(100);
     }
     if (!port) throw new Error("Chromium DevTools port never opened within 30s: " + stderr);
-    const response = await fetch("http://127.0.0.1:" + port + "/json/list", {
-      signal:AbortSignal.timeout(5000)
-    });
-    if (!response.ok) throw new Error("Cannot inspect local Chromium page target");
+    // On congested hosted runners Chromium may write DevToolsActivePort
+    // before the local HTTP discovery endpoint actually responds. Retry
+    // startup discovery only; never retry browser test assertions or hide
+    // genuine feature failures.
+    let response = null;
+    let discoveryError = null;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      if (child.exitCode !== null) throw new Error("Chrome exited during discovery: " + stderr);
+      try {
+        response = await fetch("http://127.0.0.1:" + port + "/json/list", {
+          signal:AbortSignal.timeout(5000)
+        });
+        if (response.ok) break;
+        discoveryError = new Error("DevTools discovery HTTP " + response.status);
+      } catch (error) {
+        discoveryError = error;
+      }
+      if (attempt < 2) await delay(300);
+    }
+    if (!response?.ok) {
+      throw new Error("Cannot inspect local Chromium page target after 3 attempts: " +
+        String(discoveryError) + " Chrome stderr: " + stderr);
+    }
     const pages = await response.json();
     const target = pages.find(item => item.type === "page" && item.webSocketDebuggerUrl);
     if (!target) throw new Error("Chrome did not expose a page target");
