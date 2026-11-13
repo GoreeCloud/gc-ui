@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en" data-gc-packed="pending">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GoreeCloud UI installed package Chromium integration</title>
+  <link rel="stylesheet" href="/lib/src/tokens.css">
+  <link rel="stylesheet" href="/lib/src/components.css">
+  <link rel="stylesheet" href="/lib/src/glass.css">
+  <script type="importmap">
+    { "imports": { "@goreecloud/ui/foundation": "/lib/src/foundation.js" } }
+  </script>
+</head>
+<body>
+  <main class="gc-app" id="sample-one">
+    <h1 class="gc-title">Packed GoreeCloud UI fixture</h1>
+    <nav class="gc-glass-base" data-gc-translucent="true" aria-label="Sample navigation">Navigation</nav>
+    <div class="gc-toolbar" role="group" aria-label="Display mode" id="toggle">
+      <button type="button" id="grid" aria-pressed="true">Grid</button>
+      <button type="button" id="list" aria-pressed="false">List</button>
+    </div>
+  </main>
+  <section class="gc-app" id="sample-two" aria-label="Independent secondary app">
+    <p>Second application scope</p>
+  </section>
+  <output id="result" role="status">pending</output>
+  <script type="module">
+    import { applyTheme, initToggleGroup, ICON_NAMES } from "@goreecloud/ui/foundation";
+    try {
+      const one=document.getElementById("sample-one");
+      const two=document.getElementById("sample-two");
+      applyTheme(one,{mode:"dark",customAccent:"#B13571",transparency:"reduce"});
+      applyTheme(two,{mode:"light",accent:"moss"});
+      const brandOne=getComputedStyle(one).getPropertyValue("--gc-brand").trim();
+      const brandTwo=getComputedStyle(two).getPropertyValue("--gc-brand").trim();
+      if(!brandOne || !brandTwo || brandOne===brandTwo)throw Error("Scoped color isolation missing");
+      if(one.getAttribute("data-gc-theme")!=="dark" ||
+        two.getAttribute("data-gc-theme")!=="light")throw Error("Independent appearance missing");
+      if(one.getAttribute("data-gc-transparency")!=="reduce")throw Error("Transparency setting missing");
+      if(getComputedStyle(one).backgroundColor==="rgba(0, 0, 0, 0)")throw Error("Opaque Canvas fallback missing");
+      if(!ICON_NAMES.includes("shield"))throw Error("Original icon inventory missing");
+      const dispose=initToggleGroup(document.getElementById("toggle"));
+      document.getElementById("list").click();
+      if(document.getElementById("list").getAttribute("aria-pressed")!=="true" ||
+        document.getElementById("grid").getAttribute("aria-pressed")!=="false")
+        throw Error("Interactive group did not update ARIA state");
+      dispose();
+      document.getElementById("result").textContent="pass";
+      document.documentElement.dataset.gcPacked="pass";
+    } catch(error) {
+      document.getElementById("result").textContent=String(error.stack||error);
+      document.documentElement.dataset.gcPacked="fail";
+    }
+  </script>
+</body>
+</html>
