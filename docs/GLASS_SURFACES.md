@@ -19,7 +19,7 @@ Each class is **opaque by default**. To request translucency on a supported devi
 
 The stylesheet uses existing semantic surface, outline, shadow and blur tokens. It does not impose navy, blue or any other brand hue. Do not put critical content over unpredictable imagery or translucent backdrops. Prefer solid materials for dense text, privacy controls, security alerts and unsupported platforms.
 
-Reduced transparency, increased contrast, forced colors, and the explicit `data-gc-contrast="more"` mode disable blur and restore opaque surfaces. Forced colors additionally use system color keywords. Consumers still own semantic dialog behavior, scrims, Escape/focus management, real data state, responsive layout and manual accessibility review.
+Reduced transparency, increased contrast, forced colors, and the explicit `data-gc-contrast="more"` mode disable blur and restore opaque surfaces. **Forced colors always retains final precedence**, including when an app simultaneously requests `data-gc-transparency="reduce"`: the rendered foreground, background, and borders use system `CanvasText`/`Canvas` rather than the app's semantic glass colors. This combined preference is covered by Chromium computed-style checks; it does not prove full screen-reader or device certification. Consumers still own semantic dialog behavior, scrims, Escape/focus management, real data state, responsive layout and manual accessibility review.
 
 ## Explicit reduced-transparency preference
 
