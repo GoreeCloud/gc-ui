@@ -1183,4 +1183,5 @@
   .gc-signal-board__lens::before { display:none; }
   .gc-signal-board__filters > button[aria-pressed="true"] { outline:2px solid Highlight; background:Canvas; color:CanvasText; }
   .gc-signal-card__state::before,.gc-timeflow > li::before { background:CanvasText; border-color:Canvas; box-shadow:0 0 0 1px CanvasText; }
+  .gc-signal-card:focus-within { border-color:Highlight; box-shadow:none; }
 }
