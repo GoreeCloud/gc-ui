@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { auditPackageExports } from "../scripts/package-audit.mjs";
+import { auditPackageExports, auditPackedBrandBoundary } from "../scripts/package-audit.mjs";
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
 const files=new Set(["package.json","README.md","LICENSE","src/index.js","src/index.d.ts",
   "src/theme.js","src/theme.d.ts","src/foundation.js","src/foundation.d.ts","src/tokens.css"]);
@@ -37,4 +37,16 @@ test("public 1.0 library ships generated functional glyphs but excludes logo/tra
   assert.equal(pkg.exports["./icon-sprite"],"./assets/gc-icons.svg");
   assert.equal(pkg.exports["./icon-registry"],"./assets/gc-icons.json");
   assert.ok(!Object.values(pkg.exports).some(x=>typeof x==="string" && x.includes("/identity/")));
+});
+
+test("packed tarball must not contain official brand marks even if npm files allowlist drifts",()=>{
+ const allowed=new Set(["assets/gc-icons.json","assets/gc-icons.svg","LICENSE"]);
+ assert.equal(auditPackedBrandBoundary(allowed),true);
+ const sneaky=new Set([...allowed,"assets/identity/logo-light.svg"]);
+ assert.throws(()=>auditPackedBrandBoundary(sneaky),/must not be bundled/);
+ const hidden=new Set([...allowed,"assets/identity/app-icon.svg"]);
+ assert.throws(()=>auditPackedBrandBoundary(hidden),/must not be bundled/);
+ assert.throws(()=>auditPackedBrandBoundary(new Set(["assets/gc-icons.svg"])),
+  /Missing required public glyph asset/);
+ assert.throws(()=>auditPackedBrandBoundary(null),/Set/);
 });
