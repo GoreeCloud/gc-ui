@@ -19,7 +19,7 @@ const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const candidates = process.env.GC_CHROME_BIN ? [process.env.GC_CHROME_BIN] :
   ["google-chrome", "chromium", "chromium-browser"];
 const binary = candidates.find(name => spawnSync("which", [name], { encoding:"utf8" }).status === 0);
-if (!binary) throw new Error("Google Chrome or Chromium is required for browser smoke tests");
+if (!binary) throw new Error("Chrome/Chromium not found in PATH. Set GC_CHROME_BIN to an existing executable path (for example a trusted Playwright Chromium binary) and rerun npm run browser:smoke; no browser is downloaded automatically.");
 if (typeof WebSocket !== "function") throw new Error("Node 22+ WebSocket support is required");
 const mime = {
   ".html":"text/html; charset=utf-8", ".js":"text/javascript; charset=utf-8",
