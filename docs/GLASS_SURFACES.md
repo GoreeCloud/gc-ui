@@ -44,7 +44,9 @@ This setting now affects the four glass utility roles when
 `.gc-bottom-nav` Cloud Lens surfaces via
 `@goreecloud/ui/components.css`. Dialog and command-palette backdrop blur
 is also disabled. The default `"auto"` leaves existing visual treatment
-untouched. Forced-colors `Canvas` / `CanvasText` has final precedence,
+untouched. The existing **More Contrast** toggle (`data-gc-contrast="more"`)
+now also disables blur on the shared Lens and floating navigation without
+requiring a second manual setting. Forced-colors `Canvas` / `CanvasText` has final precedence,
 including if the app simultaneously selects manual reduction. This is **not**
 a promise that unrelated native, operating-system, or product surfaces become
 opaque. A consuming app is
@@ -80,13 +82,15 @@ The `lab/` alpha demonstration now includes a local **Reduce transparency**
 switch alongside its existing Appearance, Accent and More Contrast settings.
 It uses the same nonpersistent `createThemeController`, without changing
 brand tokens or involving GoreeShield, Identity or Mesh service operations.
-It applies to the lab's normal Cloud Lens toolbar and floating navigation,
-not just the isolated four-material test fixture.
+It applies to the lab's normal Cloud Lens toolbar, viewport floating navigation,
+window-owned dock and command/dialog backdrops, not just the isolated
+four-material test fixture.
 
 Chromium checks at 320px light and 390px dark confirm immediate opaque
 backgrounds and no backdrop blur; unchecking restores original computed
-styles. Additional forced-colors checks enforce the OS system palette,
-and verify unchanged local storage and cookies. The tests check page
+styles. Additional forced-colors checks (including concurrent More Contrast and
+reduced-transparency preferences) enforce the OS system palette for the
+Lens toolbar and both dock variants, and verify unchanged local storage and cookies. The tests check page
 horizontal overflow but do not certify real touch/OS screen readers.
 **This is a review-branch capability; no production rollout occurred.**
 
