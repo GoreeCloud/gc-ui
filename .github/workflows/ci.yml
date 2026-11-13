@@ -87,11 +87,15 @@ jobs:
         run: npm run browser:smoke
       - name: Exercise offline-installed foundation inside Chromium
         run: node tests/packed-foundation-browser.mjs
+      - name: Record exact Chromium binary and PNG hashes
+        run: node scripts/record-browser-evidence.mjs
       - name: Preserve generated screenshots
         if: always()
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: gc-ui-browser-evidence
-          path: qa/screenshots/*.png
+          path: |
+            qa/screenshots/*.png
+            qa/browser-evidence.json
           if-no-files-found: warn
           retention-days: 7
