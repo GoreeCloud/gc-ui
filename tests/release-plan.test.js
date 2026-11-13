@@ -11,7 +11,7 @@ test("web-first release targets preserve the mandatory 1.0 scope and subsequent 
   assert.equal(plan.schemaVersion,1);
   assert.equal(plan.strategy,"web-first-incremental-stable");
   assert.equal(plan.currentPackageVersion,pkg.version);
-  assert.equal(pkg.version,"1.0.0","Draft candidate must pack the exact target version");
+  assert.equal(pkg.version,"1.0.0","Test branch must use exact target tarball version");
   assert.equal(plan.targetStableVersion,"1.0.0");
   assert.equal(plan.status,"candidate-unverified");
   assert.deepEqual(plan.followOnReleases.map(x=>x.version),["1.1.0","1.2.0","1.3.0","1.4.0","1.5.0"]);

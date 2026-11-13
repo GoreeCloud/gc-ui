@@ -2,7 +2,7 @@
 
 **Decision (founder direction, 2026-11-13):** Deliver a **narrow, verified GoreeCloud UI 1.0.0 Stable web foundation first**, then release independently validated improvements and optional platforms incrementally as **1.1.0, 1.2.0, 1.3.0, …**. A minor release is additive and backward-compatible; defects may be corrected in patch releases, and breaking Stable contracts require a new major version with migration guidance.
 
-**Candidate branch:** This isolated draft uses version `1.0.0` for exact archive acceptance tests only; it is NOT a Stable release, tag, publication or deployment. Current GitHub CI validates alpha source, an offline installable tarball, and a local Chromium lab. The current root package entry point exports more than the proposed narrow foundation. Its compatibility boundary must be audited and documented before tagging 1.0.0. Machine-readable scope and fail-closed checks live in [release-plan.v1.json](../registry/release-plan.v1.json).
+**Draft candidate branch:** `1.0.0` here is version metadata for exact offline tarball tests, NOT a tagged, signed or published Stable release. Current GitHub CI validates alpha source, an offline installable tarball, and a local Chromium lab. The current root package entry point exports more than the proposed narrow foundation. Its compatibility boundary must be audited and documented before tagging 1.0.0. Machine-readable scope and fail-closed checks live in [release-plan.v1.json](../registry/release-plan.v1.json).
 
 ## Planned scope by release
 

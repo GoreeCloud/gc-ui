@@ -37,16 +37,23 @@ export function comparePackageEvidence(records,{sourceSha,version="1.0.0"}={}){
     reject(Number.isSafeInteger(pkg.bytes) && pkg.bytes>0 &&
       hex(pkg.sha256,64) && sha512Valid(pkg.sha512Integrity),
       "Missing or malformed artifact digest/size");
+    reject(checks.publicTypeGraphChecked===true &&
+      Number.isSafeInteger(checks.typeEntryCount) &&
+      checks.typeEntryCount>0 && checks.typeEntryCount<=checks.publicExportCount,
+      "Installed public type declaration graph unchecked");
     reject(checks.generatorOutputsChecked===true &&
       checks.everyPublicExportResolved===true &&
       checks.installedOffline===true &&
       checks.installScriptsDisabled===true,
       "Missing offline verified consumer checks");
+    reject(checks.installedFileDigestsChecked===true,
+      "Missing installed per-file SHA-256 verification");
     const files=record.packedFiles;
     reject(Array.isArray(files) && files.length>0 &&
       files.every(f=>typeof f?.path==="string" && f.path.length>0 &&
         !f.path.startsWith("/") && !f.path.includes("..") &&
-        Number.isSafeInteger(f.size) && f.size>0) &&
+        Number.isSafeInteger(f.size) && f.size>0 &&
+        hex(f.sha256,64)) &&
       new Set(files.map(f=>f.path)).size===files.length,
       "Invalid packed-file inventory");
     reject(Number.isSafeInteger(checks.publicExportCount) && checks.publicExportCount>0 &&
@@ -60,7 +67,7 @@ export function comparePackageEvidence(records,{sourceSha,version="1.0.0"}={}){
       const refPkg=first.package||{},refChecks=first.checks||{};
       for(const key of ["name","version","tarball","bytes","sha256","sha512Integrity"])
         reject(refPkg[key]===pkg[key],"Cross-Node package mismatch: "+key);
-      for(const key of ["publicExportCount","packedFileCount"])
+      for(const key of ["publicExportCount","packedFileCount","typeEntryCount"])
         reject(refChecks[key]===checks[key],"Cross-Node verification mismatch: "+key);
       reject(same(first.packedFiles,files),"Cross-Node packed file inventory mismatch");
     }

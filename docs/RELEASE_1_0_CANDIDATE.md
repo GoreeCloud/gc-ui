@@ -14,3 +14,8 @@ Follow [release and rollback runbook](RELEASE_1_0_RUNBOOK.md). If rejected, reta
 ## 2026-11-13 exact-source regeneration
 
 This candidate has incorporated merged source hardening through PR #108, including verified npm install hook/dependency policy, an owner-run read-only protection diagnostic, and independent screenshot artifact digest checking. Its previous 1.0.0 archive hashes and screenshot IDs refer to older branch commits and **must not be reused as current-candidate evidence**. The current SHA and any verified run must be recorded externally in issue #85 after CI, because a commit cannot contain its own final hash. The package remains deliberately unpublishable while release gates are open.
+
+
+## 2026-11-13 updated source integrity qualification
+
+This exact `1.0.0` draft candidate now tracks reviewed `main` through [PR #109](https://github.com/GoreeCloud/gc-ui/pull/109) (offline-installed JavaScript/TypeScript export graph) and [PR #110](https://github.com/GoreeCloud/gc-ui/pull/110) (per-file SHA-256 installed-package evidence and Node 20/22/24 parity). Previous candidate hashes are **historical**, not authorization or evidence for this source SHA. The draft remains **UNVERIFIED and UNPUBLISHED** until new five-job CI, independent evidence review and the eight external gates are completed. GitHub main branch protection is not verified. Source main checkpoint: `a0018131930ffc73d58471de8e0f07551ce27743`. The exact new candidate SHA is read back from GitHub, never embedded self-referentially.

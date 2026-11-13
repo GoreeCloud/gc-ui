@@ -10,6 +10,8 @@ import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary, auditPackageInstallSafety } from "./package-audit.mjs";
+import { auditTypeGraph } from "./audit-type-graph.mjs";
+import { digestInstalledFiles } from "./installed-file-digests.mjs";
 
 const jsonMode=process.argv.length===3 && process.argv[2]==="--json";
 if(!jsonMode && process.argv.length!==2) throw new Error("Use --json or no options");
@@ -52,6 +54,9 @@ try {
   mkdirSync(consumer,{recursive:true});
   run(npm,["install","--offline","--ignore-scripts","--no-audit","--no-fund",
     "--package-lock=false","--prefix",consumer,join(temp,meta.filename)],consumer);
+  const installRoot=join(consumer,"node_modules","@goreecloud","ui");
+  const typeGraph=auditTypeGraph(pkg,files,path=>readFileSync(join(installRoot,path),"utf8"));
+  const fileDigests=digestInstalledFiles(installRoot,meta.files);
   // Run in the isolated installed consumer rather than against the repo tree.
   const consumerSource=`
 import assert from "node:assert/strict";
@@ -107,10 +112,12 @@ console.log("Verified "+entries.length+" public specifiers from installed offlin
       checks:{
         generatorOutputsChecked:true,everyPublicExportResolved:true,
         installedOffline:true,installScriptsDisabled:true,
+        publicTypeGraphChecked:true,typeEntryCount:typeGraph.entryCount,
+        installedFileDigestsChecked:true,
         publicExportCount:entries.length,packedFileCount:files.size,
         isolatedConsumerResult:consumerResult
       },
-      packedFiles:meta.files.map(file=>({path:file.path,size:file.size})).sort((a,b)=>a.path.localeCompare(b.path))
+      packedFiles:fileDigests
     };
     console.log(JSON.stringify(evidence,null,2));
   }else{
