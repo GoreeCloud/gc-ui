@@ -9,12 +9,13 @@ import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { execFileSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
-import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary } from "./package-audit.mjs";
+import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary, auditPackageInstallSafety } from "./package-audit.mjs";
 
 const jsonMode=process.argv.length===3 && process.argv[2]==="--json";
 if(!jsonMode && process.argv.length!==2) throw new Error("Use --json or no options");
 const root=fileURLToPath(new URL("../",import.meta.url));
 const pkg=JSON.parse(readFileSync(join(root,"package.json"),"utf8"));
+auditPackageInstallSafety(pkg);
 const temp=mkdtempSync(join(tmpdir(),"gc-ui-package-audit-"));
 const npm=process.platform==="win32"?"npm.cmd":"npm";
 const run=(cmd,args,cwd)=>execFileSync(cmd,args,{

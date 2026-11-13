@@ -86,7 +86,7 @@ test("cannot silently promote preview exports or omit root API classification",(
   missing.plan.webFoundations.rootSymbolClassification.candidateStable=[];
   assert.equal(check(missing).ready,false);
 });
-test("draft exact-version candidate remains blocked without fabricated acceptance",()=>{
+test("current exact-version candidate remains blocked without fabricated acceptance",()=>{
   const result=evaluateReleaseReadiness(currentPlan,pkg,{sourceSha:sha,cleanTree:true});
   assert.equal(result.ready,false);
   assert.ok(result.blockers.includes("Open gate: public-api-contract"));

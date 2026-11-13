@@ -91,7 +91,8 @@
     "verify:package": "node scripts/verify-package.mjs",
     "release:status": "node scripts/release-readiness.mjs --status",
     "release:verify": "node scripts/release-readiness.mjs --require-ready",
-    "prepublishOnly": "npm run release:verify"
+    "prepublishOnly": "npm run release:verify",
+    "release:controls": "node scripts/audit-branch-controls.mjs --json"
   },
   "sideEffects": [
     "**/*.css"

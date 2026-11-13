@@ -3,7 +3,7 @@
   "targetVersion": "1.0.0",
   "name": "@goreecloud/ui",
   "status": "draft-candidate-unverified-unpublished",
-  "sourceBaseSha": "31732dcfb7ace59701db6781f06adbfadffe1028",
+  "sourceBaseSha": "5eaf78ca42cada35d835536ce0c053834cc2b874",
   "sourceBranch": "release/stable-web-1.0.0-candidate-20261113",
   "sourceCommitSha": null,
   "sourceCommitNote": "A commit cannot embed its own SHA; exact tested head SHA and hash evidence are recorded externally in GitHub issue #85",
@@ -37,10 +37,10 @@
     "allGatesVerified": false
   },
   "blocking": [
-    "main is unprotected; required checks off",
-    "brand-asset master lacks separate LICENSE/SPDX",
-    "exact 1.0.0 candidate needs independent source/package/visual acceptance",
-    "eight mandatory release gates not yet verified"
+    "GitHub main protected=false and required status checks off; owner enforcement unverified",
+    "Draft release gate 8/8 statuses open and maintainer Stable approval absent",
+    "Exact current candidate commit must complete five CI jobs, archive parity and reviewed screenshot acceptance",
+    "Signed distributable release record and authorized publisher decision still absent"
   ],
   "rollback": {
     "sourceBaselineSha": "c235f9b5e2577c440465de0d455372c363f4d01d",

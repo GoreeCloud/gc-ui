@@ -1,6 +1,6 @@
 # GoreeCloud UI — Public API boundary for the proposed Stable 1.0 web foundation
 
-**Status:** source-classified candidate, **not Stable**, not published. This isolated draft candidate branch uses package `1.0.0` but has NOT passed Stable release acceptance; the [1.0 release gates](../registry/release-plan.v1.json) remain open.
+**Status:** source-classified candidate, **not Stable**, not published. This isolated draft candidate uses `1.0.0` package metadata but has NOT passed Stable acceptance; the [1.0 release gates](../registry/release-plan.v1.json) remain open.
 
 ## Canonical import boundary
 
