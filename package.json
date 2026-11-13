@@ -93,7 +93,8 @@
     "browser:smoke": "node tests/browser-smoke.mjs",
     "verify:package": "node scripts/verify-package.mjs",
     "release:status": "node scripts/release-readiness.mjs --status",
-    "release:verify": "node scripts/release-readiness.mjs --require-ready"
+    "release:verify": "node scripts/release-readiness.mjs --require-ready",
+    "prepublishOnly": "npm run release:verify"
   },
   "sideEffects": [
     "**/*.css"
