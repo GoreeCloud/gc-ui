@@ -1016,7 +1016,8 @@ try {
     const visual=JSON.parse(await browser.evaluate(
       '(()=>{const root=document.documentElement,board=document.querySelector("#signal-constellation");'+
       'if('+String(scenario.zoom)+'){root.dir="rtl";root.style.fontSize="400%";}'+
-      'board.scrollIntoView({block:"center",behavior:"instant"});'+
+      'board.scrollIntoView({block:"start",behavior:"instant"});'+
+      'window.scrollBy({top:-Math.max(0,document.querySelector(".gc-lab-toolbar").getBoundingClientRect().height),behavior:"instant"});'+
       'const r=board.getBoundingClientRect(),lens=board.querySelector(".gc-signal-board__lens");'+
       'const css=getComputedStyle(lens),cards=[...board.querySelectorAll("[data-gc-signal-list] > li")];'+
       'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
