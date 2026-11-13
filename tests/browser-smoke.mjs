@@ -181,9 +181,16 @@ async function startBrowser() {
       }));
     };
     return { evaluate, setViewport, navigate, waitFor, screenshot, accessibilityTree,
-      dispatchHorizontalWheel:(x,y,deltaX)=>command("Input.dispatchMouseEvent",{
-        type:"mouseWheel",x,y,deltaX,deltaY:0,pointerType:"mouse"
-      }),
+      dispatchHorizontalWheel:async(x,y,deltaX)=>{
+        // CDP mouse-wheel delivery can race viewport emulation until a real
+        // pointer-move has established the hit-test target.
+        await command("Input.dispatchMouseEvent",{
+          type:"mouseMoved",x,y,button:"none",buttons:0,pointerType:"mouse"
+        });
+        return command("Input.dispatchMouseEvent",{
+          type:"mouseWheel",x,y,deltaX,deltaY:0,pointerType:"mouse"
+        });
+      },
       bringToFront:()=>command("Page.bringToFront"), close:cleanup };
   } catch (error) {
     await cleanup();
@@ -861,8 +868,15 @@ try {
   assert.ok(wheelDock.scrollWidth>wheelDock.clientWidth+1,
     "Horizontal wheel fixture did not contain offscreen navigation");
   await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,320);
-  await delay(120);
-  const afterPositive=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await delay(240);
+  let afterPositive=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  if(Math.abs(afterPositive-wheelDock.scrollLeft)<=2){
+    // Keep testing actual native wheel input: a dropped first CDP gesture is
+    // retried once, never replaced by a scripted scrollLeft mutation.
+    await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,480);
+    await delay(240);
+    afterPositive=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  }
   await browser.dispatchHorizontalWheel(wheelDock.x,wheelDock.y,-320);
   await delay(120);
   const afterNegative=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
@@ -892,8 +906,13 @@ try {
   assert.equal(rtlWheel.scrollbar,"thin","RTL forced-colors dock lost its scroll affordance");
   assert.ok(rtlWheel.content>rtlWheel.width+1,"RTL wheel fixture did not overflow");
   await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,-320);
-  await delay(150);
-  const rtlAfter=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  await delay(240);
+  let rtlAfter=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  if(rtlAfter>=rtlWheel.start-3){
+    await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,-480);
+    await delay(240);
+    rtlAfter=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
+  }
   await browser.dispatchHorizontalWheel(rtlWheel.x,rtlWheel.y,320);
   await delay(150);
   const rtlReturned=Number(await browser.evaluate('document.querySelector("#zoom-dock").scrollLeft'));
