@@ -1,14 +1,16 @@
 export type GcMode = "auto" | "light" | "dark";
 export type GcAccent = "iris" | "lagoon" | "ember" | "moss";
 export type GcContrast = "normal" | "more";
+export type GcTransparency = "auto" | "reduce";
 export declare const ACCENTS: readonly GcAccent[];
 export declare const MODES: readonly GcMode[];
+export declare const TRANSPARENCY_MODES: readonly GcTransparency[];
 export declare function contrastRatio(a: string, b: string): number;
 export declare function getAccentColor(accent: GcAccent, mode?: "light" | "dark"): string;
 export declare function deriveAccent(hex: string, mode?: "light" | "dark"): Readonly<{
   brand: string; onBrand: string; brandContainer: string; onBrandContainer: string;
 }>;
-export declare function applyTheme(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string }): { mode: GcMode; accent: GcAccent; contrast: GcContrast };
+export declare function applyTheme(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; transparency?: GcTransparency; customAccent?: string }): { mode: GcMode; accent: GcAccent; contrast: GcContrast };
 export declare const ICON_NAMES: readonly string[];
 export declare function hasIcon(name: string): boolean;
 export declare function iconSvg(name: string, options?: { size?: number; decorative?: boolean }): string;
@@ -23,7 +25,7 @@ export declare function initAccordion(container: HTMLElement, options?: { single
 export declare function initToggleGroup(container: HTMLElement, options?: { onChange?: (button: HTMLButtonElement) => void }): () => void;
 export declare function bindRangeOutput(input: HTMLInputElement, output: HTMLOutputElement, options?: { format?: (value: string) => string }): () => void;
 export declare function initDrawer(dialog: HTMLDialogElement, openButton: HTMLElement, closeButton: HTMLElement): () => void;
-export declare function createThemeController(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string }): { update: (options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; customAccent?: string | null }) => { mode: GcMode; accent: GcAccent; contrast: GcContrast }; dispose: () => void };
+export declare function createThemeController(root: HTMLElement, options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; transparency?: GcTransparency; customAccent?: string }): { update: (options?: { mode?: GcMode; accent?: GcAccent; contrast?: GcContrast; transparency?: GcTransparency; customAccent?: string | null }) => { mode: GcMode; accent: GcAccent; contrast: GcContrast }; dispose: () => void };
 
 export declare function matchesCommand(query: string, label: string, keywords?: string): boolean;
 export declare function initCommandPalette(dialog: HTMLDialogElement, options: {
