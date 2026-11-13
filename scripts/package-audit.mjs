@@ -80,3 +80,40 @@ export function auditPackedRuntimeBoundary(filePaths){
     throw new Error("Missing minimal web foundation files");
   return true;
 }
+
+/**
+ * Refuse unreviewed install/publish lifecycle execution or hidden package
+ * dependencies. Verification uses --ignore-scripts, so it must separately
+ * inspect scripts that could run during a normal consumer npm install.
+ */
+export function auditPackageInstallSafety(pkg){
+  if(!pkg||typeof pkg!=="object"||Array.isArray(pkg))
+    throw new TypeError("Expected npm package manifest");
+  for(const field of ["dependencies","optionalDependencies","peerDependencies",
+      "bundledDependencies","bundleDependencies","devDependencies"]){
+    const val=pkg[field];
+    if(val!==undefined && val!==null &&
+      (typeof val!=="object"||Object.keys(val).length>0))
+      throw new Error("Unreviewed package dependency surface: "+field);
+  }
+  if(pkg.bin!==undefined || pkg.gypfile===true)
+    throw new Error("UI foundation may not ship an executable or native build hook");
+  if(!pkg.scripts || typeof pkg.scripts!=="object" || Array.isArray(pkg.scripts))
+    throw new Error("Missing reviewed npm lifecycle scripts");
+  const expected={
+    prepack:"npm run icons:check && npm run tokens:check && npm run export:platform",
+    prepublishOnly:"npm run release:verify"
+  };
+  for(const [key,value] of Object.entries(expected))
+    if(pkg.scripts[key]!==value)
+      throw new Error("Unreviewed npm lifecycle command: "+key);
+  for(const key of [
+    "preinstall","install","postinstall","preuninstall","uninstall",
+    "postuninstall","prepare","postpack","prepublish","publish",
+    "postpublish","dependencies"
+  ]){
+    if(Object.hasOwn(pkg.scripts,key))
+      throw new Error("Disallowed npm lifecycle hook: "+key);
+  }
+  return true;
+}
