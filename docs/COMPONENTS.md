@@ -24,7 +24,10 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 **Signal Constellation** is an alpha, locally filtered application status
 composition: a frosted Cloud Lens header, native count list, labeled
 `aria-pressed` filters, readable Cloud Surface status cards and an accessible
-native Timeflow chronology. It is genuinely different from a decorative
+native Timeflow chronology. With an opt-in `data-gc-timeflow-list`, that
+chronology now follows the selected signal state, reports related-event counts
+through the same live summary, protects keyboard focus on filtered events,
+and shows its own explanatory empty state without any data fetching. It is genuinely different from a decorative
 status badge: it supports actual filter choices, live count summaries, dynamic
 `refresh()`, empty results and focus-safe hiding of status cards.
 
