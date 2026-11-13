@@ -46,3 +46,7 @@ packaging. Lab source remains alpha, not certified Stable.
   screen-reader and real touch acceptance.
 - All official marks remain copyright/provenance-controlled; repository
   open-source licensing does not automatically waive brand/trademark rights.
+
+## Web-foundation package distribution boundary
+
+The separate **public npm design-system library** intentionally packages the generated first-party functional icon registry/sprite but **does not bundle** `assets/identity/` logo, app-icon, favicon or hero-artwork masters. These six official assets remain intact in the public `GoreeCloud/gc-ui` source repository for the reference lab and provenance tests, with authoritative originals in `GoreeCloud/brand-assets`. Consumers needing official branded imagery must follow separately verified product identity/asset-rights instructions; a library's MIT declaration does not grant trademark usage rights by implication. This does not revoke or alter existing repository ownership or set a new asset license.

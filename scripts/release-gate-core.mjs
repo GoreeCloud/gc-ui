@@ -42,12 +42,31 @@ const exactSet=(expected,actual)=>
   Array.isArray(actual) && actual.length===expected.length &&
   new Set(actual).size===actual.length && expected.every(v=>actual.includes(v));
 
+/** Separately recorded post-commit gate decisions avoid a self-referential SHA. */
+export function validateExternalReleaseEvidence(record,pkg,sha){
+  if(!record || typeof record!=="object" || Array.isArray(record))return false;
+  if(record.schemaVersion!==1 || record.packageName!==pkg?.name ||
+    record.targetVersion!=="1.0.0" || record.sourceSha!==sha ||
+    !shaPattern.test(record.sourceSha||"") || record.decision!=="verified" ||
+    record.maintainerApproval!==true ||
+    typeof record.reviewer!=="string" || record.reviewer.trim().length<5 ||
+    !safeHttpsUrl(record.reviewUrl) ||
+    !/^https:\/\/github\.com\/GoreeCloud\/gc-ui\/(?:issues|pull)\/\d+/.test(record.reviewUrl) ||
+    typeof record.reviewedAt!=="string" ||
+    !/^\d{4}-\d{2}-\d{2}T/.test(record.reviewedAt) ||
+    !Number.isFinite(Date.parse(record.reviewedAt)))return false;
+  const items=record.gates;
+  if(!exactSet(REQUIRED_RELEASE_GATES,Array.isArray(items)?items.map(v=>v?.id):null))return false;
+  return items.every(g=>g.status==="verified" && Array.isArray(g.evidence) &&
+    g.evidence.length>0 && g.evidence.every(e=>isValidEvidence(e,sha)));
+}
+
 /**
  * Validates STRUCTURE and referenced evidence metadata only. It cannot attest
  * that a URL exists, a CI run actually passed, or a human tested a real device.
  * Those assertions require an independent review of the referenced evidence.
  */
-export function evaluateReleaseReadiness(plan,pkg,{sourceSha=null,cleanTree=false}={}){
+export function evaluateReleaseReadiness(plan,pkg,{sourceSha=null,cleanTree=false,externalEvidence=null}={}){
   const blockers=[];
   fail(blockers,plan?.schemaVersion===1 && plan?.authority==="GoreeCloud UI",
     "Release schema/authority mismatch");
@@ -85,15 +104,23 @@ export function evaluateReleaseReadiness(plan,pkg,{sourceSha=null,cleanTree=fals
   const ids=Array.isArray(gates)?gates.map(g=>g?.id):[];
   fail(blockers,exactSet(REQUIRED_RELEASE_GATES,ids),
     "Mandatory release gate inventory changed");
+  const usingExternal=externalEvidence!==null;
+  if(usingExternal){
+    fail(blockers,validateExternalReleaseEvidence(externalEvidence,pkg,sourceSha),
+      "External post-commit evidence record is invalid or stale");
+  }
   for(const id of REQUIRED_RELEASE_GATES){
     const gate=Array.isArray(gates)?gates.find(g=>g?.id===id):null;
     if(!gate) {blockers.push("Missing mandatory gate: "+id);continue;}
     if(gate.blocking!==true){blockers.push("Mandatory gate disabled: "+id);continue;}
-    if(gate.status!=="verified"){blockers.push("Open gate: "+id);continue;}
-    if(!Array.isArray(gate.evidence)||gate.evidence.length===0){
+    // Evidence collected after the tested commit must live OUTSIDE its Git
+    // tree. Otherwise the commit hash changes as soon as the proof is saved.
+    const decision=usingExternal ? externalEvidence?.gates?.find(x=>x?.id===id) : gate;
+    if(decision?.status!=="verified"){blockers.push("Open gate: "+id);continue;}
+    if(!Array.isArray(decision.evidence)||decision.evidence.length===0){
       blockers.push("Missing evidence: "+id);continue;
     }
-    if(gate.evidence.some(e=>!isValidEvidence(e,sourceSha))){
+    if(decision.evidence.some(e=>!isValidEvidence(e,sourceSha))){
       blockers.push("Invalid or stale evidence: "+id);
     }
   }

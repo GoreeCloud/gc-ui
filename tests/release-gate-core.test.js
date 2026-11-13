@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { evaluateReleaseReadiness,REQUIRED_RELEASE_GATES } from "../scripts/release-gate-core.mjs";
+import { evaluateReleaseReadiness,REQUIRED_RELEASE_GATES,validateExternalReleaseEvidence } from "../scripts/release-gate-core.mjs";
 
 const load=path=>JSON.parse(readFileSync(new URL("../"+path,import.meta.url),"utf8"));
 const currentPlan=load("registry/release-plan.v1.json");
@@ -86,9 +86,46 @@ test("cannot silently promote preview exports or omit root API classification",(
   missing.plan.webFoundations.rootSymbolClassification.candidateStable=[];
   assert.equal(check(missing).ready,false);
 });
-test("exact-version candidate remains blocked without fabricated acceptance",()=>{
+test("draft exact-version candidate remains blocked without fabricated acceptance",()=>{
   const result=evaluateReleaseReadiness(currentPlan,pkg,{sourceSha:sha,cleanTree:true});
   assert.equal(result.ready,false);
   assert.ok(result.blockers.includes("Open gate: public-api-contract"));
   assert.ok(result.blockers.some(x=>/Candidate has not been verified/.test(x)));
+});
+
+test("post-commit external decision can qualify unchanged open gate records after true acceptance",()=>{
+  const candidate=setup();
+  // Source gate statuses stay OPEN; post-commit decisions are outside Git.
+  for(const gate of candidate.plan.gates){gate.status="open";gate.evidence=[];}
+  const external={
+    schemaVersion:1,packageName:"@goreecloud/ui",targetVersion:"1.0.0",
+    sourceSha:sha,decision:"verified",maintainerApproval:true,
+    reviewer:"GoreeCloud founder",reviewedAt:"2026-11-13T17:00:00Z",
+    reviewUrl:"https://github.com/GoreeCloud/gc-ui/issues/85#issuecomment-999",
+    gates:REQUIRED_RELEASE_GATES.map(id=>({id,status:"verified",evidence:[clone(goodEvidence)]}))
+  };
+  assert.equal(check(candidate).ready,false,"Open source gates cannot pass by default");
+  assert.equal(validateExternalReleaseEvidence(external,candidate.pkg,sha),true);
+  assert.equal(check(candidate,{externalEvidence:external}).ready,true,
+    "Complete same-SHA post-commit metadata qualifies only with affirmative review");
+  const disabled=clone(candidate);
+  disabled.plan.gates[0].blocking=false;
+  assert.equal(check(disabled,{externalEvidence:external}).ready,false,
+    "Post-commit record may not override disabled mandatory source policy");
+  for(const mutate of [
+    x=>x.gates.pop(),
+    x=>x.gates.push(clone(x.gates[0])),
+    x=>x.sourceSha="0000000000000000000000000000000000000000",
+    x=>x.reviewUrl="https://example.com/approval",
+    x=>x.maintainerApproval=false,
+    x=>x.gates[0].status="open",
+    x=>x.gates[0].evidence[0].sourceSha="0000000000000000000000000000000000000000",
+    x=>x.gates[0].evidence[0].url="http://github.com/GoreeCloud/gc-ui/issues/85"
+  ]){
+    const record=clone(external);mutate(record);
+    assert.equal(check(candidate,{externalEvidence:record}).ready,false,JSON.stringify(record).slice(0,140));
+  }
+  candidate.plan.status="candidate-unverified";
+  assert.equal(check(candidate,{externalEvidence:external}).ready,false,
+    "External review cannot override unqualified source status");
 });

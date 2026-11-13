@@ -1,0 +1,19 @@
+# GoreeCloud UI — cross-Node 1.0 candidate archive evidence
+
+**Development evidence only, not signed Stable publication.** Draft candidate [PR #97](https://github.com/GoreeCloud/gc-ui/pull/97) commit `24022457c4d2cb47f872d0240fd11cacfa6c232e` passed [CI run 43452829330](https://github.com/GoreeCloud/gc-ui/actions/runs/43452829330) with four green jobs: source/package validation on Node 20, Node 22 and Node 24, plus Chromium.
+
+I downloaded all three GitHub Actions package evidence archives and independently inspected their JSON. All used `sourceSha=24022457c4d2cb47f872d0240fd11cacfa6c232e`, version `1.0.0`, **identical** `goreecloud-ui-1.0.0.tgz` SHA-256 `39761af381018e6521848aa79ad1087e3a1c4cea3b40a84a333917f5f5fc2ebb`, identical SHA-512 integrity `sha512-/jnklXiMFQuqHa+OsHdm8Ue1nGFiYFl1OsSHvtY5YTwWviJbdmWoPsDdjLhmeAnSrQe3wcGAyKV5MlRYbEDjdg==`, 192852 bytes, 94 packed files, and 19 verified public export paths. Their npm versions differed; Node 20.20.2 / npm 10.8.2, Node 22.23.4 / npm 10.9.9, Node 24.22.2 / npm 11.19.1. Artifact archive IDs: **14052855694**, **14052640706**, **14051862417**. Their per-Node ZIP digests are **not** the npm tarball digest, because ZIP compression and JSON evidence differ; compare the nested `package.sha256` field.
+
+A fourth downloaded browser archive ID **14051522602** contains **53 real Chromium screenshots** captured on that candidate SHA; the ZIP's SHA-256 is `63659f8bb80171d267312bdc6ce87d8da432546db2003023aa2b284db07aa74c`. An AI review of a 12-view contact sheet and three full-resolution baseline views found coherent desktop/mobile composition, with separate follow-up needed for user-visible 400% CSS-root-font occlusion and real browser zoom. This is **not** physical-device testing, human AT testing, broad engine certification or a human design approval.
+
+The new dependency-free `scripts/compare-package-evidence.mjs` reads the three downloaded `package-evidence.json` records from *local files*, compares source SHA, target version, archive SHA-256/SHA-512 and bytes, runtime-major coverage, export counts and all 94 file paths/sizes. It **rejects** missing/duplicate runtimes, stale source SHAs, missing offline checks and mismatched archives. Example:
+
+```sh
+node scripts/compare-package-evidence.mjs --source-sha 24022457c4d2cb47f872d0240fd11cacfa6c232e --version 1.0.0 node20.json node22.json node24.json
+```
+
+**Limits:** A matching archive digest across three runners is strong reproducibility evidence for **those specific jobs**, not proof of a deterministic build on arbitrary machines. The evidence packages are unsigned, explicitly unpublished and retained temporarily; the actual `.tgz` is not persisted as a publicly distributable registry/release asset. A source hash and a future publish decision remain separate. The source `release:verify` gates and explicit founder/owner approval must still be satisfied. `main` branch protections, brand-asset distribution decision and real candidate release controls remain blockers.
+
+## Enforced cross-Node CI quality gate
+
+The `cross-node-package-reproducibility` GitHub Actions job now runs **after** all three independent `source-and-contract (20|22|24)` jobs. It uses a **SHA-pinned official** `actions/download-artifact` v6 to retrieve the same-run JSON evidence, checks out the **exact same source SHA**, and passes all three independent records to the offline comparator. A missing upload, wrong version, differing tarball hash/packed files, duplicate runtime, or stale checkout SHA fails the CI job. This adds a fifth required quality signal, whose exact check name must be included when real GitHub branch protection is configured. The job does **not** package or publish anything and does not imply a signed Stable release. Green status means only that the checked versions produced consistent evidence in that run; real-world browser, source security, release authorizations and legal rights retain their separate gates.

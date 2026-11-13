@@ -46,3 +46,17 @@ export function auditPackageExports(pkg, filePaths) {
   }
   return Object.freeze(exports.map(entry=>Object.freeze(entry)));
 }
+
+/** Enforce functional glyphs only in distributable npm archives. */
+export function auditPackedBrandBoundary(filePaths){
+  if(!(filePaths instanceof Set))throw new TypeError("Expected npm pack file inventory Set");
+  for(const asset of ["assets/gc-icons.json","assets/gc-icons.svg"]){
+    if(!filePaths.has(asset))throw new Error("Missing required public glyph asset: "+asset);
+  }
+  for(const path of filePaths){
+    if(typeof path!=="string")throw new TypeError("Invalid packed file path");
+    if(path==="assets/identity" || path.startsWith("assets/identity/"))
+      throw new Error("Official identity artwork must not be bundled in the public UI package: "+path);
+  }
+  return true;
+}
