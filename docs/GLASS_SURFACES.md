@@ -46,4 +46,35 @@ responsible for its settings UI, user consent, persistence (if desired),
 and contrast verification. Do not rely on preference CSS to replace meaningful
 solid surfaces for credentials, long-form text, or security/privacy alerts.
 
+## Worst-case opaque-backdrop text-contrast guard
+
+The review branch includes `scripts/glass-contrast-guard.mjs`, a dependency-free
+QA utility (not a public browser export) for **opaque CSS text over one RGBA
+glass fill**, with any fully opaque sRGB background. It computes the minimum
+WCAG relative-luminance contrast over the entire RGB backdrop cube using the
+monotonic bounds of sRGB alpha blending. Rather than testing just one gradient,
+it rejects any color pairing whose modeled worst case drops below **4.5:1**.
+
+```js
+import { assertGlassTextContrast } from "./scripts/glass-contrast-guard.mjs";
+
+const result = assertGlassTextContrast(
+  "rgb(27, 32, 48)", "rgba(255, 255, 255, 0.84)", 4.5
+);
+// Throws on low contrast or unsupported/transparent foreground colors.
+```
+
+Chromium `browser:smoke` now feeds **computed** foreground and background
+colors from all four material roles into the guard in light/dark, high contrast,
+reduced-transparency, forced-colors and manual-preference scenarios. It fails
+closed for unsupported CSS color formats, which must be audited separately.
+
+**Limitations:** The calculation assumes one uniform RGBA surface, opaque
+foreground text, a fully opaque sRGB backdrop, and standard alpha compositing.
+It does **not** establish pixel-perfect screenshot contrast, accuracy under
+nested translucent surfaces, blend modes, shadows, non-sRGB color spaces,
+complex glyph anti-aliasing, imagery/art direction, nontext indicators, real
+hardware performance, or screen-reader acceptance. Consumer-specific visual
+and accessibility audits remain mandatory, especially over high-detail media.
+
 **Verification limits:** The Node contract tests check stylesheet invariants; CI browser smoke tests are not a complete matrix for these new classes. Before publication, verify computed styles and real contrast across light/dark, reduced transparency, forced colors, zoom and multiple compositing backdrops. This change does not assert WCAG certification or native platform integration.
