@@ -126,3 +126,9 @@ For a desktop-like app frame, pair `gc-window--app-shell` with `gc-bottom-nav--w
 GoreeCloud UI has **no required hue, optional-preset restriction or mandatory light/dark theme**. Applications may independently select a curated example accent, an arbitrary six-digit hex color, and light, dark or auto appearance. Iris is a technical fallback, not the brand mandate.
 
 Use `applyTheme(document.documentElement, { mode: "auto", customAccent: "#B13571" })` for full-page apps, or `applyTheme(appRoot, { mode: "dark", accent: "lagoon" })` on separate `.gc-app` elements to isolate palette roles. A scoped root must be explicitly configured; unconfigured apps inherit the host's palette. Verify contrast, OS appearance updates, overlays, forced colors and reduced-transparency on actual consumers. See the [scoped theme contract](docs/DESIGN_LANGUAGE.md#per-application-color-and-appearance-scope-web-alpha).
+
+## Optional frosted Cloud Lens materials
+
+The independently importable `@goreecloud/ui/glass.css` adds opt-in atmospheric materials. It does **not** require a particular color, system theme or glass treatment on every surface. Import `tokens.css` and `components.css` first; use a native element with `class="gc-glass-base"` and `data-gc-translucent="true"` to opt in. Essential reading content remains on opaque Cloud Surface.
+
+Apps embedded in one document can choose light/dark/auto appearance, accents and `transparency: "reduce"` independently using `applyTheme(appRoot, options)` on an explicitly configured `.gc-app` root. Real Chromium regression checks exercise sibling isolation, the Signal Constellation Lens, and forced-colors fallback. See [glass material guidance](docs/GLASS_SURFACES.md). Consumer and native device acceptance remain separate.

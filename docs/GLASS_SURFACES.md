@@ -174,3 +174,7 @@ hardware performance, or screen-reader acceptance. Consumer-specific visual
 and accessibility audits remain mandatory, especially over high-detail media.
 
 **Verification limits:** The Node contract tests check stylesheet invariants; CI browser smoke tests are not a complete matrix for these new classes. Before publication, verify computed styles and real contrast across light/dark, reduced transparency, forced colors, zoom and multiple compositing backdrops. This change does not assert WCAG certification or native platform integration.
+
+## Independently configured application roots
+
+When multiple products share a document, apply `applyTheme(appRoot, { mode: "dark", accent: "lagoon", transparency: "reduce" })` to each relevant `.gc-app` element. Manual `data-gc-transparency="reduce"` and `data-gc-contrast="more"` are scoped to that application subtree, not applied globally; sibling applications can choose completely different colors and materials. A configured root is required for independent appearance. Native forced colors always wins over a manually selected solid material. The shared Signal Constellation Lens follows the same scoped reduction rules. Automated Chromium fixture coverage tests this behavior; physical devices, screen readers and complete consumer visual acceptance remain open.
