@@ -941,7 +941,20 @@ try {
       'const roles=["base","elevated","overlay","solid"];'+
       'const values=roles.map(role=>{const el=document.querySelector(".gc-glass-"+role);'+
       'const style=getComputedStyle(el);return {role,background:style.backgroundColor,blur:style.backdropFilter||style.webkitBackdropFilter,border:style.borderTopStyle,rect:el.getBoundingClientRect().toJSON()};});'+
-      'return JSON.stringify({width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,values});})()'));
+      'const root=document.documentElement,rs=getComputedStyle(root);'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,values,'+
+      'theme:root.dataset.gcTheme,emulatedDark:matchMedia("(prefers-color-scheme: dark)").matches,'+
+      'canvas:rs.getPropertyValue("--gc-canvas").trim(),text:rs.getPropertyValue("--gc-text").trim()});})()'));
+    const brightness=value=>{
+      assert.match(value,/^#[0-9a-f]{6}$/i,"Unexpected semantic color format "+value);
+      return ([1,3,5].reduce((sum,i)=>sum+Number.parseInt(value.slice(i,i+2),16),0))/3;
+    };
+    assert.equal(state.theme,"auto","Glass fixture must respect the emulated appearance");
+    assert.equal(state.emulatedDark,scenario.dark,"Browser did not emulate the requested appearance");
+    assert.ok(scenario.dark
+      ? brightness(state.text)>brightness(state.canvas)
+      : brightness(state.text)<brightness(state.canvas),
+      "Glass fixture failed to apply the effective "+(scenario.dark?"dark":"light")+" semantic palette: "+JSON.stringify(state));
     assert.ok(state.scroll<=state.width+1,"Glass fixture horizontal overflow: "+JSON.stringify({scenario:scenario.name,state}));
     assert.equal(state.values.length,4,"Missing material roles");
     for(const value of state.values) {
