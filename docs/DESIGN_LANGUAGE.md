@@ -18,7 +18,9 @@ GoreeCloud UI combines ergonomic reach and content hierarchy, adaptable semantic
 | Cloud Surface | 1 | Readable cards, forms, workspaces and tonal grouping |
 | Cloud Lens | 2 | Floating navigation, menus, overlays and transient controls |
 
-Glass must be purposeful; provide solid fallback and maintain contrast. Never put essential reading content over unpredictable photographs or translucent layers.
+Frosted glass is a **signature, elegant expression of Cloud Lens**, central to the intended GoreeCloud UI experience wherever elevated navigation or transient controls benefit from contextual depth. The material uses real backdrop blur, a softly translucent semantic surface, precise outlines and restrained optical highlights; its design importance does **not** require every card, page or private reading area to become transparent. Cloud Canvas and Cloud Surface remain calm, principally opaque materials. Keep accent colors application- and user-controlled, not globally blue by default.
+
+Glass must be purposeful; provide solid fallback and maintain contrast. Never put essential reading content over unpredictable photographs or translucent layers. The alpha review branch provides reusable `@goreecloud/ui/glass.css` roles and a responsive frosted composition in the [design lab](../lab/index.html), with browser-verified reduced-transparency, increased-contrast and forced-colors alternatives. See [Frosted Cloud Lens materials](GLASS_SURFACES.md); these review-branch assets are not yet a release or cross-product adoption claim.
 
 ## Authoritative token roles and alpha values
 
