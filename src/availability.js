@@ -69,8 +69,18 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
     if (planned) blockAndAnnounce(event, planned);
   };
   root.addEventListener('click', onClick, true);
-  root.addEventListener('submit', onSubmit, true);
+  // A custom event root can reject the second registration. Never leave a
+  // capturing click listener installed when initialization has failed.
+  try {
+    root.addEventListener('submit', onSubmit, true);
+  } catch (error) {
+    root.removeEventListener('click', onClick, true);
+    throw error;
+  }
+  let disposed = false;
   return () => {
+    if (disposed) return;
+    disposed = true;
     root.removeEventListener('click', onClick, true);
     root.removeEventListener('submit', onSubmit, true);
   };
