@@ -57,3 +57,33 @@ test("Linux policy is mirrored in the native adapter contract, not a new native 
   assert.match(docs, /migration required/i);
   assert.match(native, /Qt Quick \(Qt 6\.12\.0\), Flutter Linux Desktop or Slint only/);
 });
+
+test("optional Qt Quick previews must never override legacy primary UI noncompliance", () => {
+  assert.equal(policy.previewStatusNotCompliance, true);
+  const candidates = new Map(
+    policy.consumerSnapshots.filter((row) => row.previewCandidate).map((row) => [row.repo, row])
+  );
+  assert.deepEqual([...candidates.keys()], [
+    "GoreeCloud/contacts", "GoreeCloud/app-store", "GoreeCloud/memos"
+  ]);
+  for (const [name, row] of candidates) {
+    const preview = row.previewCandidate;
+    assert.equal(row.status, "migration-required", name);
+    assert.equal(preview.framework, "qt-quick", name);
+    assert.equal(preview.qtVersion, "6.12.0", name);
+    assert.equal(preview.defaultPrimaryUiReplaced, false, name);
+    assert.equal(preview.userDeviceAcceptance, false, name);
+    assert.ok(preview.sourcePath, name);
+  }
+  const store = candidates.get("GoreeCloud/app-store").previewCandidate;
+  assert.equal(store.implementation, "merged-optional");
+  assert.equal(store.hostedQt612SmokesPassed, true);
+  assert.equal(store.verifiedPRs.length, 3);
+  assert.equal(store.nextInReview, "https://github.com/GoreeCloud/app-store/pull/10");
+  for (const repo of ["GoreeCloud/contacts", "GoreeCloud/memos"]) {
+    assert.equal(candidates.get(repo).previewCandidate.implementation, "open-draft");
+  }
+  const docs = read(policy.docs);
+  assert.match(docs, /Optional Qt Quick migration candidates/);
+  assert.match(docs, /not approved primary app migrations/i);
+});
