@@ -161,6 +161,7 @@
     "docs": "docs/LINUX_UI_FRAMEWORKS.md",
     "status": "mandatory-existing-and-future-applications",
     "nativeConsumerCompliance": "migration-required-for-verified-legacy-clients",
-    "masterDriveReconciliation": "open"
+    "masterDriveReconciliation": "verified-targeted",
+    "masterGovernanceSection": "14.2B"
   }
 }

@@ -50,8 +50,9 @@
       "versionEvidencePath": "pyproject.toml"
     }
   ],
-  "masterDriveReconciliation": "open",
+  "masterDriveReconciliation": "verified-targeted",
   "nativeSdkStatus": "not-implemented",
   "webReleaseScope": "unchanged",
-  "docs": "docs/LINUX_UI_FRAMEWORKS.md"
+  "docs": "docs/LINUX_UI_FRAMEWORKS.md",
+  "masterDriveGovernanceSection": "14.2B"
 }
