@@ -1,0 +1,180 @@
+{
+  "schemaVersion": 1,
+  "authority": "GoreeCloud Linux Application UI Framework Standard",
+  "canonicalDriveUrl": "https://drive.google.com/file/d/1L-93POcFZE12F-vYxbSc9XquQ-KWOa6f/view",
+  "effectiveDate": "2026-11-13",
+  "scope": "all-existing-and-future-linux-graphical-applications",
+  "grandfathering": false,
+  "approvedPrimaryFrameworks": [
+    {
+      "id": "qt-quick",
+      "requiredQtVersion": "6.12.0"
+    },
+    {
+      "id": "flutter-linux-desktop",
+      "requiredSdkVersion": null
+    },
+    {
+      "id": "slint",
+      "requiredSdkVersion": null
+    }
+  ],
+  "disallowedPrimaryExamples": [
+    "qt-widgets",
+    "gtk4-libadwaita",
+    "tauri-web-rendered",
+    "electron-web-rendered",
+    "gtk4",
+    "gpui"
+  ],
+  "verificationRequired": [
+    "actual-source",
+    "package",
+    "representative-linux-runtime",
+    "security-and-privacy",
+    "goreecloud-ui",
+    "accessibility",
+    "windowing"
+  ],
+  "consumerSnapshots": [
+    {
+      "repo": "GoreeCloud/browser",
+      "primaryUi": "qt-widgets",
+      "status": "migration-required",
+      "evidencePath": "goreecloud_browser/app.py",
+      "versionEvidencePath": "pyproject.toml"
+    },
+    {
+      "repo": "GoreeCloud/index",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "src/goreecloud_index/ui.py",
+      "versionEvidencePath": "pyproject.toml",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "src/goreecloud_index/qtquick_app.py",
+        "qmlSourcePath": "src/goreecloud_index/qtquick/Main.qml",
+        "implementation": "merged-optional",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "sourceAndSyntheticRuntimeEvidence": "actual Qt 6.12.0 offscreen/Wayland development preview documented by Index",
+        "verifiedPRs": [
+          "https://github.com/GoreeCloud/index/pull/46",
+          "https://github.com/GoreeCloud/index/pull/47",
+          "https://github.com/GoreeCloud/index/pull/48",
+          "https://github.com/GoreeCloud/index/pull/49",
+          "https://github.com/GoreeCloud/index/pull/50",
+          "https://github.com/GoreeCloud/index/pull/51",
+          "https://github.com/GoreeCloud/index/pull/52",
+          "https://github.com/GoreeCloud/index/pull/53",
+          "https://github.com/GoreeCloud/index/pull/54"
+        ],
+        "migrationIssue": "https://github.com/GoreeCloud/index/issues/43",
+        "featureParityVerified": false,
+        "lastVerifiedMergedCommit": "e218eca723ddaac3a12fed9c07a1e2731aecafab",
+        "compactViewportAndConsentModalSyntheticQtCI": "passed"
+      }
+    },
+    {
+      "repo": "GoreeCloud/contacts",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/goreecloud_contacts/app.py",
+      "versionEvidencePath": "linux/pyproject.toml",
+      "migrationIssue": "https://github.com/GoreeCloud/contacts/issues/25",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "linux/goreecloud_contacts/qt_preview.py",
+        "implementation": "open-draft",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "draftPR": "https://github.com/GoreeCloud/contacts/pull/27"
+      }
+    },
+    {
+      "repo": "GoreeCloud/app-store",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/goreecloud_store/__main__.py",
+      "launchEvidencePath": "linux/run.sh",
+      "migrationIssue": "https://github.com/GoreeCloud/app-store/issues/4",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "linux/goreecloud_store/qtquick_preview.py",
+        "implementation": "merged-optional",
+        "defaultPrimaryUiReplaced": false,
+        "hostedQt612SmokesPassed": true,
+        "userDeviceAcceptance": false,
+        "verifiedPRs": [
+          "https://github.com/GoreeCloud/app-store/pull/6",
+          "https://github.com/GoreeCloud/app-store/pull/7",
+          "https://github.com/GoreeCloud/app-store/pull/8",
+          "https://github.com/GoreeCloud/app-store/pull/9",
+          "https://github.com/GoreeCloud/app-store/pull/11",
+          "https://github.com/GoreeCloud/app-store/pull/12",
+          "https://github.com/GoreeCloud/app-store/pull/13",
+          "https://github.com/GoreeCloud/app-store/pull/14",
+          "https://github.com/GoreeCloud/app-store/pull/15",
+          "https://github.com/GoreeCloud/app-store/pull/16",
+          "https://github.com/GoreeCloud/app-store/pull/17"
+        ],
+        "supersededClosedPR": "https://github.com/GoreeCloud/app-store/pull/10",
+        "lastVerifiedMergedCommit": "2c35c5593caa3f84d59cf653be50044c35217b40",
+        "featureParityVerified": false,
+        "downloadCancellationSourceVerified": true,
+        "downloadCancellationSyntheticCI": "passed",
+        "realNetworkCancellationAccepted": false,
+        "privateLoopbackTransportRegression": "passed",
+        "workflowActionShaPinningVerified": true
+      }
+    },
+    {
+      "repo": "GoreeCloud/tasks",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/app.py",
+      "migrationIssue": "https://github.com/GoreeCloud/tasks/issues/28"
+    },
+    {
+      "repo": "GoreeCloud/memos",
+      "primaryUi": "gtk4",
+      "status": "migration-required",
+      "evidencePath": "clients/linux/app.py",
+      "migrationIssue": "https://github.com/GoreeCloud/memos/issues/70",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "clients/linux/qt_app.py",
+        "implementation": "open-draft",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "draftPR": "https://github.com/GoreeCloud/memos/pull/71"
+      }
+    },
+    {
+      "repo": "GoreeCloud/documents",
+      "primaryUi": "gtk4",
+      "status": "migration-required",
+      "evidencePath": "goreedocs/linux.py",
+      "migrationIssue": "https://github.com/GoreeCloud/documents/issues/29"
+    },
+    {
+      "repo": "GoreeCloud/rich-text-editor",
+      "primaryUi": "gpui",
+      "status": "migration-required",
+      "evidencePath": "src/main.rs",
+      "versionEvidencePath": "Cargo.toml",
+      "migrationIssue": "https://github.com/GoreeCloud/rich-text-editor/issues/12"
+    }
+  ],
+  "masterDriveReconciliation": "verified-targeted",
+  "nativeSdkStatus": "not-implemented",
+  "webReleaseScope": "unchanged",
+  "docs": "docs/LINUX_UI_FRAMEWORKS.md",
+  "masterDriveGovernanceSection": "14.2B",
+  "previewStatusNotCompliance": true,
+  "consumerSnapshotLastVerifiedDate": "2026-11-14"
+}
