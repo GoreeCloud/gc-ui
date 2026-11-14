@@ -9,13 +9,17 @@ A native port can generate resources with npm run export:platform (see PLATFORM_
 | Android | Jetpack Compose / Views | Real builds, semantics, gesture areas, accessibility services, lifecycle and theme |
 | iOS/iPadOS | SwiftUI / UIKit | VoiceOver, Dynamic Type, safe areas, blur energy impact, signing and device |
 | Windows | WinUI / Windows App SDK | keyboard, contrast mode, scaling, window chrome, packaged build |
-| Linux | GTK4 / Qt | GNOME/KDE theme conventions, assistive APIs, packaging and runtime |
+| Linux | **Qt Quick (Qt 6.12.0), Flutter Linux Desktop or Slint only** | Source-proven primary UI, GNOME/KDE desktop integration, accessibility, packaging, runtime and migrated-consumer acceptance |
 | macOS | SwiftUI / AppKit | window/toolbar conventions, VoiceOver, scaling and signed application |
 | TV / wearables | OS-specific native kits | remote focus, distance, device affordances and performance |
 
 Delivery sequence: (1) review/freeze token schema; (2) generate native assets from reviewed semantic roles; (3) implement native controls; (4) run visual, accessibility, behavior and battery/performance matrices; (5) integrate into real apps; (6) independently validate release artifacts.
 
 GC UI is presentation only. GoreeCloud Identity owns authorization, GoreeShield owns **privacy**, Wardveil owns **cybersecurity**, GoreeCloud Mesh owns interoperability. Do not silently read credentials, perform telemetry or assume those systems are implemented by a UI component. No independent native SDK claims should appear until real code/tests exist.
+
+## Mandatory Linux primary UI framework — existing and future applications
+
+The [founder-directed Linux UI framework standard](https://drive.google.com/file/d/1L-93POcFZE12F-vYxbSc9XquQ-KWOa6f/view) permits **only Qt Quick on Qt 6.12.0, Flutter Linux Desktop or Slint as the primary Linux application UI**, including all existing apps with no grandfathering. GTK4/libadwaita, Qt Widgets and packaged web-rendered shells are **not approved as primary Linux UIs**. Browser and Index are source-verified **migration required**, even though their existing native windowing checks passed. See the [framework status and migration evidence](LINUX_UI_FRAMEWORKS.md). Generated GTK color resources are supporting export artifacts, **not** a compliant GTK primary UI SDK. Linux desktop web-wrapper governance remains subject to explicit in-place reconciliation with the newer founder mandate; no existing app is silently exempted.
 
 ## Mandatory rounded windows and bottom navigation
 
