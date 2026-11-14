@@ -9,6 +9,36 @@ function requireElement(element, condition, message) {
 }
 
 /**
+ * Register a group of browser event listeners as one lifecycle unit.
+ * Track each attempted registration before calling addEventListener: a custom
+ * event target may install its callback and then throw. Roll back on failure
+ * and make teardown idempotent to tolerate repeated component unmounts.
+ */
+function listenTogether(registrations) {
+  const installed = [];
+  const remove = () => {
+    for (const [target, name, listener] of installed.reverse()) {
+      try { target.removeEventListener(name, listener); } catch { /* preserve primary failure */ }
+    }
+    installed.length = 0;
+  };
+  try {
+    for (const [target, name, listener] of registrations) {
+      if (typeof target?.addEventListener !== "function" ||
+          typeof target?.removeEventListener !== "function") {
+        throw new TypeError("Event target requires add/remove listener methods");
+      }
+      installed.push([target, name, listener]);
+      target.addEventListener(name, listener);
+    }
+  } catch (error) {
+    remove();
+    throw error;
+  }
+  return remove;
+}
+
+/**
  * Give native details elements single-open (optional) accordion behavior.
  * The first initially open item wins. Browser-native disclosure works even without JS.
  */
@@ -26,16 +56,12 @@ export function initAccordion(container, { single = true } = {}) {
       }
     }
   }
-  const handlers = items.map((item) => {
-    const handler = () => {
-      if (single && item.open) {
-        for (const sibling of items) if (sibling !== item) sibling.open = false;
-      }
-    };
-    item.addEventListener("toggle", handler);
-    return handler;
-  });
-  return () => items.forEach((item, i) => item.removeEventListener("toggle", handlers[i]));
+  const registrations = items.map((item) => [item, "toggle", () => {
+    if (single && item.open) {
+      for (const sibling of items) if (sibling !== item) sibling.open = false;
+    }
+  }]);
+  return listenTogether(registrations);
 }
 
 /**
@@ -90,8 +116,10 @@ export function initToggleGroup(container, { onChange } = {}) {
       select(choices[next], true);
     }
   };
-  buttons.forEach(b => {b.addEventListener("click", handleClick);b.addEventListener("keydown", handleKey);});
-  return () => buttons.forEach(b => {b.removeEventListener("click", handleClick);b.removeEventListener("keydown", handleKey);});
+  return listenTogether(buttons.flatMap(b => [
+    [b, "click", handleClick],
+    [b, "keydown", handleKey],
+  ]));
 }
 
 /** Keep output content in sync with a native range control. */
@@ -133,13 +161,13 @@ export function initDrawer(dialog, openButton, closeButton) {
     active = true;
   };
   const onClose = () => { if (dialog.open) dialog.close(); };
-  openButton.addEventListener("click", onOpen);
-  closeButton.addEventListener("click", onClose);
-  dialog.addEventListener("close", onClosed);
+  const detach = listenTogether([
+    [openButton, "click", onOpen],
+    [closeButton, "click", onClose],
+    [dialog, "close", onClosed],
+  ]);
   return () => {
-    openButton.removeEventListener("click", onOpen);
-    closeButton.removeEventListener("click", onClose);
-    dialog.removeEventListener("close", onClosed);
+    detach();
     // Do not force-close externally-owned dialogs during teardown.
     active = false;
   };
