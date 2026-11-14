@@ -20,15 +20,20 @@ test("founder Linux UI restriction applies to existing and future graphical apps
 
 test("nonconforming Linux UI must never be reported as compliant", () => {
   const allowed = new Set(policy.approvedPrimaryFrameworks.map((f) => f.id));
-  assert.equal(policy.consumerSnapshots.length, 2);
+  assert.equal(policy.consumerSnapshots.length, 4);
   for (const consumer of policy.consumerSnapshots) {
     assert.ok(!allowed.has(consumer.primaryUi), consumer.repo);
     assert.equal(consumer.status, "migration-required", consumer.repo);
     assert.ok(consumer.evidencePath);
-    assert.ok(consumer.versionEvidencePath);
+    if (consumer.repo === "GoreeCloud/app-store") {
+      assert.equal(consumer.launchEvidencePath, "linux/run.sh");
+    } else {
+      assert.ok(consumer.versionEvidencePath);
+    }
   }
   assert.deepEqual(policy.consumerSnapshots.map((x) => x.repo), [
-    "GoreeCloud/browser", "GoreeCloud/index"
+    "GoreeCloud/browser", "GoreeCloud/index",
+    "GoreeCloud/contacts", "GoreeCloud/app-store"
   ]);
   assert.ok(policy.disallowedPrimaryExamples.includes("qt-widgets"));
   assert.ok(policy.disallowedPrimaryExamples.includes("gtk4-libadwaita"));
