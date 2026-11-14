@@ -20,27 +20,26 @@ test("founder Linux UI restriction applies to existing and future graphical apps
 
 test("nonconforming Linux UI must never be reported as compliant", () => {
   const allowed = new Set(policy.approvedPrimaryFrameworks.map((f) => f.id));
-  assert.equal(policy.consumerSnapshots.length, 6);
+  assert.equal(policy.consumerSnapshots.length, 8);
   for (const consumer of policy.consumerSnapshots) {
     assert.ok(!allowed.has(consumer.primaryUi), consumer.repo);
     assert.equal(consumer.status, "migration-required", consumer.repo);
     assert.ok(consumer.evidencePath);
     if (consumer.repo === "GoreeCloud/app-store") {
       assert.equal(consumer.launchEvidencePath, "linux/run.sh");
-    } else if (consumer.repo === "GoreeCloud/tasks" || consumer.repo === "GoreeCloud/memos") {
-      assert.ok(consumer.migrationIssue);
-    } else {
-      assert.ok(consumer.versionEvidencePath);
     }
+    assert.ok(consumer.versionEvidencePath || consumer.migrationIssue, consumer.repo);
   }
   assert.deepEqual(policy.consumerSnapshots.map((x) => x.repo), [
     "GoreeCloud/browser", "GoreeCloud/index",
     "GoreeCloud/contacts", "GoreeCloud/app-store",
-    "GoreeCloud/tasks", "GoreeCloud/memos"
+    "GoreeCloud/tasks", "GoreeCloud/memos",
+    "GoreeCloud/documents", "GoreeCloud/rich-text-editor"
   ]);
   assert.ok(policy.disallowedPrimaryExamples.includes("qt-widgets"));
   assert.ok(policy.disallowedPrimaryExamples.includes("gtk4-libadwaita"));
   assert.ok(policy.disallowedPrimaryExamples.includes("gtk4"));
+  assert.ok(policy.disallowedPrimaryExamples.includes("gpui"));
 });
 
 test("Linux policy is mirrored in the native adapter contract, not a new native SDK", () => {
