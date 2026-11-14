@@ -106,8 +106,10 @@ export function bindRangeOutput(input, output, { format = (value) => value } = {
     if ("value" in output) output.value = value;
     return value;
   };
-  input.addEventListener("input", update);
+  // Render the initial value before installing a listener. If consumer
+  // formatting fails, initialization must not leave a live event callback.
   update();
+  input.addEventListener("input", update);
   return () => input.removeEventListener("input", update);
 }
 
@@ -118,7 +120,13 @@ export function initDrawer(dialog, openButton, closeButton) {
   requireElement(openButton, (el) => typeof el.addEventListener === "function", "Expected open button");
   requireElement(closeButton, (el) => typeof el.addEventListener === "function", "Expected close button");
   let active = false;
-  const onClosed = () => { active = false; openButton.focus?.(); };
+  const onClosed = () => {
+    // Only restore focus when this controller opened the drawer. External
+    // dialog owners must retain control of focus after their own close.
+    const restoreFocus = active;
+    active = false;
+    if (restoreFocus) openButton.focus?.();
+  };
   const onOpen = () => {
     if (dialog.open) return;
     dialog.showModal();
