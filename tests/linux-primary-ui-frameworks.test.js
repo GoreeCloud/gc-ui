@@ -38,8 +38,10 @@ test("Linux policy is mirrored in the native adapter contract, not a new native 
   assert.equal(authority.linuxPrimaryUiFrameworks.policy, "registry/linux-primary-ui-frameworks.v1.json");
   assert.equal(policy.nativeSdkStatus, "not-implemented");
   assert.equal(authority.nativeSdkStatus, "not-implemented");
-  assert.equal(policy.masterDriveReconciliation, "open");
-  assert.equal(authority.linuxPrimaryUiFrameworks.masterDriveReconciliation, "open");
+  assert.equal(policy.masterDriveReconciliation, "verified-targeted");
+  assert.equal(authority.linuxPrimaryUiFrameworks.masterDriveReconciliation, "verified-targeted");
+  assert.equal(policy.masterDriveGovernanceSection, "14.2B");
+  assert.equal(authority.linuxPrimaryUiFrameworks.masterGovernanceSection, "14.2B");
   const docs = read(policy.docs);
   const native = read("docs/PLATFORM_ADAPTERS.md");
   assert.match(docs, /no grandfathering|no grandfathering/i);
