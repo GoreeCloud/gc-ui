@@ -756,6 +756,33 @@ try {
       "400% multi-mode dock escaped "+mode.name+": "+JSON.stringify(results));
     const shot=await browser.screenshot(join(directory,"gc-ui-full-400-"+mode.name+".png"));
     assert.equal(shot.width,mode.width);
+    // A cropped adjacent destination in this first-frame screenshot is
+    // intentional internal horizontal scrolling, not truncated label text.
+    // Prove all destinations can actually be reached with keyboard focus
+    // in the *full* page under forced-colors and 400% root typography.
+    if(mode.name==="forced-colors") {
+      const navQA=JSON.parse(await browser.evaluate(
+        '(async()=>{const root=document.documentElement,dock=document.querySelector("#demo-bottom-nav"),'+
+        'links=[...dock.querySelectorAll("a.gc-bottom-nav__link")];'+
+        'const step=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+        'const visible=el=>{const box=el.getBoundingClientRect(),frame=dock.getBoundingClientRect();'+
+        'return box.left>=frame.left-2&&box.right<=frame.right+2};'+
+        'links[0].focus();await step();const firstVisible=visible(links[0]);'+
+        'const before=dock.scrollLeft;'+
+        'links.at(-1).focus();await step();const lastVisible=visible(links.at(-1));'+
+        'const lastFocused=document.activeElement===links.at(-1),after=dock.scrollLeft;'+
+        'links[0].focus();await step();const homeVisible=visible(links[0]);'+
+        'return JSON.stringify({count:links.length,overflow:dock.scrollWidth>dock.clientWidth,'+
+        'firstVisible,lastVisible,lastFocused,homeVisible,before,after,homeScroll:dock.scrollLeft,'+
+        'pageOverflow:root.scrollWidth>root.clientWidth+1});})()'));
+      assert.equal(navQA.count,4,"Four full-lab destinations must remain reachable");
+      assert.ok(navQA.overflow,"Forced-colors dock did not exercise internal overflow: "+JSON.stringify(navQA));
+      assert.ok(navQA.firstVisible&&navQA.lastVisible&&navQA.lastFocused&&navQA.homeVisible,
+        "Forced-colors 400% dock focus cannot reveal every destination: "+JSON.stringify(navQA));
+      assert.ok(navQA.after>navQA.before&&navQA.homeScroll<navQA.after,
+        "Forced-colors 400% dock did not scroll its own navigation: "+JSON.stringify(navQA));
+      assert.equal(navQA.pageOverflow,false,"Navigation focus widened the 400% document");
+    }
     console.log("Chromium full 400% "+mode.name+": text and layout pass");
   }
 
