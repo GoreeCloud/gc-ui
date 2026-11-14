@@ -66,10 +66,14 @@
           "https://github.com/GoreeCloud/index/pull/49",
           "https://github.com/GoreeCloud/index/pull/50",
           "https://github.com/GoreeCloud/index/pull/51",
-          "https://github.com/GoreeCloud/index/pull/52"
+          "https://github.com/GoreeCloud/index/pull/52",
+          "https://github.com/GoreeCloud/index/pull/53",
+          "https://github.com/GoreeCloud/index/pull/54"
         ],
         "migrationIssue": "https://github.com/GoreeCloud/index/issues/43",
-        "featureParityVerified": false
+        "featureParityVerified": false,
+        "lastVerifiedMergedCommit": "e218eca723ddaac3a12fed9c07a1e2731aecafab",
+        "compactViewportAndConsentModalSyntheticQtCI": "passed"
       }
     },
     {
@@ -113,14 +117,18 @@
           "https://github.com/GoreeCloud/app-store/pull/12",
           "https://github.com/GoreeCloud/app-store/pull/13",
           "https://github.com/GoreeCloud/app-store/pull/14",
-          "https://github.com/GoreeCloud/app-store/pull/15"
+          "https://github.com/GoreeCloud/app-store/pull/15",
+          "https://github.com/GoreeCloud/app-store/pull/16",
+          "https://github.com/GoreeCloud/app-store/pull/17"
         ],
         "supersededClosedPR": "https://github.com/GoreeCloud/app-store/pull/10",
-        "lastVerifiedMergedCommit": "7bf380dff34599eac7927d5feacb921624b7aa69",
+        "lastVerifiedMergedCommit": "2c35c5593caa3f84d59cf653be50044c35217b40",
         "featureParityVerified": false,
         "downloadCancellationSourceVerified": true,
         "downloadCancellationSyntheticCI": "passed",
-        "realNetworkCancellationAccepted": false
+        "realNetworkCancellationAccepted": false,
+        "privateLoopbackTransportRegression": "passed",
+        "workflowActionShaPinningVerified": true
       }
     },
     {
