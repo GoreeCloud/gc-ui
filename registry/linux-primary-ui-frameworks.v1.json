@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "authority": "GoreeCloud Linux Application UI Framework Standard",
+  "canonicalDriveUrl": "https://drive.google.com/file/d/1L-93POcFZE12F-vYxbSc9XquQ-KWOa6f/view",
+  "effectiveDate": "2026-11-13",
+  "scope": "all-existing-and-future-linux-graphical-applications",
+  "grandfathering": false,
+  "approvedPrimaryFrameworks": [
+    {
+      "id": "qt-quick",
+      "requiredQtVersion": "6.12.0"
+    },
+    {
+      "id": "flutter-linux-desktop",
+      "requiredSdkVersion": null
+    },
+    {
+      "id": "slint",
+      "requiredSdkVersion": null
+    }
+  ],
+  "disallowedPrimaryExamples": [
+    "qt-widgets",
+    "gtk4-libadwaita",
+    "tauri-web-rendered",
+    "electron-web-rendered"
+  ],
+  "verificationRequired": [
+    "actual-source",
+    "package",
+    "representative-linux-runtime",
+    "security-and-privacy",
+    "goreecloud-ui",
+    "accessibility",
+    "windowing"
+  ],
+  "consumerSnapshots": [
+    {
+      "repo": "GoreeCloud/browser",
+      "primaryUi": "qt-widgets",
+      "status": "migration-required",
+      "evidencePath": "goreecloud_browser/app.py",
+      "versionEvidencePath": "pyproject.toml"
+    },
+    {
+      "repo": "GoreeCloud/index",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "src/goreecloud_index/ui.py",
+      "versionEvidencePath": "pyproject.toml"
+    }
+  ],
+  "masterDriveReconciliation": "open",
+  "nativeSdkStatus": "not-implemented",
+  "webReleaseScope": "unchanged",
+  "docs": "docs/LINUX_UI_FRAMEWORKS.md"
+}
