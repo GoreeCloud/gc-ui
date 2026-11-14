@@ -78,8 +78,13 @@ test("optional Qt Quick previews must never override legacy primary UI noncompli
   const store = candidates.get("GoreeCloud/app-store").previewCandidate;
   assert.equal(store.implementation, "merged-optional");
   assert.equal(store.hostedQt612SmokesPassed, true);
-  assert.equal(store.verifiedPRs.length, 3);
-  assert.equal(store.nextInReview, "https://github.com/GoreeCloud/app-store/pull/10");
+  assert.equal(store.verifiedPRs.length, 6);
+  assert.ok(store.verifiedPRs.includes("https://github.com/GoreeCloud/app-store/pull/11"));
+  assert.ok(store.verifiedPRs.includes("https://github.com/GoreeCloud/app-store/pull/12"));
+  assert.equal(store.supersededClosedPR, "https://github.com/GoreeCloud/app-store/pull/10");
+  assert.equal(store.lastVerifiedMergedCommit, "8ba7f2ff72074cfe659d7c4540692b8c7807021b");
+  assert.equal(store.featureParityVerified, false);
+  assert.equal(policy.consumerSnapshotLastVerifiedDate, "2026-11-14");
   for (const repo of ["GoreeCloud/contacts", "GoreeCloud/memos"]) {
     assert.equal(candidates.get(repo).previewCandidate.implementation, "open-draft");
   }
