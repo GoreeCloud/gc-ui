@@ -68,20 +68,30 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
       AVAILABLE_STATES.has(element.getAttribute('data-gc-availability')));
     if (planned) blockAndAnnounce(event, planned);
   };
-  root.addEventListener('click', onClick, true);
-  // A custom event root can reject the second registration. Never leave a
-  // capturing click listener installed when initialization has failed.
+  // Register as a transaction. A custom event target may attach a listener
+  // and *then* throw, so record every attempt before adding it. Cleanup must
+  // try both listeners even when one removal fails.
+  const attempted = [];
+  const detach = () => {
+    for (const [name, handler] of attempted) {
+      try { root.removeEventListener(name, handler, true); }
+      catch { /* best effort for nonstandard event targets */ }
+    }
+    attempted.length = 0;
+  };
   try {
-    root.addEventListener('submit', onSubmit, true);
+    for (const [name, handler] of [['click', onClick], ['submit', onSubmit]]) {
+      attempted.push([name, handler]);
+      root.addEventListener(name, handler, true);
+    }
   } catch (error) {
-    root.removeEventListener('click', onClick, true);
+    detach();
     throw error;
   }
   let disposed = false;
   return () => {
     if (disposed) return;
     disposed = true;
-    root.removeEventListener('click', onClick, true);
-    root.removeEventListener('submit', onSubmit, true);
+    detach();
   };
 }
