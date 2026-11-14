@@ -110,11 +110,17 @@
           "https://github.com/GoreeCloud/app-store/pull/8",
           "https://github.com/GoreeCloud/app-store/pull/9",
           "https://github.com/GoreeCloud/app-store/pull/11",
-          "https://github.com/GoreeCloud/app-store/pull/12"
+          "https://github.com/GoreeCloud/app-store/pull/12",
+          "https://github.com/GoreeCloud/app-store/pull/13",
+          "https://github.com/GoreeCloud/app-store/pull/14",
+          "https://github.com/GoreeCloud/app-store/pull/15"
         ],
         "supersededClosedPR": "https://github.com/GoreeCloud/app-store/pull/10",
-        "lastVerifiedMergedCommit": "8ba7f2ff72074cfe659d7c4540692b8c7807021b",
-        "featureParityVerified": false
+        "lastVerifiedMergedCommit": "7bf380dff34599eac7927d5feacb921624b7aa69",
+        "featureParityVerified": false,
+        "downloadCancellationSourceVerified": true,
+        "downloadCancellationSyntheticCI": "passed",
+        "realNetworkCancellationAccepted": false
       }
     },
     {
