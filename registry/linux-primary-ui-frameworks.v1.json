@@ -57,7 +57,16 @@
       "status": "migration-required",
       "evidencePath": "linux/goreecloud_contacts/app.py",
       "versionEvidencePath": "linux/pyproject.toml",
-      "migrationIssue": "https://github.com/GoreeCloud/contacts/issues/25"
+      "migrationIssue": "https://github.com/GoreeCloud/contacts/issues/25",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "linux/goreecloud_contacts/qt_preview.py",
+        "implementation": "open-draft",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "draftPR": "https://github.com/GoreeCloud/contacts/pull/27"
+      }
     },
     {
       "repo": "GoreeCloud/app-store",
@@ -65,7 +74,22 @@
       "status": "migration-required",
       "evidencePath": "linux/goreecloud_store/__main__.py",
       "launchEvidencePath": "linux/run.sh",
-      "migrationIssue": "https://github.com/GoreeCloud/app-store/issues/4"
+      "migrationIssue": "https://github.com/GoreeCloud/app-store/issues/4",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "linux/goreecloud_store/qtquick_preview.py",
+        "implementation": "merged-optional",
+        "defaultPrimaryUiReplaced": false,
+        "hostedQt612SmokesPassed": true,
+        "userDeviceAcceptance": false,
+        "verifiedPRs": [
+          "https://github.com/GoreeCloud/app-store/pull/6",
+          "https://github.com/GoreeCloud/app-store/pull/7",
+          "https://github.com/GoreeCloud/app-store/pull/8"
+        ],
+        "nextInReview": "https://github.com/GoreeCloud/app-store/pull/10"
+      }
     },
     {
       "repo": "GoreeCloud/tasks",
@@ -79,7 +103,16 @@
       "primaryUi": "gtk4",
       "status": "migration-required",
       "evidencePath": "clients/linux/app.py",
-      "migrationIssue": "https://github.com/GoreeCloud/memos/issues/70"
+      "migrationIssue": "https://github.com/GoreeCloud/memos/issues/70",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "clients/linux/qt_app.py",
+        "implementation": "open-draft",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "draftPR": "https://github.com/GoreeCloud/memos/pull/71"
+      }
     },
     {
       "repo": "GoreeCloud/documents",
@@ -101,5 +134,6 @@
   "nativeSdkStatus": "not-implemented",
   "webReleaseScope": "unchanged",
   "docs": "docs/LINUX_UI_FRAMEWORKS.md",
-  "masterDriveGovernanceSection": "14.2B"
+  "masterDriveGovernanceSection": "14.2B",
+  "previewStatusNotCompliance": true
 }

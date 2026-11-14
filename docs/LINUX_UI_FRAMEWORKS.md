@@ -27,6 +27,18 @@ The machine-readable governance mirror in [`registry/linux-primary-ui-frameworks
 | [Documents Linux client](https://github.com/GoreeCloud/documents) | `goreedocs/linux.py` imports `gi.repository.Gtk` and declares `DocumentsWindow(Gtk.ApplicationWindow)`; existing GTK4 native API editor and experimental Debian package | GTK4 | **Migration required** | [Issue #29](https://github.com/GoreeCloud/documents/issues/29): preserve owner API token boundaries, local authenticated Documents client, editor, consent, pagination and package rollback under an approved Linux UI |
 | [Rich Text Editor Linux candidate](https://github.com/GoreeCloud/rich-text-editor) | `Cargo.toml` depends on `gpui = "0.2.2"` and describes Linux; `src/main.rs` imports `gpui::*`; Linux support is experimental in the attributed Quiet.md import | Rust GPUI | **Migration required for Linux GUI** | [Issue #12](https://github.com/GoreeCloud/rich-text-editor/issues/12): evaluate approved Slint/Qt Quick/Flutter UI after reviewing imported third-party licensing, dependency security, local document formats and platform viability; no compliant Linux release presumed |
 
+### Optional Qt Quick migration candidates — not approved primary app migrations
+
+The [versioned source inventory](../registry/linux-primary-ui-frameworks.v1.json) separately records *optional/draft* implementation progress. Candidate code does not change the current **noncompliant** Linux primary window or validate full feature parity.
+
+| Linux client | Source-backed candidate | Verified state | Next acceptance |
+| --- | --- | --- | --- |
+| [App Store](https://github.com/GoreeCloud/app-store) | `linux/goreecloud_store/qtquick_preview.py` and genuine Qt Quick `ApplicationWindow` | Opt-in development source merged in [PR #6](https://github.com/GoreeCloud/app-store/pull/6) and offline catalog in [PR #7](https://github.com/GoreeCloud/app-store/pull/7); [PR #8](https://github.com/GoreeCloud/app-store/pull/8) made legacy download saves no-clobber. Actual **Qt 6.12.0** offscreen and dual-X-screen CI passed on those merged increments; [PR #10](https://github.com/GoreeCloud/app-store/pull/10) adds consent-first save **under review** | Fully native primary UI feature parity, publisher verification, package/rollback, real GNOME/KDE/Wayland/Orca and user-hardware evidence |
+| [Contacts Linux](https://github.com/GoreeCloud/contacts) | `linux/goreecloud_contacts/qt_preview.py` | [Draft PR #27](https://github.com/GoreeCloud/contacts/pull/27): read-only Qt Quick preview, not merged or delivered; current GTK4 UI remains default | Edit/delete/import/export, permissions and local SQLite parity, physical Linux UX, signed packages |
+| [Memos Linux](https://github.com/GoreeCloud/memos) | `clients/linux/qt_app.py` | [Draft PR #71](https://github.com/GoreeCloud/memos/pull/71): Qt Quick API/memo preview, not merged or delivered; current GTK4 UI remains default | Service/auth, create/update/delete, network/privacy, layout, full runtime and packaging parity |
+
+Do not promote a repository to `compliant` because an optional UI can render in CI or a draft passes its isolated checks. The existing primary entrypoint, approved-framework packaging and real runtime/feature acceptance are the gates.
+
 These are **verified current source observations** rather than completed migrations, release or runtime acceptance. Existing legacy consumer windowing, privacy and security tests remain valuable as migration regression baselines; a passing legacy test must **never** be reported as framework compliance.
 
 ## Required migration gates
