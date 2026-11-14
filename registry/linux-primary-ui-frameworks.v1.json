@@ -24,7 +24,8 @@
     "gtk4-libadwaita",
     "tauri-web-rendered",
     "electron-web-rendered",
-    "gtk4"
+    "gtk4",
+    "gpui"
   ],
   "verificationRequired": [
     "actual-source",
@@ -79,6 +80,21 @@
       "status": "migration-required",
       "evidencePath": "clients/linux/app.py",
       "migrationIssue": "https://github.com/GoreeCloud/memos/issues/70"
+    },
+    {
+      "repo": "GoreeCloud/documents",
+      "primaryUi": "gtk4",
+      "status": "migration-required",
+      "evidencePath": "goreedocs/linux.py",
+      "migrationIssue": "https://github.com/GoreeCloud/documents/issues/29"
+    },
+    {
+      "repo": "GoreeCloud/rich-text-editor",
+      "primaryUi": "gpui",
+      "status": "migration-required",
+      "evidencePath": "src/main.rs",
+      "versionEvidencePath": "Cargo.toml",
+      "migrationIssue": "https://github.com/GoreeCloud/rich-text-editor/issues/12"
     }
   ],
   "masterDriveReconciliation": "verified-targeted",
