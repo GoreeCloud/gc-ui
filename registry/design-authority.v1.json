@@ -155,5 +155,12 @@
     "docs": "docs/PLATFORM_ADAPTERS.md",
     "nativeSdkStatus": "not-implemented",
     "webStableScope": "not-applicable"
+  },
+  "linuxPrimaryUiFrameworks": {
+    "policy": "registry/linux-primary-ui-frameworks.v1.json",
+    "docs": "docs/LINUX_UI_FRAMEWORKS.md",
+    "status": "mandatory-existing-and-future-applications",
+    "nativeConsumerCompliance": "migration-required-for-verified-legacy-clients",
+    "masterDriveReconciliation": "open"
   }
 }
