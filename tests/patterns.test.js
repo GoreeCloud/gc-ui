@@ -105,3 +105,41 @@ test("interaction styles, native semantics and lab examples stay in sync",()=>{
   for(const fn of ["initAccordion(","initDrawer(","bindRangeOutput(","initToggleGroup(","createThemeController("])assert.ok(js.includes(fn),fn);
   assert.doesNotMatch(lab,/\bonclick\s*=/i);
 });
+
+test("failed initial range formatter does not retain event listeners or mutate output", () => {
+  let additions = 0;
+  const callbacks = new Set();
+  const input = {
+    type: "range", value: "17",
+    addEventListener(_event, callback) { additions++; callbacks.add(callback); },
+    removeEventListener(_event, callback) { callbacks.delete(callback); },
+  };
+  const output = { textContent: "original", value: "original" };
+  assert.throws(() => bindRangeOutput(input, output, {
+    format() { throw new Error("formatter failed"); },
+  }), /formatter failed/);
+  assert.equal(additions, 0, "initial render failure must not install a handler");
+  assert.equal(callbacks.size, 0);
+  assert.equal(output.textContent, "original");
+  assert.equal(output.value, "original");
+  const dispose = bindRangeOutput(input, output, { format: value => "value:" + value });
+  assert.equal(output.textContent, "value:17");
+  assert.equal(callbacks.size, 1);
+  dispose();
+  assert.equal(callbacks.size, 0);
+});
+
+test("drawer does not steal focus when an externally managed dialog closes", () => {
+  const dialog = node(), open = node(), close = node();
+  dialog.showModal = function () { this.open = true; };
+  dialog.close = function () { this.open = false; this.emit("close"); };
+  const dispose = initDrawer(dialog, open, close);
+  dialog.open = true; // another owner opened the dialog
+  dialog.close();
+  assert.notEqual(open.focused, true, "external close must not redirect focus");
+  open.emit("click");
+  assert.equal(dialog.open, true);
+  close.emit("click");
+  assert.equal(open.focused, true, "controller-owned close restores focus");
+  dispose();
+});
