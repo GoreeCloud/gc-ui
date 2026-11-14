@@ -143,3 +143,50 @@ test("drawer does not steal focus when an externally managed dialog closes", () 
   assert.equal(open.focused, true, "controller-owned close restores focus");
   dispose();
 });
+
+test("accordion initialization unregisters partially installed listeners on failure", () => {
+  const first = node(), second = node();
+  first.open = true;
+  const add = second.addEventListener.bind(second);
+  second.addEventListener = (...args) => {
+    add(...args);
+    throw new Error("injected registration failure");
+  };
+  assert.throws(() => initAccordion({querySelectorAll: () => [first, second]}), /registration failure/);
+  second.open = true;
+  first.emit("toggle");
+  assert.equal(second.open, true, "the first listener was rolled back");
+});
+
+test("toggle-group initialization rolls back click when keydown attachment fails", () => {
+  const a = node({"aria-pressed": "true"}), b = node({"aria-pressed": "false"});
+  const add = a.addEventListener.bind(a);
+  a.addEventListener = (name, fn) => {
+    add(name, fn);
+    if (name === "keydown") throw new Error("injected key listener failure");
+  };
+  const toolbar = node();
+  toolbar.querySelectorAll = () => [a, b];
+  assert.throws(() => initToggleGroup(toolbar), /key listener failure/);
+  b.emit("click");
+  assert.equal(a.getAttribute("aria-pressed"), "true");
+  a.emit("keydown", {key: "ArrowRight"});
+  assert.equal(b.getAttribute("aria-pressed"), "false");
+});
+
+test("drawer initialization rolls back opener and closer listeners on failure", () => {
+  const dialog = node(), open = node(), close = node();
+  dialog.showModal = function () { this.open = true; };
+  dialog.close = function () { this.open = false; this.emit("close"); };
+  const add = dialog.addEventListener.bind(dialog);
+  dialog.addEventListener = (...args) => {
+    add(...args);
+    throw new Error("dialog listener failure");
+  };
+  assert.throws(() => initDrawer(dialog, open, close), /dialog listener failure/);
+  open.emit("click");
+  assert.equal(dialog.open, false, "failed controller must not open dialog");
+  dialog.open = true;
+  close.emit("click");
+  assert.equal(dialog.open, true, "failed controller must not close dialog");
+});
