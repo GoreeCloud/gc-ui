@@ -48,6 +48,22 @@
       "status": "migration-required",
       "evidencePath": "src/goreecloud_index/ui.py",
       "versionEvidencePath": "pyproject.toml"
+    },
+    {
+      "repo": "GoreeCloud/contacts",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/goreecloud_contacts/app.py",
+      "versionEvidencePath": "linux/pyproject.toml",
+      "migrationIssue": "https://github.com/GoreeCloud/contacts/issues/25"
+    },
+    {
+      "repo": "GoreeCloud/app-store",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/goreecloud_store/__main__.py",
+      "launchEvidencePath": "linux/run.sh",
+      "migrationIssue": "https://github.com/GoreeCloud/app-store/issues/4"
     }
   ],
   "masterDriveReconciliation": "verified-targeted",
