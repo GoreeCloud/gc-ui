@@ -64,7 +64,7 @@ test("optional Qt Quick previews must never override legacy primary UI noncompli
     policy.consumerSnapshots.filter((row) => row.previewCandidate).map((row) => [row.repo, row])
   );
   assert.deepEqual([...candidates.keys()], [
-    "GoreeCloud/contacts", "GoreeCloud/app-store", "GoreeCloud/memos"
+    "GoreeCloud/index", "GoreeCloud/contacts", "GoreeCloud/app-store", "GoreeCloud/memos"
   ]);
   for (const [name, row] of candidates) {
     const preview = row.previewCandidate;
@@ -75,6 +75,13 @@ test("optional Qt Quick previews must never override legacy primary UI noncompli
     assert.equal(preview.userDeviceAcceptance, false, name);
     assert.ok(preview.sourcePath, name);
   }
+  const index = candidates.get("GoreeCloud/index").previewCandidate;
+  assert.equal(index.implementation, "merged-optional");
+  assert.equal(index.verifiedPRs.length, 7);
+  assert.ok(index.verifiedPRs.includes("https://github.com/GoreeCloud/index/pull/52"));
+  assert.equal(index.featureParityVerified, false);
+  assert.equal(index.qmlSourcePath, "src/goreecloud_index/qtquick/Main.qml");
+  assert.equal(index.migrationIssue, "https://github.com/GoreeCloud/index/issues/43");
   const store = candidates.get("GoreeCloud/app-store").previewCandidate;
   assert.equal(store.implementation, "merged-optional");
   assert.equal(store.hostedQt612SmokesPassed, true);

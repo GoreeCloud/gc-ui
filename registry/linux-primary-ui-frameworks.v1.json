@@ -49,7 +49,28 @@
       "primaryUi": "gtk4-libadwaita",
       "status": "migration-required",
       "evidencePath": "src/goreecloud_index/ui.py",
-      "versionEvidencePath": "pyproject.toml"
+      "versionEvidencePath": "pyproject.toml",
+      "previewCandidate": {
+        "framework": "qt-quick",
+        "qtVersion": "6.12.0",
+        "sourcePath": "src/goreecloud_index/qtquick_app.py",
+        "qmlSourcePath": "src/goreecloud_index/qtquick/Main.qml",
+        "implementation": "merged-optional",
+        "defaultPrimaryUiReplaced": false,
+        "userDeviceAcceptance": false,
+        "sourceAndSyntheticRuntimeEvidence": "actual Qt 6.12.0 offscreen/Wayland development preview documented by Index",
+        "verifiedPRs": [
+          "https://github.com/GoreeCloud/index/pull/46",
+          "https://github.com/GoreeCloud/index/pull/47",
+          "https://github.com/GoreeCloud/index/pull/48",
+          "https://github.com/GoreeCloud/index/pull/49",
+          "https://github.com/GoreeCloud/index/pull/50",
+          "https://github.com/GoreeCloud/index/pull/51",
+          "https://github.com/GoreeCloud/index/pull/52"
+        ],
+        "migrationIssue": "https://github.com/GoreeCloud/index/issues/43",
+        "featureParityVerified": false
+      }
     },
     {
       "repo": "GoreeCloud/contacts",
