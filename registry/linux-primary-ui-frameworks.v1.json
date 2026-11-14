@@ -23,7 +23,8 @@
     "qt-widgets",
     "gtk4-libadwaita",
     "tauri-web-rendered",
-    "electron-web-rendered"
+    "electron-web-rendered",
+    "gtk4"
   ],
   "verificationRequired": [
     "actual-source",
@@ -64,6 +65,20 @@
       "evidencePath": "linux/goreecloud_store/__main__.py",
       "launchEvidencePath": "linux/run.sh",
       "migrationIssue": "https://github.com/GoreeCloud/app-store/issues/4"
+    },
+    {
+      "repo": "GoreeCloud/tasks",
+      "primaryUi": "gtk4-libadwaita",
+      "status": "migration-required",
+      "evidencePath": "linux/app.py",
+      "migrationIssue": "https://github.com/GoreeCloud/tasks/issues/28"
+    },
+    {
+      "repo": "GoreeCloud/memos",
+      "primaryUi": "gtk4",
+      "status": "migration-required",
+      "evidencePath": "clients/linux/app.py",
+      "migrationIssue": "https://github.com/GoreeCloud/memos/issues/70"
     }
   ],
   "masterDriveReconciliation": "verified-targeted",
