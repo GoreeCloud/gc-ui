@@ -163,5 +163,40 @@
     "nativeConsumerCompliance": "migration-required-for-verified-legacy-clients",
     "masterDriveReconciliation": "verified-targeted",
     "masterGovernanceSection": "14.2B"
+  },
+  "windowCommandNodes": {
+    "officialName": "GoreeCloud UI Window Command Nodes",
+    "abbreviation": "WCN",
+    "shortName": "Command Nodes",
+    "status": "founder-approved-design-requirement-not-yet-implemented",
+    "approvedOn": "2026-11-14",
+    "titlebarAlignment": "physical-right",
+    "visualTreatment": "flat",
+    "visibleGlyphs": false,
+    "actionSymbols": false,
+    "controls": [
+      {
+        "name": "Crimson Node",
+        "action": "Dismiss",
+        "windowOperation": "close"
+      },
+      {
+        "name": "Amber Node",
+        "action": "Dock",
+        "windowOperation": "minimize-to-workspace-dock"
+      },
+      {
+        "name": "Teal Node",
+        "action": "Expand",
+        "windowOperation": "maximize-or-restore"
+      }
+    ],
+    "colorHexValues": "not-specified-by-founder",
+    "shapeGeometry": "not-specified-by-founder",
+    "nativeWindowActionsRequired": true,
+    "accessibleNamesRequired": true,
+    "appAccentIndependent": true,
+    "docs": "docs/WINDOWS_AND_NAVIGATION.md",
+    "adoptionStatus": "unverified"
   }
 }

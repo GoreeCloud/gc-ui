@@ -69,6 +69,10 @@ The JSON manifest follows a GC UI alpha-specific structure rather than claiming 
 
 GoreeCloud UI must remain distinct, polished and modern across supported apps, dashboards and future operating systems. Generic unfinished defaults are unacceptable. Premium means original expressive hierarchy, balanced space, refined controls and purposeful depth—not indiscriminate blur or decoration. Use semantic tokens and three material roles, maintain opaque legibility and accessible modes, and require real visual acceptance. See [Premium visual quality](VISUAL_QUALITY.md).
 
+## Signature Window Command Nodes (WCN)
+
+**Founder directive (November 14, 2026):** I named GoreeCloud's distinctive titlebar controls **Window Command Nodes (WCN)**, or **Command Nodes**. The three right-aligned, flat, **glyph-free** faces are **Crimson — Dismiss (close)**, **Amber — Dock (minimize into the workspace dock)**, and **Teal — Expand (maximize or restore)**. This named functional palette is not a mandatory global application accent. Exact numeric colors, geometric silhouettes and dimensions are **not yet approved**; do not invent them. Real native actions, accessibility and platform compatibility remain required. For the full contract and documented-versus-implemented status, see [Window Command Nodes in the windowing specification](WINDOWS_AND_NAVIGATION.md#window-command-nodes-wcn--official-goreecloud-ui-window-controls).
+
 ## Rounded application windows (founder requirement)
 
 Every GoreeCloud application window, including compact, modal and maximized frames, has rounded corners. Web gc-window and overlay primitives use the canonical 36px XL or compact 26px LG radii. See WINDOWS_AND_NAVIGATION.md. Native OS chrome requires independently verified platform adapters; no native implementation is claimed.
