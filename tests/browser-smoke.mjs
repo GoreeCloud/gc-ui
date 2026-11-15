@@ -1096,12 +1096,12 @@ try {
       '(()=>{const root=document.documentElement,section=document.querySelector("#premium");'+
       'const surface=section.querySelector(".gc-showcase"),tile=section.querySelector(".gc-feature-tile");const action=section.querySelector(".gc-showcase__actions a.gc-button");const probe=document.createElement("span");probe.style.color="var(--gc-on-brand)";section.append(probe);const expectedAction=getComputedStyle(probe).color;probe.remove();'+
       'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,'+
-      'gradient:getComputedStyle(surface,"::before").backgroundImage.includes("gradient"),'+
+      'decorativeOverlay:getComputedStyle(surface,"::before").display,'+
       'radius:getComputedStyle(surface).borderTopLeftRadius,'+
       'anchorColor:getComputedStyle(action).color,expectedAction:expectedAction,'+
       'tile:getComputedStyle(tile).backgroundColor});})()'));
     assert.ok(result.scroll<=result.width+1,"Premium lab page overflow: "+JSON.stringify(result));
-    assert.equal(result.gradient,true,"Signature surface gradient missing");
+    assert.equal(result.decorativeOverlay,"none","Signature material study reintroduced a decorative overlay");
     assert.equal(result.anchorColor,result.expectedAction,"Primary anchor button text is not readable on its brand fill");
     assert.ok(parseFloat(result.radius)>=18,"Signature surface lost its premium shape");
     await browser.evaluate('document.querySelector("#premium").scrollIntoView({behavior:"instant",block:"start"})');
@@ -1110,6 +1110,24 @@ try {
     assert.equal(shot.width,width);
     assert.equal(shot.height,height);
     console.log("Chromium signature composition "+filename+": material, bounds and capture passed");
+    // The Lens controls must be genuine in-page navigation, not inert decoration.
+    const lens=JSON.parse(await browser.evaluate(
+      '(()=>{const nav=document.querySelector("#premium .gc-studio-lens-dock");'+
+      'const links=[...nav.querySelectorAll("a")];'+
+      'const hrefs=links.map(a=>a.getAttribute("href"));'+
+      'const sized=links.every(a=>a.getBoundingClientRect().width>=30&&a.getBoundingClientRect().height>=30);'+
+      'links[1].focus();const focused=document.activeElement===links[1];'+
+      'links[1].click();return JSON.stringify({name:nav.getAttribute("aria-label"),hrefs,sized,focused,'+
+      'hash:location.hash,destination:!!document.querySelector("#forms"),'+
+      'width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth});})()'));
+    assert.equal(lens.name,"Cloud Lens example navigation","Lens navigation lost its accessible purpose");
+    assert.deepEqual(lens.hrefs,["#patterns","#forms"],"Lens link destinations changed");
+    assert.ok(lens.sized,"Lens example targets have unusable dimensions");
+    assert.ok(lens.focused,"Lens destination cannot receive keyboard focus");
+    assert.equal(lens.hash,"#forms","Lens link did not navigate to its actual section");
+    assert.equal(lens.destination,true,"Lens destination is absent");
+    assert.ok(lens.scroll<=lens.width+1,"Lens link activation introduced page overflow");
+    console.log("Chromium material Lens actions "+filename+": focus, real hash navigation and bounds passed");
   }
 
   // Signal Constellation is a native-first pattern, not live service telemetry.
