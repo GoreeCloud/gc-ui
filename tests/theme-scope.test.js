@@ -17,6 +17,10 @@ test("generated palettes isolate explicitly configured application roots",()=>{
   ]) assert.ok(css.includes(selector),selector);
   assert.ok(generator.includes(".gc-app[data-gc-theme]"),"Generator must retain app scoping");
   assert.ok(css.includes("@media (prefers-reduced-motion: reduce) { :root, .gc-app[data-gc-theme] {"),"Scoped apps must honor reduced motion");
+  // An explicit dark/auto root or OS-dark unconfigured root defines Lens at higher
+  // specificity than a bare :root; the reduction must tie those selectors and win.
+  assert.ok(css.includes("@media (prefers-reduced-transparency: reduce) { :root, :root:not([data-gc-theme]), :root[data-gc-theme], .gc-app[data-gc-theme] {"));
+  assert.ok(generator.includes(":root:not([data-gc-theme]), :root[data-gc-theme]"), "Do not hand-edit generated CSS only");
   assert.ok(!css.includes("\n.gc-app {"),"An unconfigured app must inherit the host's palette");
 });
 

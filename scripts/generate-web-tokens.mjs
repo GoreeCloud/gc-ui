@@ -33,7 +33,7 @@ function renderCss(t){
  css+="}\n";
  css+=':root[data-gc-contrast="more"], .gc-app[data-gc-theme][data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }\n';
  css+='@media (prefers-contrast: more) { :root:not([data-gc-contrast="normal"]), .gc-app[data-gc-theme]:not([data-gc-contrast="normal"]) { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); } }\n';
- css+='@media (prefers-reduced-transparency: reduce) { :root, .gc-app[data-gc-theme] { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }\n';
+ css+='@media (prefers-reduced-transparency: reduce) { :root, :root:not([data-gc-theme]), :root[data-gc-theme], .gc-app[data-gc-theme] { --gc-lens-fill: var(--gc-lens-solid); --gc-blur-lens: 0px; } }\n';
  css+='@media (prefers-reduced-motion: reduce) { :root, .gc-app[data-gc-theme] { --gc-motion-fast: 0ms; --gc-motion-base: 0ms; --gc-motion-slow: 0ms; } }\n';
  return css;
 }
