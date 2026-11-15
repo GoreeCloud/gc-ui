@@ -704,6 +704,12 @@ try {
       width===1440?"gc-ui-studio-preferences-foundations-desktop.png":
       width===390?"gc-ui-studio-preferences-foundations-mobile.png":"gc-ui-studio-preferences-foundations-compact.png"));
     assert.equal(shot.width,width);
+    await browser.evaluate('document.querySelector("#foundations").scrollIntoView({block:"start",behavior:"instant"})');
+    await delay(90);
+    const foundationsShot=await browser.screenshot(join(directory,
+      "gc-ui-studio-foundations-"+width+".png"));
+    assert.equal(foundationsShot.width,width,
+      "Foundation composition screenshot must match actual responsive viewport");
   }
   console.log("Chromium Studio preferences and foundations: native labels, reversible themes, reading layout and screenshots passed");
 
