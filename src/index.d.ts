@@ -1,3 +1,5 @@
+export type { WindowCommandAction, WindowCommandContext, WindowCommandNodesController } from "./window-command-nodes.js";
+export { initWindowCommandNodes } from "./window-command-nodes.js";
 export type GcMode = "auto" | "light" | "dark";
 export type GcAccent = "iris" | "lagoon" | "ember" | "moss";
 export type GcContrast = "normal" | "more";

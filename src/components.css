@@ -674,6 +674,49 @@
 .gc-window__controls > button:hover:not(:disabled) {
   background:var(--gc-brand-container); color:var(--gc-on-brand-container);
 }
+/* Signature WCN: the 18px faces are FLAT, CIRCULAR and completely glyph-free.
+   Accessible circular 44px hit targets are physically right-aligned in both LTR/RTL.
+   The named palette is independent of the application's general accent. */
+.gc-window__command-nodes {
+  display:flex; align-items:center; justify-content:flex-end; gap:0;
+  margin-left:auto; margin-right:0; direction:ltr; flex:0 0 auto;
+}
+.gc-window__command-nodes > button[data-gc-window-command] {
+  appearance:none; position:relative; display:grid; place-items:center;
+  inline-size:var(--gc-touch-min); block-size:var(--gc-touch-min);
+  min-inline-size:var(--gc-touch-min); padding:0; margin:0;
+  border:0; border-radius:50%; box-shadow:none; background:transparent;
+  color:inherit; font-size:0; line-height:0; cursor:pointer;
+}
+.gc-window__command-nodes > button[data-gc-window-command]::before {
+  content:""; display:block; inline-size:18px; block-size:18px;
+  border-radius:50%; border:0; box-shadow:none;
+  background:ButtonText;
+}
+.gc-window__command-nodes > button[data-gc-window-command="dismiss"]::before { background:var(--gc-wcn-crimson); }
+.gc-window__command-nodes > button[data-gc-window-command="dock"]::before { background:var(--gc-wcn-amber); }
+.gc-window__command-nodes > button[data-gc-window-command="expand"]::before { background:var(--gc-wcn-teal); }
+.gc-window__command-nodes > button[data-gc-window-command]:focus-visible {
+  outline:3px solid var(--gc-focus-ring); outline-offset:-4px;
+}
+.gc-window__command-nodes > button[data-gc-window-command]:hover:not(:disabled)::before {
+  filter:brightness(1.08);
+}
+.gc-window__command-nodes > button[data-gc-window-command]:disabled::before,
+.gc-window__command-nodes[aria-busy="true"] > button[data-gc-window-command]::before {
+  opacity:.55;
+}
+@media (forced-colors:active) {
+  .gc-window__command-nodes > button[data-gc-window-command] {
+    forced-color-adjust:auto; border:1px solid ButtonText;
+  }
+  .gc-window__command-nodes > button[data-gc-window-command]::before {
+    background:ButtonText !important; border:1px solid Canvas;
+  }
+  .gc-window__command-nodes > button[data-gc-window-command]:focus-visible {
+    outline-color:Highlight;
+  }
+}
 .gc-window__body { flex:1; min-block-size:0; min-inline-size:0; padding:var(--gc-space-6); }
 .gc-window__statusbar {
   display:flex; gap:var(--gc-space-2); flex-wrap:wrap; padding:var(--gc-space-3) var(--gc-space-5);
