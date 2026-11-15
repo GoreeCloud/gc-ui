@@ -7,6 +7,9 @@ Describe why the visual, semantic or interaction change is necessary and which t
 - [ ] The change follows current GoreeCloud UI authority and does not misrepresent unimplemented consumer migrations.
 - [ ] Canvas / Surface / Lens hierarchy, readable typography and purposeful depth are preserved.
 - [ ] The interface is original, visually distinctive and premium (not generic, basic or unfinished), with representative screenshots for design review; opaque text and reduced-effects alternatives are preserved.
+- [ ] I checked the **entire affected shell and workflow** (sidebar/rail, headers, main content, secondary surfaces, empty/error/offline states), not only the hero or the changed component.
+- [ ] I checked for **AI-slop outcomes**: repetitive templates, arbitrary gradients/glow, purposeless glass, mismatched icons/type, under-designed navigation and copied composition without workflow rationale. Findings and corrections are documented.
+- [ ] Actual rendered evidence, screen sizes, themes, focus/keyboard behavior and reduced-effects fallbacks are recorded, with unresolved visual limitations stated; code tests alone do not certify aesthetic acceptance.
 - [ ] Iris, Lagoon, Ember and Moss (light and dark) were reviewed as appropriate.
 - [ ] Keyboard focus, native semantics, error/disabled/loading states and touch ergonomics considered.
 - [ ] Narrow/wide layouts, zoom, RTL, reduced motion, forced color and reduced transparency reviewed.
