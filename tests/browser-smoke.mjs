@@ -661,6 +661,67 @@ try {
     console.log("Chromium workflow compositions "+width+"px: full-width table/tree, planned form and no overflow passed");
   }
 
+  // Screenshot-grounded composition: display settings should form readable
+  // native groups without covering content; foundations must have a lead.
+  for(const [width,dark] of [[1440,false],[390,true],[320,false]]) {
+    await browser.setViewport(width,900,{dark});
+    await browser.navigate(base+"/lab/");
+    const layout=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,toolbar=document.querySelector(".gc-lab-toolbar"),'+
+      'panel=document.querySelector(".gc-lab-toolbar-accessibility"),select=document.querySelector("#appearance"),'+
+      'forms=[...document.querySelectorAll("#foundations .gc-lab-foundations > article")],'+
+      'boxes=forms.map(e=>{const r=e.getBoundingClientRect();return {width:r.width,height:r.height,top:r.top,left:r.left}});'+
+      'const checks=["contrast","transparency"].map(id=>{const el=document.getElementById(id),'+
+      'r=el.closest("label").getBoundingClientRect();return {label:el.labels[0]?.textContent.trim(),width:r.width,'+
+      'left:r.left,right:r.right,display:getComputedStyle(el.closest("label")).display}});'+
+      'const a=select.getBoundingClientRect(),f=panel.getBoundingClientRect();'+
+      'return JSON.stringify({width:root.clientWidth,scroll:root.scrollWidth,toolbarHeight:toolbar.getBoundingClientRect().height,'+
+      'selectWidth:a.width,fieldset:{width:f.width,left:f.left,right:f.right},checks,boxes});})()'));
+    assert.ok(layout.scroll<=layout.width+1,"Preference group or foundation introduced horizontal overflow "+JSON.stringify(layout));
+    assert.ok(layout.checks.every(x=>x.width>20&&x.right<=layout.width+1&&x.left>=-1&&x.display!=="none"),
+      "Contrast/transparency switches must stay visibly labeled at "+width+"px: "+JSON.stringify(layout));
+    assert.deepEqual(layout.checks.map(x=>x.label),["More contrast","Reduce transparency"]);
+    if(width===1440){
+      assert.ok(layout.boxes[0].height>layout.boxes[1].height*1.55 &&
+        layout.boxes[1].left>layout.boxes[0].left,
+        "Desktop foundations need an asymmetric primary surface, not three equal cards: "+JSON.stringify(layout));
+    }else {
+      assert.ok(layout.boxes[0].top<layout.boxes[1].top&&layout.boxes[1].top<layout.boxes[2].top,
+        "Compact foundations must follow a full-width reading order: "+JSON.stringify(layout));
+    }
+    if(width===320) assert.ok(layout.selectWidth>=250,
+      "At narrow widths, native theme select must remain readable: "+JSON.stringify(layout));
+    const live=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement,c=document.querySelector("#contrast"),t=document.querySelector("#transparency");'+
+      'c.click();t.click();const enabled={contrast:root.dataset.gcContrast,transparency:root.dataset.gcTransparency};'+
+      'c.click();t.click();return JSON.stringify({enabled,restored:{contrast:root.dataset.gcContrast,transparency:root.dataset.gcTransparency}});})()'));
+    assert.deepEqual(live,{enabled:{contrast:"more",transparency:"reduce"},
+      restored:{contrast:"normal",transparency:"auto"}},
+      "Native grouped preference controls must retain functional semantics");
+    const preview=JSON.parse(await browser.evaluate(
+      '(()=>{const accent=document.querySelector("#accent"),chip=document.querySelector(".gc-lab-color-context-chip");'+
+      'const initial=getComputedStyle(chip).backgroundColor;accent.value="lagoon";'+
+      'accent.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'const changed=getComputedStyle(chip).backgroundColor;accent.value="iris";'+
+      'accent.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'return JSON.stringify({initial,changed,restored:getComputedStyle(chip).backgroundColor});})()'));
+    assert.ok(preview.initial!==preview.changed&&preview.restored===preview.initial,
+      "Foundation accent context must use live semantic theme tokens: "+JSON.stringify(preview));
+    await browser.evaluate('window.scrollTo({top:0,behavior:"instant"})');
+    await delay(60);
+    const shot=await browser.screenshot(join(directory,
+      width===1440?"gc-ui-studio-preferences-foundations-desktop.png":
+      width===390?"gc-ui-studio-preferences-foundations-mobile.png":"gc-ui-studio-preferences-foundations-compact.png"));
+    assert.equal(shot.width,width);
+    await browser.evaluate('document.querySelector("#foundations").scrollIntoView({block:"start",behavior:"instant"})');
+    await delay(90);
+    const foundationsShot=await browser.screenshot(join(directory,
+      "gc-ui-studio-foundations-"+width+".png"));
+    assert.equal(foundationsShot.width,width,
+      "Foundation composition screenshot must match actual responsive viewport");
+  }
+  console.log("Chromium Studio preferences and foundations: native labels, reversible themes, reading layout and screenshots passed");
+
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
   await browser.setViewport(390,844,{dark:false});

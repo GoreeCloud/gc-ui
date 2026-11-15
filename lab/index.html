@@ -50,7 +50,7 @@
   <div class="gc-lab-body">
     <header class="gc-lab-toolbar gc-lens">
       <div class="gc-lab-breadcrumb"><span>UI Studio</span><span aria-hidden="true">/</span><strong id="gc-lab-current-section">Design Language</strong></div>
-      <div class="gc-lab-toolbar-controls">
+      <div class="gc-lab-toolbar-controls" role="group" aria-label="Display preferences">
         <label class="gc-lab-compact-label" for="appearance">Appearance</label>
         <select class="gc-select gc-lab-select" id="appearance" aria-label="Appearance">
           <option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option>
@@ -59,8 +59,13 @@
         <select class="gc-select gc-lab-select" id="accent" aria-label="Accent color family">
           <option value="iris">Iris</option><option value="lagoon">Lagoon</option><option value="ember">Ember</option><option value="moss">Moss</option>
         </select>
-        <label class="gc-switch gc-lab-contrast"><input id="contrast" type="checkbox"><span>More contrast</span></label>
-        <label class="gc-switch gc-lab-transparency"><input id="transparency" type="checkbox"><span>Reduce transparency</span></label>
+        <fieldset class="gc-lab-toolbar-accessibility">
+          <legend>Accessibility</legend>
+          <div class="gc-lab-toolbar-accessibility-switches">
+            <label class="gc-switch gc-lab-contrast"><input id="contrast" type="checkbox"><span>More contrast</span></label>
+            <label class="gc-switch gc-lab-transparency"><input id="transparency" type="checkbox"><span>Reduce transparency</span></label>
+          </div>
+        </fieldset>
       </div>
     </header>
     <main id="main" class="gc-container gc-lab-main gc-bottom-nav-content">
@@ -126,7 +131,16 @@
       <section id="foundations" class="gc-lab-section" aria-labelledby="foundations-heading">
         <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">01 / THE FOUNDATIONS</p><h2 class="gc-title" id="foundations-heading">Design foundations.</h2></div><p class="gc-support gc-readable">Semantic color, typography, shape, space and material that adapt without losing identity.</p></div>
         <div class="gc-grid gc-lab-foundations">
-          <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">These presets are optional examples. Every app or user may choose another accessible hue.</p><div class="gc-lab-colors" aria-label="Four optional example accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-cluster"><label class="gc-check" for="demo-custom-accent"><input id="demo-custom-accent" type="checkbox"> Custom accent</label><input type="color" value="#5146C8" id="demo-custom-color" aria-label="Choose custom accent" disabled class="gc-lab-color-picker"></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
+          <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">These presets are optional examples. Every app or user may choose another accessible hue.</p>
+            <div class="gc-lab-color-context">
+              <div class="gc-lab-color-context-head"><span>ACCENT IN CONTEXT</span><span>LIVE THEME PREVIEW</span></div>
+              <div class="gc-lab-color-context-body">
+                <span class="gc-lab-color-context-symbol" aria-hidden="true"><gc-icon name="sparkle"></gc-icon></span>
+                <div><strong>Purposeful emphasis.</strong><p>Accent guides attention; the work stays readable.</p></div>
+                <span class="gc-lab-color-context-chip">Accent</span>
+              </div>
+            </div>
+            <div class="gc-lab-colors" aria-label="Four optional example accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-cluster"><label class="gc-check" for="demo-custom-accent"><input id="demo-custom-accent" type="checkbox"> Custom accent</label><input type="color" value="#5146C8" id="demo-custom-color" aria-label="Choose custom accent" disabled class="gc-lab-color-picker"></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
           <article class="gc-card"><p class="gc-lab-card-label">SHAPE & SPACING</p><h3 class="gc-heading">Soft, calm geometry</h3><p class="gc-support">4-pixel foundation. 12, 18, 26 and 36-pixel radii.</p><div class="gc-lab-shapes"><span></span><span></span><span></span><span></span></div></article>
           <article class="gc-card"><p class="gc-lab-card-label">TYPOGRAPHY</p><h3 class="gc-heading">Readable at every size</h3><p class="gc-support">Familiar system font metrics, nuanced weight, strong information hierarchy.</p><div class="gc-lab-type-sample"><b>Aa</b><div><strong>Clarity first.</strong><small>Consistent by nature.</small></div></div></article>
         </div>
