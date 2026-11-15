@@ -19,8 +19,17 @@
 <div class="gc-lab-shell gc-navigation-shell gc-premium-shell">
   <aside class="gc-lab-rail gc-navigation-rail gc-surface" aria-label="Design lab navigation">
     <div class="gc-lab-rail-header">
-      <div class="gc-lab-logo"><img class="gc-lab-official-mark" src="../assets/identity/app-icon.svg" alt="" width="36" height="36"><span class="gc-navigation-rail__brand-label"><strong>GoreeCloud</strong><small>UI STUDIO</small></span></div>
+      <a class="gc-lab-logo" href="#overview" aria-label="GoreeCloud UI Studio overview"><img class="gc-lab-official-mark" src="../assets/identity/app-icon.svg" alt="" width="36" height="36"><span class="gc-navigation-rail__brand-label"><strong>GoreeCloud</strong><small>UI STUDIO</small></span></a>
       <button type="button" class="gc-navigation-rail__toggle" data-gc-rail-toggle aria-controls="gc-lab-rail-links" aria-label="Collapse navigation" aria-expanded="true"><gc-icon name="menu"></gc-icon><span class="gc-navigation-rail__toggle-label">Navigation</span></button>
+    </div>
+    <div class="gc-lab-rail-search gc-navigation-rail__secondary" role="search">
+      <label class="gc-lab-search-label" for="gc-lab-rail-search">FIND A SECTION</label>
+      <div class="gc-lab-search-field">
+        <gc-icon name="search"></gc-icon>
+        <input id="gc-lab-rail-search" type="search" aria-label="Find a studio section" aria-controls="gc-lab-rail-links" placeholder="Search the studio" autocomplete="off" spellcheck="false">
+        <kbd aria-hidden="true">/</kbd>
+      </div>
+      <p id="gc-lab-search-status" class="gc-lab-search-status" role="status" aria-live="polite" hidden></p>
     </div>
     <nav id="gc-lab-rail-links" class="gc-nav gc-navigation-rail__links" aria-label="Design lab sections">
       <p class="gc-lab-nav-group gc-navigation-rail__secondary" aria-hidden="true">DISCOVER</p>
@@ -40,7 +49,7 @@
   </aside>
   <div class="gc-lab-body">
     <header class="gc-lab-toolbar gc-lens">
-      <div class="gc-lab-breadcrumb">GoreeCloud <span>/</span> <strong>Design Language</strong></div>
+      <div class="gc-lab-breadcrumb"><span>UI Studio</span><span aria-hidden="true">/</span><strong id="gc-lab-current-section">Design Language</strong></div>
       <div class="gc-lab-toolbar-controls">
         <label class="gc-lab-compact-label" for="appearance">Appearance</label>
         <select class="gc-select gc-lab-select" id="appearance" aria-label="Appearance">
