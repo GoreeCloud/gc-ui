@@ -558,3 +558,64 @@
     border-color:CanvasText;
   }
 }
+
+
+/* Workflow-oriented content geometry: avoid orphaned half-width tables and
+   arbitrary fifth cards in the component and interaction references. */
+@media (min-width:1081px) {
+  .gc-app #components > .gc-grid--two,
+  .gc-app #patterns > .gc-grid--two {
+    gap:18px; align-items:start;
+  }
+  .gc-app #components > .gc-grid--two > article:last-child {
+    grid-column:1 / -1;
+  }
+  .gc-app #components > .gc-grid--two > article:last-child .gc-table-wrap {
+    inline-size:100%; max-inline-size:100%;
+  }
+  .gc-app #patterns > .gc-grid--two > article:last-child {
+    grid-column:1 / -1;
+    display:grid; grid-template-columns:minmax(0,.75fr) minmax(0,1.25fr);
+    align-items:start; gap:14px 30px;
+  }
+  .gc-app #patterns > .gc-grid--two > article:last-child > h3 {
+    grid-column:1; grid-row:1; margin:0;
+  }
+  .gc-app #patterns > .gc-grid--two > article:last-child > p:first-of-type {
+    grid-column:1; grid-row:2; max-inline-size:45ch; margin:0;
+  }
+  .gc-app #patterns > .gc-grid--two > article:last-child > .gc-tree {
+    grid-column:2; grid-row:1 / span 2; min-inline-size:0;
+  }
+  .gc-app #patterns > .gc-grid--two > article:last-child > p:last-child {
+    grid-column:2; grid-row:3; margin:0;
+  }
+}
+/* The working form is primary; planned Mesh setup is a distinct, quieter
+   example rather than a competing action or a misleading connected service. */
+.gc-app #forms #demo-form { border-block-start:3px solid var(--gc-brand); }
+.gc-app #forms #demo-planned-form {
+  background:var(--gc-surface-tonal); box-shadow:none;
+  border-color:var(--gc-outline-soft);
+}
+.gc-app #forms #demo-planned-form > p { line-height:1.6; }
+.gc-app #forms .gc-grid--two { align-items:start; gap:18px; }
+/* Tablet and phone references need one complete task per row, not squeezed
+   pairs of dense UI controls and empty half-columns. */
+@media (max-width:1080px) {
+  .gc-app #components > .gc-grid--two,
+  .gc-app #patterns > .gc-grid--two,
+  .gc-app #forms > .gc-grid--two {
+    display:grid; grid-template-columns:minmax(0,1fr);
+    gap:16px;
+  }
+  .gc-app #components > .gc-grid--two > *,
+  .gc-app #patterns > .gc-grid--two > *,
+  .gc-app #forms > .gc-grid--two > * {
+    grid-column:auto; grid-row:auto; min-inline-size:0;
+  }
+}
+@media (forced-colors:active) {
+  .gc-app #forms #demo-form { border-block-start-color:Highlight; }
+  .gc-app #forms #demo-planned-form { border-color:CanvasText; }
+}
