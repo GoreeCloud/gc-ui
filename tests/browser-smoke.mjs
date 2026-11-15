@@ -782,7 +782,7 @@ try {
     }
     assert.equal(has("navigation",useRail?"Primary application destinations":"Design lab sections"),false,
       "Hidden alternate navigation should not appear in assistive-tech tree");
-    assert.ok(has("heading","Rounded. Always."),
+    assert.ok(has("heading","The window system."),
       "Window showcase's visual heading is not in accessibility tree: "+name);
     const buttons=nodes.filter(n=>n.role==="button");
     assert.ok(buttons.some(n=>n.name==="Explore interaction"),

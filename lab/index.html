@@ -11,30 +11,32 @@
   <link rel="stylesheet" href="../src/components.css">
   <link rel="stylesheet" href="../src/glass.css">
   <link rel="stylesheet" href="./lab.css">
+  <link rel="stylesheet" href="./studio.css">
   <script type="module" src="./app.js"></script>
 </head>
 <body class="gc-app">
 <a class="gc-link-skip" href="#main">Skip to content</a>
 <div class="gc-lab-shell gc-navigation-shell gc-premium-shell">
   <aside class="gc-lab-rail gc-navigation-rail gc-surface" aria-label="Design lab navigation">
-    <div class="gc-lab-logo"><img class="gc-lab-official-mark" src="../assets/identity/app-icon.svg" alt="" width="36" height="36"><strong class="gc-navigation-rail__brand-label">GoreeCloud <span>UI</span></strong></div>
-    <button type="button" class="gc-navigation-rail__toggle" data-gc-rail-toggle aria-controls="gc-lab-rail-links" aria-label="Collapse navigation" aria-expanded="true"><gc-icon name="menu"></gc-icon><span class="gc-navigation-rail__toggle-label">Navigation</span></button>
-    <p class="gc-support gc-lab-caption gc-navigation-rail__secondary">DESIGN SYSTEM / ALPHA</p>
+    <div class="gc-lab-rail-header">
+      <div class="gc-lab-logo"><img class="gc-lab-official-mark" src="../assets/identity/app-icon.svg" alt="" width="36" height="36"><span class="gc-navigation-rail__brand-label"><strong>GoreeCloud</strong><small>UI STUDIO</small></span></div>
+      <button type="button" class="gc-navigation-rail__toggle" data-gc-rail-toggle aria-controls="gc-lab-rail-links" aria-label="Collapse navigation" aria-expanded="true"><gc-icon name="menu"></gc-icon><span class="gc-navigation-rail__toggle-label">Navigation</span></button>
+    </div>
     <nav id="gc-lab-rail-links" class="gc-nav gc-navigation-rail__links" aria-label="Design lab sections">
+      <p class="gc-lab-nav-group gc-navigation-rail__secondary" aria-hidden="true">DISCOVER</p>
       <a href="#overview" aria-current="page"><gc-icon name="home"></gc-icon><span class="gc-navigation-rail__label">Overview</span></a>
       <a href="#identity"><gc-icon name="sparkle"></gc-icon><span class="gc-navigation-rail__label">Identity</span></a>
-      <a href="#foundations"><gc-icon name="sparkle"></gc-icon><span class="gc-navigation-rail__label">Foundations</span></a>
-      <a href="#premium"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Signature surfaces</span></a>
-      <a href="#rounded-windows"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Rounded windows</span></a>
+      <a href="#foundations"><gc-icon name="settings"></gc-icon><span class="gc-navigation-rail__label">Foundations</span></a>
+      <p class="gc-lab-nav-group gc-navigation-rail__secondary" aria-hidden="true">THE SYSTEM</p>
+      <a href="#premium"><gc-icon name="eye"></gc-icon><span class="gc-navigation-rail__label">Signature surfaces</span></a>
+      <a href="#rounded-windows"><gc-icon name="folder"></gc-icon><span class="gc-navigation-rail__label">Rounded windows</span></a>
       <a href="#components"><gc-icon name="grid"></gc-icon><span class="gc-navigation-rail__label">Components</span></a>
+      <p class="gc-lab-nav-group gc-navigation-rail__secondary" aria-hidden="true">REFERENCE</p>
       <a href="#patterns"><gc-icon name="list"></gc-icon><span class="gc-navigation-rail__label">Patterns</span></a>
       <a href="#forms"><gc-icon name="edit"></gc-icon><span class="gc-navigation-rail__label">Forms</span></a>
       <a href="#iconography"><gc-icon name="shield"></gc-icon><span class="gc-navigation-rail__label">Iconography</span></a>
     </nav>
-    <div class="gc-lab-rail-note gc-card gc-card--tonal gc-navigation-rail__secondary">
-      <span class="gc-badge gc-badge--brand">0.1.0 alpha</span>
-      <p class="gc-support" style="margin:12px 0 0">Prototype palette. Native SDKs and consumer migrations are not shipped.</p>
-    </div>
+    <div class="gc-lab-rail-note gc-navigation-rail__secondary"><span class="gc-lab-rail-status-dot" aria-hidden="true"></span><div><strong>Design lab</strong><small>0.1.0 alpha · Local preview</small></div></div>
   </aside>
   <div class="gc-lab-body">
     <header class="gc-lab-toolbar gc-lens">
@@ -53,38 +55,52 @@
       </div>
     </header>
     <main id="main" class="gc-container gc-lab-main gc-bottom-nav-content">
-      <section id="overview" class="gc-lab-hero">
+      <section id="overview" class="gc-lab-hero" aria-labelledby="gc-lab-hero-title">
         <div class="gc-lab-hero-copy">
-          <div class="gc-ui-official-wordmark" aria-label="GoreeCloud UI official Aperture Weave identity">
-            <img class="gc-ui-wordmark-light" src="../assets/identity/logo-light.svg" width="710" height="180" alt="GoreeCloud UI Aperture Weave">
-            <img class="gc-ui-wordmark-dark" src="../assets/identity/logo-dark.svg" width="710" height="180" alt="GoreeCloud UI Aperture Weave">
-          </div>
-          <div class="gc-cluster gc-lab-status-cluster"><span class="gc-badge gc-badge--brand">THE NEW INTERFACE LANGUAGE</span><span class="gc-support">Preview / 2026</span></div>
-          <h1 class="gc-display">Calm information.<br><span class="gc-lab-highlight">Expressive personality.</span><br>Purposeful depth.</h1>
-          <p class="gc-lab-lead">One thoughtful design language for everything GoreeCloud. Ergonomic where it matters. Adaptable by nature. Beautiful without getting in your way.</p>
-          <div class="gc-cluster">
+          <div class="gc-lab-hero-mark"><img src="../assets/identity/app-icon.svg" width="34" height="34" alt=""><span>GOREECLOUD <b>UI</b></span></div>
+          <div class="gc-cluster gc-lab-status-cluster"><span class="gc-badge gc-badge--brand">DESIGN SYSTEM / ALPHA</span><span class="gc-support">Original by design.</span></div>
+          <h1 class="gc-display" id="gc-lab-hero-title">Your workspace,<br><span class="gc-lab-highlight">your way.</span></h1>
+          <p class="gc-lab-lead">One distinct interface language for everything GoreeCloud. Calm surfaces, deliberate interactions, and thoughtful depth—designed to work together.</p>
+          <div class="gc-cluster gc-lab-primary-actions">
             <button class="gc-button gc-button--lg gc-button--round" type="button" id="open-dialog"><gc-icon name="sparkle"></gc-icon> Explore interaction</button>
-            <button class="gc-button gc-button--outline gc-button--lg gc-button--round" type="button" id="notify"><gc-icon name="bell"></gc-icon> Preview notification</button>
-            <button class="gc-button gc-button--outline gc-button--lg gc-button--round" type="button" data-gc-availability="planned" data-gc-feature="Mesh integrations"><gc-icon name="grid"></gc-icon> Mesh integrations · Coming soon</button>
-            <button class="gc-button gc-button--secondary gc-button--lg gc-button--round" type="button" id="open-command"><gc-icon name="search"></gc-icon> Quick commands <span class="gc-kbd">Ctrl K</span></button>
+            <button class="gc-button gc-button--outline gc-button--lg gc-button--round" type="button" id="open-command"><gc-icon name="search"></gc-icon> Quick commands <span class="gc-kbd">Ctrl K</span></button>
+          </div>
+          <div class="gc-cluster gc-lab-utility-actions">
+            <button class="gc-button gc-button--outline" type="button" id="notify"><gc-icon name="bell"></gc-icon> Preview notification</button>
+            <button class="gc-button gc-button--outline" type="button" data-gc-availability="planned" data-gc-feature="Mesh integrations"><gc-icon name="grid"></gc-icon> Mesh integrations · Coming soon</button>
           </div>
         </div>
-        <div class="gc-lab-scene" aria-label="Preview of translucent and solid GoreeCloud UI panels">
-          <div class="gc-lab-orb gc-lab-orb--a"></div><div class="gc-lab-orb gc-lab-orb--b"></div>
-          <div class="gc-lab-floating gc-surface">
-            <div class="gc-cluster"><span class="gc-lab-small-icon"><gc-icon name="cloud"></gc-icon></span><strong>Cloud workspace</strong><span class="gc-spacer"></span><span class="gc-badge gc-badge--positive">Local</span></div>
-            <p class="gc-support">Everything in its place.</p>
-            <div class="gc-lab-stat"><span>All systems</span><strong>In harmony</strong></div>
-            <progress class="gc-progress" max="100" value="72" aria-label="Illustrative workspace progress"></progress>
-            <div class="gc-lab-palette-line"><span></span><span></span><span></span><span></span></div>
+        <div class="gc-lab-scene" aria-label="GoreeCloud layered window-system illustration">
+          <div class="gc-lab-preview">
+            <div class="gc-lab-preview-header">
+              <div class="gc-lab-preview-identity"><span class="gc-lab-preview-mini-mark">GC</span><strong>Workspace</strong></div>
+              <div class="gc-lab-preview-node-sample" role="img" aria-label="Visual sample of circular Crimson Dismiss, Amber Dock and Teal Expand nodes, not interactive">
+                <span class="gc-lab-preview-node gc-lab-preview-node--dismiss"></span><span class="gc-lab-preview-node gc-lab-preview-node--dock"></span><span class="gc-lab-preview-node gc-lab-preview-node--expand"></span>
+              </div>
+            </div>
+            <div class="gc-lab-preview-content">
+              <p class="gc-lab-preview-kicker">THE WINDOW SYSTEM / 01</p>
+              <h2>Control, in its<br>simplest form.</h2>
+              <p>A recognizable workspace, composed of carefully defined surfaces and purposeful controls.</p>
+              <div class="gc-lab-preview-materials">
+                <div><span class="gc-lab-preview-material-symbol gc-lab-preview-material-symbol--canvas"></span><b>Canvas</b><small>Context</small></div>
+                <div><span class="gc-lab-preview-material-symbol gc-lab-preview-material-symbol--surface"></span><b>Surface</b><small>Content</small></div>
+                <div><span class="gc-lab-preview-material-symbol gc-lab-preview-material-symbol--lens"></span><b>Lens</b><small>Depth</small></div>
+              </div>
+            </div>
+            <div class="gc-lab-preview-footer"><span>GOREECLOUD UI / ALPHA</span><span>DESIGN LANGUAGE · 2026</span></div>
           </div>
-          <div class="gc-lab-glass gc-lens"><gc-icon name="sparkle"></gc-icon><div><strong>Cloud Lens</strong><small>Clarity with depth</small></div><gc-icon name="check"></gc-icon></div>
+          <p class="gc-lab-preview-note">VISUAL STUDY / NO DESKTOP ACTIONS</p>
         </div>
       </section>
 
       <section id="identity" class="gc-lab-section gc-ui-identity-section" aria-labelledby="identity-heading">
         <div class="gc-ui-identity-layout">
           <div class="gc-ui-identity-copy">
+            <div class="gc-ui-official-wordmark gc-lab-identity-wordmark" aria-label="Official GoreeCloud UI identity versions">
+              <img class="gc-ui-wordmark-light" src="../assets/identity/logo-light.svg" width="710" height="180" alt="GoreeCloud UI official identity">
+              <img class="gc-ui-wordmark-dark" src="../assets/identity/logo-dark.svg" width="710" height="180" alt="GoreeCloud UI official identity">
+            </div>
             <p class="gc-lab-eyebrow">OFFICIAL APERTURE WEAVE IDENTITY</p>
             <h2 class="gc-title" id="identity-heading">One mark. Three layers.</h2>
             <p class="gc-support gc-readable">The founder-approved GoreeCloud UI symbol expresses Cloud Canvas, Surface, and Lens through three interlocking planes around an open center. The logo, icon, favicon, and interface artwork share a single verified source.</p>
@@ -99,7 +115,7 @@
       </section>
 
       <section id="foundations" class="gc-lab-section" aria-labelledby="foundations-heading">
-        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">01 / THE FOUNDATIONS</p><h2 class="gc-title" id="foundations-heading">A system with intention.</h2></div><p class="gc-support gc-readable">Semantic color, typography, shape, space and material that adapt without losing identity.</p></div>
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">01 / THE FOUNDATIONS</p><h2 class="gc-title" id="foundations-heading">Design foundations.</h2></div><p class="gc-support gc-readable">Semantic color, typography, shape, space and material that adapt without losing identity.</p></div>
         <div class="gc-grid gc-lab-foundations">
           <article class="gc-card"><p class="gc-lab-card-label">SEMANTIC COLOR</p><h3 class="gc-heading">Four expressive families</h3><p class="gc-support">These presets are optional examples. Every app or user may choose another accessible hue.</p><div class="gc-lab-colors" aria-label="Four optional example accent families"><span title="Iris"></span><span title="Lagoon"></span><span title="Ember"></span><span title="Moss"></span></div><div class="gc-cluster"><label class="gc-check" for="demo-custom-accent"><input id="demo-custom-accent" type="checkbox"> Custom accent</label><input type="color" value="#5146C8" id="demo-custom-color" aria-label="Choose custom accent" disabled class="gc-lab-color-picker"></div><div class="gc-lab-color-demo"><span class="gc-lab-brand"></span><span class="gc-lab-brand-soft"></span><span class="gc-lab-neutral"></span></div></article>
           <article class="gc-card"><p class="gc-lab-card-label">SHAPE & SPACING</p><h3 class="gc-heading">Soft, calm geometry</h3><p class="gc-support">4-pixel foundation. 12, 18, 26 and 36-pixel radii.</p><div class="gc-lab-shapes"><span></span><span></span><span></span><span></span></div></article>
@@ -109,14 +125,14 @@
 
       <section id="premium" class="gc-lab-section" aria-labelledby="premium-heading">
         <div class="gc-lab-section-head">
-          <div><p class="gc-lab-eyebrow">SIGNATURE / CORE COMPONENTS</p><h2 class="gc-title" id="premium-heading">Recognizably GoreeCloud.</h2></div>
+          <div><p class="gc-lab-eyebrow">SIGNATURE / CORE COMPONENTS</p><h2 class="gc-title" id="premium-heading">Signature surfaces.</h2></div>
           <p class="gc-support gc-readable">A reusable composition language: expressive without noise, layered without sacrificing clarity.</p>
         </div>
         <div class="gc-showcase">
           <div class="gc-showcase__content">
             <span class="gc-overline">GoreeCloud UI / Signature</span>
-            <h3 class="gc-showcase__title">Space to think. Depth to explore.</h3>
-            <p class="gc-showcase__lead">An original system of calm surfaces, distinctive visual hierarchy and purposeful motion. Premium is a quality standard, not an optional skin.</p>
+            <h3 class="gc-showcase__title">Three materials. One system.</h3>
+            <p class="gc-showcase__lead">Cloud Canvas establishes context. Cloud Surface protects the work. Cloud Lens adds depth only where it improves navigation and interaction.</p>
             <div class="gc-showcase__actions">
               <a class="gc-button gc-button--lg gc-button--round" href="#components"><gc-icon name="sparkle"></gc-icon> Explore the components</a>
               <a class="gc-button gc-button--outline gc-button--lg gc-button--round" href="#foundations">Design foundations</a>
@@ -189,7 +205,7 @@
 
       <section id="rounded-windows" class="gc-lab-section" aria-labelledby="windows-heading">
         <div class="gc-lab-section-head">
-          <div><p class="gc-lab-eyebrow">WINDOWS / SIGNATURE SHAPE</p><h2 class="gc-title" id="windows-heading">Rounded. Always.</h2></div>
+          <div><p class="gc-lab-eyebrow">WINDOWS / SIGNATURE SHAPE</p><h2 class="gc-title" id="windows-heading">The window system.</h2></div>
           <p class="gc-support">Original window chrome, four soft corners, meaningful depth. A web reference—not native OS window control.</p>
         </div>
         <div class="gc-window gc-window--floating gc-window--app-shell" id="demo-window" role="region" aria-label="Rounded workspace window preview">
@@ -223,7 +239,7 @@
       </section>
 
       <section id="components" class="gc-lab-section" aria-labelledby="components-heading">
-        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">02 / THE COMPONENTS</p><h2 class="gc-title" id="components-heading">Built to feel familiar.</h2></div><p class="gc-support">Responsive, native-semantic building blocks with visibly purposeful states.</p></div>
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">02 / THE COMPONENTS</p><h2 class="gc-title" id="components-heading">Components, refined.</h2></div><p class="gc-support">Responsive, native-semantic building blocks with visibly purposeful states.</p></div>
         <div class="gc-grid gc-grid--two">
           <article class="gc-card gc-stack"><h3 class="gc-heading">Buttons & actions</h3><div class="gc-cluster">
             <button class="gc-button" type="button" data-demo-toast="Primary action activated">Primary</button>
@@ -286,7 +302,7 @@
 
 
       <section id="patterns" class="gc-lab-section" aria-labelledby="patterns-heading">
-        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INTERACTION PATTERNS</p><h2 class="gc-title" id="patterns-heading">Control without complexity.</h2></div><p class="gc-support">Native disclosure, real inputs, accessible side navigation and stateful controls.</p></div>
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INTERACTION PATTERNS</p><h2 class="gc-title" id="patterns-heading">Interaction patterns.</h2></div><p class="gc-support">Native disclosure, real inputs, accessible side navigation and stateful controls.</p></div>
         <div class="gc-grid gc-grid--two">
           <article class="gc-card gc-stack">
             <h3 class="gc-heading">Disclosure accordion</h3>
@@ -407,7 +423,7 @@
         </section>
       </section>
       <section id="forms" class="gc-lab-section" aria-labelledby="forms-heading">
-        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INPUT & PREFERENCE</p><h2 class="gc-title" id="forms-heading">Controls that just work.</h2></div><p class="gc-support">Full labels, logical focus, native validation and understandable feedback.</p></div>
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">03 / INPUT & PREFERENCE</p><h2 class="gc-title" id="forms-heading">Inputs &amp; preferences.</h2></div><p class="gc-support">Full labels, logical focus, native validation and understandable feedback.</p></div>
         <div class="gc-grid gc-grid--two">
           <form id="demo-form" class="gc-card gc-stack">
             <h3 class="gc-heading">Sample local form</h3>
@@ -451,7 +467,7 @@
         </div>
       </section>
       <section id="iconography" class="gc-lab-section" aria-labelledby="icons-heading">
-        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">04 / ICONOGRAPHY</p><h2 class="gc-title" id="icons-heading">One consistent visual voice.</h2></div><p class="gc-support">Original, lightweight, 24px line glyphs. Uniform stroke language; no external icon packages.</p></div>
+        <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">04 / ICONOGRAPHY</p><h2 class="gc-title" id="icons-heading">One icon language.</h2></div><p class="gc-support">Original, lightweight, 24px line glyphs. Uniform stroke language; no external icon packages.</p></div>
         <div class="gc-card"><div id="icon-grid" class="gc-lab-icon-grid" aria-label="GoreeCloud icon catalogue"></div></div>
       </section>
       <footer class="gc-lab-footer"><span>GoreeCloud UI • 0.1.0 alpha</span><span>Clear by default. Consistent by nature. Fluid by design.</span></footer>
