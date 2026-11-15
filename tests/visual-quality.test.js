@@ -102,7 +102,7 @@ test("exceptional craftsmanship standard is a tracked, evidence-based review req
   const contract=load("docs/VISUAL_QUALITY.md");
   assert.match(contract,/Exceptional craftsmanship and rejection of generic design/);
   assert.match(contract,/whole rendered workflow/);
-  assert.match(contract,/passing Node tests.*does not by itself prove exceptional craftsmanship/);
+  assert.match(contract,/Passing Node tests.*does not by itself prove exceptional craftsmanship/);
   const checklist=load(".github/PULL_REQUEST_TEMPLATE.md");
   assert.match(checklist,/entire affected shell and workflow/);
   assert.match(checklist,/AI-slop outcomes/);
