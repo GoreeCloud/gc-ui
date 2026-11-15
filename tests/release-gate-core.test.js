@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
-import { evaluateReleaseReadiness,REQUIRED_RELEASE_GATES,validateExternalReleaseEvidence } from "../scripts/release-gate-core.mjs";
+import { evaluateReleaseReadiness,REQUIRED_RELEASE_GATES,validateExternalReleaseEvidence,parseReleaseEvidenceTimestamp } from "../scripts/release-gate-core.mjs";
 
 const load=path=>JSON.parse(readFileSync(new URL("../"+path,import.meta.url),"utf8"));
 const currentPlan=load("registry/release-plan.v1.json");
@@ -61,6 +61,39 @@ test("release gate rejects stale, malformed and unverifiable evidence metadata",
     assert.equal(check(candidate).ready,false,JSON.stringify(edit));
   }
 });
+test("evidence timestamp parser rejects impossible dates, ambiguous zones and future claims",()=>{
+ const now=Date.parse("2026-11-15T22:00:00Z");
+ for(const text of [
+  "2026-02-31T14:00:00Z", "2026-13-10T14:00:00Z",
+  "2026-11-15T25:00:00Z", "2026-11-15T18:60:00Z",
+  "2026-11-15T18:00:60Z", "2026-11-15T18:00:00",
+  "2026-11-15T18:00:00+14:30", "2026-11-15T18:00:00+15:00",
+  "2099-01-01T00:00:00Z", "not-a-date"
+ ])assert.equal(parseReleaseEvidenceTimestamp(text,now),null,text);
+ assert.equal(parseReleaseEvidenceTimestamp("2026-11-15T16:00:00-06:00",now),now);
+ assert.equal(parseReleaseEvidenceTimestamp("2026-11-15T22:04:59Z",now),now+299000,
+  "Up to five minutes of review clock skew is permitted");
+ assert.equal(parseReleaseEvidenceTimestamp("2026-11-15T22:05:01Z",now),null);
+});
+test("a post-commit approval cannot predate its cited gate evidence",()=>{
+ const candidate=setup();
+ const external={
+  schemaVersion:1,packageName:"@goreecloud/ui",targetVersion:"1.0.0",
+  sourceSha:sha,decision:"verified",maintainerApproval:true,
+  reviewer:"GoreeCloud founder",reviewedAt:"2026-11-13T17:00:00Z",
+  reviewUrl:"https://github.com/GoreeCloud/gc-ui/issues/85#issuecomment-999",
+  gates:REQUIRED_RELEASE_GATES.map(id=>({id,status:"verified",evidence:[clone(goodEvidence)]}))
+ };
+ assert.equal(validateExternalReleaseEvidence(external,candidate.pkg,sha),true);
+ external.reviewedAt="2026-11-13T13:59:59Z";
+ assert.equal(validateExternalReleaseEvidence(external,candidate.pkg,sha),false);
+ external.reviewedAt="2026-11-13T17:00:00Z";
+ external.gates[0].evidence[0].testedAt="2099-01-01T00:00:00Z";
+ assert.equal(validateExternalReleaseEvidence(external,candidate.pkg,sha),false);
+ external.gates[0].evidence[0].testedAt="2026-02-31T14:00:00Z";
+ assert.equal(validateExternalReleaseEvidence(external,candidate.pkg,sha),false);
+});
+
 test("source SHA and clean checkout required even if all metadata says verified",()=>{
   const candidate=setup();
   assert.equal(check(candidate,{sourceSha:null}).ready,false);
