@@ -468,3 +468,93 @@
   .gc-app .gc-lab-highlight { text-decoration-color:Highlight; }
   .gc-lab-rail-status-dot { background:Highlight; box-shadow:none; }
 }
+
+
+/* Reference-first icon library: searchable categories instead of an icon wall. */
+.gc-app .gc-studio-icon-library {
+  padding:clamp(22px,2.4vw,36px);
+  border-radius:22px;
+}
+.gc-studio-icon-controls {
+  display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap;
+  gap:20px 32px; padding-block-end:22px; border-bottom:1px solid var(--gc-outline-soft);
+}
+.gc-studio-icon-intro { max-inline-size:46ch; }
+.gc-studio-icon-intro .gc-lab-eyebrow { margin-block:0 8px; }
+.gc-studio-icon-intro > p:last-child {
+  margin:0; color:var(--gc-text-soft); line-height:1.6; font-size:13px;
+}
+.gc-studio-icon-fields { display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px; }
+.gc-studio-icon-field { display:grid; gap:7px; font-size:11px; font-weight:740; color:var(--gc-text-soft); }
+.gc-studio-icon-field :is(input,select) {
+  box-sizing:border-box; inline-size:clamp(155px,16vw,220px); min-block-size:44px;
+  border:1px solid var(--gc-outline); border-radius:12px;
+  background:var(--gc-surface); color:var(--gc-text); padding-inline:12px;
+  font:inherit; font-size:13px; font-weight:500;
+}
+.gc-studio-icon-field :is(input,select):focus-visible {
+  outline:3px solid var(--gc-focus-ring); outline-offset:1px;
+}
+.gc-studio-icon-fields > button { min-block-size:44px; }
+.gc-studio-icon-results {
+  color:var(--gc-text-soft); margin:16px 0 4px; font-size:12px; font-weight:600;
+}
+.gc-studio-icon-groups { display:grid; gap:10px; }
+.gc-studio-icon-group { padding-block:16px 8px; border-bottom:1px solid var(--gc-outline-soft); }
+.gc-studio-icon-group:last-child { border-bottom:0; padding-bottom:0; }
+.gc-studio-icon-group-head {
+  display:flex; gap:14px; align-items:flex-start; justify-content:space-between;
+  margin-block-end:14px;
+}
+.gc-studio-icon-group-head h3 {
+  font-size:16px; letter-spacing:-.025em; margin:0 0 4px; color:var(--gc-text); font-weight:740;
+}
+.gc-studio-icon-group-head p { margin:0; font-size:12px; line-height:1.5; color:var(--gc-text-soft); }
+.gc-studio-icon-group-count {
+  color:var(--gc-text-soft); font:700 12px/1.4 ui-monospace,SFMono-Regular,Consolas,monospace;
+  min-inline-size:24px; text-align:end;
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-grid {
+  display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:8px;
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-tile {
+  min-inline-size:0; min-block-size:65px; padding:10px 12px;
+  display:grid; grid-template-columns:26px minmax(0,1fr); grid-template-rows:auto auto;
+  gap:1px 12px; align-items:center; justify-items:start;
+  background:var(--gc-surface); border:1px solid var(--gc-outline-soft);
+  border-radius:12px; box-shadow:none; transition:border-color 120ms ease;
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-tile:hover {
+  transform:none; border-color:var(--gc-outline); box-shadow:none;
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-tile gc-icon {
+  grid-row:1 / span 2; inline-size:24px; block-size:24px; color:var(--gc-text);
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-tile > span {
+  color:var(--gc-text); font-size:12px; font-weight:670;
+  line-height:1.25; min-inline-size:0; overflow-wrap:anywhere; text-align:start;
+}
+.gc-app .gc-studio-icon-library .gc-lab-icon-tile code {
+  color:var(--gc-text-soft); font:500 10px/1.35 ui-monospace,SFMono-Regular,Consolas,monospace;
+  min-inline-size:0; overflow-wrap:anywhere;
+}
+.gc-app .gc-studio-icon-library [hidden] { display:none !important; }
+@media (max-width:760px) {
+  .gc-studio-icon-fields { inline-size:100%; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .gc-studio-icon-field :is(input,select) { inline-size:100%; max-inline-size:100%; }
+  .gc-studio-icon-fields > button { grid-column:1 / -1; justify-self:start; }
+  .gc-app .gc-studio-icon-library .gc-lab-icon-grid { grid-template-columns:repeat(auto-fill,minmax(135px,1fr)); }
+}
+@media (max-width:430px) {
+  .gc-studio-icon-fields { grid-template-columns:minmax(0,1fr); }
+  .gc-app .gc-studio-icon-library .gc-lab-icon-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+}
+@media (prefers-reduced-motion:reduce) {
+  .gc-app .gc-studio-icon-library .gc-lab-icon-tile { transition:none; }
+}
+@media (forced-colors:active) {
+  .gc-studio-icon-field :is(input,select),.gc-app .gc-studio-icon-library .gc-lab-icon-tile {
+    border-color:CanvasText;
+  }
+}
