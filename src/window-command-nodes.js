@@ -25,7 +25,7 @@ export function initWindowCommandNodes(group, {
   }
   const actions = ["dismiss", "dock", "expand"];
   const nodes = Array.from(group.querySelectorAll("button[data-gc-window-command]"));
-  if (nodes.length !== 3 || nodes.some((node, index) =>
+  if (nodes.length !== 3 || (group.children && group.children.length !== 3) || nodes.some((node, index) =>
     node.parentElement !== group ||
     node.getAttribute("data-gc-window-command") !== actions[index] ||
     node.children.length !== 0 || node.textContent.trim() !== "")) {
@@ -82,7 +82,10 @@ export function initWindowCommandNodes(group, {
     } catch (error) {
       if (!disposed && !abort.signal.aborted) {
         group.setAttribute("data-gc-wcn-error", action);
-        if (onError) onError(error, action);
+        if (onError) {
+          // Host error reporter failures must not become unhandled rejections.
+          try { onError(error, action); } catch { /* state remains failed */ }
+        }
       }
     } finally {
       if (pending === abort) {
