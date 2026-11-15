@@ -496,7 +496,24 @@
       </section>
       <section id="iconography" class="gc-lab-section" aria-labelledby="icons-heading">
         <div class="gc-lab-section-head"><div><p class="gc-lab-eyebrow">04 / ICONOGRAPHY</p><h2 class="gc-title" id="icons-heading">One icon language.</h2></div><p class="gc-support">Original, lightweight, 24px line glyphs. Uniform stroke language; no external icon packages.</p></div>
-        <div class="gc-card"><div id="icon-grid" class="gc-lab-icon-grid" aria-label="GoreeCloud icon catalogue"></div></div>
+        <div class="gc-card gc-studio-icon-library" id="gc-studio-icon-library">
+          <div class="gc-studio-icon-controls">
+            <div class="gc-studio-icon-intro"><p class="gc-lab-eyebrow">OFFICIAL ICON REFERENCE</p><p>Find original GoreeCloud icons by name or purpose. Labels and source token names stay visible.</p></div>
+            <div class="gc-studio-icon-fields">
+              <label class="gc-studio-icon-field" for="gc-studio-icon-search">Search icons
+                <input type="search" id="gc-studio-icon-search" placeholder="Find an icon" autocomplete="off" spellcheck="false">
+              </label>
+              <label class="gc-studio-icon-field" for="gc-studio-icon-category">Category
+                <select id="gc-studio-icon-category">
+                  <option value="all">All categories</option><option value="navigation">Navigation</option><option value="actions">Actions</option><option value="workspace">Workspace</option><option value="protection">People &amp; protection</option><option value="feedback">Feedback &amp; appearance</option>
+                </select>
+              </label>
+              <button id="gc-studio-icon-clear" type="button" class="gc-button gc-button--outline" hidden>Clear filters</button>
+            </div>
+          </div>
+          <p class="gc-studio-icon-results" id="gc-studio-icon-results" role="status" aria-live="polite">Original icon library</p>
+          <div id="icon-grid" class="gc-studio-icon-groups" aria-label="GoreeCloud icon catalogue"></div>
+        </div>
       </section>
       <footer class="gc-lab-footer"><span>GoreeCloud UI • 0.1.0 alpha</span><span>Clear by default. Consistent by nature. Fluid by design.</span></footer>
     </main>
