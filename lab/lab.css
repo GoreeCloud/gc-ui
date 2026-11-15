@@ -394,3 +394,7 @@
 :root:is([data-gc-contrast="more"],[data-gc-transparency="reduce"]) .gc-frost-stage::before,
 :root:is([data-gc-contrast="more"],[data-gc-transparency="reduce"]) .gc-frost-stage::after { display:none; }
 @media(forced-colors:active) { .gc-frost-stage { border-color:CanvasText; } }
+
+/* WCN controls resize only the local web lab window, not native desktop chrome. */
+#demo-window.gc-window--maximized { block-size:min(740px,84dvh); }
+#demo-window-restore:not([hidden]) { margin-block-start:var(--gc-space-3); }

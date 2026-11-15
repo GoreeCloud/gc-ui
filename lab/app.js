@@ -1,4 +1,4 @@
-import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, initSignalBoard, ICON_NAMES } from "../src/index.js";
+import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, initSignalBoard, initWindowCommandNodes, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 // A single reusable rail controller owns expansion and route announcements.
@@ -163,3 +163,42 @@ initBottomNavigation(document.querySelector("#demo-window-nav"));
 
 // Signal Constellation reads illustrative DOM records only; no live service polling.
 initSignalBoard(document.querySelector("#signal-constellation"));
+
+
+// Local-only Window Command Nodes preview: no native OS or browser-window calls.
+const previewWindow=document.querySelector("#demo-window");
+const previewRestore=document.querySelector("#demo-window-restore");
+const previewStatus=document.querySelector("#demo-window-status");
+const previewWcn=initWindowCommandNodes(previewWindow.querySelector(".gc-window__command-nodes"),{
+  onDismiss(){
+    previewWindow.hidden=true;
+    previewRestore.hidden=false;
+    previewRestore.textContent="Reopen dismissed local preview";
+    previewStatus.textContent="Local preview dismissed. Your desktop window is unchanged.";
+    previewRestore.focus();
+  },
+  onDock(){
+    previewWindow.hidden=true;
+    previewRestore.hidden=false;
+    previewRestore.textContent="Restore docked local preview";
+    previewStatus.textContent="Local preview docked. Your actual desktop dock is unchanged.";
+    previewRestore.focus();
+  },
+  onExpand({maximized}){
+    const next=!maximized;
+    previewWindow.classList.toggle("gc-window--maximized",next);
+    previewStatus.textContent=next
+      ?"Local preview expanded; no OS window was maximized."
+      :"Local preview restored; no OS window was changed.";
+    return next;
+  },
+  onError(){previewStatus.textContent="Local preview action unavailable.";}
+});
+previewRestore.addEventListener("click",()=>{
+  previewWindow.hidden=false;
+  previewRestore.hidden=true;
+  previewWindow.classList.remove("gc-window--maximized");
+  previewWcn.setMaximized(false);
+  previewStatus.textContent="Local preview reopened. Your desktop window remains unchanged.";
+  previewWindow.querySelector('[data-gc-window-command="dismiss"]').focus();
+});
