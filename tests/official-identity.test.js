@@ -51,16 +51,21 @@ test('large-text badge selector is stable when wordmark precedes hero status',()
  assert.doesNotMatch(css,/\.gc-lab-hero-copy\s*>\s*\.gc-cluster:first-child\s+\.gc-badge/);
 });
 
-test('new replacement remains source-only while pinned approved identity remains active',()=>{
+test('rejected Frame Relay identity must never be promoted to consumer assets',()=>{
  const doc=read('docs/OFFICIAL_IDENTITY.md').toString('utf8');
  const readme=read('README.md').toString('utf8');
  const html=read('lab/index.html').toString('utf8');
- assert.match(doc,/Frame Relay v1 candidate/);
- assert.match(doc,/not approved/i);
- assert.ok(doc.includes("Do **not** replace existing assets/identity/ files"));
- assert.match(doc,/umbrella circular-G/i);
- assert.match(doc,/brand-assets issue #18/);
- assert.match(readme,/Identity refresh in review/);
- assert.match(readme,/Official Aperture Weave asset pins remain unchanged/);
- assert.ok(!html.includes("frame-relay-v1") && !html.includes("candidates/frame-relay"));
+ assert.match(doc,/Frame Relay v1/);
+ assert.match(doc,/rejected/i);
+ assert.match(doc,/founder-rejected-archived/);
+ assert.match(doc,/Do not copy, repurpose, promote/);
+ assert.match(doc,/assets\/identity\//);
+ assert.match(doc,/umbrella circular-G/);
+ assert.match(doc,/brand issue #18/);
+ assert.match(readme,/Rejected identity experiment/);
+ assert.match(readme,/A genuinely new identity is still needed/);
+ assert.ok(!html.includes('frame-relay-v1') && !html.includes('candidates/frame-relay'));
+ for(const name of Object.keys(pins)){
+   assert.ok(!name.toLowerCase().includes('frame-relay'),name+' must stay an official interim identity asset');
+ }
 });
