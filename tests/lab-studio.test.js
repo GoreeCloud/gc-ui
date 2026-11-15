@@ -82,7 +82,8 @@ test("material study avoids AI-template decoration and uses real navigable Cloud
   assert.match(premium,/gc-studio-showcase/);
   assert.match(premium,/Depth where it earns its place/);
   assert.doesNotMatch(premium,/Beautiful by design|gc-showcase__orbit|gc-showcase__progress/);
-  for(const role of ["Canvas","Surface","Lens"])assert.match(premium,new RegExp("01—03|"+role));
+  for(const [index,role] of [["01","Canvas"],["02","Surface"],["03","Lens"]])
+    assert.ok(premium.includes("<dt><span>"+index+"</span> "+role+"</dt>"),"Missing material "+role);
   for(const target of ["#patterns","#forms"])assert.ok(premium.includes('href="'+target+'"'));
   assert.match(premium,/aria-label="Cloud Lens example navigation"/);
   assert.match(premium,/NO LIVE SERVICE DATA/);
