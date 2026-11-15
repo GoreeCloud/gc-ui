@@ -248,6 +248,11 @@
 @media (max-width:600px) {
   .gc-lab-rail.gc-navigation-rail { display:none; }
   .gc-app .gc-lab-main { padding-block-start:12px; }
+  /* The floating mobile dock must not cover reading content. A lab-specific
+     selector keeps clearance intact when Studio styles follow component CSS. */
+  .gc-app #main.gc-bottom-nav-content {
+    padding-block-end:max(calc(160px + env(safe-area-inset-bottom,0px)),var(--gc-bottom-nav-clearance,0px));
+  }
   .gc-app .gc-lab-hero { gap:22px; min-block-size:0; padding:24px; border-radius:24px; }
   .gc-app .gc-lab-hero h1 { max-inline-size:100%; font-size:clamp(32px,8vw,44px); line-height:1.08; letter-spacing:-.05em; }
   .gc-lab-hero-mark { margin-block-end:12px; }
