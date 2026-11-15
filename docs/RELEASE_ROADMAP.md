@@ -23,6 +23,13 @@ The proposed frozen direct exports are `./foundation`, `./tokens`, `./tokens.css
 
 **Color and appearance freedom is permanent:** GoreeCloud UI requires no global hue, default brand color, or mandatory light/dark appearance. Each authorized application can select an independent accessible accent, visual palette and supported appearance; the illustrative Iris/Lagoon/Ember/Moss presets do not impose a brand choice. Cloud Lens may use frosted glass selectively with solid, reduced-transparency and forced-color fallbacks.
 
+
+### Evidence timestamp integrity (November 15, 2026 hardening)
+
+The source-only `release:status` and `release:verify` gate now validates evidence and founder/maintainer decision timestamps as explicitly timezoned RFC3339 values. It rejects impossible calendar days, malformed/ambiguous zones and future-dated claims (five minutes of clock-skew tolerance), and it will not accept an external approval dated **before** any of its claimed test results. Tests use fixed date fixtures plus negative cases.
+
+This protects against obvious chronology mistakes and accidental premature release. It **does not** authenticate GitHub links, independently verify screenshots, prove a named reviewer actually approved anything, or imply that 1.0.0 is released. Manual review of the exact source SHA, linked CI artifacts and actual premium visual acceptance remains mandatory; the current `0.1.0-alpha.0` package and all eight release gates remain unchanged and open.
+
 ## Release acceptance workflow
 
 1. Resolve [machine-readable blocking gates](../registry/release-plan.v1.json) for a specific *candidate commit* and identify reproducible evidence for each. Use `npm run release:status` for a non-mutating readiness report. `npm run release:verify` must **fail closed** while any gate or the exact package version is outstanding.

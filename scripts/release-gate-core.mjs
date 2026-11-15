@@ -19,6 +19,24 @@ export const STABLE_1_0_SYMBOLS=Object.freeze([
   "getAccentColor","hasIcon","iconSvg","initAccordion","initDrawer","initToggleGroup"
 ]);
 const shaPattern=/^[a-f0-9]{40}$/;
+/**
+ * RFC3339 date with explicit timezone. Date.parse alone normalizes impossible
+ * calendar days (for example February 31) and accepts some ambiguous formats.
+ * Reject future evidence (allowing at most five minutes of clock skew).
+ */
+export function parseReleaseEvidenceTimestamp(value,now=Date.now()){
+  if(typeof value!=="string"||
+    !/^\d{4}-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12]\d|3[01])T(?:[01]\d|2[0-3]):[0-5]\d:[0-5]\d(?:\.\d{1,3})?(?:Z|[+-](?:0\d|1[0-4]):[0-5]\d)$/.test(value))return null;
+  const zone=value.match(/([+-])(\d{2}):(\d{2})$/);
+  if(zone&&Number(zone[2])===14&&Number(zone[3])!==0)return null;
+  const stamp=Date.parse(value);
+  if(!Number.isFinite(stamp)||stamp>now+300000)return null;
+  const minutes=zone?(zone[1]==="+"?1:-1)*(Number(zone[2])*60+Number(zone[3])):0;
+  const local=new Date(stamp+minutes*60000);
+  if(!Number.isFinite(local.getTime())||local.toISOString().slice(0,19)!==value.slice(0,19))
+    return null;
+  return stamp;
+}
 const fail=(failures,condition,message)=>{if(!condition) failures.push(message);};
 const safeHttpsUrl=text=>{
   if(typeof text!=="string" || text.length>2048) return false;
@@ -34,8 +52,7 @@ const isValidEvidence=(item,sha)=>{
   if(!shaPattern.test(item.sourceSha||"") || item.sourceSha!==sha)return false;
   if(!safeHttpsUrl(item.url))return false;
   if(typeof item.summary!=="string"||item.summary.trim().length<15)return false;
-  if(typeof item.testedAt!=="string" || !/^\d{4}-\d{2}-\d{2}T/.test(item.testedAt) ||
-    !Number.isFinite(Date.parse(item.testedAt)))return false;
+  if(parseReleaseEvidenceTimestamp(item.testedAt)===null)return false;
   return true;
 };
 const exactSet=(expected,actual)=>
@@ -52,13 +69,13 @@ export function validateExternalReleaseEvidence(record,pkg,sha){
     typeof record.reviewer!=="string" || record.reviewer.trim().length<5 ||
     !safeHttpsUrl(record.reviewUrl) ||
     !/^https:\/\/github\.com\/GoreeCloud\/gc-ui\/(?:issues|pull)\/\d+/.test(record.reviewUrl) ||
-    typeof record.reviewedAt!=="string" ||
-    !/^\d{4}-\d{2}-\d{2}T/.test(record.reviewedAt) ||
-    !Number.isFinite(Date.parse(record.reviewedAt)))return false;
+    parseReleaseEvidenceTimestamp(record.reviewedAt)===null)return false;
   const items=record.gates;
   if(!exactSet(REQUIRED_RELEASE_GATES,Array.isArray(items)?items.map(v=>v?.id):null))return false;
+  const decisionAt=parseReleaseEvidenceTimestamp(record.reviewedAt);
   return items.every(g=>g.status==="verified" && Array.isArray(g.evidence) &&
-    g.evidence.length>0 && g.evidence.every(e=>isValidEvidence(e,sha)));
+    g.evidence.length>0 && g.evidence.every(e=>isValidEvidence(e,sha) &&
+      parseReleaseEvidenceTimestamp(e.testedAt)<=decisionAt));
 }
 
 /**
