@@ -21,6 +21,10 @@ A wholly separate candidate, if later authorized, requires human visual review a
 
 The UI source tests additionally reject accidental exact-byte imports of the six archived, founder-rejected Frame Relay vectors into current `assets/`, and reject direct references to the rejected archive in `lab/` or `src/`. The expected Git blob fingerprints derive from the canonical `brand-assets` rejected manifest, which remains separately checked by brand CI. This is an **exact-source safety guard only**: it does not detect altered artwork, certify visual originality, or grant approval to any new concept. Both repositories must independently pass their CI before future consumer changes.
 
+### Repainted rejected-symbol guard
+
+The consumer source test now independently checks the three original, immutable Frame Relay SVG path command streams in every current `assets/` SVG. Changes to fills, names, path order or coordinate whitespace do **not** make the rejected silhouette eligible for adoption. An altered silhouette, transformed path or visually similar redraw is **not fully detectable** by this restricted source comparison and still requires human review and the founder's explicit decision. This expands the existing exact-file/direct-link checks without introducing any new artwork or changing the interim active brand identity.
+
 ## Consumer copy mapping
 
 | GC UI local asset | Central master | SHA-256 |

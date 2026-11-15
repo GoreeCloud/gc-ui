@@ -78,3 +78,53 @@ test("working Lab and shared runtime must not directly load the rejected archive
   assert.ok(!pkg.files.some(path=>path.includes("assets/identity")),
     "Graphic identity must not silently enter the open-source foundation package");
 });
+
+// The three original vector paths are pinned directly from the rejected
+// brand-assets source blob 842cbedd40697aa21f899b0c7948594e760714d8. Recoloring or reshuffling paths
+// is not an acceptable way to revive the rejected symbol.
+const rejectedCorePathData=Object.freeze([
+  "M71 28h105c20 0 36 16 36 36v28h-30V66c0-5-4-9-9-9H73c-5 0-9 4-9 9v116c0 5 4 9 9 9h37v30H71c-20 0-37-16-37-37V65c0-20 17-37 37-37Z",
+  "M139 80h40c23 0 41 18 41 41v63c0 23-18 41-41 41h-40v-30h40c6 0 11-5 11-11v-63c0-6-5-11-11-11h-40V80Z",
+  "M111 111h44c12 0 21 9 21 21v36c0 12-9 21-21 21h-44c-12 0-21-9-21-21v-36c0-12 9-21 21-21Zm8 27v24h28v-24h-28Z"
+]);
+const pathToken=/[AaCcHhLlMmQqSsTtVvZz]|[-+]?(?:\d+\.?\d*|\.\d+)(?:[eE][-+]?\d+)?/g;
+const canonicalPath=value=>{
+ if(typeof value!=="string"||value.length>20000)return null;
+ const tokens=value.match(pathToken);
+ if(!tokens || tokens.length<4)return null;
+ if(value.replace(pathToken,"").replace(/[\s,]/g,""))return null;
+ return tokens.join("|");
+};
+const pathsFromSvg=svg=>{
+ const paths=new Set();
+ for(const tag of svg.matchAll(/<path\b[^>]*>/gi)){
+  const d=tag[0].match(/\bd\s*=\s*(["'])([\s\S]*?)\1/i);
+  if(d){const canonical=canonicalPath(d[2]);if(canonical)paths.add(canonical);}
+ }
+ return paths;
+};
+const originalGeometry=new Set(rejectedCorePathData.map(canonicalPath));
+const isRejectedFrameGeometry=svg=>{
+ const actual=pathsFromSvg(svg);
+ return [...originalGeometry].every(x=>actual.has(x));
+};
+test("recolored or reordered rejected mark remains blocked, not just identical bytes",()=>{
+ assert.equal(originalGeometry.size,3);
+ const redraw=(colors=["#111111","#222222","#333333"],order=[0,1,2])=>
+  "<svg xmlns='http://www.w3.org/2000/svg'>"+
+  order.map(i=>"<path fill='"+colors[i]+"' d='"+rejectedCorePathData[i]+"'/>").join("")+
+  "</svg>";
+ assert.ok(isRejectedFrameGeometry(redraw()));
+ assert.ok(isRejectedFrameGeometry(redraw(["#121212","#343434","#565656"],[2,0,1])));
+ assert.ok(isRejectedFrameGeometry(redraw().replace("M71 28h105","M71,28 h105")));
+ assert.equal(isRejectedFrameGeometry(redraw().replace("M71 28h105","M71 29h105")),false,
+  "Modified geometry must not be misrepresented as automatically recognized");
+});
+test("active UI SVGs must not contain the rejected mark's three original paths",()=>{
+ const files=walk(join(root,"assets")).filter(x=>x.toLowerCase().endsWith(".svg"));
+ assert.ok(files.length>3);
+ for(const file of files){
+  assert.equal(isRejectedFrameGeometry(readFileSync(file,"utf8")),false,
+   relative(root,file)+" contains the founder-rejected frame symbol despite cosmetic source changes");
+ }
+});
