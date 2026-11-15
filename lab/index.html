@@ -195,12 +195,17 @@
         <div class="gc-window gc-window--floating gc-window--app-shell" id="demo-window" role="region" aria-label="Rounded workspace window preview">
           <div class="gc-window__titlebar">
             <div class="gc-window__identity"><span class="gc-feature-tile__icon" style="inline-size:42px;block-size:42px" aria-hidden="true"><gc-icon name="grid"></gc-icon></span><span>GoreeCloud Workspace</span></div>
-            <div class="gc-window__controls"><a class="gc-button gc-button--quiet gc-button--sm gc-button--round" href="#forms" aria-label="Jump to form examples">Explore forms</a></div>
+            <div class="gc-window__command-nodes" aria-label="Window commands">
+              <button type="button" data-gc-window-command="dismiss" aria-label="Close window"></button>
+              <button type="button" data-gc-window-command="dock" aria-label="Minimize window"></button>
+              <button type="button" data-gc-window-command="expand" aria-label="Maximize window"></button>
+            </div>
           </div>
           <div class="gc-window__body gc-stack">
             <span class="gc-overline">Cloud Surface / Window</span>
             <h3 class="gc-title">Every edge, considered.</h3>
-            <p class="gc-support gc-readable">An application window should feel intentional at every size. All four corners remain rounded—even in compact and maximized states.</p>
+            <p class="gc-support gc-readable">An application window should feel intentional at every size. All four corners remain rounded—even in compact and maximized states. The right-aligned circular nodes operate <strong>only this local browser preview</strong>, not your desktop window manager.</p>
+            <a class="gc-button gc-button--secondary" href="#forms">Explore forms</a>
             <div class="gc-feature-grid" style="margin-block-start:var(--gc-space-3)">
               <div class="gc-feature-tile"><h4 class="gc-heading">Soft geometry</h4><p>Canonical radius scale.</p></div>
               <div class="gc-feature-tile"><h4 class="gc-heading">Clear hierarchy</h4><p>Controls with purpose.</p></div>
@@ -213,6 +218,8 @@
             <a class="gc-bottom-nav__link" href="#components"><gc-icon name="grid"></gc-icon><span>Library</span></a>
           </nav>
         </div>
+        <button class="gc-button gc-button--secondary" id="demo-window-restore" type="button" hidden>Reopen local preview</button>
+        <p class="gc-support" id="demo-window-status" role="status" aria-live="polite">Circular, glyph-free Window Command Nodes. Local preview only; no OS-level window control.</p>
       </section>
 
       <section id="components" class="gc-lab-section" aria-labelledby="components-heading">

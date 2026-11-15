@@ -66,7 +66,11 @@
       "types": "./src/signal-board.d.ts",
       "default": "./src/signal-board.js"
     },
-    "./glass.css": "./src/glass.css"
+    "./glass.css": "./src/glass.css",
+    "./window-command-nodes": {
+      "types": "./src/window-command-nodes.d.ts",
+      "default": "./src/window-command-nodes.js"
+    }
   },
   "files": [
     "src/",
@@ -78,7 +82,7 @@
   ],
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "check": "node --check src/index.js && node --check src/availability.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check src/menu.js && node --check src/table.js && node --check src/tree.js && node --check src/combobox.js && node --check src/bottom-nav.js && node --check src/navigation-rail.js && node --check src/signal-board.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
+    "check": "node --check src/index.js && node --check src/availability.js && node --check src/theme.js && node --check src/icons.js && node --check src/elements.js && node --check src/patterns.js && node --check src/commands.js && node --check src/menu.js && node --check src/table.js && node --check src/tree.js && node --check src/combobox.js && node --check src/bottom-nav.js && node --check src/navigation-rail.js && node --check src/window-command-nodes.js && node --check src/signal-board.js && node --check scripts/generate-web-tokens.mjs && node --check scripts/build-icon-assets.mjs && npm run icons:check && npm run tokens:check && npm run export:platform && npm run export:check && npm run contrast:check && npm test",
     "export:platform": "node scripts/export-platform-tokens.mjs --write",
     "export:check": "node scripts/export-platform-tokens.mjs --check",
     "prepack": "npm run icons:check && npm run tokens:check && npm run export:platform",

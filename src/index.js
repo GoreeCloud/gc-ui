@@ -11,6 +11,7 @@ export { initCombobox } from "./combobox.js";
 export { initBottomNavigation } from "./bottom-nav.js";
 
 export { initNavigationRail } from "./navigation-rail.js";
+export { initWindowCommandNodes } from "./window-command-nodes.js";
 
 export { initAvailabilityFeedback } from "./availability.js";
 export { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "./signal-board.js";

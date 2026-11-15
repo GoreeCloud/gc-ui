@@ -4,6 +4,9 @@ import { fileURLToPath } from "node:url";
 function renderCss(t){
  if(!t?.foundations||!t?.semantic?.light||!t?.semantic?.dark||!t?.accents?.iris)throw new Error("Missing GoreeCloud token sections");
  const b=t.foundations;
+ const wcn=t.windowCommandNodes;
+ if(wcn?.shape!=="circle"||!wcn.colors?.light||!wcn.colors?.dark)throw new Error("Missing GoreeCloud WCN circle or palette tokens");
+ const wcnColors=mode=>Object.fromEntries(Object.entries(wcn.colors[mode]).map(([key,value])=>["wcn-"+key,value]));
  const primitives={"font-ui":b.type.fontFamily,"font-mono":b.type.mono,"type-display":b.type.display,"type-title":b.type.title,"type-section":b.type.section,"type-heading":b.type.heading,"type-body":b.type.body,"type-support":b.type.support,"type-label":b.type.label,"line-body":b.type.lineBody,
  "radius-sm":b.radius.sm,"radius-md":b.radius.md,"radius-lg":b.radius.lg,"radius-xl":b.radius.xl,"radius-full":b.radius.full,
  "motion-fast":b.motion.fast,"motion-base":b.motion.base,"motion-slow":b.motion.slow,"ease":b.motion.ease,"ease-expressive":b.motion.expressive,
@@ -20,12 +23,12 @@ function renderCss(t){
  }).join("\n");
  const block=(selector,values,extra="")=>selector+" {\n"+decl(values)+(extra?"\n  "+extra:"")+"\n}\n";
  let css="/* Generated from tokens/gc.tokens.json by scripts/generate-web-tokens.mjs — DO NOT EDIT. */\n";
- css+=block(":root, .gc-app[data-gc-theme]",{...primitives,...t.semantic.light,...t.accents.iris.light},"color-scheme: light;");
+ css+=block(":root, .gc-app[data-gc-theme]",{...primitives,...t.semantic.light,...wcnColors("light"),...t.accents.iris.light},"color-scheme: light;");
  for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-accent="'+family+'"], .gc-app[data-gc-theme][data-gc-accent="'+family+'"]',modes.light);
- css+=block(':root[data-gc-theme="dark"], .gc-app[data-gc-theme="dark"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
+ css+=block(':root[data-gc-theme="dark"], .gc-app[data-gc-theme="dark"]',{...t.semantic.dark,...wcnColors("dark"),...t.accents.iris.dark},"color-scheme: dark;");
  for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block(':root[data-gc-theme="dark"][data-gc-accent="'+family+'"], .gc-app[data-gc-theme="dark"][data-gc-accent="'+family+'"]',modes.dark);
  css+="@media (prefers-color-scheme: dark) {\n";
- css+=block('  :root:not([data-gc-theme]), :root[data-gc-theme="auto"], .gc-app[data-gc-theme="auto"]',{...t.semantic.dark,...t.accents.iris.dark},"color-scheme: dark;");
+ css+=block('  :root:not([data-gc-theme]), :root[data-gc-theme="auto"], .gc-app[data-gc-theme="auto"]',{...t.semantic.dark,...wcnColors("dark"),...t.accents.iris.dark},"color-scheme: dark;");
  for(const [family,modes] of Object.entries(t.accents))if(family!=="iris")css+=block('  :root:not([data-gc-theme])[data-gc-accent="'+family+'"], :root[data-gc-theme="auto"][data-gc-accent="'+family+'"], .gc-app[data-gc-theme="auto"][data-gc-accent="'+family+'"]',modes.dark);
  css+="}\n";
  css+=':root[data-gc-contrast="more"], .gc-app[data-gc-theme][data-gc-contrast="more"] { --gc-lens-fill: var(--gc-lens-solid); --gc-outline-soft: var(--gc-outline); --gc-shadow-1: none; --gc-shadow-2: none; --gc-shadow-3: none; --gc-shadow-4: none; }\n';

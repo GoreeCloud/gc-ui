@@ -168,7 +168,7 @@
     "officialName": "GoreeCloud UI Window Command Nodes",
     "abbreviation": "WCN",
     "shortName": "Command Nodes",
-    "status": "founder-approved-design-requirement-not-yet-implemented",
+    "status": "founder-approved-circular-design-web-alpha-implementation",
     "approvedOn": "2026-11-14",
     "titlebarAlignment": "physical-right",
     "visualTreatment": "flat",
@@ -191,12 +191,19 @@
         "windowOperation": "maximize-or-restore"
       }
     ],
-    "colorHexValues": "not-specified-by-founder",
-    "shapeGeometry": "not-specified-by-founder",
+    "colorHexValues": "tokens/gc.tokens.json#windowCommandNodes.colors",
+    "shapeGeometry": "circle",
     "nativeWindowActionsRequired": true,
     "accessibleNamesRequired": true,
     "appAccentIndependent": true,
     "docs": "docs/WINDOWS_AND_NAVIGATION.md",
-    "adoptionStatus": "unverified"
+    "adoptionStatus": "not-audited",
+    "faceDiameter": "18px",
+    "hitTarget": "44px",
+    "gap": "0px",
+    "paletteStatus": "implementation-candidate-pending-founder-visual-review",
+    "webController": "src/window-command-nodes.js",
+    "webControllerStatus": "implemented-alpha",
+    "nativeAdapterStatus": "not-implemented"
   }
 }

@@ -192,5 +192,24 @@
         "on-brand-container": "#DBF7DF"
       }
     }
+  },
+  "windowCommandNodes": {
+    "shape": "circle",
+    "faceDiameter": "18px",
+    "hitTarget": "44px",
+    "gap": "0px",
+    "paletteStatus": "implementation-candidate-pending-founder-visual-review",
+    "colors": {
+      "light": {
+        "crimson": "#B62F4B",
+        "amber": "#9C5F13",
+        "teal": "#087E78"
+      },
+      "dark": {
+        "crimson": "#F16C82",
+        "amber": "#F0B64C",
+        "teal": "#45CBC1"
+      }
+    }
   }
 }

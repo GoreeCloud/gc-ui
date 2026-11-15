@@ -19,6 +19,42 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
 | Identity and icons | gc-avatar; gc-icon, iconSvg() | Image alt and icon-only button names |
 
+## Window Command Nodes (WCN) — web alpha
+
+**Founder-approved shape:** circular like familiar desktop window dots, but distinctly GoreeCloud: the three **flat, glyph-free** faces are aligned at the **physical right** of the titlebar, ordered **Crimson / Dismiss**, **Amber / Dock**, **Teal / Expand**. Do not insert icons, visible symbols, letters, or a glyph on hover. Semantic WCN light/dark colors are independent of the app accent; exact values and the 18px face are current alpha candidates pending final visual acceptance. Each face lives inside a **44px circular target** to support mouse and touch.
+
+Use three **empty native buttons** and the controller supplied by the web package:
+
+```html
+<div class="gc-window__command-nodes" role="group" aria-label="Window commands">
+  <button type="button" data-gc-window-command="dismiss" aria-label="Close window"></button>
+  <button type="button" data-gc-window-command="dock" aria-label="Minimize window"></button>
+  <button type="button" data-gc-window-command="expand" aria-label="Maximize window"></button>
+</div>
+```
+
+```js
+import { initWindowCommandNodes } from "@goreecloud/ui/window-command-nodes";
+
+// windowHost is an APPLICATION-SUPPLIED native adapter, not a GC UI browser API.
+const wcn = initWindowCommandNodes(document.querySelector(".gc-window__command-nodes"), {
+  onDismiss: ({ signal }) => windowHost.requestClose({ signal }),  // honor unsaved work
+  onDock: ({ signal }) => windowHost.minimize({ signal }),
+  onExpand: async ({ maximized, signal }) => {
+    if (maximized) await windowHost.restore({ signal });
+    else await windowHost.maximize({ signal });
+    return windowHost.isMaximized(); // confirmed host state, never guessed
+  },
+  onError: () => announceWindowActionUnavailable()
+});
+windowHost.onMaximizedChange(value => wcn.setMaximized(value));
+// On component unmount: wcn.dispose()
+```
+
+The controller **rejects incomplete/unwired controls** instead of displaying fake OS actions; callback errors set `data-gc-wcn-error` on the group and can be announced by the host. The group exposes busy state while awaiting actions and prevents repeated activation. A callback may return the confirmed maximized state, or the host can call `setMaximized()` when the OS notifies it. Pending actions are aborted on `dispose()`; host operations must honor the AbortSignal where supported. The controller **never closes the browser window** or invents native desktop capabilities.
+
+Text tooltips and screen-reader names are outside the colored faces; keyboard focus rings, forced colors and flat hover feedback are supported. Compare actual compositor chrome, OS permission, restored/maximized state, and unsaved-work behavior in **native builds**, and track acceptance before claiming desktop integration. The design lab's controls manipulate **only a local preview**, not the user's OS window. See [full WCN contract](WINDOWS_AND_NAVIGATION.md#window-command-nodes-wcn--official-goreecloud-ui-window-controls).
+
 ## Signature pattern: Signal Constellation & Timeflow
 
 **Signal Constellation** is an alpha, locally filtered application status
