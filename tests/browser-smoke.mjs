@@ -698,6 +698,15 @@ try {
     assert.deepEqual(live,{enabled:{contrast:"more",transparency:"reduce"},
       restored:{contrast:"normal",transparency:"auto"}},
       "Native grouped preference controls must retain functional semantics");
+    const preview=JSON.parse(await browser.evaluate(
+      '(()=>{const accent=document.querySelector("#accent"),chip=document.querySelector(".gc-lab-color-context-chip");'+
+      'const initial=getComputedStyle(chip).backgroundColor;accent.value="lagoon";'+
+      'accent.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'const changed=getComputedStyle(chip).backgroundColor;accent.value="iris";'+
+      'accent.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'return JSON.stringify({initial,changed,restored:getComputedStyle(chip).backgroundColor});})()'));
+    assert.ok(preview.initial!==preview.changed&&preview.restored===preview.initial,
+      "Foundation accent context must use live semantic theme tokens: "+JSON.stringify(preview));
     await browser.evaluate('window.scrollTo({top:0,behavior:"instant"})');
     await delay(60);
     const shot=await browser.screenshot(join(directory,
