@@ -629,6 +629,31 @@ try {
   }
   console.log("Chromium icon reference: 42 original tokens, groups, search, empty/reset, dark mobile and screenshots passed");
 
+  // Verify real responsive workflow composition, not only source-level CSS.
+  for(const width of [1440,900,390]) {
+    await browser.setViewport(width,900,{dark:width===390});
+    await browser.navigate(base+"/lab/");
+    const geometry=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;'+
+      'const box=id=>document.querySelector(id).getBoundingClientRect();'+
+      'const components=box("#components > .gc-grid--two"),table=box("#components > .gc-grid--two > article:last-child");'+
+      'const patterns=box("#patterns > .gc-grid--two"),tree=box("#patterns > .gc-grid--two > article:last-child");'+
+      'const forms=box("#forms > .gc-grid--two"),form=box("#demo-form");'+
+      'return JSON.stringify({viewport:root.clientWidth,scroll:root.scrollWidth,'+
+      'tableRatio:table.width/components.width,treeRatio:tree.width/patterns.width,'+
+      'formRatio:form.width/forms.width,treeLayout:getComputedStyle(document.querySelector("#patterns > .gc-grid--two > article:last-child")).display,'+
+      'plannedBackground:getComputedStyle(document.querySelector("#demo-planned-form")).backgroundColor});})()'));
+    assert.ok(geometry.scroll<=geometry.viewport+1,
+      "Workflow panel layout introduced horizontal overflow: "+width+" "+JSON.stringify(geometry));
+    assert.ok(geometry.tableRatio>.94 && geometry.treeRatio>.94,
+      "Sortable table or interactive tree was stranded in an orphan half-column: "+JSON.stringify(geometry));
+    if(width<=1080)assert.ok(geometry.formRatio>.94,
+      "Tablet/phone working form must have a complete row: "+JSON.stringify(geometry));
+    else assert.equal(geometry.treeLayout,"grid",
+      "Desktop tree navigation reference must use an intentional two-column panel");
+    console.log("Chromium workflow compositions "+width+"px: full-width table/tree, planned form and no overflow passed");
+  }
+
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
   await browser.setViewport(390,844,{dark:false});

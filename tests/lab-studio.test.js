@@ -149,3 +149,21 @@ test("icon reference is searchable, grouped, responsive, and uses only canonical
   assert.match(studio,/@media \(max-width:430px\)/);
   assert.doesNotMatch(source,/\bfetch\s*\(|XMLHttpRequest|localStorage|\.innerHTML\s*=/);
 });
+
+
+test("workflow layouts promote real tables and navigation rather than orphaned fifth cards",()=>{
+  for(const section of ["components","patterns","forms"]) {
+    assert.match(html,new RegExp('id="'+section+'" class="gc-lab-section"'));
+  }
+  assert.match(studio,/\.gc-app #components > \.gc-grid--two > article:last-child \{\s*grid-column:1 \/ -1/);
+  assert.match(studio,/\.gc-app #patterns > \.gc-grid--two > article:last-child \{\s*grid-column:1 \/ -1/);
+  assert.match(studio,/\.gc-app #patterns > \.gc-grid--two > article:last-child > \.gc-tree/);
+  assert.match(studio,/\.gc-app #forms #demo-form \{ border-block-start:3px solid var\(--gc-brand\)/);
+  assert.match(studio,/\.gc-app #forms #demo-planned-form \{/);
+  assert.match(studio,/@media \(max-width:1080px\)/);
+  assert.match(studio,/@media \(forced-colors:active\)/);
+  assert.match(html,/id="demo-sort-table"/);
+  assert.match(html,/id="demo-tree"/);
+  assert.match(html,/id="demo-form"/);
+  assert.match(html,/id="demo-planned-form"/);
+});
