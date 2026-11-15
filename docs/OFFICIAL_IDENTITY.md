@@ -7,6 +7,14 @@ The approved visual direction is **Aperture Weave**, founder-approved
 November 6, 2026. `GoreeCloud/gc-ui` is the user-interface authority; it
 consumes images but does not replace the central brand master repository.
 
+## November 15 replacement proposal (source-only; not approved)
+
+A distinct unapproved [Frame Relay v1 candidate](https://github.com/GoreeCloud/brand-assets/tree/c93aa79fbb6d1d3d4de896763de2fdc63ac275d2/products/gc-ui/candidates/frame-relay-v1) is preserved in the central brand source library after [brand-assets PR #33](https://github.com/GoreeCloud/brand-assets/pull/33). The family contains six original SVG sources: symbol, app icon, SVG favicon, light/dark wordmarks and Canvas/Surface/Lens artwork. This fulfills **candidate source creation only**, not founder visual acceptance, platform derivatives or adoption.
+
+**Current official/consumer identity remains the exact-pinned November 6 Aperture Weave** until a separate founder-approved migration. Do **not** replace existing assets/identity/ files, SHA-256 pins, lab favicon, product icon, deployment or published package contents simply because a candidate exists. The permanent **GoreeCloud umbrella circular-G** identity is distinct from GoreeCloud UI.
+
+To inspect the candidate locally, clone the authorized brand-assets repository and run: node scripts/gc-ui-candidate-review-server.mjs. The server exposes only the six candidate SVGs and review HTML over http://127.0.0.1:8766 without generating image files. Following **explicit** founder visual approval, prepare reproducible PNG/ICO derivatives, verify 16px favicon legibility, light/dark and native packaging, and open a **separate**, hash-pinned GoreeCloud/gc-ui adoption PR with CI, rollback and real-world acceptance. Pending decisions remain tracked in [brand-assets issue #18](https://github.com/GoreeCloud/brand-assets/issues/18). The candidate's CI green status is **not** a founder design approval.
+
 ## Consumer copy mapping
 
 | GC UI local asset | Central master | SHA-256 |

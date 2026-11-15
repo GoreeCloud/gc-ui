@@ -2,6 +2,8 @@
 
 **Official identity:** The founder-approved Aperture Weave [logo, favicon and interface artwork](docs/OFFICIAL_IDENTITY.md) are centrally maintained in GoreeCloud/brand-assets and integrated into the experimental lab. Consumer visual acceptance remains separate from Stable release status.
 
+**Identity refresh in review:** [Frame Relay v1](docs/OFFICIAL_IDENTITY.md#november-15-replacement-proposal-source-only-not-approved) exists only as a candidate in the central brand library; it is not founder-approved, active in the lab, or deployed. Official Aperture Weave asset pins remain unchanged. No cutover is implied.
+
 
 **Clear by default. Consistent by nature. Fluid by design.**
 
