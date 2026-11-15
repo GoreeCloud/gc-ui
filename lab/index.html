@@ -50,7 +50,7 @@
   <div class="gc-lab-body">
     <header class="gc-lab-toolbar gc-lens">
       <div class="gc-lab-breadcrumb"><span>UI Studio</span><span aria-hidden="true">/</span><strong id="gc-lab-current-section">Design Language</strong></div>
-      <div class="gc-lab-toolbar-controls">
+      <div class="gc-lab-toolbar-controls" role="group" aria-label="Display preferences">
         <label class="gc-lab-compact-label" for="appearance">Appearance</label>
         <select class="gc-select gc-lab-select" id="appearance" aria-label="Appearance">
           <option value="auto">System</option><option value="light">Light</option><option value="dark">Dark</option>
@@ -59,8 +59,13 @@
         <select class="gc-select gc-lab-select" id="accent" aria-label="Accent color family">
           <option value="iris">Iris</option><option value="lagoon">Lagoon</option><option value="ember">Ember</option><option value="moss">Moss</option>
         </select>
-        <label class="gc-switch gc-lab-contrast"><input id="contrast" type="checkbox"><span>More contrast</span></label>
-        <label class="gc-switch gc-lab-transparency"><input id="transparency" type="checkbox"><span>Reduce transparency</span></label>
+        <fieldset class="gc-lab-toolbar-accessibility">
+          <legend>Accessibility</legend>
+          <div class="gc-lab-toolbar-accessibility-switches">
+            <label class="gc-switch gc-lab-contrast"><input id="contrast" type="checkbox"><span>More contrast</span></label>
+            <label class="gc-switch gc-lab-transparency"><input id="transparency" type="checkbox"><span>Reduce transparency</span></label>
+          </div>
+        </fieldset>
       </div>
     </header>
     <main id="main" class="gc-container gc-lab-main gc-bottom-nav-content">
