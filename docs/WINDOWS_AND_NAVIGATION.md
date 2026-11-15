@@ -2,6 +2,40 @@
 
 **Status:** Founder requirements mandatory. Web alpha primitives implemented incrementally; native adapters and consumer adoption remain unverified.
 
+## Window Command Nodes (WCN) — official GoreeCloud UI window controls
+
+**Founder design directive — November 14, 2026.** **Design status:** approved design requirement; implementation, platform support, and consumer adoption are **not** independently verified. **Official name:** *GoreeCloud UI Window Command Nodes (WCN)*. **Short name:** *Command Nodes*. **GoreeCloud motto:** *Your workspace, your way.*
+
+I created Window Command Nodes as GoreeCloud's distinctive window-management language: flat, glyph-free, right-aligned window controls with their own color identity. Their purpose is precise, seamless window interaction that feels consistent and unmistakably GoreeCloud.
+
+| Official node | Action | Required semantics |
+| --- | --- | --- |
+| **Crimson Node — Dismiss** | Close the active window | Invoke the supported native window-close action; do not equate this with deleting user data, force-quitting the application, or bypassing unsaved-work safeguards. |
+| **Amber Node — Dock** | Minimize the active window into the workspace dock | Invoke the supported native minimize action; this means the desktop window/dock mechanism, **not** GoreeCloud UI's in-app floating destination navigation. |
+| **Teal Node — Expand** | Maximize the active window, or restore it when already maximized | Reflect the current maximized/restored state in the accessible name and the action. |
+
+### Visual and placement contract
+
+- The three distinct nodes appear together as a consistent **right-aligned** group in the window titlebar. Preserve physical right-edge placement, including for RTL layouts, while maintaining accessible keyboard navigation.
+- The node faces are **flat and contain no glyphs, letters, punctuation, icons, or other visible action symbols**. This explicit founder direction resolves the conflict with the earlier prose mention of an “action symbol.” Do not add an X, minus, square, chevron, or hover-only pictogram.
+- Use the named **Crimson, Amber, and Teal** roles as the WCN-specific color palette, separate from each application's freely chosen accent. No numerical color values have yet been specified or approved; do not invent canonical hex/RGB values.
+- The founder identifies geometric shapes but has **not defined exact silhouettes, dimensions, spacing or node corner geometry**. Validate these against a future approved visual reference instead of silently standardizing circles, squares or diamonds.
+- Window frames retain the GoreeCloud rounded-corner requirement; the nodes themselves remain visually flat. Cloud Lens frosted material on an appropriate surrounding titlebar is a separate decision, not a node-face requirement.
+
+### Interaction, accessibility, and platform requirements
+
+- Use real focusable, keyboard-operable controls wired to genuine supported window actions. Accessible names must describe “Close window,” “Minimize window,” and context-dependent “Maximize window” / “Restore window.” Optional text tooltips can clarify actions **outside** the glyph-free faces.
+- Provide visible focus states, adequate hit areas, state feedback, contrast, disabled behavior, screen-reader support, high-contrast/forced-colors alternatives and reduced-motion accommodations. Colors alone are not sufficient identification: combine accessible names with discoverable tooltips or other non-face guidance.
+- Preserve unsaved-work protection, OS window-manager permissions and native lifecycle behavior. Never show a seemingly functional node whose action cannot be executed. Report unimplemented and unsupported cases accurately.
+- Native decorations and minimize-to-dock mechanics are platform-dependent. A browser-rendered GC window is a visual demonstration, **not** proof of desktop OS window management. Comply with supported APIs instead of forcing fake native controls.
+- Verify normal and maximized states, keyboard navigation, screen readers, zoom, right alignment in RTL, light/dark themes, forced colors, reduced motion, and each supported desktop adapter before claiming implementation compliance.
+
+### Official description and terminology
+
+**GoreeCloud UI Window Command Nodes:** I developed Window Command Nodes as GoreeCloud's signature window-management controls to provide a modern, intuitive, recognizable desktop experience. Each node is differentiated by its named color, intended geometry and window action, **without any glyph or action symbol on the node face**. My goal is to make window management feel seamless, visually consistent and distinctly GoreeCloud.
+
+Use **Window Command Nodes (WCN)** on first reference, then **Command Nodes** where brevity helps. **Dismiss**, **Dock**, and **Expand** identify their actions; these names do not change OS-level semantics. The standard is **documented**, not yet evidence of implemented components, native platform integrations, or consumer deployment.
+
 ## Desktop startup state: normal window by default
 
 **Founder directive (November 13, 2026):** Native Linux, Windows and macOS
