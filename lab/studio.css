@@ -694,7 +694,12 @@
   }
   .gc-app .gc-lab-toolbar-accessibility legend { margin:0 0 5px; }
   .gc-app .gc-lab-toolbar-accessibility-switches { gap:10px 18px; }
-  .gc-app .gc-lab-toolbar .gc-lab-select { min-inline-size:0; inline-size:100%; }
+  .gc-app .gc-lab-toolbar .gc-lab-select {
+    min-inline-size:0; inline-size:100%;
+    /* Preserve the established native-select 400% text reflow contract. */
+    font-size:clamp(16px,calc(.32rem + 10px),32px);
+    line-height:1.25;
+  }
 }
 @media (max-width:360px) {
   .gc-app .gc-lab-toolbar-controls { grid-template-columns:minmax(0,1fr); }
