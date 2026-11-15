@@ -189,4 +189,7 @@ test("foundations use an asymmetric, readable lead panel without new brand token
   assert.equal([...section.matchAll(/<article class="gc-card"/g)].length,3);
   assert.match(section,/id="demo-custom-accent"/);
   assert.match(section,/id="demo-custom-color"/);
+  assert.match(section,/class="gc-lab-color-context"/);
+  assert.match(section,/Purposeful emphasis\./);
+  assert.match(studio,/\.gc-lab-color-context-chip/);
 });
