@@ -17,6 +17,10 @@ The failure exposed a quality/process gap: hash-pinned and safe SVGs did **not**
 
 A wholly separate candidate, if later authorized, requires human visual review and an explicit decision **before** promotion, native platform derivatives or consumer migration. Automated tests are supporting evidence only. Track the replacement in [central brand issue #18](https://github.com/GoreeCloud/brand-assets/issues/18) and keep visual acceptance open in [GC UI issue #7](https://github.com/GoreeCloud/gc-ui/issues/7). No images will be generated in this chat per the founder's instruction.
 
+### Fail-closed archive import guard
+
+The UI source tests additionally reject accidental exact-byte imports of the six archived, founder-rejected Frame Relay vectors into current `assets/`, and reject direct references to the rejected archive in `lab/` or `src/`. The expected Git blob fingerprints derive from the canonical `brand-assets` rejected manifest, which remains separately checked by brand CI. This is an **exact-source safety guard only**: it does not detect altered artwork, certify visual originality, or grant approval to any new concept. Both repositories must independently pass their CI before future consumer changes.
+
 ## Consumer copy mapping
 
 | GC UI local asset | Central master | SHA-256 |
