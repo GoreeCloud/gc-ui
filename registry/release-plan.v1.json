@@ -38,14 +38,16 @@
       "./bottom-nav",
       "./navigation-rail",
       "./signal-board",
-      "."
+      ".",
+      "./window-command-nodes"
     ],
     "requiringClassification": [],
     "releaseLimitations": [
       "The legacy root entry point is explicitly preview-compatibility and re-exports preview controllers; @goreecloud/ui/foundation provides a narrow candidate Stable web entry, with final acceptance still open",
       "No default GoreeCloud hue or appearance mode is mandatory; each app can select its own",
       "Native token outputs are deterministic resources, not native component SDKs",
-      "No native device or consumer app is certified by the web package"
+      "No native device or consumer app is certified by the web package",
+      "Circular WCN is a preview-only web controller; native window management, founder visual acceptance and consumer adoption remain unverified."
     ],
     "rootEntryStatus": "preview-compatibility",
     "rootSymbolClassification": {
@@ -85,7 +87,8 @@
         "matchesCommand",
         "openDialog",
         "summarizeSignals",
-        "toast"
+        "toast",
+        "initWindowCommandNodes"
       ]
     }
   },
@@ -167,7 +170,7 @@
     {
       "version": "1.3.0",
       "status": "candidate-scope",
-      "scope": "Expand supported native desktop integration to independently verified Windows WinUI and/or Linux GTK4/Qt adapters; do not claim parity from token resources"
+      "scope": "Expand native desktop integration using verified Windows WinUI and/or Linux Qt Quick (Qt 6.12.0), Flutter Linux Desktop or Slint; native token exports alone do not certify platform support"
     },
     {
       "version": "1.4.0",

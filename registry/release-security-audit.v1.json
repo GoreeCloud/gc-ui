@@ -10,7 +10,11 @@
     "clientCssFiles": 3,
     "liveRuntimeDependencies": 0,
     "developmentDependencies": 0,
-    "firstPartyIconSprite": true
+    "firstPartyIconSprite": true,
+    "postBaselineAdditions": [
+      "src/window-command-nodes.js"
+    ],
+    "postBaselineReview": "not-covered-by-2026-11-13-security-baseline"
   },
   "licenseInventory": {
     "packageSpdx": "MIT",
@@ -38,7 +42,8 @@
     "Brand-assets master has no separate LICENSE/SPDX at inspected commit; do not infer trademark permission from package MIT declaration",
     "Exact 1.0.0 candidate source SHA, tarball and assets must be independently rerun after final changes",
     "Branch main is unprotected (GitHub branches/main protected=false, required checks off); admin-only protection endpoint returns 403",
-    "No released npm package, verified consumer migration, deployed production UI, or native SDK exists"
+    "No released npm package, verified consumer migration, deployed production UI, or native SDK exists",
+    "Circular WCN source was added after this audit's immutable sourceSha; baseline inventory remains historically accurate and full source/security review remains OPEN"
   ],
   "candidateGate": "open",
   "signedOrPublished": false

@@ -8,7 +8,10 @@ const plan=JSON.parse(load("registry/release-plan.v1.json"));
 test("release source/license review states exact baseline, dependencies and unresolved legal gate",()=>{
  assert.equal(audit.schemaVersion,1);
  assert.equal(audit.sourceSha,"c235f9b5e2577c440465de0d455372c363f4d01d");
- assert.equal(audit.sourceInventory.clientJsModules,readdirSync(new URL("../src/",import.meta.url)).filter(n=>n.endsWith(".js")).length);
+ assert.deepEqual(audit.sourceInventory.postBaselineAdditions,["src/window-command-nodes.js"]);
+ assert.equal(audit.sourceInventory.postBaselineReview,"not-covered-by-2026-11-13-security-baseline");
+ assert.equal(audit.sourceInventory.clientJsModules+audit.sourceInventory.postBaselineAdditions.length,
+   readdirSync(new URL("../src/",import.meta.url)).filter(n=>n.endsWith(".js")).length);
  assert.equal(audit.sourceInventory.clientCssFiles,3);
  assert.equal(audit.licenseInventory.packageSpdx,pkg.license);
  assert.match(load("LICENSE"),/MIT License/);
