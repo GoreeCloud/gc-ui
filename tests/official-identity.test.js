@@ -50,3 +50,17 @@ test('large-text badge selector is stable when wordmark precedes hero status',()
  assert.match(css,/\.gc-lab-hero-copy\s*>\s*\.gc-lab-status-cluster\s+\.gc-badge/);
  assert.doesNotMatch(css,/\.gc-lab-hero-copy\s*>\s*\.gc-cluster:first-child\s+\.gc-badge/);
 });
+
+test('new replacement remains source-only while pinned approved identity remains active',()=>{
+ const doc=read('docs/OFFICIAL_IDENTITY.md').toString('utf8');
+ const readme=read('README.md').toString('utf8');
+ const html=read('lab/index.html').toString('utf8');
+ assert.match(doc,/Frame Relay v1 candidate/);
+ assert.match(doc,/not approved/i);
+ assert.match(doc,/Do \\*\\*not\\*\\* replace existing assets\\/identity\\//i);
+ assert.match(doc,/umbrella circular-G/i);
+ assert.match(doc,/brand-assets issue #18/);
+ assert.match(readme,/Identity refresh in review/);
+ assert.match(readme,/Official Aperture Weave asset pins remain unchanged/);
+ assert.doesNotMatch(html,/frame-relay-v1|candidates\\/frame-relay/i);
+});
