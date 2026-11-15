@@ -167,3 +167,26 @@ test("workflow layouts promote real tables and navigation rather than orphaned f
   assert.match(html,/id="demo-form"/);
   assert.match(html,/id="demo-planned-form"/);
 });
+
+
+test("display preferences are a native group with an explicit accessible contrast/transparency fieldset",()=>{
+  assert.match(html, /class="gc-lab-toolbar-controls" role="group" aria-label="Display preferences"/);
+  assert.match(html, /<fieldset class="gc-lab-toolbar-accessibility">\s*<legend>Accessibility<\/legend>/);
+  for (const [id,label] of [["contrast","More contrast"],["transparency","Reduce transparency"]]) {
+    assert.match(html,new RegExp('<label class="gc-switch gc-lab-'+id+'"><input id="'+id+'" type="checkbox"><span>'+label+'</span></label>'));
+  }
+  assert.match(studio,/\.gc-app \.gc-lab-toolbar-accessibility-switches/);
+  assert.match(studio,/@media \(max-width:360px\)/);
+  assert.doesNotMatch(read("lab/app.js"),/window\.localStorage|document\.cookie/);
+});
+
+test("foundations use an asymmetric, readable lead panel without new brand tokens",()=>{
+  assert.match(studio,/@media \(min-width:1200px\)/);
+  assert.match(studio,/\.gc-app #foundations \.gc-lab-foundations > \.gc-card:first-child \{/);
+  assert.match(studio,/grid-row:span 2/);
+  assert.match(studio,/@media \(max-width:700px\)/);
+  const section=html.slice(html.indexOf('<section id="foundations"'),html.indexOf('<section id="premium"'));
+  assert.equal([...section.matchAll(/<article class="gc-card"/g)].length,3);
+  assert.match(section,/id="demo-custom-accent"/);
+  assert.match(section,/id="demo-custom-color"/);
+});
