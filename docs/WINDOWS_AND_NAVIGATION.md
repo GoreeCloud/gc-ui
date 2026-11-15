@@ -4,7 +4,7 @@
 
 ## Window Command Nodes (WCN) — official GoreeCloud UI window controls
 
-**Founder design directive — November 14, 2026.** **Design status:** approved design requirement; implementation, platform support, and consumer adoption are **not** independently verified. **Official name:** *GoreeCloud UI Window Command Nodes (WCN)*. **Short name:** *Command Nodes*. **GoreeCloud motto:** *Your workspace, your way.*
+**Founder design directive — November 14, 2026.** **Design status:** circular, flat, glyph-free, right-aligned controls are founder-approved. A browser/web-alpha host-callback controller and CSS are implemented for preview/consumers; native window-manager adapters and consumer adoption are **not** verified. **Official name:** *GoreeCloud UI Window Command Nodes (WCN)*. **Short name:** *Command Nodes*. **GoreeCloud motto:** *Your workspace, your way.*
 
 I created Window Command Nodes as GoreeCloud's distinctive window-management language: flat, glyph-free, right-aligned window controls with their own color identity. Their purpose is precise, seamless window interaction that feels consistent and unmistakably GoreeCloud.
 
@@ -18,9 +18,15 @@ I created Window Command Nodes as GoreeCloud's distinctive window-management lan
 
 - The three distinct nodes appear together as a consistent **right-aligned** group in the window titlebar. Preserve physical right-edge placement, including for RTL layouts, while maintaining accessible keyboard navigation.
 - The node faces are **flat and contain no glyphs, letters, punctuation, icons, or other visible action symbols**. This explicit founder direction resolves the conflict with the earlier prose mention of an “action symbol.” Do not add an X, minus, square, chevron, or hover-only pictogram.
-- Use the named **Crimson, Amber, and Teal** roles as the WCN-specific color palette, separate from each application's freely chosen accent. No numerical color values have yet been specified or approved; do not invent canonical hex/RGB values.
-- The founder identifies geometric shapes but has **not defined exact silhouettes, dimensions, spacing or node corner geometry**. Validate these against a future approved visual reference instead of silently standardizing circles, squares or diamonds.
-- Window frames retain the GoreeCloud rounded-corner requirement; the nodes themselves remain visually flat. Cloud Lens frosted material on an appropriate surrounding titlebar is a separate decision, not a node-face requirement.
+- Use the **Crimson, Amber, and Teal** WCN palette, independent of each application's accent. The shared source is `tokens/gc.tokens.json#windowCommandNodes.colors`; the **light/dark numeric colors are implementation candidates, not an independently founder-approved final color swatch**. Keep contrast and forced-colors access.
+- **Founder shape clarification (November 14, 2026): all three node faces are circles, visually similar in basic geometry to macOS window dots but original in color, right placement and glyph-free treatment.** The shared web-alpha specification uses **18px circular faces inside 44px circular interaction targets**, with zero additional gap; the face sizing/spacing remain tunable design implementation choices pending full visual acceptance.
+- Window frames retain the GoreeCloud rounded-corner requirement; the circular nodes themselves remain visually flat. Cloud Lens frosted material on an appropriate surrounding titlebar is a separate decision, not a node-face requirement.
+
+### Web-alpha component and native action boundary
+
+Use three **empty** real buttons as direct children of a physically right-aligned \`gc-window__command-nodes\` group, in Dismiss/Dock/Expand order; never place an icon or glyph inside a face. Import \`initWindowCommandNodes\` from \`@goreecloud/ui\` or \`@goreecloud/ui/window-command-nodes\`. Supply all three native host callbacks: \`onDismiss\`, \`onDock\`, and \`onExpand\`. Omission **throws** instead of creating inert fake OS controls. Each callback receives \`{ action, maximized, signal }\`; \`onExpand\` may return a **confirmed boolean** window state, or the host may call \`setMaximized(boolean)\` after its own window-state event. The controller never calls \`window.close()\`, guesses permission, or automatically toggles an unconfirmed state. \`dispose()\` aborts pending operations and detaches handlers. Applications retain unsaved-work checks, authorization, error feedback, and native lifecycle behavior. See [component usage](COMPONENTS.md#window-command-nodes-wcn--web-alpha).
+
+A browser design-lab demo may operate only its **local simulated window element** and must say so visibly. Desktop OS close/minimize/maximize behavior requires independently built and verified host adapters. High-contrast mode replaces the color signal with forced-colors-compatible controls and accessible text labels; no node-face glyphs appear in either mode.
 
 ### Interaction, accessibility, and platform requirements
 
@@ -34,7 +40,7 @@ I created Window Command Nodes as GoreeCloud's distinctive window-management lan
 
 **GoreeCloud UI Window Command Nodes:** I developed Window Command Nodes as GoreeCloud's signature window-management controls to provide a modern, intuitive, recognizable desktop experience. Each node is differentiated by its named color, intended geometry and window action, **without any glyph or action symbol on the node face**. My goal is to make window management feel seamless, visually consistent and distinctly GoreeCloud.
 
-Use **Window Command Nodes (WCN)** on first reference, then **Command Nodes** where brevity helps. **Dismiss**, **Dock**, and **Expand** identify their actions; these names do not change OS-level semantics. The standard is **documented**, not yet evidence of implemented components, native platform integrations, or consumer deployment.
+Use **Window Command Nodes (WCN)** on first reference, then **Command Nodes** where brevity helps. **Dismiss**, **Dock**, and **Expand** identify their actions; these names do not change OS-level semantics. The signature **browser-reference CSS and callback controller are implemented in web alpha**, but this is not evidence of native platform integration, founder-accepted visual polish, or any consumer deployment.
 
 ## Desktop startup state: normal window by default
 
