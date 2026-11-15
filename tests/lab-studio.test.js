@@ -75,3 +75,19 @@ test("new dark shell colors reuse canonical semantic values and remain readable"
   assert.match(studio,/--gc-studio-ink: #171D2A/);
   assert.match(studio,/--gc-studio-ink-text: #F2F4FB/);
 });
+
+test("material study avoids AI-template decoration and uses real navigable Cloud Lens actions",()=>{
+  const premium=html.match(/<section id="premium"[\s\S]*?<section class="gc-frost-demo"/)?.[0];
+  assert.ok(premium,"material study exists before frosted stage");
+  assert.match(premium,/gc-studio-showcase/);
+  assert.match(premium,/Depth where it earns its place/);
+  assert.doesNotMatch(premium,/Beautiful by design|gc-showcase__orbit|gc-showcase__progress/);
+  for(const [index,role] of [["01","Canvas"],["02","Surface"],["03","Lens"]])
+    assert.ok(premium.includes("<dt><span>"+index+"</span> "+role+"</dt>"),"Missing material "+role);
+  for(const target of ["#patterns","#forms"])assert.ok(premium.includes('href="'+target+'"'));
+  assert.match(premium,/aria-label="Cloud Lens example navigation"/);
+  assert.match(premium,/NO LIVE SERVICE DATA/);
+  assert.match(studio,/\.gc-app #premium \.gc-studio-showcase::before \{ display:none; \}/);
+  assert.match(studio,/\.gc-app #premium \.gc-studio-lens-actions a:focus-visible/);
+  assert.match(studio,/:root:is\(\[data-gc-contrast="more"\],\[data-gc-transparency="reduce"\]\)/);
+});
