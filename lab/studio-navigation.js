@@ -45,7 +45,7 @@ export function initStudioSectionFinder(rail, controller) {
     }
     status.hidden = !term;
     status.textContent = term
-      ? visible.length ? \`\${visible.length} section\${visible.length === 1 ? "" : "s"} found.\`
+      ? visible.length ? `${visible.length} section${visible.length === 1 ? "" : "s"} found.`
         : "No matching sections. Try another search."
       : "";
     return visible;
