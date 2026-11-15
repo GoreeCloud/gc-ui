@@ -118,7 +118,7 @@ test("viewport-aware studio navigation preserves native URLs and original comman
   assert.match(nav,/export function initStudioViewportNavigation/);
   assert.match(nav,/requestAnimationFrame\(sync\)/);
   assert.match(nav,/addEventListener\("scroll", schedule, \{ passive: true \}\)/);
-  assert.match(nav,/getBoundingClientRect\(\)\.top <= limit/);
+  assert.match(nav,/Math\.min\(rect\.bottom, readingBottom\) - Math\.max\(rect\.top, readingTop\)/);
   assert.match(nav,/setAttribute\("aria-current", "page"\)/);
   assert.match(nav,/breadcrumb\.textContent = current\.label/);
   assert.doesNotMatch(nav,/history\.replaceState|history\.pushState|location\.hash\s*=/);
