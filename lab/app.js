@@ -1,4 +1,5 @@
-import { initStudioSectionFinder } from "./studio-navigation.js";
+import { initStudioSectionFinder, initStudioViewportNavigation } from "./studio-navigation.js";
+import { initStudioIconLibrary } from "./studio-icon-library.js";
 import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, initSignalBoard, initWindowCommandNodes, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
@@ -6,6 +7,7 @@ defineCustomElements();
 // Tablet starts icon-only, desktop shows full labels; the user can override either.
 const studioRail = initNavigationRail(document.querySelector(".gc-lab-rail"));
 initStudioSectionFinder(document.querySelector(".gc-lab-rail"), studioRail);
+initStudioViewportNavigation(document.querySelector(".gc-lab-rail"));
 const root = document.documentElement;
 const appearance = document.querySelector("#appearance");
 const accent = document.querySelector("#accent");
@@ -55,19 +57,7 @@ for (const chip of document.querySelectorAll("[data-chip]")) {
     toast(chip.textContent.trim() + " example selected.", { region });
   });
 }
-const grid = document.querySelector("#icon-grid");
-for (const name of ICON_NAMES) {
-  const tile = document.createElement("div");
-  tile.className = "gc-lab-icon-tile";
-  const icon = document.createElement("gc-icon");
-  icon.setAttribute("name", name);
-  icon.setAttribute("size", "26");
-  const text = document.createElement("span");
-  text.textContent = name;
-  tile.append(icon, text);
-  grid.append(tile);
-}
-
+initStudioIconLibrary(document.querySelector("#gc-studio-icon-library"), ICON_NAMES);
 
 // Pattern controllers enhance semantic native elements; clean up when a host SPA unmounts them.
 initAccordion(document.querySelector("#demo-accordion"), { single: true });

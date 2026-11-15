@@ -140,3 +140,74 @@ export function initStudioSectionFinder(rail, controller) {
     }
   });
 }
+
+/**
+ * Reflect the section actually in view during scrolling.
+ * This is a lab-only scroll-location indicator, not a URL router:
+ * it never mutates location.hash, history, or the shared navigation API.
+ * A manual #anchor navigation still updates normally via the shared rail.
+ */
+export function initStudioViewportNavigation(rail) {
+  if (!rail || typeof rail.querySelectorAll !== "function") {
+    throw new TypeError("Studio viewport navigation requires its rail element");
+  }
+  const doc = rail.ownerDocument, win = doc?.defaultView;
+  const nav = rail.querySelector("#gc-lab-rail-links");
+  const breadcrumb = doc?.querySelector("#gc-lab-current-section");
+  const toolbar = doc?.querySelector(".gc-lab-toolbar");
+  if (!win || !nav || !breadcrumb || !toolbar) {
+    throw new TypeError("Studio viewport navigation requires the document and toolbar");
+  }
+
+  const entries = [...nav.querySelectorAll('a[href^="#"]')].map(link => ({
+    link,
+    section: doc.getElementById(link.getAttribute("href").slice(1)),
+    label: link.querySelector(".gc-navigation-rail__label")?.textContent?.trim()
+  }));
+  if (!entries.length || entries.some(entry => !entry.section || !entry.label)) {
+    throw new Error("Studio viewport navigation needs real labeled section destinations");
+  }
+  let frame = 0, disposed = false;
+
+  function sync() {
+    frame = 0;
+    if (disposed) return;
+    // The section nearest the top reading position wins. A scroll spy must
+    // never incorrectly claim that Overview remains current deep in the page.
+    const toolbarBottom = toolbar.getBoundingClientRect().bottom;
+    const limit = Math.max(0, toolbarBottom) + 28;
+    let current = entries[0];
+    for (const entry of entries) {
+      if (entry.section.getBoundingClientRect().top <= limit) current = entry;
+    }
+    // At the exact document end, the last section stays reachable/current.
+    for (const entry of entries) {
+      if (entry.link === current.link) entry.link.setAttribute("aria-current", "page");
+      else entry.link.removeAttribute("aria-current");
+    }
+    breadcrumb.textContent = current.label;
+  }
+
+  function schedule() {
+    if (disposed || frame) return;
+    frame = win.requestAnimationFrame(sync);
+  }
+  win.addEventListener("scroll", schedule, { passive: true });
+  win.addEventListener("resize", schedule);
+  win.addEventListener("hashchange", schedule);
+  win.addEventListener("pageshow", schedule);
+  schedule();
+
+  return Object.freeze({
+    sync,
+    dispose() {
+      if (disposed) return;
+      disposed = true;
+      if (frame) win.cancelAnimationFrame(frame);
+      win.removeEventListener("scroll", schedule);
+      win.removeEventListener("resize", schedule);
+      win.removeEventListener("hashchange", schedule);
+      win.removeEventListener("pageshow", schedule);
+    }
+  });
+}

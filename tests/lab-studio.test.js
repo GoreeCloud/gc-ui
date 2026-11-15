@@ -111,3 +111,41 @@ test("material study avoids AI-template decoration and uses real navigable Cloud
   assert.match(studio,/\.gc-app #premium \.gc-studio-lens-actions a:focus-visible/);
   assert.match(studio,/:root:is\(\[data-gc-contrast="more"\],\[data-gc-transparency="reduce"\]\)/);
 });
+
+
+test("viewport-aware studio navigation preserves native URLs and original command nodes",()=>{
+  const nav=read("lab/studio-navigation.js");
+  assert.match(nav,/export function initStudioViewportNavigation/);
+  assert.match(nav,/requestAnimationFrame\(sync\)/);
+  assert.match(nav,/addEventListener\("scroll", schedule, \{ passive: true \}\)/);
+  assert.match(nav,/getBoundingClientRect\(\)\.top <= limit/);
+  assert.match(nav,/setAttribute\("aria-current", "page"\)/);
+  assert.match(nav,/breadcrumb\.textContent = current\.label/);
+  assert.doesNotMatch(nav,/history\.replaceState|history\.pushState|location\.hash\s*=/);
+  assert.match(read("lab/app.js"),/initStudioViewportNavigation/);
+  assert.match(html,/class="gc-window__command-nodes"/);
+});
+
+test("icon reference is searchable, grouped, responsive, and uses only canonical icon assets",()=>{
+  const source=read("lab/studio-icon-library.js");
+  const app=read("lab/app.js");
+  const original=JSON.parse(read("assets/gc-icons.json"));
+  assert.match(source,/export function initStudioIconLibrary/);
+  assert.match(app,/initStudioIconLibrary\(document\.querySelector\("#gc-studio-icon-library"\), ICON_NAMES\)/);
+  assert.match(html,/id="gc-studio-icon-search" type="search"|type="search" id="gc-studio-icon-search"/);
+  assert.match(html,/id="gc-studio-icon-category"/);
+  assert.match(html,/id="gc-studio-icon-results" role="status" aria-live="polite"/);
+  assert.match(html,/id="gc-studio-icon-clear"/);
+  for(const category of ["navigation","actions","workspace","protection","feedback"]){
+    assert.match(source,new RegExp('id:"'+category+'"'));
+    assert.match(html,new RegExp('value="'+category+'"'));
+  }
+  const names=[...source.matchAll(/names:\[([^\]]+)\]/g)]
+    .flatMap(m=>[...m[1].matchAll(/"([^"]+)"/g)].map(v=>v[1]));
+  assert.deepEqual(new Set(names),new Set(original.icons.map(item=>item.name)));
+  assert.equal(names.length,original.icons.length);
+  assert.match(studio,/\.gc-studio-icon-groups/);
+  assert.match(studio,/\.gc-app \.gc-studio-icon-library \[hidden\] \{ display:none !important; \}/);
+  assert.match(studio,/@media \(max-width:430px\)/);
+  assert.doesNotMatch(source,/\bfetch\s*\(|XMLHttpRequest|localStorage|\.innerHTML\s*=/);
+});

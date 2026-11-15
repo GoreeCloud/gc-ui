@@ -564,6 +564,71 @@ try {
     "Slash shortcut must reveal and focus the section finder from a compact tablet rail");
   console.log("Chromium UI Studio sidebar: search, sections, keyboard, expanded/compact states passed");
 
+  // Actual viewport position, not stale URL hash or first-item selection, owns
+  // the Studio's visible active section and toolbar reading context.
+  await browser.setViewport(1440,900);
+  await browser.navigate(base+"/lab/");
+  for (const [id,label] of [
+    ["premium","Signature surfaces"],["patterns","Patterns"],
+    ["forms","Forms"],["iconography","Iconography"]
+  ]) {
+    await browser.evaluate('document.getElementById("'+id+'").scrollIntoView({block:"start",behavior:"instant"})');
+    await delay(90);
+    const state=JSON.parse(await browser.evaluate(
+      '(()=>{const nav=document.querySelector("#gc-lab-rail-links"),current=[...nav.querySelectorAll("a[aria-current=page]")];'+
+      'return JSON.stringify({selected:current.map(a=>a.getAttribute("href")),'+
+      'label:document.querySelector("#gc-lab-current-section").textContent.trim(),'+
+      'hash:location.hash,overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+1});})()'));
+    assert.deepEqual(state,{selected:["#"+id],label,hash:"",overflow:false},
+      "Scroll-visible Studio section does not match sidebar and toolbar: "+id+" "+JSON.stringify(state));
+  }
+  await browser.evaluate('window.scrollTo({top:0,behavior:"instant"})');
+  await delay(90);
+  const restoredOverview=JSON.parse(await browser.evaluate(
+    '(()=>{const nav=document.querySelector("#gc-lab-rail-links");return JSON.stringify({'+
+    'active:nav.querySelector("a[aria-current=page]")?.getAttribute("href"),'+
+    'crumb:document.querySelector("#gc-lab-current-section").textContent});})()'));
+  assert.deepEqual(restoredOverview,{active:"#overview",crumb:"Overview"},
+    "Returning to top must restore Overview as the visible current section");
+  console.log("Chromium Studio scroll positions: sidebar selection and toolbar context track actual visible sections");
+
+  // The icon gallery must be a genuine searchable/grouped reference, not 42
+  // indistinguishable dummy cards or unverified new icon assets.
+  for(const [width,dark] of [[1440,false],[390,true]]) {
+    await browser.setViewport(width,844,{dark});
+    await browser.navigate(base+"/lab/");
+    const initial=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.querySelector("#gc-studio-icon-library"),'+
+      'items=[...root.querySelectorAll("[data-icon-name]")],sections=[...root.querySelectorAll("[data-icon-group].gc-studio-icon-group")];'+
+      'return JSON.stringify({total:items.length,groups:sections.length,seen:new Set(items.map(x=>x.dataset.iconName)).size,'+
+      'withNames:items.every(x=>x.querySelector("code")?.textContent===x.dataset.iconName),'+
+      'overflow:document.documentElement.scrollWidth>document.documentElement.clientWidth+1});})()'));
+    assert.deepEqual(initial,{total:42,groups:5,seen:42,withNames:true,overflow:false},
+      "Icon reference lost original icons, grouping or responsive fit: "+width);
+    const filtered=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.querySelector("#gc-studio-icon-library"),'+
+      'search=root.querySelector("#gc-studio-icon-search"),category=root.querySelector("#gc-studio-icon-category"),'+
+      'clear=root.querySelector("#gc-studio-icon-clear"),count=root.querySelector("#gc-studio-icon-results");'+
+      'const shown=()=>[...root.querySelectorAll("[data-icon-name]")].filter(x=>!x.hidden).map(x=>x.dataset.iconName);'+
+      'search.value="chevron";search.dispatchEvent(new Event("input",{bubbles:true}));'+
+      'const matches=shown(),filteredStatus=count.textContent;'+
+      'category.value="actions";category.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'const empty=shown().length===0 && !clear.hidden && count.textContent.startsWith("No matching");'+
+      'clear.click();const restored=shown().length,reset=search.value===""&&category.value==="all";'+
+      'category.value="protection";category.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'const protection=shown();return JSON.stringify({matches,filteredStatus,empty,restored,reset,protection});})()'));
+    assert.deepEqual(filtered,{matches:["chevronDown","chevronRight"],
+      filteredStatus:"2 of 42 original icons shown",empty:true,restored:42,reset:true,
+      protection:["user","users","lock","shield","eye","eyeOff"]},
+      "Icon category and search control returned the wrong canonical names");
+    await browser.evaluate('document.getElementById("iconography").scrollIntoView({block:"start",behavior:"instant"})');
+    await delay(90);
+    const shot=await browser.screenshot(join(directory,
+      width===1440?"gc-ui-icon-reference-desktop.png":"gc-ui-icon-reference-dark-mobile.png"));
+    assert.equal(shot.width,width);
+  }
+  console.log("Chromium icon reference: 42 original tokens, groups, search, empty/reset, dark mobile and screenshots passed");
+
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
   await browser.setViewport(390,844,{dark:false});
