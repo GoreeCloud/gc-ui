@@ -57,10 +57,10 @@ test('new replacement remains source-only while pinned approved identity remains
  const html=read('lab/index.html').toString('utf8');
  assert.match(doc,/Frame Relay v1 candidate/);
  assert.match(doc,/not approved/i);
- assert.match(doc,/Do \\*\\*not\\*\\* replace existing assets\\/identity\\//i);
+ assert.ok(doc.includes("Do **not** replace existing assets/identity/ files"));
  assert.match(doc,/umbrella circular-G/i);
  assert.match(doc,/brand-assets issue #18/);
  assert.match(readme,/Identity refresh in review/);
  assert.match(readme,/Official Aperture Weave asset pins remain unchanged/);
- assert.doesNotMatch(html,/frame-relay-v1|candidates\\/frame-relay/i);
+ assert.ok(!html.includes("frame-relay-v1") && !html.includes("candidates/frame-relay"));
 });
