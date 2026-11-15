@@ -22,6 +22,26 @@ test("UI Studio keeps all nine existing destinations while grouping them meaning
   assert.match(studio,/\.gc-lab-rail\[data-gc-collapsed="true"\]/);
 });
 
+test("sidebar provides a real accessible section search and contextual location",()=>{
+  assert.match(html,/<div class="gc-lab-rail-search gc-navigation-rail__secondary" role="search">/);
+  assert.match(html,/<label class="gc-lab-search-label" for="gc-lab-rail-search">FIND A SECTION<\/label>/);
+  assert.match(html,/id="gc-lab-rail-search" type="search" aria-label="Find a studio section"/);
+  assert.match(html,/aria-controls="gc-lab-rail-links"/);
+  assert.match(html,/id="gc-lab-search-status"[^>]*role="status" aria-live="polite" hidden/);
+  assert.match(html,/id="gc-lab-current-section"/);
+  assert.match(studio,/--gc-navigation-rail-expanded:272px/);
+  assert.match(studio,/\.gc-lab-rail \.gc-navigation-rail__links a\[hidden\]/);
+  assert.match(studio,/\.gc-lab-rail\[data-gc-collapsed="true"\] \.gc-lab-rail-search/);
+  const code=read("lab/studio-navigation.js");
+  assert.match(code,/export function initStudioSectionFinder/);
+  assert.match(code,/event\.isComposing/);
+  assert.match(code,/event\.key === "Escape"/);
+  assert.match(code,/event\.key === "Enter"/);
+  assert.match(code,/event\.key !== "\/"/);
+  assert.doesNotMatch(code,/\.innerHTML\s*=|localStorage|sessionStorage|fetch\s*\(|XMLHttpRequest|eval\s*\(/);
+  assert.match(read("lab/app.js"),/initStudioSectionFinder/);
+});
+
 test("founder-approved WCNs remain the actual interactive preview, with no fake hero buttons",()=>{
   const win=html.match(/<section id="rounded-windows"[\s\S]*?<\/section>/)?.[0];
   assert.ok(win);
