@@ -623,6 +623,13 @@ try {
       "Icon category and search control returned the wrong canonical names");
     await browser.evaluate('document.getElementById("iconography").scrollIntoView({block:"start",behavior:"instant"})');
     await delay(90);
+    const endSection=JSON.parse(await browser.evaluate(
+      '(()=>{const nav=document.querySelector("#gc-lab-rail-links");return JSON.stringify({'+
+      'current:nav.querySelector("a[aria-current=page]")?.getAttribute("href"),'+
+      'crumb:document.querySelector("#gc-lab-current-section").textContent.trim()});})()'));
+    assert.deepEqual(endSection,{current:"#iconography",crumb:"Iconography"},
+      "Short filtered iconography section must not leave the previous Forms section highlighted: "+
+      width+"px "+JSON.stringify(endSection));
     const shot=await browser.screenshot(join(directory,
       width===1440?"gc-ui-icon-reference-desktop.png":"gc-ui-icon-reference-dark-mobile.png"));
     assert.equal(shot.width,width);

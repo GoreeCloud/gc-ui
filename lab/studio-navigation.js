@@ -172,15 +172,26 @@ export function initStudioViewportNavigation(rail) {
   function sync() {
     frame = 0;
     if (disposed) return;
-    // The section nearest the top reading position wins. A scroll spy must
-    // never incorrectly claim that Overview remains current deep in the page.
-    const toolbarBottom = toolbar.getBoundingClientRect().bottom;
-    const limit = Math.max(0, toolbarBottom) + 28;
-    let current = entries[0];
+    // Select the section contributing the greatest *visible reading area*.
+    // A short final section may never reach the sticky toolbar's top edge at
+    // the document bottom, especially after narrowing a filter. A top-only
+    // threshold then leaves the previous section falsely selected.
+    const readingTop = Math.max(0, toolbar.getBoundingClientRect().bottom) + 20;
+    const readingBottom = Math.max(readingTop + 1, win.innerHeight - 16);
+    let current = entries[0], mostVisible = -1;
     for (const entry of entries) {
-      if (entry.section.getBoundingClientRect().top <= limit) current = entry;
+      const rect = entry.section.getBoundingClientRect();
+      const visible = Math.max(0,
+        Math.min(rect.bottom, readingBottom) - Math.max(rect.top, readingTop));
+      if (visible > mostVisible) { mostVisible = visible; current = entry; }
     }
-    // At the exact document end, the last section stays reachable/current.
+    // If no section is intersecting (e.g. an inter-section break), preserve
+    // the nearest preceding section; this does not change the URL route.
+    if (mostVisible <= 0) {
+      for (const entry of entries) {
+        if (entry.section.getBoundingClientRect().top <= readingTop) current = entry;
+      }
+    }
     for (const entry of entries) {
       if (entry.link === current.link) entry.link.setAttribute("aria-current", "page");
       else entry.link.removeAttribute("aria-current");
