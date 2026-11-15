@@ -111,6 +111,10 @@ GoreeCloud UI must be visually distinctive, premium and modern in every supporte
 
 All GoreeCloud application windows must have rounded corners. The web library provides gc-window with rounded titlebar/body/controls/statusbar, including compact/floating variants, and four-corner dialogs/drawers. See docs/WINDOWS_AND_NAVIGATION.md. Native OS chrome remains a separate verified-adapter requirement.
 
+### Signature Window Command Nodes (WCN)
+
+The founder-approved **GoreeCloud UI Window Command Nodes** are the flat, glyph-free, right-aligned titlebar actions **Crimson — Dismiss** (close), **Amber — Dock** (minimize into the workspace dock) and **Teal — Expand** (maximize or restore). This WCN palette is distinct from each app's optional accent; exact hexadecimal colors and geometric silhouettes have not been specified. The [windowing specification](docs/WINDOWS_AND_NAVIGATION.md#window-command-nodes-wcn--official-goreecloud-ui-window-controls) and [machine-readable design authority](registry/design-authority.v1.json) govern the pattern. **Documentation is approved; WCN controls and native desktop adapters are not yet implemented or validated.** Existing web shell examples do not constitute native window management.
+
 ## Floating bottom navigation
 
 The responsive gc-bottom-nav capsule floats above device gesture insets, with native links, original icons, visible labels, selected-state contrast, mobile reflow and an optional keyboard/route controller. See docs/COMPONENTS.md. Actual routing authorization and native OS navigation remain consumer responsibilities.
