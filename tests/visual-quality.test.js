@@ -89,3 +89,22 @@ test("mobile hero keeps complete words at physical phone widths, with extreme fa
   for(const style of ["hyphens:manual","overflow-wrap:anywhere","word-break:normal","text-wrap:wrap"])
     assert.ok(rule.includes(style),style);
 });
+
+test("exceptional craftsmanship standard is a tracked, evidence-based review requirement",()=> {
+  const registry=JSON.parse(load("registry/design-authority.v1.json"));
+  const review=registry.visualQuality.craftsmanshipReview;
+  assert.equal(review.requirement,"mandatory-whole-experience");
+  assert.equal(review.adoptionStatus,"per-consumer-unverified");
+  assert.ok(review.founderStandard.includes("1IAcE_0j-FGu_qi3nhzfHvDINfuI_lVVR"));
+  assert.ok(review.prohibitedOutcomes.includes("unrefined-shell-or-sidebar"));
+  assert.ok(review.reviewScopes.includes("end-to-end-states"));
+  assert.ok(registry.requiredReview.includes("anti-AI-slop-and-template-originality"));
+  const contract=load("docs/VISUAL_QUALITY.md");
+  assert.match(contract,/Exceptional craftsmanship and rejection of generic design/);
+  assert.match(contract,/whole rendered workflow/);
+  assert.match(contract,/passing Node tests.*does not by itself prove exceptional craftsmanship/);
+  const checklist=load(".github/PULL_REQUEST_TEMPLATE.md");
+  assert.match(checklist,/entire affected shell and workflow/);
+  assert.match(checklist,/AI-slop outcomes/);
+  assert.match(checklist,/Actual rendered evidence/);
+});
