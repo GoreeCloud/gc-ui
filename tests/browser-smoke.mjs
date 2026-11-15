@@ -484,8 +484,8 @@ try {
     assert.equal(before.expanded,String(!expectCollapsed));
     assert.equal(before.linkText,"Overview","Icon-only state must retain accessible link text");
     assert.equal(before.dockDisplay,"none","Do not present two primary navigation systems");
-    assert.ok(before.railWidth<(expectCollapsed?100:270) && before.railWidth>(expectCollapsed?56:200),
-      "Incorrect navigation rail width: "+JSON.stringify(before));
+    assert.ok(Math.abs(before.railWidth-(expectCollapsed?76:272))<=2,
+      "Studio rail must use its verified 76px/272px geometry: "+JSON.stringify(before));
     if(expectCollapsed) assert.equal(before.clip,"inset(50%)","Compact labels are visually hidden, not removed");
     await browser.screenshot(join(directory,
       width===820?"gc-ui-rail-tablet-collapsed.png":"gc-ui-rail-desktop-expanded.png"));
@@ -518,6 +518,51 @@ try {
       width===820?"gc-ui-rail-tablet-expanded.png":"gc-ui-rail-desktop-collapsed.png"));
     console.log("Chromium adaptive navigation rail @ "+width+"px: focus, collapse, route and geometry passed");
   }
+
+  // Functional studio sidebar discovery: filtering, empty state, Escape,
+  // keyboard / shortcut, Enter navigation, and collapsed-rail recovery.
+  await browser.setViewport(1440,900);
+  await browser.navigate(base+"/lab/");
+  const studioFind=JSON.parse(await browser.evaluate(
+    '(()=>{const rail=document.querySelector(".gc-lab-rail"),'+
+    'input=rail.querySelector("#gc-lab-rail-search"),'+
+    'links=[...rail.querySelectorAll("#gc-lab-rail-links a[href]")],'+
+    'groups=[...rail.querySelectorAll(".gc-lab-nav-group")],'+
+    'status=rail.querySelector("#gc-lab-search-status");'+
+    'input.value="windows";input.dispatchEvent(new Event("input",{bubbles:true}));'+
+    'const matched=links.filter(x=>!x.hidden).map(x=>x.getAttribute("href")),'+
+    'groupNames=groups.filter(x=>!x.hidden).map(x=>x.textContent.trim()),'+
+    'matchStatus=status.textContent;'+
+    'input.value="no such section";input.dispatchEvent(new Event("input",{bubbles:true}));'+
+    'const empty=links.every(x=>x.hidden)&&!status.hidden,'+
+    'emptyStatus=status.textContent;'+
+    'input.dispatchEvent(new KeyboardEvent("keydown",{key:"Escape",bubbles:true,cancelable:true}));'+
+    'const restored=links.filter(x=>!x.hidden).length;'+
+    'document.body.dispatchEvent(new KeyboardEvent("keydown",{key:"/",bubbles:true,cancelable:true}));'+
+    'const shortcutFocused=document.activeElement===input;'+
+    'input.value="forms";input.dispatchEvent(new Event("input",{bubbles:true}));'+
+    'input.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true,cancelable:true}));'+
+    'return JSON.stringify({matched,groupNames,matchStatus,empty,emptyStatus,restored,'+
+    'shortcutFocused,route:location.hash,crumb:document.querySelector("#gc-lab-current-section").textContent,'+
+    'focused:document.activeElement?.getAttribute("href")});})()'));
+  assert.deepEqual(studioFind,{
+    matched:["#rounded-windows"],groupNames:["THE SYSTEM"],
+    matchStatus:"1 section found.",empty:true,
+    emptyStatus:"No matching sections. Try another search.",
+    restored:9,shortcutFocused:true,route:"#forms",crumb:"Forms",focused:"#forms"
+  },"Studio sidebar search, grouping, status and keyboard navigation are inconsistent");
+  await browser.setViewport(820,900);
+  await browser.navigate(base+"/lab/");
+  const studioShortcut=JSON.parse(await browser.evaluate(
+    '(()=>{const rail=document.querySelector(".gc-lab-rail"),'+
+    'input=rail.querySelector("#gc-lab-rail-search"),'+
+    'before=rail.dataset.gcCollapsed;'+
+    'document.body.dispatchEvent(new KeyboardEvent("keydown",{key:"/",bubbles:true,cancelable:true}));'+
+    'return JSON.stringify({before,after:rail.dataset.gcCollapsed,'+
+    'focused:document.activeElement===input,expanded:rail.querySelector("[data-gc-rail-toggle]").getAttribute("aria-expanded")});})()'));
+  assert.deepEqual(studioShortcut,{before:"true",after:"false",focused:true,expanded:"true"},
+    "Slash shortcut must reveal and focus the section finder from a compact tablet rail");
+  console.log("Chromium UI Studio sidebar: search, sections, keyboard, expanded/compact states passed");
 
   // Exercise every curated accent in both explicit appearances on a real rendered lab.
   const manifest=JSON.parse(await readFile(join(root,"tokens/gc.tokens.json"),"utf8"));
