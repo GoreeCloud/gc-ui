@@ -49,7 +49,9 @@
     "loading and failure states",
     "contrast",
     "motion/transparency fallbacks",
-    "real platform evidence"
+    "real platform evidence",
+    "whole-shell-and-sidebar-craftsmanship",
+    "anti-AI-slop-and-template-originality"
   ],
   "tokenValuesStatus": "provisional-alpha-candidates",
   "nativeSdkStatus": "not-implemented",
@@ -82,7 +84,28 @@
       "semantic-roles-only",
       "original-visual-language",
       "no-inert-interactions"
-    ]
+    ],
+    "craftsmanshipReview": {
+      "requirement": "mandatory-whole-experience",
+      "founderStandard": "https://drive.google.com/file/d/1IAcE_0j-FGu_qi3nhzfHvDINfuI_lVVR/view",
+      "prohibitedOutcomes": [
+        "generic-or-repetitive-templates",
+        "unrefined-shell-or-sidebar",
+        "purposeless-gradient-glow-or-glass",
+        "inconsistent-typography-and-icons",
+        "polish-confined-to-showcase-screen",
+        "inert-or-deceptive-controls"
+      ],
+      "reviewScopes": [
+        "shell-and-sidebar",
+        "navigation-and-components",
+        "end-to-end-states",
+        "responsive-and-zoom",
+        "theme-and-accessibility-modes"
+      ],
+      "requiredEvidence": "rendered-visual-review-plus-functional-regressions",
+      "adoptionStatus": "per-consumer-unverified"
+    }
   },
   "windowShape": {
     "requirement": "rounded-all-windows",

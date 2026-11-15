@@ -10,6 +10,27 @@
 
 No GoreeCloud product should ship with a generic, unfinished, flat-by-default or unconsidered interface. Premium does not mean gratuitous glass, ornamental gradients, saturated colors everywhere, animation without meaning, illegible text, or imitation of another brand. Premium requires distinct and coherent polish that survives screen size, workflow density, device capabilities and accessibility preferences.
 
+## Exceptional craftsmanship and rejection of generic design
+
+**Mandatory founder directive (November 14, 2026):** Every GoreeCloud-controlled screen must exhibit exceptional craftsmanship, intentional hierarchy, coherent product character, and distinctive polish. The [authoritative craftsmanship and anti–AI-slop standard](https://drive.google.com/file/d/1IAcE_0j-FGu_qi3nhzfHvDINfuI_lVVR/view) strengthens the existing visual-audit procedure. These requirements apply equally to first-party and imported/rebranded interfaces; implementation, adoption and visual acceptance remain independently verified.
+
+Review the **whole rendered workflow**, not just a marketing hero or a single attractive component:
+
+- **Shell, sidebar and navigation:** Confirm that grouping, active states, collapsed/expanded behavior, labels, icon optical weight, boundaries and negative space are intentional at each supported viewport. No generic administration-rail clone or deserted empty frame should pass through visual review.
+- **Typography and composition:** Inspect text rhythm, contrast, line lengths, optical alignment, whitespace, density and primary/secondary emphasis. A default font stack or token library does not by itself prove typographic craft.
+- **Controls and states:** Verify focus, hover, pressed, selected, busy, disabled, validation, offline, empty, loading and recovery treatments. A polished default state cannot excuse a degraded or misleading failure state.
+- **Purposeful material and motion:** Use Cloud Canvas, Surface and Lens according to their documented roles. Frosted glass and subtle elevation should communicate layering, not cover weak geometry or obscure reading; reduced-effects modes must remain thoughtfully composed.
+- **Originality without template churn:** Reject repetitive card farms, interchangeable hero patterns, stock dashboard conventions, decorative glow/gradients, arbitrary glass layering and borrowed styling without a product-specific reason. Reuse canonical components where they fit; do not copy the same visual composition into every product.
+- **Legibility and functional honesty:** Reflow across supported phone/tablet/desktop views, window sizes, zoom, input methods, themes and contrast preferences. Every advertised control must have accurate behavior or honest availability feedback under the separate Complete UI requirement.
+
+The term **“AI slop”** describes an unacceptable *design outcome*, not the mere use of generative tools. AI assistance never reduces the required originality, provenance, security, usability or visual acceptance standard. Do not invent a mandatory palette, unapproved logo, arbitrary typeface or unsupported release status while trying to make a design look more premium.
+
+### Visual review evidence and disposition
+
+Before declaring a relevant visual change accepted, record: the **source commit**, exact screens and states inspected, supported viewports/themes/zoom and input conditions, authoritative references, actual rendered evidence, defects with severity and corrective actions, and any untested conditions. Perform a second visual inspection after each material correction. Use the existing professional visual-quality audit standard and its dispositions: **passed**, **passed with documented nonblocking findings**, **failed / correction required**, or **not adequately audited**.
+
+Record visual/design decisions separately from technical evidence. Passing Node tests, Chromium geometry checks, generated screenshots or a CI badge does not by itself prove exceptional craftsmanship, real-device acceptance, screen-reader acceptance, publication or deployment. If the full rendered experience was not inspected, report the gap instead of asserting premium compliance.
+
 ## Repeatable quality requirements
 
 1. **Signature hierarchy.** Establish display, title, section, body, supporting and label hierarchy with canonical typography and readable line lengths. Give the primary action clear priority.
