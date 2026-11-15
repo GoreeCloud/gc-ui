@@ -23,6 +23,7 @@ export function initStudioSectionFinder(rail, controller) {
   const initialVisibility = new Map([...links, ...groups].map(element => [element, element.hidden]));
   const label = link => link.querySelector(".gc-navigation-rail__label")?.textContent?.trim() || "";
   let disposed = false;
+  const temporaryFocusTargets = new Set();
 
   function filter() {
     if (disposed) return [];
@@ -71,8 +72,17 @@ export function initStudioSectionFinder(rail, controller) {
       event.preventDefault();
       input.value = "";
       filter();
-      first.focus();
       first.click();
+      // A search result is a destination, not just another rail selection.
+      // Programmatically focus that section for meaningful keyboard continuity.
+      const target = doc.getElementById(first.getAttribute("href").slice(1));
+      if (target) {
+        if (!target.hasAttribute("tabindex")) {
+          target.setAttribute("tabindex", "-1");
+          temporaryFocusTargets.add(target);
+        }
+        target.focus({ preventScroll: true });
+      }
       updateBreadcrumb();
     }
   }
@@ -121,6 +131,10 @@ export function initStudioSectionFinder(rail, controller) {
       win.removeEventListener("hashchange", updateBreadcrumb);
       win.removeEventListener("popstate", updateBreadcrumb);
       for (const [element, hidden] of initialVisibility) element.hidden = hidden;
+      for (const target of temporaryFocusTargets) {
+        if (target.getAttribute("tabindex") === "-1") target.removeAttribute("tabindex");
+      }
+      temporaryFocusTargets.clear();
       status.hidden = true;
       status.textContent = "";
     }
