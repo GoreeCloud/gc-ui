@@ -716,17 +716,17 @@
 @media (min-width:1200px) {
   .gc-app #foundations .gc-lab-foundations {
     display:grid; grid-template-columns:minmax(0,1.08fr) minmax(0,.92fr);
-    grid-template-rows:repeat(2,minmax(0,1fr)); align-items:stretch; gap:15px;
+    grid-template-rows:auto auto; align-items:stretch; gap:15px;
   }
   .gc-app #foundations .gc-lab-foundations > .gc-card {
     min-block-size:0; padding:26px 30px;
   }
   .gc-app #foundations .gc-lab-foundations > .gc-card:first-child {
     grid-row:span 2; display:flex; flex-direction:column;
-    min-block-size:380px;
+    min-block-size:360px;
   }
   .gc-app #foundations .gc-lab-foundations > .gc-card:first-child > .gc-lab-colors {
-    margin-block-start:auto;
+    margin-block-start:20px;
   }
   .gc-app #foundations .gc-lab-foundations > .gc-card:not(:first-child) {
     min-block-size:180px;
@@ -746,4 +746,50 @@
   .gc-app .gc-lab-toolbar-accessibility {
     border-color:CanvasText;
   }
+}
+
+
+/* The semantic lead demonstrates an actual token-based color relationship;
+   fill visual space with meaningful hierarchy rather than blank ornament. */
+.gc-app .gc-lab-color-context {
+  display:grid; gap:13px; min-inline-size:0;
+  margin-block-start:24px; padding:17px 18px;
+  border:1px solid var(--gc-outline-soft);
+  border-radius:16px; background:var(--gc-surface-tonal);
+}
+.gc-app .gc-lab-color-context-head {
+  display:flex; justify-content:space-between; flex-wrap:wrap;
+  gap:7px 14px; color:var(--gc-text-soft);
+  font-size:9px; font-weight:780; letter-spacing:.13em;
+}
+.gc-app .gc-lab-color-context-body {
+  display:flex; align-items:center; gap:13px; flex-wrap:wrap;
+  min-inline-size:0;
+}
+.gc-app .gc-lab-color-context-body > div { flex:1 1 170px; min-inline-size:0; }
+.gc-app .gc-lab-color-context-body strong {
+  display:block; color:var(--gc-text); font-size:14px; line-height:1.35;
+}
+.gc-app .gc-lab-color-context-body p {
+  margin:3px 0 0; color:var(--gc-text-soft); font-size:11px; line-height:1.45;
+}
+.gc-app .gc-lab-color-context-symbol {
+  display:grid; place-items:center; flex:none;
+  inline-size:42px; block-size:42px;
+  border-radius:13px; color:var(--gc-on-brand-container); background:var(--gc-brand-container);
+}
+.gc-app .gc-lab-color-context-symbol gc-icon { inline-size:20px; block-size:20px; }
+.gc-app .gc-lab-color-context-chip {
+  display:inline-flex; justify-content:center; align-items:center;
+  min-block-size:32px; padding-inline:12px; border-radius:20px;
+  background:var(--gc-brand); color:var(--gc-on-brand);
+  font-size:11px; font-weight:710;
+}
+@media (max-width:600px) {
+  .gc-app .gc-lab-color-context { margin-block-start:18px; padding:15px; }
+}
+@media (forced-colors:active) {
+  .gc-app .gc-lab-color-context { border-color:CanvasText; background:Canvas; }
+  .gc-app .gc-lab-color-context-symbol,
+  .gc-app .gc-lab-color-context-chip { background:Highlight; color:HighlightText; }
 }
