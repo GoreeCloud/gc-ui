@@ -544,12 +544,12 @@ try {
     'input.dispatchEvent(new KeyboardEvent("keydown",{key:"Enter",bubbles:true,cancelable:true}));'+
     'return JSON.stringify({matched,groupNames,matchStatus,empty,emptyStatus,restored,'+
     'shortcutFocused,route:location.hash,crumb:document.querySelector("#gc-lab-current-section").textContent,'+
-    'focused:document.activeElement?.getAttribute("href")});})()'));
+    'focusedSection:document.activeElement?.id});})()'));
   assert.deepEqual(studioFind,{
     matched:["#rounded-windows"],groupNames:["THE SYSTEM"],
     matchStatus:"1 section found.",empty:true,
     emptyStatus:"No matching sections. Try another search.",
-    restored:9,shortcutFocused:true,route:"#forms",crumb:"Forms",focused:"#forms"
+    restored:9,shortcutFocused:true,route:"#forms",crumb:"Forms",focusedSection:"forms"
   },"Studio sidebar search, grouping, status and keyboard navigation are inconsistent");
   await browser.setViewport(820,900);
   await browser.navigate(base+"/lab/");
