@@ -1,9 +1,11 @@
+import { initStudioSectionFinder } from "./studio-navigation.js";
 import { createThemeController, initCommandPalette, initActionMenu, initSortableTable, initTreeView, initCombobox, initBottomNavigation, initNavigationRail, defineCustomElements, initTabs, initAccordion, initToggleGroup, bindRangeOutput, initDrawer, openDialog, closeDialog, toast, initAvailabilityFeedback, initSignalBoard, initWindowCommandNodes, ICON_NAMES } from "../src/index.js";
 
 defineCustomElements();
 // A single reusable rail controller owns expansion and route announcements.
 // Tablet starts icon-only, desktop shows full labels; the user can override either.
-initNavigationRail(document.querySelector(".gc-lab-rail"));
+const studioRail = initNavigationRail(document.querySelector(".gc-lab-rail"));
+initStudioSectionFinder(document.querySelector(".gc-lab-rail"), studioRail);
 const root = document.documentElement;
 const appearance = document.querySelector("#appearance");
 const accent = document.querySelector("#accent");
