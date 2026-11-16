@@ -73,11 +73,14 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
   // try both listeners even when one removal fails.
   const attempted = [];
   const detach = () => {
+    const pending = [];
     for (const [name, handler] of attempted) {
       try { root.removeEventListener(name, handler, true); }
-      catch { /* best effort for nonstandard event targets */ }
+      catch { pending.push([name, handler]); }
     }
-    attempted.length = 0;
+    // A transient removal failure may leave a capture installed. Allow a
+    // second disposal to retry that exact handler; do not touch other events.
+    attempted.splice(0, attempted.length, ...pending);
   };
   try {
     for (const [name, handler] of [['click', onClick], ['submit', onSubmit]]) {
@@ -88,10 +91,5 @@ export function initAvailabilityFeedback(root, { region, notify } = {}) {
     detach();
     throw error;
   }
-  let disposed = false;
-  return () => {
-    if (disposed) return;
-    disposed = true;
-    detach();
-  };
+  return detach;
 }
