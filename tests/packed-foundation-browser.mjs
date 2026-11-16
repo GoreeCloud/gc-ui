@@ -172,10 +172,22 @@ try{
     "; two independent scopes, solid Canvas and interactive toggle tested");
 }finally{
   try{socket?.close();}catch{}
-  if(browser && browser.exitCode===null)browser.kill("SIGKILL");
+  if(browser && browser.exitCode===null && browser.signalCode===null){
+    // Chromium can still write to the fresh test profile after its DevTools
+    // socket closes. Wait for the actual child close before deleting files.
+    const closed=new Promise(resolve=>browser.once("close",resolve));
+    browser.kill("SIGTERM");
+    await Promise.race([closed,delay(1500)]);
+    if(browser.exitCode===null && browser.signalCode===null){
+      browser.kill("SIGKILL");
+      await Promise.race([closed,delay(1500)]);
+    }
+  }
   if(server){
     server.closeAllConnections?.();
     await new Promise(ok=>server.close(ok));
   }
-  rmSync(temp,{recursive:true,force:true});
+  // Background Chromium children can briefly race profile deletion on
+  // hosted CI. Retry only this mkdtemp-owned test directory, never user files.
+  rmSync(temp,{recursive:true,force:true,maxRetries:12,retryDelay:150});
 }
