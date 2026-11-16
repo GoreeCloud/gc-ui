@@ -218,6 +218,27 @@ test('cleanup attempts remaining capture removal when one removal throws', () =>
   const dispose = initAvailabilityFeedback(root, { notify() {} });
   dispose();
   dispose();
-  assert.deepEqual(attemptedRemoval, ['click', 'submit']);
+  assert.deepEqual(attemptedRemoval, ['click', 'submit', 'click']);
   assert.equal(active.has('submit'), false, 'other captures must be removed after one fails');
+});
+
+test('a transient listener removal failure can be retried on repeated disposal', () => {
+  const active = new Map();
+  let failedOnce = false;
+  const root = {
+    addEventListener(type, handler) { active.set(type, handler); },
+    removeEventListener(type, handler) {
+      if (type === 'click' && !failedOnce) {
+        failedOnce = true;
+        throw new Error('temporary detach failure');
+      }
+      if (active.get(type) === handler) active.delete(type);
+    },
+  };
+  const dispose = initAvailabilityFeedback(root, { notify() {} });
+  dispose();
+  assert.equal(active.has('click'), true);
+  assert.equal(active.has('submit'), false);
+  dispose();
+  assert.equal(active.size, 0, 'a second disposal should retry the failed removal');
 });
