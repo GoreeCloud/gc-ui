@@ -190,3 +190,24 @@ test("drawer initialization rolls back opener and closer listeners on failure", 
   close.emit("click");
   assert.equal(dialog.open, true, "failed controller must not close dialog");
 });
+
+test('native pattern disposal retries transient listener removal failure', () => {
+  const first = node();
+  const second = node();
+  const oldRemove = first.removeEventListener.bind(first);
+  let firstFailure = true;
+  first.removeEventListener = (name, handler) => {
+    if (firstFailure) { firstFailure = false; throw new Error('temporary detach failure'); }
+    oldRemove(name, handler);
+  };
+  const dispose = initAccordion({ querySelectorAll: () => [first, second] });
+  dispose();
+  second.open = true;
+  first.open = true;
+  first.emit('toggle');
+  assert.equal(second.open, false, 'first handler remains until successful detach');
+  second.open = true;
+  dispose();
+  first.emit('toggle');
+  assert.equal(second.open, true, 'retry must detach the previously failed handler');
+});

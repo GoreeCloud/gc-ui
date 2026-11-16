@@ -17,10 +17,15 @@ function requireElement(element, condition, message) {
 function listenTogether(registrations) {
   const installed = [];
   const remove = () => {
-    for (const [target, name, listener] of installed.reverse()) {
-      try { target.removeEventListener(name, listener); } catch { /* preserve primary failure */ }
+    // A custom event target can throw before detaching. Keep only failed
+    // registrations so a repeated disposal can safely retry them without
+    // removing successfully detached listeners again.
+    const pending = [];
+    for (const [target, name, listener] of [...installed].reverse()) {
+      try { target.removeEventListener(name, listener); }
+      catch { pending.unshift([target, name, listener]); }
     }
-    installed.length = 0;
+    installed.splice(0, installed.length, ...pending);
   };
   try {
     for (const [target, name, listener] of registrations) {
