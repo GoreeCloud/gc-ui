@@ -107,6 +107,8 @@ The `@goreecloud/ui/combobox` module adds an editable, accessible local suggesti
 
 ## Mandatory premium design standard
 
+For vibe-coded and hand-authored consumer applications, use the [20-point refinement playbook](docs/VIBE_CODED_APP_REFINEMENT.md) and the [versioned visual review rubric](registry/visual-quality-rubric.v1.json). `npm run visual:rubric` validates the shared checklist; `npm run visual:review -- --init /tmp/gc-review.json` makes a deliberately unapproved report; `npm run visual:review -- --gate /path/to/review.json` verifies reviewed dispositions, real screenshot hashes and declared context coverage. This gate is **not** aesthetic certification or a substitute for actual human inspection, and no consumer has been approved through this addition alone.
+
 GoreeCloud UI must be visually distinctive, premium and modern in every supported application context. The shared implementation includes semantic signature composition (`gc-premium-shell`, `gc-showcase`, `gc-feature-grid`), polished controls and purposeful Canvas/Surface/Lens depth. See [Visual quality contract](docs/VISUAL_QUALITY.md). CI rendering does not replace human design acceptance.
 
 ## Rounded application windows
