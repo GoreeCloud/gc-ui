@@ -1,0 +1,152 @@
+{
+  "schema": "gc.visual-rubric.v1",
+  "version": 1,
+  "authority": {
+    "designSystem": "https://github.com/GoreeCloud/gc-ui",
+    "craftsmanship": "https://drive.google.com/file/d/1IAcE_0j-FGu_qi3nhzfHvDINfuI_lVVR/view",
+    "professionalAudit": "https://drive.google.com/file/d/1Xd1ByJUThNg20WurGV_7kQPkNkTMtSPZ/view"
+  },
+  "notes": "This is an evidence checklist, not an automatic aesthetic classifier or release certification. Existing GC UI token/component authority remains unchanged.",
+  "criteria": [
+    {
+      "id": "VQ-01",
+      "title": "Product identity",
+      "category": "Art direction",
+      "severity": "critical",
+      "expectation": "Distinctive product-specific identity without interchangeable SaaS treatment"
+    },
+    {
+      "id": "VQ-02",
+      "title": "Application shell",
+      "category": "Composition",
+      "severity": "critical",
+      "expectation": "Intentional sidebar, titlebar, window chrome, toolbar and content hierarchy"
+    },
+    {
+      "id": "VQ-03",
+      "title": "Typography",
+      "category": "Craft",
+      "severity": "major",
+      "expectation": "Clear typographic roles, optical alignment, wrapping and readable scale"
+    },
+    {
+      "id": "VQ-04",
+      "title": "Spacing and proportions",
+      "category": "Craft",
+      "severity": "major",
+      "expectation": "Token-governed rhythm, balanced density and precise alignment"
+    },
+    {
+      "id": "VQ-05",
+      "title": "Design-system integrity",
+      "category": "Consistency",
+      "severity": "critical",
+      "expectation": "Verified GC UI tokens, components and approved patterns; no arbitrary branding"
+    },
+    {
+      "id": "VQ-06",
+      "title": "Information hierarchy",
+      "category": "Composition",
+      "severity": "critical",
+      "expectation": "Recognizable primary tasks, meaningful content grouping and visual focal points"
+    },
+    {
+      "id": "VQ-07",
+      "title": "Color and materials",
+      "category": "Materials",
+      "severity": "major",
+      "expectation": "Semantic contrast and purposeful Canvas, Surface and optional Lens"
+    },
+    {
+      "id": "VQ-08",
+      "title": "Depth and layering",
+      "category": "Materials",
+      "severity": "major",
+      "expectation": "Restrained coherent elevation without decorative shadow or glow overload"
+    },
+    {
+      "id": "VQ-09",
+      "title": "Navigation quality",
+      "category": "Composition",
+      "severity": "critical",
+      "expectation": "Floating app-controlled nav, discernible active state, clear grouping and reachability"
+    },
+    {
+      "id": "VQ-10",
+      "title": "Iconography",
+      "category": "Craft",
+      "severity": "major",
+      "expectation": "Coherent original glyph treatment, optical sizing and accessible labels"
+    },
+    {
+      "id": "VQ-11",
+      "title": "Layout originality",
+      "category": "Composition",
+      "severity": "critical",
+      "expectation": "Workflow-specific arrangements; no unjustified repetitive card farm"
+    },
+    {
+      "id": "VQ-12",
+      "title": "Microinteraction polish",
+      "category": "Interaction",
+      "severity": "major",
+      "expectation": "Trustworthy hover, press, focus, selected, disabled and busy feedback"
+    },
+    {
+      "id": "VQ-13",
+      "title": "Motion language",
+      "category": "Interaction",
+      "severity": "major",
+      "expectation": "Purposeful transition timing with accessible reduced-motion alternative"
+    },
+    {
+      "id": "VQ-14",
+      "title": "Component finish",
+      "category": "Craft",
+      "severity": "major",
+      "expectation": "Refined buttons, inputs, tables, menus, dialogs and window controls"
+    },
+    {
+      "id": "VQ-15",
+      "title": "Non-ideal states",
+      "category": "Interaction",
+      "severity": "critical",
+      "expectation": "Designed empty, loading, error, offline, denied and recovery workflows where applicable"
+    },
+    {
+      "id": "VQ-16",
+      "title": "Authentic imagery",
+      "category": "Identity",
+      "severity": "major",
+      "expectation": "Purposeful original and licensed assets; no generic emoji or deceptive placeholders"
+    },
+    {
+      "id": "VQ-17",
+      "title": "Responsive and native fit",
+      "category": "Adaptivity",
+      "severity": "critical",
+      "expectation": "Real platform layouts, window resizing, breakpoints, safe areas and text zoom"
+    },
+    {
+      "id": "VQ-18",
+      "title": "Pixel-level precision",
+      "category": "Craft",
+      "severity": "major",
+      "expectation": "Aligned baselines, consistent radii, borders, clipping and visual details"
+    },
+    {
+      "id": "VQ-19",
+      "title": "Content authenticity",
+      "category": "Integrity",
+      "severity": "critical",
+      "expectation": "Relevant real or clearly labeled sample data; no fictional telemetry or inert controls"
+    },
+    {
+      "id": "VQ-20",
+      "title": "Rendered visual audit",
+      "category": "Verification",
+      "severity": "critical",
+      "expectation": "Whole-workflow screenshot-led inspection, corrective iteration and reviewer disposition"
+    }
+  ]
+}
