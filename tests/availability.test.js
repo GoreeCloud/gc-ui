@@ -123,3 +123,101 @@ test('composed shadow DOM paths intercept inner planned actions even when retarg
   assert.deepEqual(f.messages,['Private export is not available yet.']);
   f.dispose();
 });
+
+test('failed submit registration rolls back capturing click listener', () => {
+  const active = new Map();
+  const calls = [];
+  const root = {
+    addEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      calls.push('add:' + type);
+      if (type === 'submit') throw new Error('unsupported submit listener');
+      active.set(type, handler);
+    },
+    removeEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      calls.push('remove:' + type);
+      if (active.get(type) === handler) active.delete(type);
+    },
+  };
+  assert.throws(() => initAvailabilityFeedback(root, { notify() {} }), /unsupported submit listener/);
+  assert.equal(active.size, 0, 'failed init must not leave a live click capture');
+  assert.deepEqual(calls, ['add:click', 'add:submit', 'remove:click', 'remove:submit']);
+});
+
+test('disposal is idempotent and never detaches unrelated capture handlers', () => {
+  const handlers = new Map();
+  const removals = [];
+  const root = {
+    addEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      handlers.set(type, handler);
+    },
+    removeEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      removals.push(type);
+      if (handlers.get(type) === handler) handlers.delete(type);
+    },
+  };
+  const dispose = initAvailabilityFeedback(root, { notify() {} });
+  assert.equal(handlers.size, 2);
+  dispose();
+  dispose();
+  assert.equal(handlers.size, 0);
+  assert.deepEqual(removals, ['click', 'submit']);
+});
+
+test('late click-listener registration failures roll back an already attached capture', () => {
+  const active = new Map();
+  const root = {
+    addEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      active.set(type, handler);
+      if (type === 'click') throw new Error('failed after click attachment');
+    },
+    removeEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      if (active.get(type) === handler) active.delete(type);
+    },
+  };
+  assert.throws(() => initAvailabilityFeedback(root, { notify() {} }), /after click attachment/);
+  assert.equal(active.size, 0);
+});
+
+test('late submit-listener registration failures remove both attempted captures', () => {
+  const active = new Map();
+  const removed = [];
+  const root = {
+    addEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      active.set(type, handler);
+      if (type === 'submit') throw new Error('failed after submit attachment');
+    },
+    removeEventListener(type, handler, capture) {
+      assert.equal(capture, true);
+      removed.push(type);
+      if (active.get(type) === handler) active.delete(type);
+    },
+  };
+  assert.throws(() => initAvailabilityFeedback(root, { notify() {} }), /after submit attachment/);
+  assert.deepEqual(removed, ['click', 'submit']);
+  assert.equal(active.size, 0);
+});
+
+test('cleanup attempts remaining capture removal when one removal throws', () => {
+  const active = new Map();
+  const attemptedRemoval = [];
+  const root = {
+    addEventListener(type, handler) { active.set(type, handler); },
+    removeEventListener(type, handler) {
+      attemptedRemoval.push(type);
+      if (type === 'click') throw new Error('unsupported click removal');
+      if (active.get(type) === handler) active.delete(type);
+    },
+  };
+  const dispose = initAvailabilityFeedback(root, { notify() {} });
+  dispose();
+  dispose();
+  assert.deepEqual(attemptedRemoval, ['click', 'submit']);
+  assert.equal(active.has('submit'), false, 'other captures must be removed after one fails');
+});
