@@ -126,7 +126,7 @@ Additional native-first patterns are implemented through CSS and small opt-in JS
 | Breadcrumbs | gc-breadcrumbs on nav > ol > li | Native links and aria-current=page |
 | Key/value details | gc-details-list on dl > dt + dd | Native semantics |
 
-Controllers expose cleanup callbacks; invoke them when a view unmounts. Avoid manually imitating radio, details or dialog behavior where native elements are available. A button-only toggle toolbar is for view selection, not a substitute for form radio inputs. Disabled items are not arrow-key destinations. Do not put a click handler on an inert card without a semantic control.
+Controllers expose cleanup callbacks; invoke them when a view unmounts. Availability and native pattern controllers now roll back partially registered listeners and tolerate repeated disposal; initial range formatting runs before its listener is attached. A controller-owned drawer restores opener focus only when its own dialog closes.  Avoid manually imitating radio, details or dialog behavior where native elements are available. A button-only toggle toolbar is for view selection, not a substitute for form radio inputs. Disabled items are not arrow-key destinations. Do not put a click handler on an inert card without a semantic control.
 
 createThemeController(root, options) accepts the same options as applyTheme(), returns update(next) and dispose(), and automatically recalculates custom accent colors on OS dark/light changes in auto mode. This opt-in watcher does **not** use local storage or network. Call dispose() to unregister the system listener. Curated palettes already respond to system appearance through CSS alone.
 
