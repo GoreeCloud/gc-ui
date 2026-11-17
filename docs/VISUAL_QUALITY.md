@@ -64,6 +64,19 @@ teams must provide real source/rendered evidence before claiming this solves
 their experience. Avoid a shared forced hue, automatic mass restyling or an
 unreviewed global palette replacement.
 
+### Seamless motion and meaningful color
+
+Every GoreeCloud-controlled digital experience must be intentionally
+art-directed for smooth feedback, clear state changes, purposeful color-coding
+and refined material effects. Reuse the alpha
+[motion and effects contract](MOTION_AND_EFFECTS.md) when suitable: real
+actions get responsive interaction feedback, state changes retain context,
+and positive/warning/negative meanings use semantic roles plus words or icons.
+Never add indiscriminate gradients, looping sparkle, hover jitter, invasive
+page transitions or inaccessible effects merely to appear premium. Respect
+reduced-motion and high-contrast preferences, and make real-browser
+interaction and screenshot acceptance separate release evidence.
+
 ## Review and acceptance
 
 Review actual application screenshots at mobile, tablet and desktop sizes across supported color appearances and accents. Record source SHA, device/browser version, visual hierarchy, text and nontext contrast, keyboard and touch flows, localization, real 200% and 400% zoom, reduced motion/transparency, forced colors, and screen-reader results. Review the application as a whole, including empty/error/offline states.

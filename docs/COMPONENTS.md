@@ -72,6 +72,17 @@ navigation; apps must provide and test their own appropriate mobile navigation
 and router. This is CSS composition, **not** an installed native SDK or an
 approved migrated product.
 
+## Motion and color-coded feedback (web alpha)
+
+Use opt-in `gc-motion-enter` for a genuinely new region,
+`gc-motion-interactive` on a real button or link, and
+`gc-motion-feedback` on status surfaces. A `gc-context-band` can set
+`data-gc-tone="positive|warning|negative"` for semantic accents, but
+must also carry explicit status text. These effects preserve existing
+motion tokens and disable movement for reduced-motion users. See the
+[full motion, effects and verification contract](MOTION_AND_EFFECTS.md).
+They do not automatically implement route transitions or change app data.
+
 ## Window Command Nodes (WCN) — web alpha
 
 **Founder-approved shape:** circular like familiar desktop window dots, but distinctly GoreeCloud: the three **flat, glyph-free** faces are aligned at the **physical right** of the titlebar, ordered **Crimson / Dismiss**, **Amber / Dock**, **Teal / Expand**. Do not insert icons, visible symbols, letters, or a glyph on hover. Semantic WCN light/dark colors are independent of the app accent; exact values and the 18px face are current alpha candidates pending final visual acceptance. Each face lives inside a **44px circular target** to support mouse and touch.

@@ -696,11 +696,16 @@
   align-items:center;
   gap:var(--gc-space-3);
   padding:var(--gc-space-4) var(--gc-space-5);
-  border-inline-start:4px solid var(--gc-brand);
+  --gc-context-tone:var(--gc-brand);
+  border-inline-start:4px solid var(--gc-context-tone);
   border-radius:var(--gc-radius-sm);
   background:var(--gc-surface-tonal);
   color:var(--gc-text);
 }
+/* Meaningful color-coding, always paired with a visible status label. */
+.gc-context-band[data-gc-tone="positive"] { --gc-context-tone:var(--gc-positive); }
+.gc-context-band[data-gc-tone="warning"] { --gc-context-tone:var(--gc-warning); }
+.gc-context-band[data-gc-tone="negative"] { --gc-context-tone:var(--gc-negative); }
 .gc-card--accent {
   background:var(--gc-brand-container);
   color:var(--gc-on-brand-container);
@@ -752,6 +757,65 @@
   }
   .gc-context-band { border-inline-start:4px solid Highlight; }
   .gc-scene__header :is(h1,h2,h3,p,a) { color:CanvasText; }
+}
+
+/* Opt-in GoreeCloud UI expressive motion.
+   Never animates layout dimensions or essential visibility by default.
+   Consumers opt in only to real entry and interactive states. */
+@media (prefers-reduced-motion:no-preference) {
+  .gc-motion-enter {
+    animation:gc-motion-appear var(--gc-motion-base) var(--gc-ease-expressive) both;
+  }
+  .gc-motion-enter--quiet {
+    animation-name:gc-motion-fade;
+    animation-duration:var(--gc-motion-fast);
+  }
+  .gc-app :is(a,button).gc-motion-interactive:not(:disabled):not([aria-disabled="true"]) {
+    transition:transform var(--gc-motion-fast) var(--gc-ease),
+      box-shadow var(--gc-motion-base) var(--gc-ease),
+      border-color var(--gc-motion-fast) var(--gc-ease),
+      background-color var(--gc-motion-fast) var(--gc-ease);
+  }
+  .gc-motion-feedback {
+    transition:background-color var(--gc-motion-base) var(--gc-ease),
+      border-color var(--gc-motion-base) var(--gc-ease),
+      color var(--gc-motion-base) var(--gc-ease);
+  }
+}
+@media (hover:hover) and (prefers-reduced-motion:no-preference) {
+  .gc-app :is(a,button).gc-motion-interactive:not(:disabled):not([aria-disabled="true"]):hover {
+    transform:translateY(-2px);
+    box-shadow:var(--gc-shadow-2);
+  }
+}
+@media (prefers-reduced-motion:no-preference) {
+  .gc-app :is(a,button).gc-motion-interactive:not(:disabled):not([aria-disabled="true"]):active {
+    transform:translateY(0) scale(.985);
+    box-shadow:var(--gc-shadow-1);
+  }
+}
+@keyframes gc-motion-appear {
+  from { opacity:.01; transform:translateY(10px); }
+  to { opacity:1; transform:none; }
+}
+@keyframes gc-motion-fade {
+  from { opacity:.01; }
+  to { opacity:1; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .gc-motion-enter,.gc-motion-enter--quiet {
+    animation:none!important; opacity:1!important; transform:none!important;
+  }
+  .gc-app :is(a,button).gc-motion-interactive {
+    transition:none!important; transform:none!important;
+  }
+  .gc-motion-feedback { transition:none!important; }
+}
+@media (forced-colors:active) {
+  .gc-motion-enter,.gc-motion-enter--quiet { animation:none; opacity:1; transform:none; }
+  .gc-app :is(a,button).gc-motion-interactive:hover:not(:disabled) {
+    box-shadow:none; outline:2px solid Highlight; outline-offset:2px;
+  }
 }
 
 /* A semantic button is a button regardless of its native element.

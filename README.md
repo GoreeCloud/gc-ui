@@ -124,6 +124,16 @@ This is a shared CSS source addition, not proof that a consuming app has
 migrated or passed visual review. Native adapters and actual screen acceptance
 remain outstanding.
 
+## Expressive motion and intentional status effects (alpha)
+
+GoreeCloud UI adds opt-in `gc-motion-enter`, `gc-motion-interactive`
+and `gc-motion-feedback` styles using existing timing/easing tokens.
+Context bands can express positive, warning and negative meanings with
+readable status labels. See [Motion and effects](docs/MOTION_AND_EFFECTS.md).
+There is no forced global animation, hue or looping decoration; reduced-motion,
+contrast and forced-colors preferences remain essential. CSS coverage
+and package checks are **not** proof of visual approval or app adoption.
+
 ## Rounded application windows
 
 All GoreeCloud application windows must have rounded corners. The web library provides gc-window with rounded titlebar/body/controls/statusbar, including compact/floating variants, and four-corner dialogs/drawers. See docs/WINDOWS_AND_NAVIGATION.md. Native OS chrome remains a separate verified-adapter requirement.
