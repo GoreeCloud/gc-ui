@@ -31,6 +31,13 @@ Before declaring a relevant visual change accepted, record: the **source commit*
 
 Record visual/design decisions separately from technical evidence. Passing Node tests, Chromium geometry checks, generated screenshots or a CI badge does not by itself prove exceptional craftsmanship, real-device acceptance, screen-reader acceptance, publication or deployment. If the full rendered experience was not inspected, report the gap instead of asserting premium compliance.
 
+A concrete [before/after reference critique](CRAFTED_WORKSPACE_REVIEW_20261117.md)
+compares the former empty chromatic screenshot with a composed Wardveil
+held-file example across four browser conditions. The example illustrates
+reviewable professional art direction and genuine native interactions; it is
+**not** an accepted Wardveil UI or evidence that other GoreeCloud applications
+have received an equivalent redesign.
+
 ## Repeatable quality requirements
 
 1. **Signature hierarchy.** Establish display, title, section, body, supporting and label hierarchy with canonical typography and readable line lengths. Give the primary action clear priority.

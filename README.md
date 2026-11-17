@@ -120,9 +120,13 @@ rail, branded-but-semantic page context, solid reading region and selective
 and existing contrast-safe token pairs, without imposing a global palette or
 changing the default `--gc-surface` used for essential reading. See
 [component markup and acceptance limits](docs/COMPONENTS.md#opt-in-chromatic-workspace-web-alpha).
-This is a shared CSS source addition, not proof that a consuming app has
-migrated or passed visual review. Native adapters and actual screen acceptance
-remain outstanding.
+The [composed held-file reference](tests/craft-workspace.html) and its
+[evidence-led design review](docs/CRAFTED_WORKSPACE_REVIEW_20261117.md)
+replace the earlier token-only, nearly blank showcase with a real information
+hierarchy, original iconography and working navigation/disclosure. This is a
+synthetic, **nonproduction** design example, not proof a consuming app has
+migrated or passed owner visual approval. Native adapters and real application
+screen acceptance remain outstanding.
 
 ## Expressive motion and intentional status effects (alpha)
 
