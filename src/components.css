@@ -759,6 +759,200 @@
   .gc-scene__header :is(h1,h2,h3,p,a) { color:CanvasText; }
 }
 
+/* Designed workflow composition: purposeful type, bounded reading width,
+   an editorial worklist and a single secondary reference plane. No fictional
+   dashboard metrics, extra hues, generic tile grids or new typography scale. */
+.gc-scene__rail {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gc-space-5);
+}
+.gc-scene__identity {
+  display:flex;
+  align-items:center;
+  gap:var(--gc-space-3);
+  min-inline-size:0;
+}
+.gc-scene__mark {
+  display:grid;
+  place-items:center;
+  inline-size:44px;
+  block-size:44px;
+  flex:none;
+  border-radius:var(--gc-radius-md);
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+}
+.gc-scene__mark gc-icon { inline-size:24px; block-size:24px; }
+.gc-scene__identity-text { min-inline-size:0; display:grid; gap:2px; }
+.gc-scene__identity-text strong { font-size:var(--gc-type-body); font-weight:760; letter-spacing:-.02em; }
+.gc-scene__identity-text small { font-size:var(--gc-type-label); color:var(--gc-text-soft); }
+.gc-scene__rail-label,
+.gc-scene__overline {
+  font-size:var(--gc-type-label);
+  font-weight:760;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+.gc-scene__rail-label { margin:0; color:var(--gc-text-soft); }
+.gc-scene__rail .gc-nav { padding:0; }
+.gc-scene__rail .gc-nav a { font-size:var(--gc-type-support); font-weight:620; }
+.gc-scene__rail .gc-nav a:focus-visible { outline-offset:-2px; }
+.gc-scene__rail .gc-nav a[aria-current="location"] {
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+}
+.gc-scene__rail .gc-nav gc-icon { inline-size:20px; block-size:20px; flex:none; }
+.gc-scene__rail-note {
+  margin-block-start:auto;
+  padding-block-start:var(--gc-space-4);
+  border-block-start:1px solid var(--gc-outline-soft);
+  color:var(--gc-text-soft);
+  font-size:var(--gc-type-support);
+  line-height:1.55;
+}
+.gc-scene__rail-note strong { display:block; color:var(--gc-text); font-size:var(--gc-type-label); }
+.gc-scene__intro { min-inline-size:0; display:grid; gap:var(--gc-space-2); }
+.gc-scene__header .gc-scene__overline { margin:0; opacity:.85; }
+.gc-scene__header .gc-scene__title {
+  font-size:var(--gc-type-title);
+  line-height:1.13;
+  letter-spacing:-.035em;
+  font-weight:760;
+  text-wrap:balance;
+}
+.gc-scene__header .gc-scene__summary {
+  max-inline-size:65ch;
+  font-size:var(--gc-type-support);
+  line-height:1.55;
+  opacity:.92;
+}
+.gc-scene__content {
+  display:grid;
+  align-content:start;
+  gap:var(--gc-space-6);
+}
+.gc-scene__content .gc-context-band {
+  line-height:1.45;
+}
+.gc-scene__content-heading {
+  display:grid;
+  gap:var(--gc-space-2);
+  margin:0;
+}
+.gc-scene__content-heading h2 {
+  margin:0;
+  font-size:var(--gc-type-section);
+  letter-spacing:-.025em;
+  line-height:1.2;
+}
+.gc-scene__content-heading p {
+  margin:0;
+  color:var(--gc-text-soft);
+  font-size:var(--gc-type-support);
+  max-inline-size:66ch;
+}
+.gc-scene__split {
+  display:grid;
+  grid-template-columns:minmax(0,1.6fr) minmax(240px,1fr);
+  gap:var(--gc-space-8);
+  align-items:start;
+}
+.gc-scene__split > * { min-inline-size:0; }
+.gc-workflow {
+  list-style:none;
+  margin:0;
+  padding:0;
+  counter-reset:gc-workflow;
+}
+.gc-workflow > li {
+  display:grid;
+  grid-template-columns:32px minmax(0,1fr);
+  column-gap:var(--gc-space-4);
+  position:relative;
+  padding-block:var(--gc-space-4);
+  border-block-end:1px solid var(--gc-outline-soft);
+}
+.gc-workflow > li:first-child { padding-block-start:0; }
+.gc-workflow > li:last-child { border-block-end:0; }
+.gc-workflow > li::before {
+  counter-increment:gc-workflow;
+  content:counter(gc-workflow,decimal-leading-zero);
+  color:var(--gc-brand);
+  font:700 var(--gc-type-support)/1.45 var(--gc-font-mono);
+  font-variant-numeric:tabular-nums;
+}
+.gc-workflow__item { display:grid; gap:var(--gc-space-1); min-inline-size:0; }
+.gc-workflow__item strong { font-size:var(--gc-type-body); font-weight:680; }
+.gc-workflow__item p { font-size:var(--gc-type-support); line-height:1.55; color:var(--gc-text-soft); margin:0; }
+.gc-workflow__meta {
+  font-size:var(--gc-type-label);
+  font-weight:620;
+  color:var(--gc-brand);
+  margin-block-start:var(--gc-space-1);
+}
+.gc-reference-panel {
+  min-inline-size:0;
+  display:grid;
+  gap:var(--gc-space-4);
+  padding:var(--gc-space-5);
+  border-radius:var(--gc-radius-lg);
+  border:1px solid var(--gc-outline-soft);
+  background:var(--gc-surface-tonal);
+}
+.gc-reference-panel h3 { margin:0; font-size:var(--gc-type-heading); }
+.gc-reference-panel dl { margin:0; display:grid; gap:0; }
+.gc-reference-panel dl > div {
+  padding-block:var(--gc-space-3);
+  display:grid;
+  gap:var(--gc-space-1);
+  border-block-start:1px solid var(--gc-outline-soft);
+}
+.gc-reference-panel dt { color:var(--gc-text-soft); font-size:var(--gc-type-label); }
+.gc-reference-panel dd { margin:0; color:var(--gc-text); font-size:var(--gc-type-support); font-weight:650; }
+.gc-scene__footnote {
+  margin:0;
+  border-block-start:1px solid var(--gc-outline-soft);
+  padding-block-start:var(--gc-space-4);
+  color:var(--gc-text-soft);
+  font-size:var(--gc-type-label);
+  line-height:1.5;
+}
+@media (max-width:1040px) {
+  .gc-scene__split { grid-template-columns:minmax(0,1fr); gap:var(--gc-space-5); }
+}
+@media (max-width:740px) {
+  .gc-scene__rail { gap:var(--gc-space-2); }
+  .gc-scene__rail-label,.gc-scene__rail-note { display:none; }
+  .gc-scene__rail .gc-nav {
+    flex-direction:row;
+    gap:var(--gc-space-1);
+    overflow-x:auto;
+    overscroll-behavior-inline:contain;
+    scrollbar-width:thin;
+    padding-block:var(--gc-space-1);
+  }
+  .gc-scene__rail .gc-nav a {
+    white-space:nowrap;
+    flex:none;
+    padding-inline:var(--gc-space-3);
+  }
+  .gc-scene__identity .gc-scene__mark { inline-size:36px; block-size:36px; }
+  .gc-scene__header .gc-scene__title { font-size:var(--gc-type-section); }
+  .gc-scene__split { gap:var(--gc-space-4); }
+  .gc-reference-panel { padding:var(--gc-space-4); border-radius:var(--gc-radius-md); }
+}
+@media (forced-colors:active) {
+  .gc-scene__mark,.gc-reference-panel {
+    background:Canvas; color:CanvasText;
+    border:1px solid CanvasText;
+  }
+  .gc-workflow > li::before,.gc-workflow__meta { color:Highlight; }
+  .gc-scene__rail .gc-nav a[aria-current="location"] { outline:2px solid Highlight; }
+}
+/* Reading columns become full width at 400% zoom; no essential text is
+   clipped, faded, transformed or covered by a fixed navigation overlay. */
+
 /* Opt-in GoreeCloud UI expressive motion.
    Never animates layout dimensions or essential visibility by default.
    Consumers opt in only to real entry and interactive states. */

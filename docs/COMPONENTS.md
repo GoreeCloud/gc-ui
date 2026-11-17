@@ -72,6 +72,36 @@ navigation; apps must provide and test their own appropriate mobile navigation
 and router. This is CSS composition, **not** an installed native SDK or an
 approved migrated product.
 
+## Professionally composed workflow reference (nonproduction)
+
+The standalone [held-file review craft reference](../tests/craft-workspace.html)
+demonstrates how these primitives can form **a coherent, task-specific
+interface**, rather than the old almost-empty "Navigation / Workspace / Ready"
+color-token screenshot. It uses Wardveil as a **synthetic illustration of
+file-owner policy**, not an operational Scan UI.
+
+- A compact, original-icon identity and real navigation links establish
+  location; narrow layouts show a horizontal, keyboard-reachable nav without
+  pretending to have a separate mobile router.
+- A deliberate overline/title/summary hierarchy distinguishes page purpose
+  from scope. The reading surface uses a sequential, numbered workflow;
+  a secondary definition list expresses file-owner boundaries without
+  fictional metrics, interchangeable cards or nonfunctional action buttons.
+- Semantic Cloud Canvas, Surface, tonal Surface and existing accent roles
+  govern materials; type sizes, spaces, geometry and iconography reuse GC UI.
+- The status explicitly says **synthetic preview**. A native `details`
+  disclosure works; nothing offers a fake upload or release operation.
+- Chromium captures the complete reference in desktop/light, mobile/dark,
+  narrow/reduced-motion and tablet/forced-colors conditions. Screenshot
+  generation and source tests do **not** certify world-class aesthetics,
+  actual Wardveil adoption, genuine Identity/scan integration or human approval.
+
+This is an example of **the design discipline**, not a universal template.
+A document manager, browser, security console and calendar must each receive
+an independently art-directed information architecture and visual acceptance
+audit; copying this shell and replacing its brand label would fail the
+anti–AI-slop standard.
+
 ## Motion and color-coded feedback (web alpha)
 
 Use opt-in `gc-motion-enter` for a genuinely new region,

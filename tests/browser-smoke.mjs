@@ -2058,65 +2058,53 @@ try {
       dark:scenario.dark,reducedMotion:Boolean(scenario.reducedMotion),
       forcedColors:Boolean(scenario.forcedColors)
     });
-    await browser.navigate(base+"/lab/");
-    const mode=scenario.dark?"dark":"light";
-    const result=JSON.parse(await browser.evaluate(
-      '(()=>{const host=document.createElement("section");'+
-      'host.className="gc-app gc-scene";host.dataset.gcTheme='+JSON.stringify(mode)+';'+
-      'host.dataset.gcAccent='+JSON.stringify(scenario.accent)+';'+
-      'host.style.cssText="position:fixed;inset:0;width:100vw;height:100vh;z-index:9999;overflow:auto";'+
-      'const rail=document.createElement("aside");rail.className="gc-scene__rail";'+
-      'rail.textContent="Navigation";'+
-      'const area=document.createElement("div");area.className="gc-scene__workarea";'+
-      'const header=document.createElement("header");header.className="gc-scene__header";'+
-      'header.textContent="Workspace";'+
-      'const content=document.createElement("main");content.className="gc-scene__content";'+
-      'const enter=document.createElement("section");enter.className="gc-motion-enter";enter.textContent="Ready";'+
-      'const state=document.createElement("div");state.className="gc-context-band gc-motion-feedback";'+
-      'state.dataset.gcTone="warning";state.textContent="Attention: review changes";'+
-      'const link=document.createElement("a");link.href="#workspace";'+
-      'link.className="gc-button gc-motion-interactive";link.textContent="View workspace";'+
-      'content.append(enter,state,link);area.append(header,content);host.append(rail,area);'+
-      'document.body.append(host);'+
-      'const root=getComputedStyle(host),intro=getComputedStyle(enter);'+
-      'const nav=getComputedStyle(rail),heading=getComputedStyle(header),status=getComputedStyle(state);'+
-      'const button=getComputedStyle(link);'+
-      'const output={width:host.clientWidth,scroll:host.scrollWidth,'+
-      'brand:root.getPropertyValue("--gc-brand").trim(),'+
-      'nav:nav.backgroundColor,header:heading.backgroundColor,'+
-      'status:status.borderInlineStartColor,label:state.textContent,'+
-      'animation:intro.animationName,opacity:intro.opacity,visible:intro.visibility,'+
-      'interactive:button.transitionProperty,'+
-      'reduced:matchMedia("(prefers-reduced-motion:reduce)").matches,'+
-      'forced:matchMedia("(forced-colors:active)").matches};'+
-      'return JSON.stringify(output)})()'));
-    assert.equal(result.width,scenario.width,
-      "Chromatic scene does not fit exact viewport "+scenario.name);
+    await browser.navigate(base+"/tests/craft-workspace.html");
+    await browser.evaluate(
+      'document.querySelector("#craft-reference").dataset.gcTheme='+JSON.stringify(scenario.dark?"dark":"light")+';'+
+      'document.querySelector("#craft-reference").dataset.gcAccent='+JSON.stringify(scenario.accent));
+    await delay(90);
+    const result=JSON.parse(await browser.evaluate('(()=>{'+
+      'const host=document.querySelector("#craft-reference");'+
+      'const nav=[...host.querySelectorAll(".gc-nav a")];'+
+      'const navTargets=nav.every(a=>document.querySelector(a.getAttribute("href")));'+
+      'const intro=getComputedStyle(host.querySelector(".gc-scene__header"));'+
+      'const panel=getComputedStyle(host.querySelector(".gc-reference-panel"));'+
+      'const icons=[...host.querySelectorAll("gc-icon")].filter(el=>el.shadowRoot?.querySelector("svg")).length;'+
+      'const st=document.querySelector(".gc-context-band");'+
+      'return JSON.stringify({width:innerWidth,scroll:document.documentElement.scrollWidth,'+
+      'title:host.querySelector("h1")?.textContent,steps:host.querySelectorAll(".gc-workflow li").length,'+
+      'navCount:nav.length,navTargets,icons,referenceText:st.textContent,'+
+      'header:intro.backgroundColor,panel:panel.backgroundColor,'+
+      'brand:getComputedStyle(host).getPropertyValue("--gc-brand").trim(),'+
+      'forced:matchMedia("(forced-colors:active)").matches,'+
+      'reduced:matchMedia("(prefers-reduced-motion:reduce)").matches})})()'));
+    assert.equal(result.width,scenario.width,"Reference viewport width mismatch");
     assert.ok(result.scroll<=result.width+1,
-      "Chromatic scene overflows "+scenario.name+": "+JSON.stringify(result));
-    assert.ok(result.brand.length>0,"Scoped GoreeCloud accent missing");
-    assert.match(result.label,/Attention: review changes/);
-    assert.equal(result.visible,"visible","Essential motion content is not visible");
-    if(scenario.reducedMotion||scenario.forcedColors){
-      assert.equal(result.animation,"none",
-        "Accessible appearance retains unnecessary entrance motion "+scenario.name);
-      assert.equal(result.opacity,"1","Accessible appearance hid new content");
-    }else{
-      assert.equal(result.animation,"gc-motion-appear",
-        "Opt-in scene entrance motion missing "+scenario.name);
-      assert.ok(result.interactive.includes("transform"),
-        "Interactive feedback transition missing "+scenario.name);
-    }
+      "Designed scene overflows "+scenario.name+": "+JSON.stringify(result));
+    assert.match(result.title,/Held-file review/);
+    assert.equal(result.steps,3,"Missing meaningful workflow hierarchy");
+    assert.equal(result.navCount,4,"Nav must reach four distinct real sections");
+    assert.equal(result.navTargets,true,"Inert scene navigation");
+    assert.ok(result.icons>=5,"Canonical original icons not registered");
+    assert.match(result.referenceText,/No real scans/);
+    assert.ok(result.brand.length>0,"Scoped semantic accent missing");
+    assert.ok(result.header.length>0&&result.panel.length>0,"Semantic material absent");
     if(scenario.forcedColors) assert.equal(result.forced,true);
     if(scenario.reducedMotion) assert.equal(result.reduced,true);
-    // Capture the actual rendered component composition for mandatory
-    // end-to-end visual review. Passing computed-style tests cannot approve it.
     const sceneShot=await browser.screenshot(join(directory,
-      "gc-ui-chromatic-scene-"+scenario.name+".png"));
+      "gc-ui-crafted-workspace-"+scenario.name+".png"));
     assert.equal(sceneShot.width,scenario.width);
-    await browser.evaluate('document.querySelector("section.gc-scene")?.remove()');
-    console.log("Chromium chromatic scene "+scenario.name+
-      ": bounded layout, scoped accent, status, motion fallback passed");
+    await browser.evaluate('document.querySelector("#review summary").click()');
+    assert.equal(await browser.evaluate('document.querySelector("#review details").open'),
+      true,"Native guidance disclosure must actually open");
+    await browser.evaluate('document.querySelector(\'.gc-nav a[href="#admission"]\').click()');
+    await delay(60);
+    assert.equal(await browser.evaluate('document.querySelector(\'.gc-nav a[href="#admission"]\').getAttribute("aria-current")'),
+      "location","Fragment navigation must update the current section");
+    assert.equal(await browser.evaluate('document.querySelector(\'.gc-nav a[href="#overview"]\').hasAttribute("aria-current")'),
+      false,"Previous section must lose current marker");
+    console.log("Chromium chromatic scene / composed Wardveil reference "+scenario.name+
+      ": semantic original icons, functioning nav, disclosure and bounded viewport passed");
   }
 
 } finally {
