@@ -48,6 +48,22 @@ Core component CSS provides the premium shell, showcase composition, content/vis
 
 Ambient decoration stays behind opaque content; the floating showcase uses the solid Cloud Lens fallback. All color derives from the canonical semantic variables rather than independent hardcoded accent hex. High contrast, reduced transparency, forced colors, mobile reflow and reduced motion have explicit fallbacks.
 
+### Avoiding the white-card default
+
+Use the opt-in `gc-scene` / `gc-scene__rail` / `gc-scene__header` /
+`gc-scene__content` pattern in product shells only when it improves the actual
+workflow. Its accented context region and tonal navigation establish identity
+without tinting every reading surface. A `gc-context-band` can identify one
+important workflow scope and `gc-card--accent` can emphasize one meaningful
+item; neither is a license to create a bigger grid of colored cards.
+
+The default white `--gc-surface` in light mode is intentional for readable
+content and remains unchanged. **The failure is monotonous composition and
+unverified consumer adoption**, not the existence of a white token. Product
+teams must provide real source/rendered evidence before claiming this solves
+their experience. Avoid a shared forced hue, automatic mass restyling or an
+unreviewed global palette replacement.
+
 ## Review and acceptance
 
 Review actual application screenshots at mobile, tablet and desktop sizes across supported color appearances and accents. Record source SHA, device/browser version, visual hierarchy, text and nontext contrast, keyboard and touch flows, localization, real 200% and 400% zoom, reduced motion/transparency, forced colors, and screen-reader results. Review the application as a whole, including empty/error/offline states.

@@ -639,6 +639,121 @@
 }
 
 
+/* Opt-in chromatic application workspace.
+   The accent is application-owned; the core light/dark token palette is
+   never rewritten. Emphasis belongs to real regions, not every card. */
+.gc-scene {
+  min-inline-size:0;
+  min-block-size:100dvh;
+  display:grid;
+  grid-template-columns:minmax(220px,clamp(220px,22vw,310px)) minmax(0,1fr);
+  gap:var(--gc-space-4);
+  padding:var(--gc-space-4);
+  background:var(--gc-canvas);
+  background-image:radial-gradient(ellipse 60% 64% at 0 0,
+    var(--gc-brand-container),transparent 84%);
+  color:var(--gc-text);
+}
+.gc-scene__rail,
+.gc-scene__workarea { min-inline-size:0; min-block-size:0; }
+.gc-scene__rail {
+  padding:var(--gc-space-6);
+  border:1px solid var(--gc-outline-soft);
+  border-radius:var(--gc-radius-lg);
+  background:var(--gc-surface-tonal);
+}
+.gc-scene__workarea {
+  display:flex;
+  flex-direction:column;
+  gap:var(--gc-space-4);
+}
+.gc-scene__header {
+  min-inline-size:0;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:space-between;
+  gap:var(--gc-space-4);
+  padding:var(--gc-space-6);
+  border-radius:var(--gc-radius-lg);
+  border:1px solid var(--gc-outline-soft);
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+}
+.gc-scene__header :is(h1,h2,h3,p) { margin:0; color:inherit; }
+.gc-scene__header a:not(.gc-button) { color:inherit; }
+.gc-scene__content {
+  min-inline-size:0;
+  flex:1;
+  padding:var(--gc-space-6);
+  background:var(--gc-surface);
+  border-radius:var(--gc-radius-lg);
+}
+.gc-context-band {
+  min-inline-size:0;
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:var(--gc-space-3);
+  padding:var(--gc-space-4) var(--gc-space-5);
+  border-inline-start:4px solid var(--gc-brand);
+  border-radius:var(--gc-radius-sm);
+  background:var(--gc-surface-tonal);
+  color:var(--gc-text);
+}
+.gc-card--accent {
+  background:var(--gc-brand-container);
+  color:var(--gc-on-brand-container);
+  border-color:var(--gc-outline-soft);
+  background-image:none;
+}
+.gc-card--accent :is(.gc-support,.gc-label,.gc-heading) { color:inherit; }
+@supports (color:color-mix(in srgb,red,blue)) {
+  .gc-scene__rail {
+    background:linear-gradient(165deg,
+      color-mix(in srgb,var(--gc-brand-container) 48%,var(--gc-surface-tonal)),
+      var(--gc-surface-tonal) 72%);
+    border-color:color-mix(in srgb,var(--gc-brand) 21%,var(--gc-outline-soft));
+  }
+  .gc-scene__header {
+    background:linear-gradient(112deg,var(--gc-brand-container),
+      color-mix(in srgb,var(--gc-brand-container) 76%,var(--gc-surface)));
+    border-color:color-mix(in srgb,var(--gc-brand) 24%,var(--gc-outline-soft));
+  }
+  .gc-card--accent {
+    background:var(--gc-brand-container);
+    background-image:none;
+    box-shadow:none;
+  }
+}
+@media (max-width:740px) {
+  .gc-scene {
+    display:flex;
+    flex-direction:column;
+    padding:var(--gc-space-2);
+    gap:var(--gc-space-2);
+  }
+  .gc-scene__rail,.gc-scene__header,.gc-scene__content {
+    padding:var(--gc-space-4);
+    border-radius:var(--gc-radius-md);
+  }
+}
+@media (prefers-contrast:more), (prefers-reduced-transparency:reduce) {
+  .gc-scene { background-image:none; }
+  .gc-scene__rail { background:var(--gc-surface-tonal); }
+  .gc-scene__header { background:var(--gc-brand-container); }
+}
+@media (forced-colors:active) {
+  .gc-scene { background:Canvas; color:CanvasText; background-image:none; }
+  .gc-scene__rail,.gc-scene__workarea,.gc-scene__header,.gc-scene__content,
+  .gc-context-band,.gc-card--accent {
+    background:Canvas; color:CanvasText;
+    border:1px solid CanvasText; background-image:none; box-shadow:none;
+  }
+  .gc-context-band { border-inline-start:4px solid Highlight; }
+  .gc-scene__header :is(h1,h2,h3,p,a) { color:CanvasText; }
+}
+
 /* A semantic button is a button regardless of its native element.
    More-specific app link styles must never override button foreground contrast. */
 .gc-app a.gc-button { color:var(--gc-on-brand); text-decoration:none; }

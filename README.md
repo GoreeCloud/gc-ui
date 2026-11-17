@@ -111,6 +111,19 @@ For vibe-coded and hand-authored consumer applications, use the [20-point refine
 
 GoreeCloud UI must be visually distinctive, premium and modern in every supported application context. The shared implementation includes semantic signature composition (`gc-premium-shell`, `gc-showcase`, `gc-feature-grid`), polished controls and purposeful Canvas/Surface/Lens depth. See [Visual quality contract](docs/VISUAL_QUALITY.md). CI rendering does not replace human design acceptance.
 
+## Color-led application compositions (alpha)
+
+The optional `gc-scene` workspace and `gc-context-band` patterns help
+application owners avoid generic white-card grids through a tonal navigation
+rail, branded-but-semantic page context, solid reading region and selective
+`gc-card--accent` emphasis. They reuse the **application's selected** hue
+and existing contrast-safe token pairs, without imposing a global palette or
+changing the default `--gc-surface` used for essential reading. See
+[component markup and acceptance limits](docs/COMPONENTS.md#opt-in-chromatic-workspace-web-alpha).
+This is a shared CSS source addition, not proof that a consuming app has
+migrated or passed visual review. Native adapters and actual screen acceptance
+remain outstanding.
+
 ## Rounded application windows
 
 All GoreeCloud application windows must have rounded corners. The web library provides gc-window with rounded titlebar/body/controls/statusbar, including compact/floating variants, and four-corner dialogs/drawers. See docs/WINDOWS_AND_NAVIGATION.md. Native OS chrome remains a separate verified-adapter requirement.

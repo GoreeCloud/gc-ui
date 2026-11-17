@@ -19,6 +19,59 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
 | Identity and icons | gc-avatar; gc-icon, iconSvg() | Image alt and icon-only button names |
 
+## Opt-in chromatic workspace (web alpha)
+
+A GoreeCloud application should not become an interchangeable grid of white cards.
+The new opt-in `gc-scene` groups a contextual rail, a visibly accented page header
+and an opaque work area into one deliberate reading hierarchy. It is intended for
+real applications with navigation and content; **not** a marketing hero or a
+replacement for existing mobile navigation behavior.
+
+- `gc-scene`: responsive Canvas scene with a restrained app-accent atmosphere.
+- `gc-scene__rail`: semantic tonal navigation region; preserve real links,
+  current-page indicators and responsive navigation behavior.
+- `gc-scene__workarea`, `gc-scene__header`, `gc-scene__content`: group
+  real operations, page context and safe opaque reading separately.
+- `gc-context-band`: one keyed context/status or filter region, not every row.
+- `gc-card--accent`: optional accent emphasis for **one** meaningful item;
+  avoid using it on repeated cards. It preserves the `on-brand-container`
+  foreground instead of relying on unreadable arbitrary blends.
+
+Minimal document structure (real destinations and actions must be supplied by
+the consuming app):
+
+```html
+<div class="gc-app gc-scene">
+  <aside class="gc-scene__rail" aria-label="Workspace navigation">
+    <nav class="gc-nav" aria-label="Sections">
+      <a href="/overview" aria-current="page">Overview</a>
+      <a href="/settings">Settings</a>
+    </nav>
+  </aside>
+  <div class="gc-scene__workarea">
+    <header class="gc-scene__header">
+      <h1>Overview</h1>
+      <a class="gc-button" href="/settings">Settings</a>
+    </header>
+    <main class="gc-scene__content" id="main">
+      <p>Application content remains on an opaque Cloud Surface.</p>
+      <section class="gc-context-band" aria-label="Current scope">
+        <strong>Current workspace</strong><span>Your content</span>
+      </section>
+    </main>
+  </div>
+</div>
+```
+
+Keep semantic color roles scoped to a real app root using `applyTheme`.
+The official four curated alpha accents are examples only; a product/user may
+choose a custom accessible accent. Light/dark/auto, high contrast, reduced
+transparency, forced colors, touch and text reflow must be verified in the
+consumer. The rail stacks in narrow layouts rather than silently hiding
+navigation; apps must provide and test their own appropriate mobile navigation
+and router. This is CSS composition, **not** an installed native SDK or an
+approved migrated product.
+
 ## Window Command Nodes (WCN) — web alpha
 
 **Founder-approved shape:** circular like familiar desktop window dots, but distinctly GoreeCloud: the three **flat, glyph-free** faces are aligned at the **physical right** of the titlebar, ordered **Crimson / Dismiss**, **Amber / Dock**, **Teal / Expand**. Do not insert icons, visible symbols, letters, or a glyph on hover. Semantic WCN light/dark colors are independent of the app accent; exact values and the 18px face are current alpha candidates pending final visual acceptance. Each face lives inside a **44px circular target** to support mouse and touch.
