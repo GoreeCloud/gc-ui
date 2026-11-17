@@ -2088,7 +2088,7 @@ try {
       'animation:intro.animationName,opacity:intro.opacity,visible:intro.visibility,'+
       'interactive:button.transitionProperty,'+
       'reduced:matchMedia("(prefers-reduced-motion:reduce)").matches,'+
-      'forced:matchMedia("(forced-colors:active)").matches};host.remove();'+
+      'forced:matchMedia("(forced-colors:active)").matches};'+
       'return JSON.stringify(output)})()'));
     assert.equal(result.width,scenario.width,
       "Chromatic scene does not fit exact viewport "+scenario.name);
@@ -2109,6 +2109,12 @@ try {
     }
     if(scenario.forcedColors) assert.equal(result.forced,true);
     if(scenario.reducedMotion) assert.equal(result.reduced,true);
+    // Capture the actual rendered component composition for mandatory
+    // end-to-end visual review. Passing computed-style tests cannot approve it.
+    const sceneShot=await browser.screenshot(join(directory,
+      "gc-ui-chromatic-scene-"+scenario.name+".png"));
+    assert.equal(sceneShot.width,scenario.width);
+    await browser.evaluate('document.querySelector("section.gc-scene")?.remove()');
     console.log("Chromium chromatic scene "+scenario.name+
       ": bounded layout, scoped accent, status, motion fallback passed");
   }
