@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "authority": "GoreeCloud UI",
   "strategy": "web-first-incremental-stable",
-  "status": "planned-not-released",
-  "currentPackageVersion": "0.1.0-alpha.0",
+  "status": "candidate-unverified",
+  "currentPackageVersion": "1.0.0",
   "targetStableVersion": "1.0.0",
   "versioning": {
     "scheme": "Semantic Versioning",
@@ -15,7 +15,7 @@
   },
   "webFoundations": {
     "target": "1.0.0",
-    "status": "planned",
+    "status": "candidate",
     "definition": "A tested and packaged web design foundation with a frozen, documented Stable API subset; not a native SDK or proof of adoption by applications",
     "candidateStableExports": [
       "./foundation",
