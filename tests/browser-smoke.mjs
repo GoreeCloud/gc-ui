@@ -959,6 +959,34 @@ try {
       "400% multi-mode dock escaped "+mode.name+": "+JSON.stringify(results));
     const shot=await browser.screenshot(join(directory,"gc-ui-full-400-"+mode.name+".png"));
     assert.equal(shot.width,mode.width);
+    // Full-page 400% root-font stress and forced colors must not leave
+    // focusable destinations inaccessible behind the horizontal dock clip.
+    // Internal scrolling is allowed; page-level x overflow is not.
+    if(mode.name==="forced-colors") {
+      const qa=JSON.parse(await browser.evaluate(
+        '(async()=>{const root=document.documentElement,dock=document.querySelector("#demo-bottom-nav"),'+
+        'links=[...dock.querySelectorAll("a.gc-bottom-nav__link")];'+
+        'const frame=()=>dock.getBoundingClientRect();'+
+        'const visible=el=>{const r=el.getBoundingClientRect(),f=frame();'+
+        'return r.left>=f.left-2&&r.right<=f.right+2};'+
+        'const settle=async()=>{await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame)};'+
+        'links[0].focus();await settle();const firstVisible=visible(links[0]);'+
+        'const start=dock.scrollLeft;links.at(-1).focus();await settle();'+
+        'const lastFocused=document.activeElement===links.at(-1),lastVisible=visible(links.at(-1));'+
+        'const end=dock.scrollLeft;links[0].focus();await settle();'+
+        'return JSON.stringify({count:links.length,overflow:dock.scrollWidth>dock.clientWidth,'+
+        'firstVisible,lastFocused,lastVisible,start,end,returnScroll:dock.scrollLeft,'+
+        'returnFocused:document.activeElement===links[0],returnVisible:visible(links[0]),'+
+        'pageOverflow:root.scrollWidth>root.clientWidth+1})})()'));
+      assert.equal(qa.count,4,"Expected four reachable lab destinations");
+      assert.equal(qa.overflow,true,"Forced-colors 400% must actually exercise clipped dock overflow");
+      assert.ok(qa.firstVisible&&qa.lastVisible&&qa.lastFocused&&qa.returnFocused&&qa.returnVisible,
+        "Dock keyboard focus failed to bring every destination into view "+JSON.stringify(qa));
+      assert.ok(qa.end>qa.start&&qa.returnScroll<qa.end,
+        "Keyboard focus did not scroll to final link then back "+JSON.stringify(qa));
+      assert.equal(qa.pageOverflow,false,"Dock focus widened the document outside its viewport");
+      console.log("Chromium full-lab forced-colors 400%: all dock destinations keyboard reachable");
+    }
     console.log("Chromium full 400% "+mode.name+": text and layout pass");
   }
 
