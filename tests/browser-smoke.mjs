@@ -2043,6 +2043,76 @@ try {
     console.log("Chromium scoped glass / Signal Lens "+(forcedColors?"forced colors":"mixed appearances")+": passed");
   }
 
+
+  // Exercise newly introduced chromatic workspace and opt-in motion CSS
+  // against actual computed Chromium styles, not only source regex checks.
+  // This temporary local overlay has no data, routes, or network calls.
+  const chromaticScenarios=[
+    {name:"light-iris-desktop",width:1440,dark:false,accent:"iris"},
+    {name:"dark-lagoon-mobile",width:390,dark:true,accent:"lagoon"},
+    {name:"reduced-ember-mobile",width:320,dark:false,accent:"ember",reducedMotion:true},
+    {name:"forced-moss-tablet",width:900,dark:true,accent:"moss",forcedColors:true}
+  ];
+  for(const scenario of chromaticScenarios){
+    await browser.setViewport(scenario.width,850,{
+      dark:scenario.dark,reducedMotion:Boolean(scenario.reducedMotion),
+      forcedColors:Boolean(scenario.forcedColors)
+    });
+    await browser.navigate(base+"/lab/");
+    const mode=scenario.dark?"dark":"light";
+    const result=JSON.parse(await browser.evaluate(
+      '(()=>{const host=document.createElement("section");'+
+      'host.className="gc-app gc-scene";host.dataset.gcTheme='+JSON.stringify(mode)+';'+
+      'host.dataset.gcAccent='+JSON.stringify(scenario.accent)+';'+
+      'host.style.cssText="position:fixed;inset:0;width:100vw;height:100vh;z-index:9999;overflow:auto";'+
+      'const rail=document.createElement("aside");rail.className="gc-scene__rail";'+
+      'rail.textContent="Navigation";'+
+      'const area=document.createElement("div");area.className="gc-scene__workarea";'+
+      'const header=document.createElement("header");header.className="gc-scene__header";'+
+      'header.textContent="Workspace";'+
+      'const content=document.createElement("main");content.className="gc-scene__content";'+
+      'const enter=document.createElement("section");enter.className="gc-motion-enter";enter.textContent="Ready";'+
+      'const state=document.createElement("div");state.className="gc-context-band gc-motion-feedback";'+
+      'state.dataset.gcTone="warning";state.textContent="Attention: review changes";'+
+      'const link=document.createElement("a");link.href="#workspace";'+
+      'link.className="gc-button gc-motion-interactive";link.textContent="View workspace";'+
+      'content.append(enter,state,link);area.append(header,content);host.append(rail,area);'+
+      'document.body.append(host);'+
+      'const root=getComputedStyle(host),intro=getComputedStyle(enter);'+
+      'const nav=getComputedStyle(rail),heading=getComputedStyle(header),status=getComputedStyle(state);'+
+      'const button=getComputedStyle(link);'+
+      'const output={width:host.clientWidth,scroll:host.scrollWidth,'+
+      'brand:root.getPropertyValue("--gc-brand").trim(),'+
+      'nav:nav.backgroundColor,header:heading.backgroundColor,'+
+      'status:status.borderInlineStartColor,label:state.textContent,'+
+      'animation:intro.animationName,opacity:intro.opacity,visible:intro.visibility,'+
+      'interactive:button.transitionProperty,'+
+      'reduced:matchMedia("(prefers-reduced-motion:reduce)").matches,'+
+      'forced:matchMedia("(forced-colors:active)").matches};host.remove();'+
+      'return JSON.stringify(output)})()'));
+    assert.equal(result.width,scenario.width,
+      "Chromatic scene does not fit exact viewport "+scenario.name);
+    assert.ok(result.scroll<=result.width+1,
+      "Chromatic scene overflows "+scenario.name+": "+JSON.stringify(result));
+    assert.ok(result.brand.length>0,"Scoped GoreeCloud accent missing");
+    assert.match(result.label,/Attention: review changes/);
+    assert.equal(result.visible,"visible","Essential motion content is not visible");
+    if(scenario.reducedMotion||scenario.forcedColors){
+      assert.equal(result.animation,"none",
+        "Accessible appearance retains unnecessary entrance motion "+scenario.name);
+      assert.equal(result.opacity,"1","Accessible appearance hid new content");
+    }else{
+      assert.equal(result.animation,"gc-motion-appear",
+        "Opt-in scene entrance motion missing "+scenario.name);
+      assert.ok(result.interactive.includes("transform"),
+        "Interactive feedback transition missing "+scenario.name);
+    }
+    if(scenario.forcedColors) assert.equal(result.forced,true);
+    if(scenario.reducedMotion) assert.equal(result.reduced,true);
+    console.log("Chromium chromatic scene "+scenario.name+
+      ": bounded layout, scoped accent, status, motion fallback passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();

@@ -43,4 +43,5 @@ test("opt-in pattern is documented without promising consumer adoption", () => {
   assert.match(docs, /not.*installed native SDK|not.*approved migrated product/i);
   assert.match(load("docs/VISUAL_QUALITY.md"), /Avoiding the white-card default/);
   assert.match(load("README.md"), /Color-led application compositions/);
+  assert.match(load("tests/browser-smoke.mjs"), /Chromium chromatic scene/);
 });
