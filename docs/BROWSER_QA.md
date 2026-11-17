@@ -76,6 +76,22 @@ Issue #28 observed a 390px design lab expanding to approximately 500px at 400% s
 
 This is still **CSS root-font emulation**, not browser zoom or physical Android/iOS accessibility text scaling. Actual zoom, native and assistive-technology acceptance remain separate.
 
+### Forced-colors full-lab dock focus reachability (refreshed 1.0 candidate)
+
+A focused regression from historical draft [#128](https://github.com/GoreeCloud/gc-ui/pull/128)
+has been ported **only** into the current-main-based candidate without merging
+that older tree. At 390 CSS px, the complete design lab is rendered with
+forced colors and 400% CSS root typography. The automated browser must
+demonstrate **real internal horizontal overflow**, focus the first and final
+destination links, scroll the last focus target into the visible dock
+bounds, return focus to the first destination and restore the internal
+scroll position, while preserving **zero document-level horizontal overflow**.
+
+This explicitly tests keyboard-reachable content behind a clipped internal
+navigation region, not merely whether a screenshot is cropped or the DOM
+has labeled links. It does not replace a physical screen-reader test,
+native user zoom, Android/iOS focus services or acceptance on other engines.
+
 ### Screenshot-led mobile typography correction
 
 The first 400% screenshots met geometry assertions but showed the sticky theme toolbar obscuring much of the readable viewport and display headings breaking into tiny character fragments. On narrow screens, the lab's theme toolbar now scrolls naturally rather than staying pinned; section/showcase/hero display typography uses a restrained, root-aware editorial scale while normal body and form text retain the user's enlargement. Chromium asserts the toolbar is non-sticky and the 400% section-title scale remains bounded. This is a design-lab presentation adjustment, not a general reduction of accessible application text.
