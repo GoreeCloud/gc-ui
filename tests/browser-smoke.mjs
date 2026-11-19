@@ -2098,6 +2098,25 @@ try {
     const sceneShot=await browser.screenshot(join(directory,
       "gc-ui-crafted-workspace-"+scenario.name+".png"));
     assert.equal(sceneShot.width,scenario.width);
+    // At phone widths the intentionally scrollable navigation must reveal
+    // clipped destinations to native keyboard focus in both directions.
+    if (scenario.width<=390) {
+      const reach=JSON.parse(await browser.evaluate('(async()=>{'+
+        'const nav=document.querySelector("#craft-reference .gc-scene__rail .gc-nav");'+
+        'const items=[...nav.querySelectorAll("a")];'+
+        'const focus=async item=>{item.focus();await new Promise(requestAnimationFrame);'+
+        'const parent=nav.getBoundingClientRect(),rect=item.getBoundingClientRect();'+
+        'return {focused:document.activeElement===item,left:rect.left>=parent.left-1,'+
+        'right:rect.right<=parent.right+1,scrollable:nav.scrollWidth>nav.clientWidth}};'+
+        'return JSON.stringify({last:await focus(items.at(-1)),first:await focus(items[0])})'+
+      '})()'));
+      for (const [destination,state] of Object.entries(reach)) {
+        assert.equal(state.focused,true,destination+" native link focus failed");
+        assert.equal(state.left,true,destination+" item clipped off left edge");
+        assert.equal(state.right,true,destination+" item clipped off right edge");
+        assert.equal(state.scrollable,true,"Compact nav must permit horizontal navigation");
+      }
+    }
     await browser.evaluate('document.querySelector("#review summary").click()');
     assert.equal(await browser.evaluate('document.querySelector("#review details").open'),
       true,"Native guidance disclosure must actually open");
