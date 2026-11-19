@@ -50,6 +50,7 @@ Use web CSS from the package exports in a bundler: @goreecloud/ui/tokens.css and
 
 - [Design language and semantic roles](docs/DESIGN_LANGUAGE.md)
 - [Component patterns](docs/COMPONENTS.md)
+- [Badge families, indicators and trust boundaries](docs/BADGES.md)
 - [Adaptive collapsible navigation rail](docs/NAVIGATION_RAIL.md)
 - [Accessibility and validation](docs/ACCESSIBILITY.md)
 - [Native and OS integration roadmap](docs/PLATFORM_ADAPTERS.md)

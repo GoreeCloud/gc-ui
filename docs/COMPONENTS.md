@@ -13,7 +13,7 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Buttons | gc-button, --secondary, --outline, --quiet, --danger, --sm, --lg, --round, --icon | Descriptive accessible names and focus styles |
 | Inputs | gc-field, gc-input, gc-select, gc-textarea, gc-field__hint, gc-field__error | Associated labels, describedby and aria-invalid |
 | Choices | gc-check, gc-radio, gc-switch, gc-chip, gc-segmented | Native state, checked or aria-pressed |
-| Status | gc-badge, gc-alert, gc-progress, gc-meter | Visible words in addition to color |
+| Status and badges | gc-badge, --brand, --positive, --warning, --negative, --count, __indicator; gc-alert, gc-progress, gc-meter | Words plus color; see [badge semantics and trust](BADGES.md) and do not render issuer claims without evidence |
 | Navigation | gc-nav, gc-topbar, gc-tabs, gc-tabpanel; gc-navigation-shell, gc-navigation-rail, gc-navigation-rail__links | Native links, aria-current and accessible icon-only collapsed mode on tablet/desktop/web |
 | Data | gc-list, gc-table, gc-table-wrap, gc-kbd | Native list/table headers |
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
