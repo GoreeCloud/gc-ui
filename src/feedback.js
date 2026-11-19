@@ -110,6 +110,9 @@ export function createTaskProgress({ label, done, total, phase = "working", conf
   if (hasMeasurements && (!Number.isFinite(done) || !Number.isFinite(total) || total <= 0 || done < 0 || done > total)) {
     throw new RangeError("Progress must be a measured 0 <= done <= total");
   }
+  if (phase === "complete" && hasMeasurements && done !== total) {
+    throw new RangeError("Confirmed completion cannot have unfinished measured progress");
+  }
   const d = documentFor(doc);
   const region = d.createElement("div");
   region.className = "gc-task-feedback";
@@ -122,6 +125,10 @@ export function createTaskProgress({ label, done, total, phase = "working", conf
   if (hasMeasurements) {
     progress.setAttribute("value", String(done));
     progress.setAttribute("max", String(total));
+  } else if (phase === "complete") {
+    // Confirmed completion is observable evidence even when no intermediate metrics exist.
+    progress.setAttribute("value", "1");
+    progress.setAttribute("max", "1");
   }
   region.append(progress);
   appendText(d, region, phase === "complete" ? "Complete" : phase, "gc-task-feedback__phase");

@@ -41,8 +41,10 @@
   </main>
   <script type="module">
     import { defineCustomElements } from '../src/elements.js';
+    import { applyTheme } from '../src/theme.js';
     import { createBadge, createStatusIndicator, createCountBadge, createTaskProgress, createAsyncFeedback } from '../src/feedback.js';
     defineCustomElements();
+    applyTheme(document.body, { accent: 'lagoon', mode: 'auto' });
     const families = document.getElementById('badge-examples');
     for (const spec of [
       { family: 'icon', label: 'Pinned', icon: 'cloud' },

@@ -81,7 +81,11 @@ test("task progress is indeterminate unless measured, and success requires proof
   assert.equal(measured.children[0].getAttribute("max"), "10");
   assert.throws(() => createTaskProgress({ label: "done", phase: "complete" }, doc), TypeError);
   assert.throws(() => createTaskProgress({ label: "bad", done: 12, total: 10 }, doc), RangeError);
-  assert.equal(createTaskProgress({ label: "Saved", phase: "complete", confirmed: true }, doc).getAttribute("data-gc-phase"), "complete");
+  const complete = createTaskProgress({ label: "Saved", phase: "complete", confirmed: true }, doc);
+  assert.equal(complete.getAttribute("data-gc-phase"), "complete");
+  assert.equal(complete.children[0].getAttribute("value"), "1");
+  assert.equal(complete.children[0].getAttribute("max"), "1");
+  assert.throws(() => createTaskProgress({ label: "Contradictory", done: 2, total: 4, phase: "complete", confirmed: true }, doc), RangeError);
 });
 
 test("skeleton placeholders are non-announced and terminal states are not endless skeletons", () => {
