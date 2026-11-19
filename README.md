@@ -113,6 +113,33 @@ For vibe-coded and hand-authored consumer applications, use the [20-point refine
 
 GoreeCloud UI must be visually distinctive, premium and modern in every supported application context. The shared implementation includes semantic signature composition (`gc-premium-shell`, `gc-showcase`, `gc-feature-grid`), polished controls and purposeful Canvas/Surface/Lens depth. See [Visual quality contract](docs/VISUAL_QUALITY.md). CI rendering does not replace human design acceptance.
 
+## Color-led application compositions (alpha)
+
+The optional `gc-scene` workspace and `gc-context-band` patterns help
+application owners avoid generic white-card grids through a tonal navigation
+rail, branded-but-semantic page context, solid reading region and selective
+`gc-card--accent` emphasis. They reuse the **application's selected** hue
+and existing contrast-safe token pairs, without imposing a global palette or
+changing the default `--gc-surface` used for essential reading. See
+[component markup and acceptance limits](docs/COMPONENTS.md#opt-in-chromatic-workspace-web-alpha).
+The [composed held-file reference](tests/craft-workspace.html) and its
+[evidence-led design review](docs/CRAFTED_WORKSPACE_REVIEW_20261117.md)
+replace the earlier token-only, nearly blank showcase with a real information
+hierarchy, original iconography and working navigation/disclosure. This is a
+synthetic, **nonproduction** design example, not proof a consuming app has
+migrated or passed owner visual approval. Native adapters and real application
+screen acceptance remain outstanding.
+
+## Expressive motion and intentional status effects (alpha)
+
+GoreeCloud UI adds opt-in `gc-motion-enter`, `gc-motion-interactive`
+and `gc-motion-feedback` styles using existing timing/easing tokens.
+Context bands can express positive, warning and negative meanings with
+readable status labels. See [Motion and effects](docs/MOTION_AND_EFFECTS.md).
+There is no forced global animation, hue or looping decoration; reduced-motion,
+contrast and forced-colors preferences remain essential. CSS coverage
+and package checks are **not** proof of visual approval or app adoption.
+
 ## Rounded application windows
 
 All GoreeCloud application windows must have rounded corners. The web library provides gc-window with rounded titlebar/body/controls/statusbar, including compact/floating variants, and four-corner dialogs/drawers. See docs/WINDOWS_AND_NAVIGATION.md. Native OS chrome remains a separate verified-adapter requirement.

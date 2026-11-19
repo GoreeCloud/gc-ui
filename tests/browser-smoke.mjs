@@ -2048,6 +2048,69 @@ try {
   // this separate from Node DOM mocks and retain source-bound screenshots.
   await verifySemanticFeedbackLab({browser,base,directory,join});
 
+  // Exercise newly introduced chromatic workspace and opt-in motion CSS
+  // against actual computed Chromium styles, not only source regex checks.
+  // This temporary local overlay has no data, routes, or network calls.
+  const chromaticScenarios=[
+    {name:"light-iris-desktop",width:1440,dark:false,accent:"iris"},
+    {name:"dark-lagoon-mobile",width:390,dark:true,accent:"lagoon"},
+    {name:"reduced-ember-mobile",width:320,dark:false,accent:"ember",reducedMotion:true},
+    {name:"forced-moss-tablet",width:900,dark:true,accent:"moss",forcedColors:true}
+  ];
+  for(const scenario of chromaticScenarios){
+    await browser.setViewport(scenario.width,850,{
+      dark:scenario.dark,reducedMotion:Boolean(scenario.reducedMotion),
+      forcedColors:Boolean(scenario.forcedColors)
+    });
+    await browser.navigate(base+"/tests/craft-workspace.html");
+    await browser.evaluate(
+      'document.querySelector("#craft-reference").dataset.gcTheme='+JSON.stringify(scenario.dark?"dark":"light")+';'+
+      'document.querySelector("#craft-reference").dataset.gcAccent='+JSON.stringify(scenario.accent));
+    await delay(90);
+    const result=JSON.parse(await browser.evaluate('(()=>{'+
+      'const host=document.querySelector("#craft-reference");'+
+      'const nav=[...host.querySelectorAll(".gc-nav a")];'+
+      'const navTargets=nav.every(a=>document.querySelector(a.getAttribute("href")));'+
+      'const intro=getComputedStyle(host.querySelector(".gc-scene__header"));'+
+      'const panel=getComputedStyle(host.querySelector(".gc-reference-panel"));'+
+      'const icons=[...host.querySelectorAll("gc-icon")].filter(el=>el.shadowRoot?.querySelector("svg")).length;'+
+      'const st=document.querySelector(".gc-context-band");'+
+      'return JSON.stringify({width:innerWidth,scroll:document.documentElement.scrollWidth,'+
+      'title:host.querySelector("h1")?.textContent,steps:host.querySelectorAll(".gc-workflow li").length,'+
+      'navCount:nav.length,navTargets,icons,referenceText:st.textContent,'+
+      'header:intro.backgroundColor,panel:panel.backgroundColor,'+
+      'brand:getComputedStyle(host).getPropertyValue("--gc-brand").trim(),'+
+      'forced:matchMedia("(forced-colors:active)").matches,'+
+      'reduced:matchMedia("(prefers-reduced-motion:reduce)").matches})})()'));
+    assert.equal(result.width,scenario.width,"Reference viewport width mismatch");
+    assert.ok(result.scroll<=result.width+1,
+      "Designed scene overflows "+scenario.name+": "+JSON.stringify(result));
+    assert.match(result.title,/Held-file review/);
+    assert.equal(result.steps,3,"Missing meaningful workflow hierarchy");
+    assert.equal(result.navCount,4,"Nav must reach four distinct real sections");
+    assert.equal(result.navTargets,true,"Inert scene navigation");
+    assert.ok(result.icons>=5,"Canonical original icons not registered");
+    assert.match(result.referenceText,/No real scans/);
+    assert.ok(result.brand.length>0,"Scoped semantic accent missing");
+    assert.ok(result.header.length>0&&result.panel.length>0,"Semantic material absent");
+    if(scenario.forcedColors) assert.equal(result.forced,true);
+    if(scenario.reducedMotion) assert.equal(result.reduced,true);
+    const sceneShot=await browser.screenshot(join(directory,
+      "gc-ui-crafted-workspace-"+scenario.name+".png"));
+    assert.equal(sceneShot.width,scenario.width);
+    await browser.evaluate('document.querySelector("#review summary").click()');
+    assert.equal(await browser.evaluate('document.querySelector("#review details").open'),
+      true,"Native guidance disclosure must actually open");
+    await browser.evaluate('document.querySelector(\'.gc-nav a[href="#admission"]\').click()');
+    await delay(60);
+    assert.equal(await browser.evaluate('document.querySelector(\'.gc-nav a[href="#admission"]\').getAttribute("aria-current")'),
+      "location","Fragment navigation must update the current section");
+    assert.equal(await browser.evaluate('document.querySelector(\'.gc-nav a[href="#overview"]\').hasAttribute("aria-current")'),
+      false,"Previous section must lose current marker");
+    console.log("Chromium chromatic scene / composed Wardveil reference "+scenario.name+
+      ": semantic original icons, functioning nav, disclosure and bounded viewport passed");
+  }
+
 } finally {
   if (browser) await browser.close();
   await closeServer();
