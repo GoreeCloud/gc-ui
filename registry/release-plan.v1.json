@@ -39,7 +39,8 @@
       "./navigation-rail",
       "./signal-board",
       ".",
-      "./window-command-nodes"
+      "./window-command-nodes",
+      "./feedback"
     ],
     "requiringClassification": [],
     "releaseLimitations": [
@@ -88,7 +89,16 @@
         "openDialog",
         "summarizeSignals",
         "toast",
-        "initWindowCommandNodes"
+        "initWindowCommandNodes",
+        "BADGE_FAMILIES",
+        "FEEDBACK_TONES",
+        "ASYNC_STATES",
+        "STATUS_TONES",
+        "createBadge",
+        "createStatusIndicator",
+        "createCountBadge",
+        "createTaskProgress",
+        "createAsyncFeedback"
       ]
     }
   },

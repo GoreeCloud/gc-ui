@@ -15,3 +15,5 @@ export { initWindowCommandNodes } from "./window-command-nodes.js";
 
 export { initAvailabilityFeedback } from "./availability.js";
 export { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "./signal-board.js";
+
+export { BADGE_FAMILIES, FEEDBACK_TONES, ASYNC_STATES, STATUS_TONES, createBadge, createStatusIndicator, createCountBadge, createTaskProgress, createAsyncFeedback } from "./feedback.js";

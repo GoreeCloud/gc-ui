@@ -70,6 +70,10 @@
     "./window-command-nodes": {
       "types": "./src/window-command-nodes.d.ts",
       "default": "./src/window-command-nodes.js"
+    },
+    "./feedback": {
+      "types": "./src/feedback.d.ts",
+      "default": "./src/feedback.js"
     }
   },
   "files": [

@@ -13,7 +13,7 @@ Import src/tokens.css and then src/components.css. Place gc-app on the document 
 | Buttons | gc-button, --secondary, --outline, --quiet, --danger, --sm, --lg, --round, --icon | Descriptive accessible names and focus styles |
 | Inputs | gc-field, gc-input, gc-select, gc-textarea, gc-field__hint, gc-field__error | Associated labels, describedby and aria-invalid |
 | Choices | gc-check, gc-radio, gc-switch, gc-chip, gc-segmented | Native state, checked or aria-pressed |
-| Status and badges | gc-badge, --brand, --positive, --warning, --negative, --count, __indicator; gc-alert, gc-progress, gc-meter | Words plus color; see [badge semantics and trust](BADGES.md) and do not render issuer claims without evidence |
+| Status | gc-badge, gc-alert, gc-progress, gc-meter | Visible words in addition to color |
 | Navigation | gc-nav, gc-topbar, gc-tabs, gc-tabpanel; gc-navigation-shell, gc-navigation-rail, gc-navigation-rail__links | Native links, aria-current and accessible icon-only collapsed mode on tablet/desktop/web |
 | Data | gc-list, gc-table, gc-table-wrap, gc-kbd | Native list/table headers |
 | Feedback | gc-dialog, gc-toast-region, gc-toast, gc-skeleton, gc-empty | Native modal, announcements, meaningful loading states |
@@ -260,3 +260,8 @@ The native command palette now passes a second `onSelect(button, { signal })` ar
 ### Action-menu session-scoped cancellation and recovery (alpha)
 
 `initActionMenu(trigger, menu, { onSelect })` now supplies `onSelect(item, { signal })`. Each native popover activation receives its own cooperative `AbortSignal`. Closing via trigger/Escape, scrolling, native light-dismiss (including synchronous `beforetoggle`), or `dispose()` aborts the active action and clears stale busy state. A subsequently opened menu can start a separate action without waiting for an older callback; older results cannot dismiss the new menu, clear its busy status or disclose stale errors. A successfully completed synchronous or asynchronous action is **not** falsely signaled as cancelled. Existing one-argument callbacks still work. This UI signal does not terminate an uncooperative owner, reverse remote side effects or grant Identity/Mesh permissions. Product consumers must implement signal forwarding, authorization checks and idempotent owner-side behavior.
+
+
+## Semantic feedback extension (web alpha)
+
+For eight badge families, labeled status indicators, privacy-aware counts, native progress, and skeleton/terminal asynchronous states, see [Semantic badges and indicators](SEMANTIC_BADGES_INDICATORS.md). The implementation is in `src/feedback.js` (`@goreecloud/ui/feedback`); use existing `gc-badge`, `gc-chip`, `gc-progress`, `gc-skeleton`, and semantic tokens. These passive visual primitives do not issue achievements, grant Identity permissions, verify claims, or enforce GoreeShield controls. The [lab](../lab/badges.html) uses illustrative states.
