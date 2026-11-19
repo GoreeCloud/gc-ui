@@ -48,6 +48,8 @@ Use web CSS from the package exports in a bundler: @goreecloud/ui/tokens.css and
 
 ## Contracts and documentation
 
+- [Semantic badges, indicators, counts, progress, skeletons, and privacy contract](docs/SEMANTIC_BADGES_INDICATORS.md) — alpha web feedback API and [laboratory examples](lab/badges.html).
+
 - [Design language and semantic roles](docs/DESIGN_LANGUAGE.md)
 - [Component patterns](docs/COMPONENTS.md)
 - [Adaptive collapsible navigation rail](docs/NAVIGATION_RAIL.md)

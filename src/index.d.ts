@@ -80,3 +80,6 @@ export declare function initAvailabilityFeedback(root: HTMLElement | Document, o
 }): () => void;
 export { SIGNAL_STATES, SIGNAL_FILTERS, summarizeSignals, initSignalBoard } from "./signal-board.js";
 export type { GcSignalState, GcSignalFilter } from "./signal-board.js";
+
+export { BADGE_FAMILIES, FEEDBACK_TONES, ASYNC_STATES, STATUS_TONES, createBadge, createStatusIndicator, createCountBadge, createTaskProgress, createAsyncFeedback } from "./feedback.js";
+export type { GcBadgeFamily, GcFeedbackTone, GcAsyncState, GcStatusState } from "./feedback.js";
