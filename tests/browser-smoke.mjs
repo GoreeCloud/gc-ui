@@ -15,6 +15,7 @@ import { setTimeout as delay } from "node:timers/promises";
 import { fileURLToPath } from "node:url";
 import assert from "node:assert/strict";
 import { assertGlassTextContrast } from "../scripts/glass-contrast-guard.mjs";
+import { verifySemanticFeedbackLab } from "./browser-feedback-acceptance.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const candidates = process.env.GC_CHROME_BIN ? [process.env.GC_CHROME_BIN] :
@@ -2042,6 +2043,10 @@ try {
     assert.equal(shot.width,900);
     console.log("Chromium scoped glass / Signal Lens "+(forcedColors?"forced colors":"mixed appearances")+": passed");
   }
+
+  // Exercise the dedicated semantic-feedback lab in a real browser. Keep
+  // this separate from Node DOM mocks and retain source-bound screenshots.
+  await verifySemanticFeedbackLab({browser,base,directory,join});
 
 } finally {
   if (browser) await browser.close();
