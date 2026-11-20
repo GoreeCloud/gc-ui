@@ -57,3 +57,14 @@ or an equivalent in the approved stack, test both appearances and four accents,
 validate device insets and reduced-motion/contrast behavior, and migrate through
 the application's own reviewable PR/CI workflow. Record actual test, release and
 deployment evidence separately. Preserve offline operation and user data.
+
+
+## Compose Multiplatform shared toolkit
+
+The newly added [Compose Multiplatform Kotlin toolkit](COMPOSE_MULTIPLATFORM.md)
+provides a common-first component and palette foundation, not a replacement
+Android host. Android apps use the GoreeCloudExpressiveTheme adapter as their
+outer Material theme and consume portable controls without a nested baseline
+theme. Both Kotlin builds use the same deterministic token-generator output;
+their plugin versions and Android target runtime must be reconciled and tested
+in a real consumer before qualifying integrated adoption.

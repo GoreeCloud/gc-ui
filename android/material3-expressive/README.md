@@ -42,3 +42,15 @@ Other approved Android stacks (Flutter, React Native + Expo, Kotlin Multiplatfor
 Compose Multiplatform) must implement the same GC UI and expressive behavior through
 compatible supported components. This Kotlin module does **not** satisfy their
 framework or runtime requirements by itself.
+
+
+## Compose Multiplatform interoperation
+
+The in-repository [shared Kotlin UI module](../../compose-multiplatform/README.md)
+provides common palette, panels, buttons and navigation primitives. Android apps
+must use GoreeCloudExpressiveTheme from **this** module as the outer Material
+theme and may render those portable components underneath it. Avoid nesting
+GoreeCloudMultiplatformTheme on Android; that would replace the Android expressive
+motion/appearance host. The separate Gradle builds currently declare different
+Kotlin/plugin versions; verify and align them in the real consuming app before
+asserting a combined Android binary is buildable. No consumer adoption is claimed.
