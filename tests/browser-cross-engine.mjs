@@ -139,7 +139,19 @@ try{
           assert.equal(submit.samePath,true,engine+" planned form navigated");
           assert.match(submit.status,/Mesh connection setup is not available yet/,
             engine+" planned form did not explain unavailability");
-          const toast=page.locator(".gc-toast[role=status]").last();
+          // The planned-form notice is correctly auto-expiring. Create a second,
+          // explicit local-only notice with no timer so actual pointer behavior
+          // can be validated independently of screen-capture/CI latency.
+          await page.evaluate(async()=>{
+            const {toast}=await import("/src/elements.js");
+            toast("Synthetic persistent dismiss interaction",{
+              region:document.querySelector("[data-gc-toasts]"),duration:0
+            });
+          });
+          const tracked=page.locator(".gc-toast[role=status]").filter({
+            hasText:"Synthetic persistent dismiss interaction"
+          });
+          const toast=tracked.last();
           const toastGeometry=await toast.evaluate(item=>{
             const action=item.querySelector('button[aria-label="Dismiss notification"]');
             const range=document.createRange();
@@ -161,8 +173,8 @@ try{
           // hosted WebKit, screenshot/animation time can outlast the toast's
           // own automatic expiry; that must not masquerade as a click pass.
           await toast.locator('button[aria-label="Dismiss notification"]').click();
-          assert.equal(await page.locator(".gc-toast[role=status]").count(),0,
-            engine+" notification could not be dismissed by an actual click");
+          assert.equal(await tracked.count(),0,
+            engine+" persistent synthetic notification could not be dismissed by an actual pointer click");
           if(scenario.name!=="compact-light") {
             await page.evaluate(()=>scrollTo({top:0,left:0,behavior:"instant"}));
             await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+"-clean.png")});
