@@ -16,7 +16,8 @@ test("common Kotlin UI exposes only supported Apple Silicon iOS targets", () => 
 
 test("macOS CI compiles real iOS Simulator source without release or signing", () => {
   const ci=read(".github/workflows/compose-ios.yml");
-  assert.match(ci,/runs-on: macos-15-arm64/);
+  assert.match(ci,/runs-on: macos-15/);
+  assert.match(ci,/test "\$\(uname -m\)" = "arm64"/);
   assert.match(ci,/compileKotlinIosSimulatorArm64/);
   assert.match(ci,/gradle-version: "9\.4\.1"/);
   assert.match(ci,/android-37\.1/);

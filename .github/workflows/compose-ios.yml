@@ -20,7 +20,8 @@ permissions:
   contents: read
 jobs:
   compile-ios-simulator:
-    runs-on: macos-15-arm64
+    # GitHub's public-repository Apple Silicon M1 runner label.
+    runs-on: macos-15
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -42,7 +43,7 @@ jobs:
           node --test tests/compose-ios-contract.test.js
       - name: Inspect native host configuration
         run: |
-          uname -m
+          test "$(uname -m)" = "arm64"
           xcodebuild -version
           xcrun --sdk iphonesimulator --show-sdk-version
           test -d "$ANDROID_HOME/platforms/android-37.1"
