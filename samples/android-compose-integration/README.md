@@ -16,6 +16,6 @@ From this directory with Gradle, JDK 17 and Android SDK configured:
 gradle :app:assembleDebug --no-daemon
 ```
 
-No network, login, persistence, secret handling or telemetry. The manifest requests no INTERNET permission, disables backup and cleartext traffic, and the sole action updates a local count rather than pretending to save to a service. Do not ship this demo or treat it as a production application.
+No network, login, persistence, secret handling or telemetry. The manifest requests no INTERNET permission, disables backup and cleartext traffic, and the sole action updates a local count rather than pretending to save to a service. CI additionally inspects the **merged APK manifest**. It permits only the app-scoped, signature-protected AndroidX dynamic-receiver guard when present, and rejects every other requested permission—including networking or data access—even when injected by a transitive library. CI also verifies debug signing and logs a SHA-256 receipt. Do not ship this demo or treat it as a production application.
 
 **Evidence boundary:** successful compilation proves Android source linkage of the two adapters at the pinned versions. It does not prove emulator/physical-device runtime, visual accessibility, screen-reader acceptance, native animation quality, release signing, or rollout in any consumer.

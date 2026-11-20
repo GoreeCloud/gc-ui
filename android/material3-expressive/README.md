@@ -56,6 +56,9 @@ provides common palette, panels, buttons and navigation primitives. Android apps
 must use GoreeCloudExpressiveTheme from **this** module as the outer Material
 theme and may render those portable components underneath it. Avoid nesting
 GoreeCloudMultiplatformTheme on Android; that would replace the Android expressive
-motion/appearance host. The separate Gradle builds currently declare different
-Kotlin/plugin versions; verify and align them in the real consuming app before
-asserting a combined Android binary is buildable. No consumer adoption is claimed.
+motion/appearance host. The separate Gradle builds declare different Kotlin/plugin versions; the
+[development-only Android interop fixture](../../samples/android-compose-integration/README.md)
+compiled both actual source modules into one debug APK in
+[CI run 44705429234](https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234).
+A production consumer must still verify its own dependency graph, runtime,
+device behavior and accessibility. No consumer adoption is claimed.

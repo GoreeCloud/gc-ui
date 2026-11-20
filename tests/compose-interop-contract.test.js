@@ -41,3 +41,19 @@ test("Development fixture does not request network or privileged Android permiss
   assert.match(info,/development-only/i);
   assert.match(info,/not a product release/i);
 });
+
+test("native CI checks the final merged APK permissions and debug signature", () => {
+  const workflow=read(".github/workflows/compose-interop.yml");
+  assert.match(workflow,/dump permissions "\$apk"/);
+  assert.match(workflow,/uses-permission/);
+  assert.match(workflow,/name apksigner/);
+  assert.match(workflow,/verify "\$apk"/);
+  assert.match(workflow,/sha256sum "\$apk"/);
+  assert.match(workflow,/source-interop-compile/);
+  assert.match(workflow,/DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION/);
+  assert.match(workflow,/dump xmltree/);
+  assert.match(workflow,/android:protectionLevel/);
+  assert.match(workflow,/signature-only/);
+  assert.match(workflow,/Unexpected Android permission/);
+  assert.match(workflow,/\[\[ -n "\$requested" && "\$requested" !=/);
+});

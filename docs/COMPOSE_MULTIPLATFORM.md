@@ -27,17 +27,17 @@
 - compose-multiplatform/settings.gradle.kts and root build.gradle.kts: independent pinned build, no automatic publication or dependency on web npm.
 - compose-multiplatform/gc-ui-compose/src/commonMain: first-party composables, semantic palette and shapes.
 - compose-multiplatform/gc-ui-compose/src/commonTest: source-level common unit tests.
-- android/material3-expressive: separate existing Android Expressive host adapter; its active PR may have failing CI.
+- android/material3-expressive: merged Android Expressive host adapter; its independent Gradle/Android CI has passed. The source-linked integration fixture in samples/android-compose-integration also compiled both actual library projects in one Android debug APK under CI run https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234.
 - scripts/generate-compose-tokens.mjs: deterministic, local-only generation of both Kotlin palettes from tokens/gc.tokens.json.
 - tests/compose-multiplatform-contract.test.js: parity, code boundary and version declarations; Node checks are *not* Kotlin compilation.
 
-The selected evaluation versions (Kotlin + compiler plugin **2.4.21**, Compose Multiplatform **1.12.2**, Android KMP library plugin **AGP 9.2.0**, Gradle **9.4.1**) come from current official compatibility guidance. They are not unchangeable brand standards. The separate Android Expressive adapter currently declares its own Kotlin/Compose versions and **needs compatibility verification before consumers compose both module builds**. No Maven publishing or consumer migration has been performed.
+The selected evaluation versions (Kotlin + compiler plugin **2.4.21**, Compose Multiplatform **1.12.2**, Android KMP library plugin **AGP 9.2.0**, Gradle **9.4.1**) come from current official compatibility guidance. They are not unchangeable brand standards. The Android Expressive adapter retains separately pinned Kotlin/Compose versions. An isolated Android Gradle composite fixture has **compiled both libraries into one debug APK** at the declared versions (CI run https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234). This establishes source-linkage at this revision, **not** consumer binary/version-matrix compatibility or runtime/device acceptance. No Maven publishing or consumer migration has been performed.
 
 ## Adoption rule and verification gates
 
 For every Kotlin UI client: inventory actual platform(s), source, feature behavior, user data, native integrations and CI; select compliant shared-UI or Kotlin-only architecture; preserve working behavior and rollback; import GC UI source/tokens; use Android Expressive where Android is targeted; provide real routing and authorization; test deterministic token output, Gradle compile, accessibility, theme modes, keyboard/gesture navigation, large fonts, reduced motion, device insets, offline/recovery, and target packaging; only then mark the client adopted.
 
-**Status:** standard documented and source implementation proposed for review. This does **not** assert all GoreeCloud applications are migrated, build/CI acceptance is passing, iOS binaries are produced or a release has been published. Maintainers should track consumer-by-consumer adoption and explicit exceptions in the owning repositories.
+**Status (2026-11-20):** Kotlin source foundation is merged on protected main; shared Android compilation and the isolated Android Expressive + shared Compose APK build passed CI at their recorded commits. This does **not** assert all GoreeCloud applications are migrated, iOS binaries are produced, human accessibility or device acceptance passed, or a release was published. Maintainers should track consumer-by-consumer adoption and explicit exceptions in the owning repositories.
 
 ## Third-party dependency and security assessment
 
