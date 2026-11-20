@@ -110,6 +110,13 @@
    viewports. The message yields space; the action never breaks mid-word. */
 .gc-toast > span { flex:1 1 auto; min-inline-size:0; overflow-wrap:anywhere; }
 .gc-toast > .gc-button { flex:0 0 auto; white-space:nowrap; overflow-wrap:normal; }
+/* At compact widths the action must not force a long status message into a
+   narrow word-breaking column, especially with enlarged text or RTL. */
+@media (max-width:480px) {
+  .gc-toast { flex-wrap:wrap; align-items:flex-start; }
+  .gc-toast > span { flex:1 1 100%; min-inline-size:0; }
+  .gc-toast > .gc-button { margin-inline-start:auto; }
+}
 .gc-toast[data-kind="positive"] { border-inline-start-color:var(--gc-positive); }
 .gc-toast[data-kind="warning"] { border-inline-start-color:var(--gc-warning); }
 .gc-toast[data-kind="negative"] { border-inline-start-color:var(--gc-negative); }
