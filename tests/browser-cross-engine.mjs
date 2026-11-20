@@ -124,6 +124,11 @@ try{
             assert.equal(await action.evaluate(el=>document.activeElement===el),true,
               engine+" desktop action did not accept focus");
           }
+          // Capture the initial source lab before starting any expiring toast.
+          // This screenshot cannot delay the required real dismiss click.
+          if(scenario.name!=="compact-light") {
+            await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+".png")});
+          }
           const submit=await page.evaluate(()=>{
             const form=document.querySelector("#demo-planned-form");
             form.querySelector("input").value="Synthetic only";
@@ -152,12 +157,12 @@ try{
           assert.ok(toastGeometry.within&&toastGeometry.visible,
             engine+" dismiss action clipped "+JSON.stringify(toastGeometry));
           assert.deepEqual(errors,[],engine+" uncaught lab errors");
-          if(scenario.name!=="compact-light") {
-            await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+".png")});
-          }
+          // The real dismiss interaction must precede screenshots. On slower
+          // hosted WebKit, screenshot/animation time can outlast the toast's
+          // own automatic expiry; that must not masquerade as a click pass.
           await toast.locator('button[aria-label="Dismiss notification"]').click();
           assert.equal(await page.locator(".gc-toast[role=status]").count(),0,
-            engine+" notification could not be dismissed");
+            engine+" notification could not be dismissed by an actual click");
           if(scenario.name!=="compact-light") {
             await page.evaluate(()=>scrollTo({top:0,left:0,behavior:"instant"}));
             await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+"-clean.png")});
