@@ -18,7 +18,7 @@ test("refreshed exact 1.0.0 candidate stays blocked until actual release accepta
   assert.equal(candidate.status, "draft-candidate-unverified-unpublished");
   assert.equal(candidate.sourceBaseSha, "79949b3db58f2214e8d4c4eb2b647f75e1cfc724");
   assert.equal(candidate.latestIntegratedProtectedMainSha,
-    "1c2db317afa0a8e8132d6b6639b25fa5dd0a78de");
+    "42965f8682c22973b4247d58238e68aa63d86523");
   assert.equal(candidate.latestIntegrationDate, "2026-11-20");
   assert.equal(candidate.rollback.sourceBaselineSha,
     candidate.latestIntegratedProtectedMainSha,
@@ -60,6 +60,13 @@ test("refreshed candidate retains newer protected-main previews and safety tests
   assert.ok(plan.webFoundations.deferredPreviewExports.includes("./window-command-nodes"));
   assert.equal(pkg.exports["./foundation"].default, "./src/foundation.js");
   assert.equal(pkg.scripts["browser:packed"], "node tests/packed-foundation-browser.mjs");
+  assert.equal(pkg.scripts["browser:cross-engine"], "node tests/browser-cross-engine.mjs");
+  for (const path of [
+    "docs/CROSS_ENGINE_BROWSER_QA.md", "docs/ANDROID_EMULATOR_RUNTIME_QA.md",
+    "tests/browser-cross-engine-contract.test.js", "tests/android-emulator-runtime.test.js",
+    "scripts/verify-android-emulator.mjs"
+  ]) assert.ok(existsSync(new URL("../" + path, import.meta.url)),
+    "Latest protected main QA source missing: " + path);
   assert.equal(pkg.scripts["visual:review"], "node scripts/visual-review.mjs");
 });
 
