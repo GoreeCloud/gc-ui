@@ -30,3 +30,15 @@ test("notification dismiss label has a stable nonshrinking layout",()=>{
   assert.ok(existsSync(new URL("docs/CROSS_ENGINE_BROWSER_QA.md",root)));
   assert.match(source("docs/CROSS_ENGINE_BROWSER_QA.md"),/not.*(?:universal|support claim)/i);
 });
+
+test("synthetic screenshots cannot outlive the toast before its required dismiss click",()=>{
+  const code=source("tests/browser-cross-engine.mjs");
+  const initial=code.indexOf('await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+".png")})');
+  const submit=code.indexOf("const submit=await page.evaluate",initial);
+  const click=code.indexOf('await toast.locator(\'button[aria-label="Dismiss notification"]\').click()',submit);
+  const after=code.indexOf('await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+"-clean.png")})',click);
+  assert.ok(initial>0&&submit>initial&&click>submit&&after>click,
+    "Initial snapshot must be before toast; real click must precede post-dismiss snapshot");
+  assert.match(code,/notification could not be dismissed by an actual click/);
+  assert.doesNotMatch(code,/const visualToast=/);
+});
