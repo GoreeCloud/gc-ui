@@ -48,7 +48,7 @@ jobs:
         with:
           gradle-version: "9.4.1"
       - name: Install Android platform
-        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37"'
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1"'
       - name: Check generated tokens
         run: node scripts/generate-compose-tokens.mjs --check
       - name: Compile shared Kotlin Android target

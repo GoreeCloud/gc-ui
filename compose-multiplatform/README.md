@@ -14,7 +14,7 @@ This is GoreeCloud's standard **shared Kotlin presentation toolkit**, located in
 
 ## Pinned evaluation toolchain
 
-Gradle 9.4.1, JDK 17+, Kotlin and Compose compiler plugins 2.4.21, Compose Multiplatform plugin 1.12.2, AGP 9.2.0 and Android SDK 37. These are source dependency declarations, not verified published-binary guarantees. Before consuming, verify dependency licenses, advisories, repository provenance and application-specific minimums. Android/iOS CI jobs and real devices must independently validate behavior.
+Gradle 9.4.1, JDK 17+, Kotlin and Compose compiler plugins 2.4.21, Compose Multiplatform plugin 1.12.2, AGP 9.2.0 and Android SDK 37.1. These are source dependency declarations, not verified published-binary guarantees. Before consuming, verify dependency licenses, advisories, repository provenance and application-specific minimums. Android/iOS CI jobs and real devices must independently validate behavior.
 
 ## Generate and build
 

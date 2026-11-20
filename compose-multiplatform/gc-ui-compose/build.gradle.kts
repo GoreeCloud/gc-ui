@@ -10,7 +10,7 @@ plugins {
 kotlin {
     androidLibrary {
         namespace = "com.goreecloud.ui.multiplatform"
-        compileSdk = 37
+        compileSdk { version = release(37) { minorApiLevel = 1 } }
         minSdk = 26
         compilerOptions { jvmTarget.set(JvmTarget.JVM_17) }
     }
