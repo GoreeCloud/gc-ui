@@ -235,6 +235,30 @@ const base = "http://127.0.0.1:" + server.address().port;
 let browser;
 try {
   browser = await startBrowser();
+  // Real device review found the hero's Ctrl K legend inheriting white text
+  // against a pale tonal chip. Check rendered text/background contrast in
+  // both actual browser appearances rather than assuming token names suffice.
+  for (const dark of [false,true]) {
+    await browser.setViewport(390,844,{dark});
+    await browser.navigate(base+"/lab/");
+    const legend=JSON.parse(await browser.evaluate(`(function(){
+      const el=document.querySelector("#open-command .gc-kbd");
+      if(!el)return JSON.stringify({error:"missing keyboard legend"});
+      const c=getComputedStyle(el),box=el.getBoundingClientRect();
+      const rgb=s=>[...s.matchAll(/[\\d.]+/g)].slice(0,3).map(x=>Number(x[0]));
+      const lum=s=>rgb(s).map(v=>{
+        v=v/255;return v<=.04045?v/12.92:((v+.055)/1.055)**2.4;
+      }).reduce((sum,x,i)=>sum+x*[.2126,.7152,.0722][i],0);
+      const a=lum(c.color),b=lum(c.backgroundColor);
+      return JSON.stringify({ratio:(Math.max(a,b)+.05)/(Math.min(a,b)+.05),
+        foreground:c.color,background:c.backgroundColor,
+        width:box.width,height:box.height,visible:box.width>25&&box.height>12});
+    })()`));
+    assert.ok(legend.ratio>=4.5 && legend.visible,
+      "Unreadable Ctrl K shortcut on "+(dark?"dark":"light")+" 390px lab: "+JSON.stringify(legend));
+    console.log("Chromium mobile "+(dark?"dark":"light")+
+      " hero Ctrl K legend contrast: "+legend.ratio.toFixed(2)+":1 passed");
+  }
   // True Chrome browser zoom: Ctrl+Plus changes the origin's zoom factor,
   // devicePixelRatio and CSS viewport. This is NOT a root-font override,
   // screenshot scaling, pinch/visualViewport zoom or the CDP emulation scale.
