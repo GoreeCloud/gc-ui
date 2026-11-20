@@ -80,7 +80,9 @@
 .gc-segmented { display:inline-flex; padding:var(--gc-space-1); background:var(--gc-surface-tonal); border-radius:var(--gc-radius-md); gap:var(--gc-space-1); }
 .gc-avatar { display:inline-grid; place-items:center; inline-size:44px; block-size:44px; border-radius:var(--gc-radius-full); overflow:hidden; background:var(--gc-brand-container); color:var(--gc-on-brand-container); font-weight:750; }
 .gc-avatar img { inline-size:100%; block-size:100%; object-fit:cover; }
-.gc-kbd { padding:4px 7px; border:1px solid var(--gc-outline); border-radius:6px; background:var(--gc-surface-tonal); font:600 var(--gc-type-label)/1 var(--gc-font-mono); }
+/* Shortcut legends on outlined/dark-hero buttons need their own readable ink;
+   inheriting the button's light foreground made text nearly invisible on this tonal chip. */
+.gc-kbd { padding:4px 7px; border:1px solid var(--gc-outline); border-radius:6px; background:var(--gc-surface-tonal); color:var(--gc-text); font:600 var(--gc-type-label)/1 var(--gc-font-mono); }
 .gc-list { list-style:none; padding:0; margin:0; }
 .gc-list>li { border-block-end:1px solid var(--gc-outline-soft); padding-block:var(--gc-space-3); }
 .gc-table-wrap { max-inline-size:100%; overflow-x:auto; border-radius:var(--gc-radius-md); border:1px solid var(--gc-outline-soft); }
