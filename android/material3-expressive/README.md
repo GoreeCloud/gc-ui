@@ -23,6 +23,11 @@ app's Gradle project; do not pretend an AAR is published.
 For apps with 3–5 primary destinations, place GoreeFloatingNavigationBar in a
 Scaffold bottomBar, reserve scaffold contentPadding for scrolling content,
 and use the supplied onDestinationSelected callback for real navigation.
+Destination IDs must be distinct and nonblank, labels must be nonblank, and
+selectedId must identify an existing destination. A tap on the already-selected
+destination does not emit another navigation event. The host still enforces
+route authorization and pending-action availability; this UI does not grant access.
+Changing the destination list requires selecting a valid ID before composition.
 
 ## Contracts
 

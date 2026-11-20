@@ -28,8 +28,14 @@ fun GoreeFloatingNavigationBar(
     modifier: Modifier = Modifier
 ) {
     require(destinations.size in 3..5) { "Use 3–5 compact primary destinations" }
+    require(destinations.all { it.id.isNotBlank() && it.label.isNotBlank() }) {
+        "Destination identifiers and accessible labels must be nonempty"
+    }
     require(destinations.map { it.id }.distinct().size == destinations.size) {
         "Destination identifiers must be unique"
+    }
+    require(destinations.any { it.id == selectedId }) {
+        "Selected destination must be present"
     }
     NavigationBar(
         modifier = modifier.navigationBarsPadding()
@@ -43,7 +49,11 @@ fun GoreeFloatingNavigationBar(
         destinations.forEach { destination ->
             NavigationBarItem(
                 selected = destination.id == selectedId,
-                onClick = { onDestinationSelected(destination.id) },
+                onClick = {
+                    // A repeated tap on the selected route must not trigger a
+                    // second navigation or duplicate side effect.
+                    if (destination.id != selectedId) onDestinationSelected(destination.id)
+                },
                 icon = destination.icon,
                 label = { Text(destination.label) },
                 alwaysShowLabel = true
