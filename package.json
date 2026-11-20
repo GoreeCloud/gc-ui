@@ -102,6 +102,7 @@
     "browser:cross-engine": "node tests/browser-cross-engine.mjs",
     "browser:packed": "node tests/packed-foundation-browser.mjs",
     "android:emulator:smoke": "node scripts/verify-android-emulator.mjs",
+    "android:physical:smoke": "node scripts/physical-android-acceptance.mjs",
     "verify:package": "node scripts/verify-package.mjs",
     "release:status": "node scripts/release-readiness.mjs --status",
     "release:verify": "node scripts/release-readiness.mjs --require-ready",
