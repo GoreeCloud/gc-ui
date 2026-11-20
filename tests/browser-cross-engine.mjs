@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import {createServer} from "node:http";
-import {readFile, mkdir} from "node:fs/promises";
+import {readFile, mkdir, writeFile} from "node:fs/promises";
 import {existsSync,statSync} from "node:fs";
 import {extname,resolve,sep,join,isAbsolute} from "node:path";
 import {fileURLToPath,pathToFileURL} from "node:url";
@@ -50,6 +50,7 @@ await opened;
 const base="http://127.0.0.1:"+server.address().port;
 const shots=join(root,"qa/screenshots");
 await mkdir(shots,{recursive:true});
+const observedVersions={};
 const cases=[
   {name:"desktop-light",width:900,height:800,appearance:"light",accent:"iris"},
   {name:"mobile-dark",width:390,height:844,appearance:"dark",accent:"lagoon",
@@ -60,6 +61,8 @@ try{
   for(const engine of ["firefox","webkit"]){
     const executablePath=process.env[engine==="firefox"?"GC_FIREFOX_BIN":"GC_WEBKIT_BIN"];
     const browser=await core[engine].launch({executablePath,headless:true,timeout:20000});
+    observedVersions[engine]=browser.version();
+    console.log(engine+" browser version: "+observedVersions[engine]);
     try {
       for(const scenario of cases) {
         const ctx=await browser.newContext({
@@ -121,6 +124,11 @@ try{
             assert.equal(await action.evaluate(el=>document.activeElement===el),true,
               engine+" desktop action did not accept focus");
           }
+          // Capture the initial source lab before starting any expiring toast.
+          // This screenshot cannot delay the required real dismiss click.
+          if(scenario.name!=="compact-light") {
+            await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+".png")});
+          }
           const submit=await page.evaluate(()=>{
             const form=document.querySelector("#demo-planned-form");
             form.querySelector("input").value="Synthetic only";
@@ -149,12 +157,12 @@ try{
           assert.ok(toastGeometry.within&&toastGeometry.visible,
             engine+" dismiss action clipped "+JSON.stringify(toastGeometry));
           assert.deepEqual(errors,[],engine+" uncaught lab errors");
-          if(scenario.name!=="compact-light") {
-            await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+".png")});
-          }
+          // The real dismiss interaction must precede screenshots. On slower
+          // hosted WebKit, screenshot/animation time can outlast the toast's
+          // own automatic expiry; that must not masquerade as a click pass.
           await toast.locator('button[aria-label="Dismiss notification"]').click();
           assert.equal(await page.locator(".gc-toast[role=status]").count(),0,
-            engine+" notification could not be dismissed");
+            engine+" notification could not be dismissed by an actual click");
           if(scenario.name!=="compact-light") {
             await page.evaluate(()=>scrollTo({top:0,left:0,behavior:"instant"}));
             await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+"-clean.png")});
@@ -168,3 +176,7 @@ try{
 } finally {
   await new Promise(done=>server.close(done));
 }
+await writeFile(join(root,"qa/cross-engine-runtimes.json"),
+  JSON.stringify({playwrightCore:"1.64.1",engines:observedVersions,
+    scope:"Linux Playwright Firefox/WebKit only; not official Apple Safari or global browser support"},
+  null,2)+"\n");

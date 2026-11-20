@@ -8,6 +8,8 @@ dist/
 !.env.example
 platform/generated/
 qa/screenshots/
+qa/cross-engine-runtimes.json
+qa/cross-engine-evidence.json
 
 # Local, device-specific visual QA outputs
 evidence/
