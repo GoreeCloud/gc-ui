@@ -29,6 +29,13 @@ From this directory, with Gradle 9.4.1 installed and Android SDK configured:
 
 Intel iOS simulator (iosX64) is not configured because the evaluated Compose 1.12.2 dependencies did not expose a compatible ios_x64 variant. Apple Silicon devices/simulators remain targets.
 
+A compiled Android source-interoperability fixture also exists at
+[samples/android-compose-integration](../samples/android-compose-integration/README.md).
+[GitHub Actions 44705429234](https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234)
+successfully linked this module under the Android Material 3 Expressive outer
+theme into one debug APK. This is source-build evidence, **not** a verified
+consumer integration or physical-device acceptance.
+
 An Apple build needs macOS, Xcode and signing/CI infrastructure:
 
     gradle :gc-ui-compose:compileKotlinIosSimulatorArm64 --no-daemon

@@ -46,8 +46,23 @@ jobs:
         run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1"'
       - name: Compile actual shared Compose plus Android Expressive sources into APK
         run: gradle -p samples/android-compose-integration :app:assembleDebug --no-daemon --stacktrace
-      - name: Verify development-only APK exists and record SHA256
+      - name: Verify generated APK permission boundary, debug signing, and integrity
+        shell: bash
         run: |
+          set -euo pipefail
           apk="samples/android-compose-integration/app/build/outputs/apk/debug/app-debug.apk"
           test -s "$apk"
+
+          # Check the MERGED binary manifest, not only app/src/main XML;
+          # included third-party libraries can add permissions at build time.
+          aapt="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name aapt -perm -111 | sort -V | tail -n1)"
+          signer="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name apksigner -perm -111 | sort -V | tail -n1)"
+          test -n "$aapt" && test -n "$signer"
+          "$aapt" dump badging "$apk" | grep -F "package: name='com.goreecloud.ui.samples.interop'"
+          permissions="$("$aapt" dump permissions "$apk")"
+          if printf '%s\n' "$permissions" | grep -E '^[[:space:]]*uses-permission'; then
+            echo "Unexpected permission merged into development-only UI fixture" >&2
+            exit 1
+          fi
+          "$signer" verify "$apk"
           sha256sum "$apk"
