@@ -36,6 +36,15 @@ successfully linked this module under the Android Material 3 Expressive outer
 theme into one debug APK. This is source-build evidence, **not** a verified
 consumer integration or physical-device acceptance.
 
+An independent macOS Apple Silicon CI workflow at
+[`.github/workflows/compose-ios.yml`](../.github/workflows/compose-ios.yml)
+is configured to **compile** the shared Kotlin UI for the
+`iosSimulatorArm64` target. Source compilation is a narrower check than
+running an iOS app in the simulator or testing on an iPhone. The workflow's
+pass/fail status must be verified from the exact source commit before citing
+it as implementation evidence; it does not sign, publish or package an iOS
+application.
+
 An Apple build needs macOS, Xcode and signing/CI infrastructure:
 
     gradle :gc-ui-compose:compileKotlinIosSimulatorArm64 --no-daemon
