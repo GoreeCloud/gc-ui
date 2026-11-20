@@ -202,8 +202,9 @@
       "React Native + Expo",
       "Kotlin Multiplatform + Compose Multiplatform"
     ],
-    "sourceStatus": "alpha-review-pr",
-    "libraryBuildStatus": "ci-unverified",
+    "sourceStatus": "alpha-source-on-main",
+    "libraryBuildStatus": "github-actions-pr-162-compiled-successfully",
+    "libraryBuildEvidence": "https://github.com/GoreeCloud/gc-ui/actions/runs/44700423037",
     "deviceAcceptance": "not-verified",
     "downstreamAdoption": "not-completed",
     "requiredBehavior": [
