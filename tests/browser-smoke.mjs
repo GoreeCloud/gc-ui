@@ -218,7 +218,12 @@ async function startBrowser() {
         await command("Input.dispatchKeyEvent",{type:"keyDown",...key});
         await command("Input.dispatchKeyEvent",{type:"keyUp",...key});
       },
-      bringToFront:()=>command("Page.bringToFront"), close:cleanup };
+      bringToFront:()=>command("Page.bringToFront"),
+      zoomShortcut: async (code, key) => {
+        await command("Input.dispatchKeyEvent",{type:"rawKeyDown",modifiers:2,key,code,windowsVirtualKeyCode:code==="Digit0"?48:187,nativeVirtualKeyCode:code==="Digit0"?48:187});
+        await command("Input.dispatchKeyEvent",{type:"keyUp",modifiers:2,key,code,windowsVirtualKeyCode:code==="Digit0"?48:187,nativeVirtualKeyCode:code==="Digit0"?48:187});
+      },
+      close:cleanup };
   } catch (error) {
     await cleanup();
     throw error;
@@ -230,6 +235,125 @@ const base = "http://127.0.0.1:" + server.address().port;
 let browser;
 try {
   browser = await startBrowser();
+  // True Chrome browser zoom: Ctrl+Plus changes the origin's zoom factor,
+  // devicePixelRatio and CSS viewport. This is NOT a root-font override,
+  // screenshot scaling, pinch/visualViewport zoom or the CDP emulation scale.
+  // Physical viewport / zoom is chosen to exercise 320px and 390px layouts
+  // while preserving the actual browser's 200–400% accessibility behavior.
+  const zoomShots=join(root,"qa/screenshots");
+  await mkdir(zoomShots,{recursive:true});
+  const zoomCases=[
+    {name:"200-mobile",width:780,target:390,steps:5,percent:200,accent:"iris"},
+    {name:"300-desktop",width:2700,target:900,steps:7,percent:300,accent:"lagoon"},
+    {name:"400-dark-rtl",width:1560,target:390,steps:8,percent:400,
+      accent:"moss",dark:true,rtl:true,reducedMotion:true},
+    {name:"400-forced-compact",width:1280,target:320,steps:8,percent:400,
+      accent:"ember",forcedColors:true}
+  ];
+  for(const scenario of zoomCases) {
+    await browser.zoomShortcut("Digit0","0");
+    await browser.setViewport(scenario.width,1000,{
+      dark:!!scenario.dark,forcedColors:!!scenario.forcedColors,
+      reducedMotion:!!scenario.reducedMotion
+    });
+    await browser.navigate(base+"/lab/");
+    const applied=JSON.parse(await browser.evaluate(
+      '((accent)=>{const select=document.getElementById("accent");'+
+      'select.value=accent;select.dispatchEvent(new Event("change",{bubbles:true}));'+
+      'return JSON.stringify({selected:select.value,root:document.documentElement.dataset.gcAccent});})('+
+      JSON.stringify(scenario.accent)+')'));
+    assert.equal(applied.selected,scenario.accent,"Zoom test did not select its accent");
+    assert.equal(applied.root,scenario.accent,"Zoom scenario ignored requested canonical accent");
+    const baseline=JSON.parse(await browser.evaluate(
+      'JSON.stringify({dpr:devicePixelRatio,width:innerWidth,scale:visualViewport.scale})'));
+    assert.equal(baseline.dpr,1,"Browser zoom reset failed before "+scenario.name);
+    assert.equal(baseline.width,scenario.width,
+      "Physical CSS viewport baseline mismatch before "+scenario.name);
+    for(let i=0;i<scenario.steps;i++)await browser.zoomShortcut("Equal","+");
+    const metrics=JSON.parse(await browser.evaluate(
+      '(()=>{const root=document.documentElement;return JSON.stringify({'+
+      'dpr:devicePixelRatio,layout:innerWidth,client:root.clientWidth,'+
+      'scroll:root.scrollWidth,bodyScroll:document.body.scrollWidth,'+
+      'pinch:visualViewport.scale,rootFont:parseFloat(getComputedStyle(root).fontSize),'+
+      'sections:["foundations","components","patterns","forms"].map(id=>{'+
+      'const e=document.getElementById(id),r=e.getBoundingClientRect();'+
+      'return {id,left:r.left,right:r.right}})});})()'));
+    assert.ok(Math.abs(metrics.dpr-scenario.percent/100)<0.05,
+      "Real browser shortcut did not reach "+scenario.percent+"%: "+JSON.stringify(metrics));
+    assert.ok(Math.abs(metrics.layout-scenario.target)<2,
+      "Real zoom did not produce target CSS viewport "+scenario.name+": "+JSON.stringify(metrics));
+    assert.equal(metrics.pinch,1,
+      "Browser zoom check accidentally used pinch/visual viewport scaling");
+    assert.equal(metrics.rootFont,16,
+      "Browser zoom check accidentally changed root font-size instead of browser zoom");
+    assert.ok(metrics.scroll<=metrics.client+1,
+      "Real "+scenario.percent+"% browser zoom caused page overflow "+scenario.name+
+      ": "+JSON.stringify(metrics));
+    assert.ok(metrics.sections.every(s=>s.left>=-1&&s.right<=metrics.client+1),
+      "Real browser zoom clipped a lab section: "+scenario.name+" "+JSON.stringify(metrics));
+    // Floating navigation is intentionally hidden in wider desktop layouts.
+    // Exercise its last destination only when the responsive mobile dock is
+    // displayed; desktop zoom focuses a visible command action instead.
+    const reach=JSON.parse(await browser.evaluate(
+      '((mobile)=>{if(!mobile){const action=document.getElementById("demo-action-trigger");'+
+      'action.focus();const r=action.getBoundingClientRect();'+
+      'return JSON.stringify({focus:document.activeElement===action,'+
+      'visible:r.top>=-1&&r.bottom<=innerHeight+1&&r.left>=0&&r.right<=innerWidth+1});}'+
+      'const nav=document.getElementById("demo-bottom-nav"),'+
+      'links=[...nav.querySelectorAll("a[href]")],last=links.at(-1);'+
+      'last.focus();const r=last.getBoundingClientRect(),n=nav.getBoundingClientRect();'+
+      'return JSON.stringify({focus:document.activeElement===last,links:links.length,'+
+      'visible:r.left>=Math.max(0,n.left)-1&&'+
+      'r.right<=Math.min(innerWidth,n.right)+1,scroll:nav.scrollLeft});})('+ (scenario.target<=390) +')'));
+    assert.equal(reach.focus,true,"Actual zoom keyboard focus failed "+scenario.name+
+      ": "+JSON.stringify(reach));
+    assert.ok(reach.visible,"Actual zoom focused control is not visible "+scenario.name+
+      ": "+JSON.stringify(reach));
+    if(scenario.rtl){
+      const rtl=JSON.parse(await browser.evaluate(
+        '(()=>{document.documentElement.dir="rtl";'+
+        'const n=document.getElementById("demo-bottom-nav"),'+
+        'links=[...n.querySelectorAll("a[href]")];'+
+        'links[0].focus();const r=links[0].getBoundingClientRect(),a=n.getBoundingClientRect();'+
+        'return JSON.stringify({dir:document.documentElement.dir,'+
+        'focus:document.activeElement===links[0],visible:r.left>=a.left-1&&r.right<=a.right+1,'+
+        'scroll:document.documentElement.scrollWidth,client:document.documentElement.clientWidth});})()'));
+      assert.ok(rtl.focus&&rtl.visible&&rtl.scroll<=rtl.client+1,
+        "Real 400% RTL zoom focus/reflow failed "+JSON.stringify(rtl));
+    }
+    if(scenario.percent===400) {
+      const shot=await browser.screenshot(join(zoomShots,"gc-ui-actual-browser-zoom-"+scenario.name+".png"));
+      assert.equal(shot.width,scenario.width,
+        "Actual browser zoom screenshot must retain physical screenshot width");
+
+      // Browser zoom must not merely avoid page overflow: a real native form
+      // field below the fold must be keyboard reachable and hit-testable
+      // outside the floating navigation's visible overlay.
+      const field=JSON.parse(await browser.evaluate(
+        '(()=>{const input=document.querySelector("#demo-form input");'+
+        'input.focus();input.scrollIntoView({block:"center",behavior:"instant"});'+
+        'const r=input.getBoundingClientRect(),x=r.left+r.width/2,y=r.top+r.height/2;'+
+        'const hit=document.elementFromPoint(x,y);'+
+        'return JSON.stringify({focused:document.activeElement===input,'+
+        'visible:x>=0&&x<=innerWidth&&y>=0&&y<=innerHeight,'+
+        'hit:hit===input||input.contains(hit),client:document.documentElement.clientWidth,'+
+        'scroll:document.documentElement.scrollWidth});})()'));
+      assert.ok(field.focused&&field.visible&&field.hit&&field.scroll<=field.client+1,
+        "Real 400% zoom obscured or blocked an interactive form input "+
+        scenario.name+": "+JSON.stringify(field));
+      const formShot=await browser.screenshot(join(zoomShots,
+        "gc-ui-actual-browser-zoom-"+scenario.name+"-form.png"));
+      assert.equal(formShot.width,scenario.width);
+    }
+    await browser.zoomShortcut("Digit0","0");
+    const restored=JSON.parse(await browser.evaluate(
+      'JSON.stringify({dpr:devicePixelRatio,width:innerWidth,scale:visualViewport.scale})'));
+    assert.equal(restored.dpr,1,"True browser zoom did not reset to 100%");
+    assert.equal(restored.width,scenario.width,"Browser zoom reset did not restore CSS viewport");
+    console.log("Chromium actual browser "+scenario.percent+"% zoom "+
+      scenario.name+": viewport, no page overflow, keyboard focus and reset passed");
+  }
+  // Restore neutral media and normal 100% zoom before existing browser QA.
   for (const [width,height] of [[320,760],[390,844],[600,860],[900,900],[1440,900]]) {
     await browser.setViewport(width,height);
     const url=base+"/tests/layout-smoke.html";
