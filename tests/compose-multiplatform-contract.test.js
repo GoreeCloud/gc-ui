@@ -30,6 +30,8 @@ test("shared Compose Kotlin stack and boundaries are explicit", () => {
   assert.match(rootBuild,/org\.jetbrains\.kotlin\.plugin\.compose.*2\.4\.21/);
   assert.match(moduleBuild,/com\.android\.kotlin\.multiplatform\.library/);
   assert.match(moduleBuild,/iosArm64\(\)/);
+  assert.match(moduleBuild,/iosSimulatorArm64\(\)/);
+  assert.doesNotMatch(moduleBuild,/iosX64\(\)/);
   assert.match(moduleBuild,/implementation\(compose\.material3\)/);
   assert.match(theme,/fun GoreeCloudMultiplatformTheme\(/);
   assert.match(theme,/fun GoreeCloudNavigation\(/);

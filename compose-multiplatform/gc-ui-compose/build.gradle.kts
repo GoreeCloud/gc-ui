@@ -18,7 +18,6 @@ kotlin {
     // Apple target binaries can only be compiled and signed on appropriately configured macOS.
     iosArm64()
     iosSimulatorArm64()
-    iosX64()
 
     sourceSets {
         commonMain.dependencies {

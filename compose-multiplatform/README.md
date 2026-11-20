@@ -27,6 +27,8 @@ From this directory, with Gradle 9.4.1 installed and Android SDK configured:
 
     gradle :gc-ui-compose:assemble --no-daemon
 
+Intel iOS simulator (iosX64) is not configured because the evaluated Compose 1.12.2 dependencies did not expose a compatible ios_x64 variant. Apple Silicon devices/simulators remain targets.
+
 An Apple build needs macOS, Xcode and signing/CI infrastructure:
 
     gradle :gc-ui-compose:compileKotlinIosSimulatorArm64 --no-daemon
