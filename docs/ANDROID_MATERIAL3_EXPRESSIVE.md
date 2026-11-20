@@ -41,7 +41,7 @@ by looking similar. Avoid rewriting a working client without a controlled plan.
 - Deterministic color bridge from canonical tokens; run npm test or generator --check.
 - Native theme with MaterialTheme and MotionScheme.expressive, optional wallpaper
   colors, a consumer-exposed reduced-motion mode and floating phone navigation.
-- Android compile CI introduced on its own workflow; its success must be checked.
+- Android compilation and GC UI quality CI passed for merged PR #162; see https://github.com/GoreeCloud/gc-ui/actions/runs/44700423037. This is source/build evidence, not Android device or consumer-app acceptance.
 - No verified app-specific integration, emulator/physical device visual acceptance,
   artifact publication, Flutter/RN/KMP bridge or ecosystem-wide migration yet.
 

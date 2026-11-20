@@ -6,7 +6,7 @@ A native port can generate resources with npm run export:platform (see PLATFORM_
 
 | Platform | Suggested native adapter | Required evidence before calling it supported |
 | --- | --- | --- |
-| Android | Jetpack Compose / Views | Real builds, semantics, gesture areas, accessibility services, lifecycle and theme |
+| Android | Jetpack Compose + Kotlin (default); Flutter, React Native + Expo, or Kotlin Multiplatform + Compose Multiplatform when justified | Real builds, semantics, gesture areas, accessibility services, lifecycle and theme |
 | iOS/iPadOS | SwiftUI / UIKit | VoiceOver, Dynamic Type, safe areas, blur energy impact, signing and device |
 | Windows | WinUI / Windows App SDK | keyboard, contrast mode, scaling, window chrome, packaged build |
 | Linux | **Qt Quick (Qt 6.12.0), Flutter Linux Desktop or Slint only** | Source-proven primary UI, GNOME/KDE desktop integration, accessibility, packaging, runtime and migrated-consumer acceptance |
