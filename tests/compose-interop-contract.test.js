@@ -50,4 +50,10 @@ test("native CI checks the final merged APK permissions and debug signature", ()
   assert.match(workflow,/verify "\$apk"/);
   assert.match(workflow,/sha256sum "\$apk"/);
   assert.match(workflow,/source-interop-compile/);
+  assert.match(workflow,/DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION/);
+  assert.match(workflow,/dump xmltree/);
+  assert.match(workflow,/android:protectionLevel/);
+  assert.match(workflow,/signature-only/);
+  assert.match(workflow,/Unexpected Android permission/);
+  assert.match(workflow,/\[\[ -n "\$requested" && "\$requested" !=/);
 });
