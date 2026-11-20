@@ -58,3 +58,15 @@ test("Firefox and WebKit include RTL 200% CSS text stress without claiming nativ
     "Desktop, mobile and RTL cases must produce snapshot and post-dismiss evidence");
   assert.match(source("docs/CROSS_ENGINE_BROWSER_QA.md"),/CSS root.*not.*native browser zoom/i);
 });
+
+test("compact toasts stack long text above native dismiss without fragmenting the label",()=>{
+ const css=source("src/components.css");
+ assert.match(css,/@media \(max-width:480px\)\s*\{\s*\.gc-toast \{ flex-wrap:wrap; align-items:flex-start; \}/);
+ assert.match(css,/\.gc-toast > span \{ flex:1 1 100%; min-inline-size:0; \}/);
+ assert.match(css,/\.gc-toast > \.gc-button \{ margin-inline-start:auto; \}/);
+ const runner=source("tests/browser-cross-engine.mjs");
+ assert.match(runner,/messageWidthRatio:message\.width\/outer\.width/);
+ assert.match(runner,/toastGeometry\.messageWidthRatio>=\.75/);
+ assert.match(runner,/toastGeometry\.stacked/);
+ assert.match(runner,/persistent synthetic notification could not be dismissed by an actual pointer click/);
+});

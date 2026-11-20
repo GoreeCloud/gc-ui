@@ -191,10 +191,13 @@ try{
             const range=document.createRange();
             range.selectNodeContents(action);
             const outer=item.getBoundingClientRect(),button=action.getBoundingClientRect();
+            const message=item.querySelector("span").getBoundingClientRect();
             return {lines:range.getClientRects().length,
               whiteSpace:getComputedStyle(action).whiteSpace,
               within:button.left>=outer.left-1&&button.right<=outer.right+1,
-              visible:button.width>30&&button.height>20};
+              visible:button.width>30&&button.height>20,
+              stacked:button.top>=message.bottom-1,
+              messageWidthRatio:message.width/outer.width};
           });
           assert.equal(toastGeometry.lines,1,
             engine+" dismiss notification split across lines "+JSON.stringify(toastGeometry));
@@ -202,6 +205,10 @@ try{
             engine+" notification action lost unbroken label");
           assert.ok(toastGeometry.within&&toastGeometry.visible,
             engine+" dismiss action clipped "+JSON.stringify(toastGeometry));
+          if(scenario.width<=390){
+            assert.ok(toastGeometry.stacked&&toastGeometry.messageWidthRatio>=.75,
+              engine+" compact toast forced a narrow word-breaking column "+JSON.stringify(toastGeometry));
+          }
           assert.deepEqual(errors,[],engine+" uncaught lab errors");
           // The real dismiss interaction must precede screenshots. On slower
           // hosted WebKit, screenshot/animation time can outlast the toast's
