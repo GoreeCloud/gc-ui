@@ -27,6 +27,7 @@
 - compose-multiplatform/settings.gradle.kts and root build.gradle.kts: independent pinned build, no automatic publication or dependency on web npm.
 - compose-multiplatform/gc-ui-compose/src/commonMain: first-party composables, semantic palette and shapes.
 - compose-multiplatform/gc-ui-compose/src/commonTest: source-level common unit tests.
+- .github/workflows/compose-ios.yml: isolated, nonpublishing Apple Silicon macOS source-compile check for iosSimulatorArm64. Its CI result must be confirmed independently; it is not a simulator run, an iPhone test, an iOS app, or signed distribution.
 - android/material3-expressive: merged Android Expressive host adapter; its independent Gradle/Android CI has passed. The source-linked integration fixture in samples/android-compose-integration also compiled both actual library projects in one Android debug APK under CI run https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234.
 - scripts/generate-compose-tokens.mjs: deterministic, local-only generation of both Kotlin palettes from tokens/gc.tokens.json.
 - tests/compose-multiplatform-contract.test.js: parity, code boundary and version declarations; Node checks are *not* Kotlin compilation.
