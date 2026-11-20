@@ -44,3 +44,17 @@ test("synthetic screenshots cannot outlive the toast before its required dismiss
   assert.match(code,/Synthetic persistent dismiss interaction/);
   assert.doesNotMatch(code,/const visualToast=/);
 });
+
+test("Firefox and WebKit include RTL 200% CSS text stress without claiming native zoom",()=>{
+  const run=source("tests/browser-cross-engine.mjs");
+  assert.match(run,/name:"rtl-large-light",width:390,height:844,appearance:"light",accent:"ember"/);
+  assert.match(run,/rtl:true,rootFontScale:2/);
+  assert.match(run,/root\.dir="rtl"/);
+  assert.match(run,/root\.style\.fontSize=/);
+  assert.match(run,/info\.direction,"rtl"/);
+  assert.match(run,/info\.scroll<=info\.client\+1/);
+  assert.match(run,/info\.sections\.every/);
+  assert.equal((run.match(/scenario\.name!=="compact-light"/g)||[]).length,2,
+    "Desktop, mobile and RTL cases must produce snapshot and post-dismiss evidence");
+  assert.match(source("docs/CROSS_ENGINE_BROWSER_QA.md"),/CSS root.*not.*native browser zoom/i);
+});

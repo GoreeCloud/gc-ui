@@ -28,7 +28,8 @@ const sha=execFileSync("git",["rev-parse","HEAD"],{cwd:root,encoding:"utf8"}).tr
 assert.match(sha,/^[0-9a-f]{40}$/);
 const specs=[
  {name:"desktop-light",width:900,height:800},
- {name:"mobile-dark",width:390,height:844}
+ {name:"mobile-dark",width:390,height:844},
+ {name:"rtl-large-light",width:390,height:844}
 ];
 const outputs=[];
 for(const browser of ["firefox","webkit"])for(const scenario of specs)for(const variant of ["","-clean"]){
@@ -42,7 +43,7 @@ for(const browser of ["firefox","webkit"])for(const scenario of specs)for(const 
     sha256:createHash("sha256").update(bytes).digest("hex"),
     width:scenario.width,height:scenario.height});
 }
-assert.equal(outputs.length,8);
+assert.equal(outputs.length,12);
 const evidence={schemaVersion:1,sourceCommit:sha,playwrightCoreVersion:coreMeta.version,
   browserVersions:runtime.engines,operatingSystemScope:"Linux x86_64",
   onlySyntheticLab:true,officialSafariQualified:false,
