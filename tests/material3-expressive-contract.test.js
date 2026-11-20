@@ -22,3 +22,13 @@ test("Expressive motion, privacy-friendly dynamic-color default and floating nav
   assert.match(nav,/navigationBarsPadding\(\)/);
   assert.match(nav,/destinations\.size in 3\.\.5/);
 });
+
+test("Android floating navigation enforces labeled, coherent destinations and avoids repeat navigation", () => {
+  const nav=read("android/material3-expressive/gc-ui-compose/src/main/java/com/goreecloud/ui/material3/GoreeFloatingNavigationBar.kt");
+  assert.match(nav,/destinations\.all\s*\{\s*it\.id\.isNotBlank\(\)\s*&&\s*it\.label\.isNotBlank\(\)/);
+  assert.match(nav,/destinations\.map\s*\{\s*it\.id\s*\}\.distinct\(\)\.size\s*==\s*destinations\.size/);
+  assert.match(nav,/destinations\.any\s*\{\s*it\.id\s*==\s*selectedId\s*\}/);
+  assert.match(nav,/if\s*\(destination\.id\s*!=\s*selectedId\)\s*onDestinationSelected\(destination\.id\)/);
+  assert.match(nav,/alwaysShowLabel\s*=\s*true/);
+  assert.match(nav,/navigationBarsPadding\(\)/);
+});
