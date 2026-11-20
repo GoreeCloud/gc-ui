@@ -4,7 +4,7 @@
   "name": "@goreecloud/ui",
   "status": "draft-candidate-unverified-unpublished",
   "sourceBaseSha": "79949b3db58f2214e8d4c4eb2b647f75e1cfc724",
-  "latestIntegratedProtectedMainSha": "c833c6cbb291e866ce25ee53c49afa00dad73130",
+  "latestIntegratedProtectedMainSha": "cf24d61ebb95ba09cab4c60376c07facec28e245",
   "latestIntegrationDate": "2026-11-20",
   "sourceBranch": "release/stable-web-1.0.0-current-main-20261117",
   "sourceCommitSha": null,
@@ -40,7 +40,7 @@
     "No approved post-commit release decision or verified public release/tag/npm publication"
   ],
   "rollback": {
-    "sourceBaselineSha": "c833c6cbb291e866ce25ee53c49afa00dad73130",
+    "sourceBaselineSha": "cf24d61ebb95ba09cab4c60376c07facec28e245",
     "runbook": "docs/RELEASE_1_0_RUNBOOK.md"
   }
 }
