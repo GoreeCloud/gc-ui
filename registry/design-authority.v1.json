@@ -187,6 +187,36 @@
     "masterDriveReconciliation": "verified-targeted",
     "masterGovernanceSection": "14.2B"
   },
+  "androidDesignFoundation": {
+    "requirement": "material-3-expressive",
+    "mandateStatus": "founder-directed-2026-11-20",
+    "governingDesignAuthority": "GoreeCloud UI",
+    "reference": "docs/ANDROID_MATERIAL3_EXPRESSIVE.md",
+    "canonicalTokens": "tokens/gc.tokens.json",
+    "nativeComposeSource": "android/material3-expressive/gc-ui-compose",
+    "upstreamLibrary": "androidx.compose.material3:material3:1.5.0",
+    "androidOnlyDefaultFramework": "Jetpack Compose + Kotlin",
+    "permittedFrameworks": [
+      "Jetpack Compose + Kotlin",
+      "Flutter",
+      "React Native + Expo",
+      "Kotlin Multiplatform + Compose Multiplatform"
+    ],
+    "sourceStatus": "alpha-review-pr",
+    "libraryBuildStatus": "ci-unverified",
+    "deviceAcceptance": "not-verified",
+    "downstreamAdoption": "not-completed",
+    "requiredBehavior": [
+      "canonical-semantic-color",
+      "light-dark-modes",
+      "expressive-motion-and-reduced-motion",
+      "rounded-surfaces",
+      "floating-inset-navigation",
+      "adaptive-large-screens",
+      "talkback-and-contrast",
+      "explicit-dynamic-color-opt-in"
+    ]
+  },
   "windowCommandNodes": {
     "officialName": "GoreeCloud UI Window Command Nodes",
     "abbreviation": "WCN",
