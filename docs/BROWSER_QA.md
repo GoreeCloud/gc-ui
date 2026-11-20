@@ -6,6 +6,8 @@
 
 Run `npm run browser:smoke` in a system with Google Chrome or Chromium available on PATH. The test starts a loopback-only, read-only HTTP server serving this repository's static source, then launches Chrome in isolated temporary profiles. It installs no packages and accesses no production services.
 
+**Additional engine-specific QA:** [Firefox and WebKit source-lab acceptance](CROSS_ENGINE_BROWSER_QA.md) is available as an explicit opt-in test using already inspected Playwright Core and browser executable paths (`npm run browser:cross-engine`). It is independent of the required hosted Chromium check and cannot be used as a general Firefox/Safari certification. The two engines exposed a compact toast action-wrap defect that now has an automated regression assertion.
+
 ## Tested by the smoke workflow
 
 - Explicit light/Iris and dark/Moss token resolution in Chromium.
