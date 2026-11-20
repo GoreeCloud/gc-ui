@@ -1,6 +1,6 @@
 # GoreeCloud UI — Native and operating-system porting contract
 
-**Implemented:** a web reference foundation and deterministic Android XML, SwiftUI, XAML, GTK, and JSON color-resource export generator. **Not implemented:** production Android/iOS/Linux/Windows/macOS native component SDKs, OS shell themes, validated installer packages, wallpaper extraction or cross-device acceptance.
+**Implemented:** a web reference foundation, deterministic Android XML, SwiftUI, XAML, GTK and JSON token export generator, plus an alpha source-level Kotlin/Compose Material 3 Expressive Android adapter. **Not verified:** native library compilation, real-device behavior, production Android/iOS/Linux/Windows/macOS SDK release, OS shell themes, installers, wallpaper extraction or cross-device acceptance. See [Android Material 3 Expressive](ANDROID_MATERIAL3_EXPRESSIVE.md).
 
 A native port can generate resources with npm run export:platform (see PLATFORM_BRIDGE.md) and should ingest the versioned tokens/gc.tokens.json manifest at build time and map semantic roles to platform appearance primitives. Maintain shape, typographic hierarchy, safe-area behavior and material decisions while using the platform's native interaction and assistive interfaces.
 

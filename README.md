@@ -15,6 +15,11 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 Founder-directed target: stabilize the **web foundation** as **1.0.0** first, then add independently validated features, native platform adapters and verified consumer adoption in compatible **1.1.0, 1.2.0, 1.3.0, …** releases. **This is a roadmap, not a released 1.0 package.** See [Stable release roadmap](docs/RELEASE_ROADMAP.md), [machine-readable readiness gates](registry/release-plan.v1.json), and non-mutating `npm run release:status`. `npm run release:verify` deliberately fails until every 1.0 gate has evidence. The root package export mixes foundation and preview controllers, so it must be classified before a Stable API guarantee. Native components and consumer migrations are *not* 1.0 blockers and must never be claimed complete from the web source alone. No global hue or appearance mode is mandatory.
 
+
+## Android: Material 3 Expressive foundation
+
+The founder requires Material 3 Expressive as the design foundation for all GoreeCloud Android interfaces. The **source-level alpha Compose adapter** now lives in [android/material3-expressive](android/material3-expressive/README.md); it derives four accent palettes from canonical tokens, provides a Compose Material 3 1.5.0 theme, and includes floating navigation and Android CI. See [the adoption contract](docs/ANDROID_MATERIAL3_EXPRESSIVE.md). This is not a published Android SDK, a verified device build, or proof of downstream adoption. Other approved Android stacks remain supported by design-equivalent adapters.
+
 ## Implemented here
 
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.

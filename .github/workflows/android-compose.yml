@@ -1,0 +1,42 @@
+name: GC UI Android Material 3 Expressive
+on:
+  pull_request:
+    paths:
+      - "android/material3-expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-compose-tokens.mjs"
+      - "tests/material3-expressive-contract.test.js"
+      - ".github/workflows/android-compose.yml"
+  push:
+    branches: [main]
+    paths:
+      - "android/material3-expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-compose-tokens.mjs"
+      - "tests/material3-expressive-contract.test.js"
+      - ".github/workflows/android-compose.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  compile-android-library:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407 # v3
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          gradle-version: "9.4.1"
+      - name: Install Android compile SDK
+        run: sdkmanager "platforms;android-37"
+      - name: Verify generated color roles
+        run: node scripts/generate-compose-tokens.mjs --check
+      - name: Compile Compose module
+        run: gradle -p android/material3-expressive :gc-ui-compose:assembleDebug --no-daemon --stacktrace
