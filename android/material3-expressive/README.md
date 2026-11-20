@@ -5,7 +5,7 @@ binary, SDK, signed APK or proof that consuming applications have adopted it.
 
 ## Build
 
-From this folder (Gradle 9.4.1 / JDK 17 / Android SDK platform 37):
+From this folder (Gradle 9.4.1 / JDK 17 / Android SDK platform 36):
 
     gradle :gc-ui-compose:assembleDebug
 

@@ -4,7 +4,7 @@ plugins {
 }
 android {
     namespace = "com.goreecloud.ui.material3"
-    compileSdk = 37
+    compileSdk = 36
     defaultConfig { minSdk = 26 }
     buildFeatures { compose = true }
     compileOptions {
