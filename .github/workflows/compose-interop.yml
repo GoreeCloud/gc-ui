@@ -1,0 +1,90 @@
+name: GC UI Android Compose source interop
+on:
+  pull_request:
+    paths:
+      - "samples/android-compose-integration/**"
+      - "compose-multiplatform/**"
+      - "android/material3-expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-compose-tokens.mjs"
+      - "tests/compose-interop-contract.test.js"
+      - ".github/workflows/compose-interop.yml"
+  push:
+    branches: [main]
+    paths:
+      - "samples/android-compose-integration/**"
+      - "compose-multiplatform/**"
+      - "android/material3-expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-compose-tokens.mjs"
+      - "tests/compose-interop-contract.test.js"
+      - ".github/workflows/compose-interop.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-interop-compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - run: node scripts/generate-compose-tokens.mjs --check
+      - run: node --test tests/compose-interop-contract.test.js
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@8da46b539cd8fe6ab27ca75128919a18d757604c # v6.4.1
+        with:
+          gradle-version: "9.4.1"
+      - name: Install pinned Android SDK platform
+        run: '"$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1"'
+      - name: Compile actual shared Compose plus Android Expressive sources into APK
+        run: gradle -p samples/android-compose-integration :app:assembleDebug --no-daemon --stacktrace
+      - name: Verify generated APK permission boundary, debug signing, and integrity
+        shell: bash
+        run: |
+          set -euo pipefail
+          apk="samples/android-compose-integration/app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$apk"
+
+          # Check the MERGED binary manifest, not only app/src/main XML;
+          # included third-party libraries can add permissions at build time.
+          aapt="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name aapt -perm -111 | sort -V | tail -n1)"
+          signer="$(find "$ANDROID_HOME/build-tools" -maxdepth 2 -type f -name apksigner -perm -111 | sort -V | tail -n1)"
+          test -n "$aapt" && test -n "$signer"
+          "$aapt" dump badging "$apk" | grep -F "package: name='com.goreecloud.ui.samples.interop'"
+          permissions="$("$aapt" dump permissions "$apk")"
+          requested="$(printf '%s\n' "$permissions" | grep -E '^[[:space:]]*uses-permission' || true)"
+          internal="com.goreecloud.ui.samples.interop.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+          # AndroidX Core supplies this *signature-protected*, app-owned
+          # receiver guard for API 26–32. It is not a privileged or network
+          # permission. Reject every other requested permission, including
+          # dangerous, normal, and any unrelated custom permission.
+          if [[ -n "$requested" && "$requested" != "uses-permission: name='$internal'" ]]; then
+            echo "Unexpected Android permission(s) in composed UI fixture: $requested" >&2
+            exit 1
+          fi
+          if [[ -n "$requested" ]]; then
+            # Reject an unprotected or changed declaration even if its name
+            # still matches. Inspect the compiled manifest rather than
+            # trusting a source-only permission declaration.
+            xml="$("$aapt" dump xmltree "$apk" AndroidManifest.xml)"
+            if ! printf '%s\n' "$xml" | awk -v expected="$internal" '
+              /E: permission \(/ { active=1; named=0; signed=0; next }
+              active && /E: / { if (named && signed) found++; active=0 }
+              active && /android:name/ && index($0,expected) { named=1 }
+              active && /android:protectionLevel/ && /0x0*2([^[:xdigit:]]|$)/ { signed=1 }
+              END { if (active && named && signed) found++; exit(found==1 ? 0 : 1) }
+            '; then
+              echo "AndroidX receiver permission must be declared signature-only" >&2
+              exit 1
+            fi
+          fi
+          "$signer" verify "$apk"
+          sha256sum "$apk"

@@ -12,7 +12,8 @@
     "developmentDependencies": 0,
     "firstPartyIconSprite": true,
     "postBaselineAdditions": [
-      "src/window-command-nodes.js"
+      "src/window-command-nodes.js",
+      "src/feedback.js"
     ],
     "postBaselineReview": "not-covered-by-2026-11-13-security-baseline"
   },
@@ -43,7 +44,8 @@
     "Exact 1.0.0 candidate source SHA, tarball and assets must be independently rerun after final changes",
     "Branch main is unprotected (GitHub branches/main protected=false, required checks off); admin-only protection endpoint returns 403",
     "No released npm package, verified consumer migration, deployed production UI, or native SDK exists",
-    "Circular WCN source was added after this audit's immutable sourceSha; baseline inventory remains historically accurate and full source/security review remains OPEN"
+    "Circular WCN source was added after this audit's immutable sourceSha; baseline inventory remains historically accurate and full source/security review remains OPEN",
+    "Semantic badge/indicator feedback web module was added after the November 13 source audit; no historical baseline or release security gate is retroactively certified."
   ],
   "candidateGate": "open",
   "signedOrPublished": false

@@ -15,6 +15,17 @@ GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled
 
 Founder-directed target: stabilize the **web foundation** as **1.0.0** first, then add independently validated features, native platform adapters and verified consumer adoption in compatible **1.1.0, 1.2.0, 1.3.0, …** releases. **This is a roadmap, not a released 1.0 package.** See [Stable release roadmap](docs/RELEASE_ROADMAP.md), [machine-readable readiness gates](registry/release-plan.v1.json), and non-mutating `npm run release:status`. `npm run release:verify` deliberately fails until every 1.0 gate has evidence. The root package export mixes foundation and preview controllers, so it must be classified before a Stable API guarantee. Native components and consumer migrations are *not* 1.0 blockers and must never be claimed complete from the web source alone. No global hue or appearance mode is mandatory.
 
+
+## Android: Material 3 Expressive foundation
+
+The founder requires Material 3 Expressive as the design foundation for all GoreeCloud Android interfaces. The **source-level alpha Compose adapter** lives in [android/material3-expressive](android/material3-expressive/README.md); it derives four accent palettes from canonical tokens, provides a Compose Material 3 1.5.0 theme and floating navigation. The library and its integration with shared Kotlin UI have **compiled successfully in CI**. See the [Android adoption contract](docs/ANDROID_MATERIAL3_EXPRESSIVE.md) and [source-linked Android integration fixture](samples/android-compose-integration/README.md). This is **not** a published Android SDK, an Android device-runtime acceptance, or proof of downstream adoption. Other approved Android stacks still require independently verified equivalents.
+
+## Compose Multiplatform: shared Kotlin UI foundation (alpha source)
+
+**Founder direction, November 20, 2026:** Compose Multiplatform is the standard shared Kotlin UI toolkit for applicable GoreeCloud clients, implemented in the [in-repository Kotlin library](compose-multiplatform/README.md). The [Android Material 3 Expressive adapter](android/material3-expressive/README.md) remains the mandatory Android theme host; portable controls inherit its MaterialTheme. Both adapters derive identical palettes from canonical JSON using one deterministic generator. **Native build evidence is now verified:** Android Compose/Expressive sources compiled together into a debug APK ([CI run](https://github.com/GoreeCloud/gc-ui/actions/runs/44707580568)), and the shared iOS Simulator ARM64 Kotlin source compiled on macOS Apple Silicon ([CI run](https://github.com/GoreeCloud/gc-ui/actions/runs/44708860031)). These checks do **not** establish a published SDK, iOS app build, device runtime, manual accessibility acceptance, or migration of any consumer.
+
+Linux graphical clients must still use Qt Quick 6.12.0, Flutter Linux Desktop or Slint as their primary UI; browser apps retain their approved web frameworks. Other non-Kotlin Android stacks remain governed by the canonical Android framework standard. See [architecture, evidence and rollout](docs/COMPOSE_MULTIPLATFORM.md). The npm web package scope and Stable 1.0 web-first roadmap are unchanged.
+
 ## Implemented here
 
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.
@@ -47,6 +58,8 @@ Open the lab from a static local web server:
 Use web CSS from the package exports in a bundler: @goreecloud/ui/tokens.css and @goreecloud/ui/components.css. Import applyTheme and defineCustomElements from @goreecloud/ui as needed. Add class gc-app to the document body and use native buttons/labels/inputs. Test changes with npm test or npm run check. The package **is not currently published to npm**.
 
 ## Contracts and documentation
+
+- [Semantic badges, indicators, counts, progress, skeletons, and privacy contract](docs/SEMANTIC_BADGES_INDICATORS.md) — alpha web feedback API and [laboratory examples](lab/badges.html).
 
 - [Design language and semantic roles](docs/DESIGN_LANGUAGE.md)
 - [Component patterns](docs/COMPONENTS.md)

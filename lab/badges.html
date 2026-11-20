@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Semantic feedback | GoreeCloud UI laboratory</title>
+  <link rel="stylesheet" href="../src/tokens.css" />
+  <link rel="stylesheet" href="../src/components.css" />
+</head>
+<body class="gc-app" data-gc-accent="lagoon">
+  <main class="gc-container gc-stack" style="padding-block:var(--gc-space-8)">
+    <header>
+      <p class="gc-support">GoreeCloud UI · alpha component laboratory</p>
+      <h1 class="gc-title">Badges and indicators</h1>
+      <p class="gc-support">Illustrative example data, not live products, verified accounts, or monitoring.</p>
+    </header>
+    <section class="gc-card gc-stack" aria-labelledby="family-heading">
+      <h2 id="family-heading" class="gc-heading">Badge families</h2>
+      <div id="badge-examples" class="gc-cluster"></div>
+    </section>
+    <section class="gc-card gc-stack" aria-labelledby="status-heading">
+      <h2 id="status-heading" class="gc-heading">Status and activity</h2>
+      <div id="status-examples" class="gc-cluster"></div>
+      <div id="progress-examples" class="gc-stack"></div>
+    </section>
+    <section class="gc-card gc-stack" aria-labelledby="notification-heading">
+      <h2 id="notification-heading" class="gc-heading">Notification privacy</h2>
+      <p class="gc-support">Numeric example versus a private, redacted activity marker.</p>
+      <div id="count-examples" class="gc-cluster"></div>
+      <form id="count-form" class="gc-cluster">
+        <div class="gc-field"><label for="count-input">Example unread count</label><input id="count-input" class="gc-input" type="number" min="0" max="1000000" step="1" value="12" /></div>
+        <button class="gc-button" type="submit">Update example</button>
+      </form>
+      <p id="count-result" class="gc-support" role="status" aria-live="polite"></p>
+    </section>
+    <section class="gc-card gc-stack" aria-labelledby="async-heading">
+      <h2 id="async-heading" class="gc-heading">Async lifecycle</h2>
+      <p class="gc-support">Skeleton for predictable content; labeled fallbacks for failed or offline data.</p>
+      <div id="async-examples" class="gc-grid gc-grid--two"></div>
+    </section>
+  </main>
+  <script type="module">
+    import { defineCustomElements } from '../src/elements.js';
+    import { applyTheme } from '../src/theme.js';
+    import { createBadge, createStatusIndicator, createCountBadge, createTaskProgress, createAsyncFeedback } from '../src/feedback.js';
+    defineCustomElements();
+    applyTheme(document.body, { accent: 'lagoon', mode: 'auto' });
+    const families = document.getElementById('badge-examples');
+    for (const spec of [
+      { family: 'icon', label: 'Pinned', icon: 'cloud' },
+      { family: 'achievement', label: 'Example milestone' },
+      { family: 'profile', label: 'Profile label' },
+      { family: 'status', label: 'Active', tone: 'positive' },
+      { family: 'role', label: 'Example moderator' },
+      { family: 'recognition', label: 'Recognition' },
+      { family: 'notification', label: 'Unread update' }
+    ]) families.append(createBadge(spec));
+    const statuses = document.getElementById('status-examples');
+    for (const [state, label] of [['online','Online'],['away','Away'],['offline','Offline'],['synced','Synced'],['degraded','Degraded'],['failed','Failed'],['stale','Stale']]) statuses.append(createStatusIndicator({ state, label }));
+    const progress = document.getElementById('progress-examples');
+    progress.append(createTaskProgress({ label:'Example upload', done:3, total:10 }), createTaskProgress({ label:'Example indexing' }));
+    const counts = document.getElementById('count-examples');
+    const result = document.getElementById('count-result');
+    function updateCount(count) {
+      counts.replaceChildren();
+      const visible = createCountBadge({ count, scope:'example unread mentions' });
+      const privateBadge = createCountBadge({ count, sensitive:true });
+      if (visible) counts.append(visible);
+      if (privateBadge) counts.append(privateBadge);
+      result.textContent = `${count} example unread mentions; private activity remains redacted.`;
+    }
+    updateCount(12);
+    document.getElementById('count-form').addEventListener('submit', event => {
+      event.preventDefault();
+      const input = document.getElementById('count-input');
+      if (!input.reportValidity()) return;
+      const count = Number(input.value);
+      if (!Number.isSafeInteger(count) || count < 0 || count > 1000000) { result.textContent = 'Enter a whole count from 0 to 1000000.'; return; }
+      updateCount(count);
+    });
+    const async = document.getElementById('async-examples');
+    for (const state of ['loading','offline','error','permission-denied']) {
+      const region = document.createElement('div');
+      region.className = 'gc-surface gc-stack';
+      region.style.padding = 'var(--gc-space-4)';
+      const heading = document.createElement('strong'); heading.textContent = state;
+      region.append(heading, createAsyncFeedback({ state, label:`Example ${state} state` }));
+      async.append(region);
+    }
+  </script>
+</body>
+</html>
