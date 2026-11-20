@@ -1,0 +1,32 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import {readFileSync,existsSync} from "node:fs";
+import {spawnSync} from "node:child_process";
+const root=new URL("../",import.meta.url);
+const source=relative=>readFileSync(new URL(relative,root),"utf8");
+
+test("cross-engine runner refuses unreviewed or missing browsers with no auto-install",()=>{
+  const runner=new URL("tests/browser-cross-engine.mjs",root);
+  const r=spawnSync(process.execPath,[runner.pathname],{encoding:"utf8",timeout:5000,
+    env:{...process.env,GC_PLAYWRIGHT_CORE_MODULE:"",GC_FIREFOX_BIN:"",GC_WEBKIT_BIN:""}});
+  assert.notEqual(r.status,0);
+  assert.match(r.stderr,/must point to an inspected, existing, absolute file/);
+  const code=source("tests/browser-cross-engine.mjs");
+  assert.match(code,/server\.listen\(0,"127\.0\.0\.1"/);
+  assert.match(code,/return route\.abort\("blockedbyclient"\)/);
+  assert.match(code,/serviceWorkers:"block"/);
+  assert.match(code,/native forms/);
+  assert.match(code,/toastGeometry\.lines,1/);
+  assert.doesNotMatch(code,/npm\s+(?:install|ci)|playwright\s+install/);
+});
+
+test("notification dismiss label has a stable nonshrinking layout",()=>{
+  const css=source("src/components.css");
+  assert.match(css,/\.gc-toast > span \{ flex:1 1 auto; min-inline-size:0/);
+  assert.match(css,/\.gc-toast > \.gc-button \{ flex:0 0 auto; white-space:nowrap/);
+  assert.match(css,/\.gc-app \.gc-toast > \.gc-button \{ white-space:nowrap/);
+  const pkg=JSON.parse(source("package.json"));
+  assert.equal(pkg.scripts["browser:cross-engine"],"node tests/browser-cross-engine.mjs");
+  assert.ok(existsSync(new URL("docs/CROSS_ENGINE_BROWSER_QA.md",root)));
+  assert.match(source("docs/CROSS_ENGINE_BROWSER_QA.md"),/not.*(?:universal|support claim)/i);
+});
