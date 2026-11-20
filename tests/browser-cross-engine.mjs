@@ -6,7 +6,7 @@
  */
 import assert from "node:assert/strict";
 import {createServer} from "node:http";
-import {readFile, mkdir} from "node:fs/promises";
+import {readFile, mkdir, writeFile} from "node:fs/promises";
 import {existsSync,statSync} from "node:fs";
 import {extname,resolve,sep,join,isAbsolute} from "node:path";
 import {fileURLToPath,pathToFileURL} from "node:url";
@@ -50,6 +50,7 @@ await opened;
 const base="http://127.0.0.1:"+server.address().port;
 const shots=join(root,"qa/screenshots");
 await mkdir(shots,{recursive:true});
+const observedVersions={};
 const cases=[
   {name:"desktop-light",width:900,height:800,appearance:"light",accent:"iris"},
   {name:"mobile-dark",width:390,height:844,appearance:"dark",accent:"lagoon",
@@ -60,6 +61,8 @@ try{
   for(const engine of ["firefox","webkit"]){
     const executablePath=process.env[engine==="firefox"?"GC_FIREFOX_BIN":"GC_WEBKIT_BIN"];
     const browser=await core[engine].launch({executablePath,headless:true,timeout:20000});
+    observedVersions[engine]=browser.version();
+    console.log(engine+" browser version: "+observedVersions[engine]);
     try {
       for(const scenario of cases) {
         const ctx=await browser.newContext({
@@ -168,3 +171,7 @@ try{
 } finally {
   await new Promise(done=>server.close(done));
 }
+await writeFile(join(root,"qa/cross-engine-runtimes.json"),
+  JSON.stringify({playwrightCore:"1.64.1",engines:observedVersions,
+    scope:"Linux Playwright Firefox/WebKit only; not official Apple Safari or global browser support"},
+  null,2)+"\n");

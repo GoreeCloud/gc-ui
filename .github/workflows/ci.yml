@@ -110,3 +110,55 @@ jobs:
             qa/browser-evidence.json
           if-no-files-found: warn
           retention-days: 7
+
+  cross-engine-lab:
+    # Separate nonpublishing Firefox/WebKit qualification. This job is not a
+    # claim of official Safari, human AT, or all supported browser versions.
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source, not the synthetic PR merge commit
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - name: Setup source-compatible Node
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - name: Install independently pinned, nonpublishing Playwright Core 1.64.1
+        run: npm install --no-save --package-lock=false --ignore-scripts --no-audit --no-fund playwright-core@1.64.1
+      - name: Install corresponding Linux Firefox and WebKit dependencies
+        run: node node_modules/playwright-core/cli.js install --with-deps firefox webkit
+      - name: Resolve and verify the exact local runtime paths
+        run: |
+          node --input-type=module <<'NODE'
+          import {firefox,webkit} from 'playwright-core';
+          import {existsSync,realpathSync,appendFileSync} from 'node:fs';
+          const files={
+            GC_PLAYWRIGHT_CORE_MODULE:realpathSync('./node_modules/playwright-core/index.mjs'),
+            GC_FIREFOX_BIN:firefox.executablePath(),
+            GC_WEBKIT_BIN:webkit.executablePath()
+          };
+          for(const [key,value] of Object.entries(files)){
+            if(!existsSync(value)||!value.startsWith('/'))throw Error('Missing reviewed browser runtime: '+key);
+            appendFileSync(process.env.GITHUB_ENV,key+'='+value+'\n');
+          }
+          console.log('Verified local Firefox and WebKit paths; private file paths omitted from logs');
+          NODE
+      - name: Run read-only native engine acceptance of the real UI source lab
+        run: npm run browser:cross-engine
+      - name: Verify source SHA, browser versions and every saved screenshot
+        run: node scripts/record-cross-engine-evidence.mjs
+      - name: Preserve source-bound browser artifact and hashes (nonpublishing)
+        if: always()
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: gc-ui-cross-engine-evidence
+          path: |
+            qa/cross-engine-evidence.json
+            qa/cross-engine-runtimes.json
+            qa/screenshots/gc-ui-firefox-*.png
+            qa/screenshots/gc-ui-webkit-*.png
+          if-no-files-found: warn
+          retention-days: 7
