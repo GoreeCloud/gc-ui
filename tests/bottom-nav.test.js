@@ -295,3 +295,27 @@ test("empty hash respects an explicit same-document initial destination only",()
  assert.ok(f.links.every(link=>link.getAttribute("aria-current")===null));
  ctl.dispose();
 });
+
+test("RTL overflowed destinations receive nearest native focus scroll and clean up",()=>{
+ const f=fixture();f.doc.documentElement.dir="rtl";
+ f.nav.getBoundingClientRect=()=>({left:16,right:374});
+ let actual=[];
+ f.links[3].getBoundingClientRect=()=>({left:-6,right:82});
+ f.links[3].scrollIntoView=options=>actual.push(options);
+ const ctrl=initBottomNavigation(f.nav);
+ f.nav.emit("focusin",{target:f.links[3]});
+ assert.deepEqual(actual,[{block:"nearest",inline:"nearest",behavior:"instant"}]);
+ assert.equal(f.links[0].getAttribute("aria-current"),"page",
+   "Scroll accommodation must not change selected route");
+ f.links[3].getBoundingClientRect=()=>({left:44,right:132});
+ f.nav.emit("focusin",{target:f.links[3]});
+ assert.equal(actual.length,1,"Do not jump a fully visible link");
+ f.links[3].setAttribute("aria-disabled","true");
+ f.links[3].getBoundingClientRect=()=>({left:-6,right:82});
+ f.nav.emit("focusin",{target:f.links[3]});
+ assert.equal(actual.length,1,"Disabled navigation must not scroll");
+ f.links[3].removeAttribute("aria-disabled");
+ ctrl.dispose();
+ f.nav.emit("focusin",{target:f.links[3]});
+ assert.equal(actual.length,1,"Dispose removes focus accommodation");
+});

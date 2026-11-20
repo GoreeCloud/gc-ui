@@ -55,16 +55,22 @@ const cases=[
   {name:"desktop-light",width:900,height:800,appearance:"light",accent:"iris"},
   {name:"mobile-dark",width:390,height:844,appearance:"dark",accent:"lagoon",
     reducedMotion:"reduce"},
-  {name:"compact-light",width:320,height:760,appearance:"light",accent:"moss"}
+  {name:"compact-light",width:320,height:760,appearance:"light",accent:"moss"},
+  // RTL plus 200% CSS root text is a stress test, NOT native browser zoom.
+  {name:"rtl-large-light",width:390,height:844,appearance:"light",accent:"ember",
+    rtl:true,rootFontScale:2}
 ];
 try{
+  const selected=process.env.GC_BROWSER_SCENARIO_FILTER;
+  const scenarios=selected?cases.filter(item=>item.name===selected):cases;
+  assert.ok(scenarios.length, "Unknown GC_BROWSER_SCENARIO_FILTER: "+selected);
   for(const engine of ["firefox","webkit"]){
     const executablePath=process.env[engine==="firefox"?"GC_FIREFOX_BIN":"GC_WEBKIT_BIN"];
     const browser=await core[engine].launch({executablePath,headless:true,timeout:20000});
     observedVersions[engine]=browser.version();
     console.log(engine+" browser version: "+observedVersions[engine]);
     try {
-      for(const scenario of cases) {
+      for(const scenario of scenarios) {
         const ctx=await browser.newContext({
           viewport:{width:scenario.width,height:scenario.height},
           colorScheme:scenario.appearance==="dark"?"dark":"light",
@@ -86,6 +92,13 @@ try{
           await page.locator("#accent").waitFor();
           await page.locator("#appearance").selectOption(scenario.appearance);
           await page.locator("#accent").selectOption(scenario.accent);
+          if(scenario.rtl||scenario.rootFontScale){
+            await page.evaluate(({rtl,scale})=>{
+              const root=document.documentElement;
+              if(rtl)root.dir="rtl";
+              if(scale)root.style.fontSize=(scale*100)+"%";
+            },{rtl:scenario.rtl,scale:scenario.rootFontScale});
+          }
           const info=await page.evaluate(()=>{
             const root=document.documentElement;
             const keys=["foundations","components","patterns","forms"].map(id=>{
@@ -94,6 +107,8 @@ try{
             });
             return {width:innerWidth,client:root.clientWidth,scroll:root.scrollWidth,
               theme:root.dataset.gcTheme,accent:root.dataset.gcAccent,
+              direction:getComputedStyle(root).direction,
+              rootFontPx:parseFloat(getComputedStyle(root).fontSize),
               navDisplayed:getComputedStyle(document.getElementById("demo-bottom-nav")).display!=="none",
               sections:keys};
           });
@@ -103,6 +118,10 @@ try{
             engine+" theme selector failed "+JSON.stringify(info));
           assert.equal(info.accent,scenario.accent,
             engine+" accent selector failed "+JSON.stringify(info));
+          if(scenario.rtl)assert.equal(info.direction,"rtl",
+            engine+" RTL layout not applied "+JSON.stringify(info));
+          if(scenario.rootFontScale)assert.ok(info.rootFontPx>=28,
+            engine+" enlarged CSS root text not applied "+JSON.stringify(info));
           assert.ok(info.scroll<=info.client+1,
             engine+" horizontal document overflow "+scenario.name+" "+JSON.stringify(info));
           assert.ok(info.sections.every(s=>s.left>=-1&&s.right<=info.client+1),
@@ -112,10 +131,25 @@ try{
             const nav=page.locator("#demo-bottom-nav");
             const link=nav.locator("a[href]").last();
             await link.focus();
+            // Browser-native scrolling can be animated, especially for RTL.
+            // Never scroll via script: the native focus behavior must succeed.
+            await page.waitForFunction(()=>{
+              const nav=document.querySelector("#demo-bottom-nav");
+              const links=[...nav.querySelectorAll("a[href]")];
+              const last=links.at(-1);
+              const item=last.getBoundingClientRect(),bounds=nav.getBoundingClientRect();
+              return item.left>=bounds.left-1&&item.right<=bounds.right+1;
+            },null,{timeout:3000}).catch(()=>{});
             const box=await link.boundingBox(),navBox=await nav.boundingBox();
+            const metrics=await page.evaluate(()=>{
+              const nav=document.querySelector("#demo-bottom-nav");
+              return {scrollLeft:nav.scrollLeft,scrollWidth:nav.scrollWidth,
+                clientWidth:nav.clientWidth,scrollBehavior:getComputedStyle(nav).scrollBehavior,
+                direction:getComputedStyle(nav).direction};
+            });
             assert.ok(box&&navBox&&box.x>=navBox.x-1&&
               box.x+box.width<=navBox.x+navBox.width+1,
-              engine+" could not focus/scroll last mobile destination");
+              engine+" could not focus/scroll last mobile destination "+JSON.stringify({box,navBox,metrics}));
             assert.equal(await link.evaluate(el=>document.activeElement===el),true,
               engine+" native focus was not retained");
           }else{

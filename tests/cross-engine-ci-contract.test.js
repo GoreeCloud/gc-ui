@@ -35,3 +35,10 @@ test("cross-engine proof is hash- and dimension-bound, and refuses absent review
  assert.notEqual(result.status,0);
  assert.match(result.stderr,/inspected Playwright Core absolute path is required/);
 });
+
+test("RTL focus and large text add four provenance-verified PNGs without weakening manifest bounds",()=>{
+ const manifest=read("scripts/record-cross-engine-evidence.mjs");
+ assert.match(manifest,/name:"rtl-large-light",width:390,height:844/);
+ assert.match(manifest,/outputs\.length,12/);
+ assert.match(read("docs/CROSS_ENGINE_BROWSER_QA.md"),/twelve SHA-256-validated CI screenshot files/);
+});

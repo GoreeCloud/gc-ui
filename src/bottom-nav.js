@@ -132,6 +132,21 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
     available[next].focus(); // Focus does not navigate or change aria-current.
   };
 
+  // Native focus does not always scroll an overflowing RTL flex container in
+  // Firefox. Keep the focused, enabled destination visible without changing
+  // the route or selection; no polling, storage or document-wide scrolling.
+  const onFocusIn = event => {
+    const link = event.target?.closest?.("a[href]");
+    if (disposed || !enabled(link) ||
+        typeof nav.getBoundingClientRect !== "function" ||
+        typeof link.getBoundingClientRect !== "function") return;
+    const bounds=nav.getBoundingClientRect();
+    const target=link.getBoundingClientRect();
+    if (target.left<bounds.left-1||target.right>bounds.right+1) {
+      link.scrollIntoView?.({block:"nearest",inline:"nearest",behavior:"instant"});
+    }
+  };
+
   // Reserve actual viewport space for the floating capsule at any font scale.
   // A ResizeObserver is local-only: no polling, storage, or remote telemetry.
   let clearanceObserver = null;
@@ -160,6 +175,7 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
   }
   nav.addEventListener("click", onClick);
   nav.addEventListener("keydown", onKey);
+  nav.addEventListener("focusin", onFocusIn);
   win.addEventListener("hashchange", syncFromLocation);
   win.addEventListener("popstate", syncFromLocation);
   const current = links.find((link,i)=>enabled(link) &&
@@ -183,6 +199,7 @@ export function initBottomNavigation(nav, { onNavigate, content } = {}) {
       disposed = true;
       nav.removeEventListener("click", onClick);
       nav.removeEventListener("keydown", onKey);
+      nav.removeEventListener("focusin", onFocusIn);
       win.removeEventListener("hashchange", syncFromLocation);
       win.removeEventListener("popstate", syncFromLocation);
       if (content) {
