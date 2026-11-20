@@ -18,7 +18,7 @@ test("refreshed exact 1.0.0 candidate stays blocked until actual release accepta
   assert.equal(candidate.status, "draft-candidate-unverified-unpublished");
   assert.equal(candidate.sourceBaseSha, "79949b3db58f2214e8d4c4eb2b647f75e1cfc724");
   assert.equal(candidate.latestIntegratedProtectedMainSha,
-    "be8b819748d1ef0f6b2d3e786f4b22864cb3d07d");
+    "c833c6cbb291e866ce25ee53c49afa00dad73130");
   assert.equal(candidate.latestIntegrationDate, "2026-11-20");
   assert.equal(candidate.rollback.sourceBaselineSha,
     candidate.latestIntegratedProtectedMainSha,
