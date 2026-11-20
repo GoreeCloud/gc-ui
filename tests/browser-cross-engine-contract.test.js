@@ -39,6 +39,8 @@ test("synthetic screenshots cannot outlive the toast before its required dismiss
   const after=code.indexOf('await page.screenshot({path:join(shots,"gc-ui-"+engine+"-"+scenario.name+"-clean.png")})',click);
   assert.ok(initial>0&&submit>initial&&click>submit&&after>click,
     "Initial snapshot must be before toast; real click must precede post-dismiss snapshot");
-  assert.match(code,/notification could not be dismissed by an actual click/);
+  assert.match(code,/persistent synthetic notification could not be dismissed by an actual pointer click/);
+  assert.match(code,/duration:0/);
+  assert.match(code,/Synthetic persistent dismiss interaction/);
   assert.doesNotMatch(code,/const visualToast=/);
 });
