@@ -52,4 +52,4 @@ jobs:
       - name: Check generated tokens
         run: node scripts/generate-compose-tokens.mjs --check
       - name: Compile shared Kotlin Android target
-        run: gradle -p compose-multiplatform :gc-ui-compose:compileKotlinAndroid --no-daemon --stacktrace
+        run: gradle -p compose-multiplatform :gc-ui-compose:assemble --no-daemon --stacktrace

@@ -25,7 +25,7 @@ From the repository root:
 
 From this directory, with Gradle 9.4.1 installed and Android SDK configured:
 
-    gradle :gc-ui-compose:compileKotlinAndroid --no-daemon
+    gradle :gc-ui-compose:assemble --no-daemon
 
 An Apple build needs macOS, Xcode and signing/CI infrastructure:
 
