@@ -104,6 +104,10 @@
 .gc-empty { display:grid; justify-items:center; text-align:center; gap:var(--gc-space-3); padding:var(--gc-space-12) var(--gc-space-6); }
 .gc-toast-region { position:fixed; inset-block-end:max(var(--gc-space-6),env(safe-area-inset-bottom)); inset-inline-end:max(var(--gc-space-6),env(safe-area-inset-right)); z-index:var(--gc-z-toast); display:grid; gap:var(--gc-space-3); inline-size:min(400px,calc(100vw - 32px)); pointer-events:none; }
 .gc-toast { display:flex; align-items:center; justify-content:space-between; gap:var(--gc-space-3); padding:var(--gc-space-3) var(--gc-space-4); background:var(--gc-lens-solid); color:var(--gc-text); border:1px solid var(--gc-outline); border-inline-start:4px solid var(--gc-brand); border-radius:var(--gc-radius-md); box-shadow:var(--gc-shadow-3); pointer-events:auto; }
+/* Preserve a readable dismiss action when notification copy wraps on compact
+   viewports. The message yields space; the action never breaks mid-word. */
+.gc-toast > span { flex:1 1 auto; min-inline-size:0; overflow-wrap:anywhere; }
+.gc-toast > .gc-button { flex:0 0 auto; white-space:nowrap; overflow-wrap:normal; }
 .gc-toast[data-kind="positive"] { border-inline-start-color:var(--gc-positive); }
 .gc-toast[data-kind="warning"] { border-inline-start-color:var(--gc-warning); }
 .gc-toast[data-kind="negative"] { border-inline-start-color:var(--gc-negative); }
@@ -1326,6 +1330,7 @@
     max-inline-size:calc(100vw - 32px);
   }
   .gc-app .gc-toast { max-inline-size:100%; overflow-wrap:anywhere; }
+  .gc-app .gc-toast > .gc-button { white-space:nowrap; overflow-wrap:normal; }
 }
 
 
