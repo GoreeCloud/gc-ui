@@ -2,11 +2,13 @@
 
 **Implemented:** a web reference foundation, deterministic Android XML, SwiftUI, XAML, GTK and JSON token export generator, plus an alpha source-level Kotlin/Compose Material 3 Expressive Android adapter. **Not verified:** native library compilation, real-device behavior, production Android/iOS/Linux/Windows/macOS SDK release, OS shell themes, installers, wallpaper extraction or cross-device acceptance. See [Android Material 3 Expressive](ANDROID_MATERIAL3_EXPRESSIVE.md).
 
+**Compose Multiplatform source adapter (new development):** A separate shared Kotlin UI library is present in `compose-multiplatform/`, with common palette and UI primitives generated from the same canonical tokens as the Android Material 3 Expressive adapter. **Android continues to require Material 3 Expressive**, while Linux and web primary-framework restrictions remain unchanged. This is source-level alpha, not independently compiled/native-device-certified support. See [Compose Multiplatform standard](COMPOSE_MULTIPLATFORM.md).
+
 A native port can generate resources with npm run export:platform (see PLATFORM_BRIDGE.md) and should ingest the versioned tokens/gc.tokens.json manifest at build time and map semantic roles to platform appearance primitives. Maintain shape, typographic hierarchy, safe-area behavior and material decisions while using the platform's native interaction and assistive interfaces.
 
 | Platform | Suggested native adapter | Required evidence before calling it supported |
 | --- | --- | --- |
-| Android | Jetpack Compose + Kotlin (default); Flutter, React Native + Expo, or Kotlin Multiplatform + Compose Multiplatform when justified | Real builds, semantics, gesture areas, accessibility services, lifecycle and theme |
+| Android | Jetpack Compose / Views | Real builds, semantics, gesture areas, accessibility services, lifecycle and theme |
 | iOS/iPadOS | SwiftUI / UIKit | VoiceOver, Dynamic Type, safe areas, blur energy impact, signing and device |
 | Windows | WinUI / Windows App SDK | keyboard, contrast mode, scaling, window chrome, packaged build |
 | Linux | **Qt Quick (Qt 6.12.0), Flutter Linux Desktop or Slint only** | Source-proven primary UI, GNOME/KDE desktop integration, accessibility, packaging, runtime and migrated-consumer acceptance |

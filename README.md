@@ -20,6 +20,12 @@ Founder-directed target: stabilize the **web foundation** as **1.0.0** first, th
 
 The founder requires Material 3 Expressive as the design foundation for all GoreeCloud Android interfaces. The **source-level alpha Compose adapter** now lives in [android/material3-expressive](android/material3-expressive/README.md); it derives four accent palettes from canonical tokens, provides a Compose Material 3 1.5.0 theme, and includes floating navigation and Android CI. See [the adoption contract](docs/ANDROID_MATERIAL3_EXPRESSIVE.md). This is not a published Android SDK, a verified device build, or proof of downstream adoption. Other approved Android stacks remain supported by design-equivalent adapters.
 
+## Compose Multiplatform: shared Kotlin UI foundation (alpha source)
+
+**New founder direction, November 20, 2026:** Compose Multiplatform is the standard shared Kotlin UI toolkit for applicable GoreeCloud clients, implemented here as an independent [in-repository Kotlin library](compose-multiplatform/README.md). The existing [Android Material 3 Expressive adapter](android/material3-expressive/README.md) remains the mandatory Android theme host; portable controls work under its MaterialTheme. Both adapters derive identical palettes from the canonical JSON with a single deterministic generator. This source addition does **not** establish an SDK release, Gradle build success, device acceptance or migration of any consumer.
+
+Linux graphical clients must still use Qt Quick 6.12.0, Flutter Linux Desktop or Slint as their primary UI; browser apps retain their approved web frameworks. Other non-Kotlin Android stacks remain governed by the canonical Android framework standard. See [architecture, evidence and rollout](docs/COMPOSE_MULTIPLATFORM.md). The npm web package scope and Stable 1.0 web-first roadmap are unchanged.
+
 ## Implemented here
 
 - **Cloud Canvas / Cloud Surface / Cloud Lens** material hierarchy with solid-glass alternatives.
