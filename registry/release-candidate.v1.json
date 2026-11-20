@@ -4,6 +4,8 @@
   "name": "@goreecloud/ui",
   "status": "draft-candidate-unverified-unpublished",
   "sourceBaseSha": "79949b3db58f2214e8d4c4eb2b647f75e1cfc724",
+  "latestIntegratedProtectedMainSha": "1c2db317afa0a8e8132d6b6639b25fa5dd0a78de",
+  "latestIntegrationDate": "2026-11-20",
   "sourceBranch": "release/stable-web-1.0.0-current-main-20261117",
   "sourceCommitSha": null,
   "sourceCommitNote": "The candidate cannot embed its own commit SHA; record the exact reviewed source SHA and artifact hashes in the separate GitHub release gate issue (#85).",
@@ -38,7 +40,7 @@
     "No approved post-commit release decision or verified public release/tag/npm publication"
   ],
   "rollback": {
-    "sourceBaselineSha": "79949b3db58f2214e8d4c4eb2b647f75e1cfc724",
+    "sourceBaselineSha": "1c2db317afa0a8e8132d6b6639b25fa5dd0a78de",
     "runbook": "docs/RELEASE_1_0_RUNBOOK.md"
   }
 }

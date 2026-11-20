@@ -1,5 +1,7 @@
 # GoreeCloud UI — protected-main Stable 1.0 candidate refresh
 
+> **Historical November 17 snapshot.** The subsequent protected-main integration and its distinct unverified release gates are documented in [November 20 candidate integration](STABLE_CANDIDATE_INTEGRATION_20261120.md). The base SHA below is the original branch origin, not the latest integrated main revision.
+
 **Date:** 2026-11-17. **Status:** Proposed release candidate, **unverified and unpublished**. Source base: protected `main` at `79949b3db58f2214e8d4c4eb2b647f75e1cfc724`. Branch: `release/stable-web-1.0.0-current-main-20261117`. Actual candidate head SHA, CI run IDs and package digest are external post-commit evidence, to be published in the existing [Stable gate issue #85](https://github.com/GoreeCloud/gc-ui/issues/85) only after independent readback.
 
 ## Root-cause remediation

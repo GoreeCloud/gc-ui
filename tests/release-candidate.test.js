@@ -17,6 +17,12 @@ test("refreshed exact 1.0.0 candidate stays blocked until actual release accepta
   assert.equal(plan.webFoundations.status, "candidate");
   assert.equal(candidate.status, "draft-candidate-unverified-unpublished");
   assert.equal(candidate.sourceBaseSha, "79949b3db58f2214e8d4c4eb2b647f75e1cfc724");
+  assert.equal(candidate.latestIntegratedProtectedMainSha,
+    "1c2db317afa0a8e8132d6b6639b25fa5dd0a78de");
+  assert.equal(candidate.latestIntegrationDate, "2026-11-20");
+  assert.equal(candidate.rollback.sourceBaselineSha,
+    candidate.latestIntegratedProtectedMainSha,
+    "Rollback must use the current protected source, not the historical initial base");
   assert.equal(candidate.sourceBranch, "release/stable-web-1.0.0-current-main-20261117");
   assert.equal(candidate.sourceCommitSha, null, "No self-referential Git SHA in candidate");
   assert.equal(candidate.candidateEvidence.testedSha, null);
