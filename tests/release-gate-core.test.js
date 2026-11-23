@@ -119,11 +119,11 @@ test("cannot silently promote preview exports or omit root API classification",(
   missing.plan.webFoundations.rootSymbolClassification.candidateStable=[];
   assert.equal(check(missing).ready,false);
 });
-test("current alpha remains blocked without fabricated acceptance",()=>{
+test("current exact-version draft remains blocked without fabricated acceptance",()=>{
   const result=evaluateReleaseReadiness(currentPlan,pkg,{sourceSha:sha,cleanTree:true});
   assert.equal(result.ready,false);
   assert.ok(result.blockers.includes("Open gate: public-api-contract"));
-  assert.ok(result.blockers.some(x=>/version 1.0.0/.test(x)));
+  assert.ok(result.blockers.some(x=>/Candidate has not been verified/.test(x)));
 });
 
 test("post-commit external decision can qualify unchanged open gate records after true acceptance",()=>{

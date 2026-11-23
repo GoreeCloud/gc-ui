@@ -1,6 +1,6 @@
 # GoreeCloud UI — Stable 1.0 candidate, release and rollback runbook
 
-**Status:** Prepared procedure, **not executed**, 2026-11-13. Package `0.1.0-alpha.0` remains unreleased to npm in the verified repository record. Preparing a local tarball is not a release or consumer migration. The sole Stable target is the web-foundation API in [PUBLIC_API_BOUNDARY.md](PUBLIC_API_BOUNDARY.md); native components and app migrations remain deferred.
+**Status:** Prepared procedure, **not a completed release**, 2026-11-13. Protected `main` remains `0.1.0-alpha.0`; the isolated refreshed 2026-11-17 review candidate intentionally uses exactly `1.0.0` with `candidate-unverified` status. No verified npm publication exists. Preparing or testing a local tarball is not a release or consumer migration. See [refreshed candidate safety record](STABLE_CANDIDATE_REFRESH_20261117.md). The sole Stable target is the web-foundation API in [PUBLIC_API_BOUNDARY.md](PUBLIC_API_BOUNDARY.md); native components and app migrations remain deferred.
 
 ## 1. Candidate and no-publication safety
 

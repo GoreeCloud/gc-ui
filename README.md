@@ -9,7 +9,7 @@
 
 GoreeCloud UI (GC UI) is the mandatory design language for GoreeCloud-controlled applications, websites, dashboards and future operating-system interfaces. It synthesizes ergonomic layout, adaptive semantic color and purposeful translucent depth into an original visual system.
 
-> **Maturity: 0.1.0-alpha.0, not Stable.** GoreeCloud UI is a new greenfield project, with no inherited code or releases. The initial alpha establishes its design language and implementation contracts. Semantic roles follow the founder-approved standard, while specific new palette values are provisional alpha candidates pending visual acceptance.
+> **Release-candidate worktree only: exact `1.0.0`, status `candidate-unverified`, NOT Stable or published.** Protected `main` remains `0.1.0-alpha.0`. This isolated branch exists to test an exact-version web-foundation tarball while **all eight mandatory Stable gates remain open**. No registry distribution, tag, verified app adoption, signed release, or approval is implied. Existing semantic roles and palette candidates still require visual acceptance.
 
 ## Targeted release strategy — web-first Stable 1.0
 

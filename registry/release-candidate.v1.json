@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "targetVersion": "1.0.0",
+  "name": "@goreecloud/ui",
+  "status": "draft-candidate-unverified-unpublished",
+  "sourceBaseSha": "79949b3db58f2214e8d4c4eb2b647f75e1cfc724",
+  "latestIntegratedProtectedMainSha": "cf24d61ebb95ba09cab4c60376c07facec28e245",
+  "latestIntegrationDate": "2026-11-20",
+  "sourceBranch": "release/stable-web-1.0.0-current-main-20261117",
+  "sourceCommitSha": null,
+  "sourceCommitNote": "The candidate cannot embed its own commit SHA; record the exact reviewed source SHA and artifact hashes in the separate GitHub release gate issue (#85).",
+  "date": "2026-11-17",
+  "releasePublished": false,
+  "githubTagCreated": false,
+  "npmPublished": false,
+  "frozenExports": [
+    "./foundation",
+    "./tokens",
+    "./tokens.css",
+    "./components.css",
+    "./glass.css",
+    "./icons",
+    "./icon-sprite",
+    "./icon-registry",
+    "./theme",
+    "./patterns"
+  ],
+  "legacyRoot": "preview-compatibility",
+  "candidateEvidence": {
+    "testedSha": null,
+    "runUrl": null,
+    "artifactSha256": null,
+    "screenshotArtifactId": null,
+    "allGatesVerified": false
+  },
+  "blocking": [
+    "All eight mandatory Stable gates remain open pending exact-source review and independent verified evidence",
+    "No real multi-state/browser human visual and platform acceptance of this exact candidate",
+    "Security/privacy/license and official brand-asset redistribution review remains incomplete",
+    "No approved post-commit release decision or verified public release/tag/npm publication"
+  ],
+  "rollback": {
+    "sourceBaselineSha": "cf24d61ebb95ba09cab4c60376c07facec28e245",
+    "runbook": "docs/RELEASE_1_0_RUNBOOK.md"
+  }
+}
