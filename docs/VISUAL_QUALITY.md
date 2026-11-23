@@ -31,6 +31,13 @@ Before declaring a relevant visual change accepted, record: the **source commit*
 
 Record visual/design decisions separately from technical evidence. Passing Node tests, Chromium geometry checks, generated screenshots or a CI badge does not by itself prove exceptional craftsmanship, real-device acceptance, screen-reader acceptance, publication or deployment. If the full rendered experience was not inspected, report the gap instead of asserting premium compliance.
 
+A concrete [before/after reference critique](CRAFTED_WORKSPACE_REVIEW_20261117.md)
+compares the former empty chromatic screenshot with a composed Wardveil
+held-file example across four browser conditions. The example illustrates
+reviewable professional art direction and genuine native interactions; it is
+**not** an accepted Wardveil UI or evidence that other GoreeCloud applications
+have received an equivalent redesign.
+
 ## Repeatable quality requirements
 
 1. **Signature hierarchy.** Establish display, title, section, body, supporting and label hierarchy with canonical typography and readable line lengths. Give the primary action clear priority.
@@ -47,6 +54,35 @@ Record visual/design decisions separately from technical evidence. Passing Node 
 Core component CSS provides the premium shell, showcase composition, content/visual/floating/metrics elements, editorial overline, metric, and three-up responsive feature tiles. These are shared application primitives, not showcase-only mockups. Dense settings, operating-system utilities and dashboards can remain premium through consistent typography, spacing, focus, refinement and selective depth without adding decorative marketing heroes to every view.
 
 Ambient decoration stays behind opaque content; the floating showcase uses the solid Cloud Lens fallback. All color derives from the canonical semantic variables rather than independent hardcoded accent hex. High contrast, reduced transparency, forced colors, mobile reflow and reduced motion have explicit fallbacks.
+
+### Avoiding the white-card default
+
+Use the opt-in `gc-scene` / `gc-scene__rail` / `gc-scene__header` /
+`gc-scene__content` pattern in product shells only when it improves the actual
+workflow. Its accented context region and tonal navigation establish identity
+without tinting every reading surface. A `gc-context-band` can identify one
+important workflow scope and `gc-card--accent` can emphasize one meaningful
+item; neither is a license to create a bigger grid of colored cards.
+
+The default white `--gc-surface` in light mode is intentional for readable
+content and remains unchanged. **The failure is monotonous composition and
+unverified consumer adoption**, not the existence of a white token. Product
+teams must provide real source/rendered evidence before claiming this solves
+their experience. Avoid a shared forced hue, automatic mass restyling or an
+unreviewed global palette replacement.
+
+### Seamless motion and meaningful color
+
+Every GoreeCloud-controlled digital experience must be intentionally
+art-directed for smooth feedback, clear state changes, purposeful color-coding
+and refined material effects. Reuse the alpha
+[motion and effects contract](MOTION_AND_EFFECTS.md) when suitable: real
+actions get responsive interaction feedback, state changes retain context,
+and positive/warning/negative meanings use semantic roles plus words or icons.
+Never add indiscriminate gradients, looping sparkle, hover jitter, invasive
+page transitions or inaccessible effects merely to appear premium. Respect
+reduced-motion and high-contrast preferences, and make real-browser
+interaction and screenshot acceptance separate release evidence.
 
 ## Review and acceptance
 

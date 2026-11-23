@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Wardveil · held-file review — GoreeCloud UI craft reference</title>
+  <link rel="stylesheet" href="../src/tokens.css">
+  <link rel="stylesheet" href="../src/components.css">
+  <script type="module">
+    import { defineCustomElements } from "../src/elements.js";
+    defineCustomElements();
+    // Keep the current section announced correctly after fragment navigation;
+    // this is a static specimen, not a fabricated router or live data view.
+    const links = [...document.querySelectorAll('.gc-scene__rail .gc-nav a')];
+    const syncLocation = () => {
+      const current = links.some(link => link.hash === location.hash)
+        ? location.hash : '#overview';
+      for (const link of links) {
+        if (link.hash === current) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    window.addEventListener('hashchange', syncLocation);
+    syncLocation();
+  </script>
+</head>
+<body class="gc-app">
+  <a class="gc-link-skip" href="#main">Skip to review flow</a>
+  <div class="gc-app gc-scene" id="craft-reference" data-gc-theme="light" data-gc-accent="iris">
+    <aside class="gc-scene__rail" aria-label="Wardveil reference navigation">
+      <div class="gc-scene__identity">
+        <span class="gc-scene__mark" aria-hidden="true"><gc-icon name="shield"></gc-icon></span>
+        <span class="gc-scene__identity-text">
+          <strong>Wardveil</strong>
+          <small>CYBERSECURITY / DESIGN STUDY</small>
+        </span>
+      </div>
+      <p class="gc-scene__rail-label">Review workspace</p>
+      <nav class="gc-nav" aria-label="Reference sections">
+        <a href="#overview" aria-current="location"><gc-icon name="home" aria-hidden="true"></gc-icon>Overview</a>
+        <a href="#admission"><gc-icon name="lock" aria-hidden="true"></gc-icon>Admission flow</a>
+        <a href="#boundaries"><gc-icon name="shield" aria-hidden="true"></gc-icon>Owner boundaries</a>
+        <a href="#review"><gc-icon name="info" aria-hidden="true"></gc-icon>Review guidance</a>
+      </nav>
+      <p class="gc-scene__rail-note">
+        <strong>REFERENCE · NO LIVE DATA</strong>
+        A composed interface example; not connected to Identity, files or a scanning service.
+      </p>
+    </aside>
+
+    <div class="gc-scene__workarea" id="overview">
+      <header class="gc-scene__header">
+        <div class="gc-scene__intro">
+          <p class="gc-scene__overline">Wardveil / Scan workspace</p>
+          <h1 class="gc-scene__title">Held-file review</h1>
+          <p class="gc-scene__summary">Every scan begins with a verified owner hold. The owning application—not the scanner—decides what happens next.</p>
+        </div>
+        <span class="gc-badge gc-badge--brand">Design reference</span>
+      </header>
+
+      <main class="gc-scene__content" id="main">
+        <section class="gc-context-band" aria-label="Reference status">
+          <strong>Prototype workflow</strong>
+          <span>Synthetic content only. No real scans, accounts, files or decisions.</span>
+        </section>
+
+        <section class="gc-scene__split" aria-label="Admission flow and owner boundaries">
+          <div id="admission">
+            <div class="gc-scene__content-heading">
+              <p class="gc-scene__overline">01 / Request to advisory</p>
+              <h2>One deliberate path from hold to review</h2>
+              <p>A clear sequence should replace decorative statistics. The information below describes the intended policy, not an operating queue.</p>
+            </div>
+            <ol class="gc-workflow" aria-label="Private scan workflow stages">
+              <li>
+                <div class="gc-workflow__item">
+                  <strong>Verify the owner</strong>
+                  <p>Check the caller and confirm the original application still holds the exact requested object.</p>
+                  <span class="gc-workflow__meta">Identity and owner attestation</span>
+                </div>
+              </li>
+              <li>
+                <div class="gc-workflow__item">
+                  <strong>Reserve a private scan</strong>
+                  <p>Reject a reused lease or exhausted capacity before passing any held bytes to the engine.</p>
+                  <span class="gc-workflow__meta">Replay guard and bounded admission</span>
+                </div>
+              </li>
+              <li>
+                <div class="gc-workflow__item">
+                  <strong>Record an advisory result</strong>
+                  <p>Check what was scanned, preserve the hold on uncertainty, and leave final release authority with the owner.</p>
+                  <span class="gc-workflow__meta">Advisory only · never auto-release</span>
+                </div>
+              </li>
+            </ol>
+          </div>
+
+          <aside class="gc-reference-panel" id="boundaries" aria-label="File owner authority">
+            <div class="gc-scene__content-heading">
+              <p class="gc-scene__overline">02 / Trust boundary</p>
+              <h3>Who controls the file?</h3>
+            </div>
+            <dl>
+              <div><dt>Object access</dt><dd>Owning application only</dd></div>
+              <div><dt>Scanner output</dt><dd>Non-authoritative advisory</dd></div>
+              <div><dt>On error or uncertainty</dt><dd>Retain the pending hold</dd></div>
+              <div><dt>Privacy decisions</dt><dd>GoreeShield policy</dd></div>
+            </dl>
+          </aside>
+        </section>
+
+        <section id="review" aria-labelledby="review-heading">
+          <h2 class="gc-heading" id="review-heading">What happens after detection?</h2>
+          <div class="gc-accordion">
+            <details>
+              <summary>Review a result without releasing the file</summary>
+              <div class="gc-accordion__content">
+                <p>An advisory result must be bound to the exact request and held file.
+                   A clean result may qualify for owner review; it cannot publish or release content.
+                   Unknown or failed scans retain the pending hold.</p>
+              </div>
+            </details>
+          </div>
+        </section>
+
+        <p class="gc-scene__footnote">
+          GoreeCloud UI composition specimen · approved semantic tokens and original icon family ·
+          static, synthetic, non-interactive service preview. Section links and disclosure are native browser interactions.
+        </p>
+      </main>
+    </div>
+  </div>
+</body>
+</html>
