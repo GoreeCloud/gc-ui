@@ -265,7 +265,13 @@
         {
           "repository": "GoreeCloud/vault",
           "pullRequest": "https://github.com/GoreeCloud/vault/pull/32",
-          "state": "open-ci-in-progress"
+          "state": "source-on-main-pr-closed-unmerged",
+          "mainCommit": "00979f1343576feec3826b1f12d4d97a3390eb4a",
+          "reviewedTree": "f4fce0313da449337581553952a6e4a6f1885c8b",
+          "validation": "all-six-app-ci-and-codeql-success; identical git tree with tested PR head",
+          "prMetadata": "closed-not-merged-after-merge-call-timeouts",
+          "ciUrl": "https://github.com/GoreeCloud/vault/actions/runs/45647577022",
+          "codeqlUrl": "https://github.com/GoreeCloud/vault/actions/runs/45647576997"
         },
         {
           "repository": "GoreeCloud/android-defaults",
