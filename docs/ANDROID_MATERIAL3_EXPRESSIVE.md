@@ -68,3 +68,8 @@ outer Material theme and consume portable controls without a nested baseline
 theme. Both Kotlin builds use the same deterministic token-generator output;
 their plugin versions and Android target runtime must be reconciled and tested
 in a real consumer before qualifying integrated adoption.
+
+
+## Flutter source adapter — partial Expressive parity
+
+Flutter clients can consume the new source-level [GC UI Flutter adapter](../flutter/gc_ui_expressive/README.md). Its eight light/dark accent palettes are generated deterministically from canonical tokens, with rounded Material 3 controls and floating compact navigation. Flutter's official Expressive component ecosystem is still evolving; this adapter does not claim full native Compose motion, spring or widget parity. Consumer apps must apply reduced-motion preferences, test platform insets and accessibility, and validate visuals on real devices. Source availability alone is not a verified downstream migration.

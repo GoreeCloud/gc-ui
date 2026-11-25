@@ -159,3 +159,8 @@ The independently importable `@goreecloud/ui/glass.css` adds opt-in atmospheric 
 Apps embedded in one document can choose light/dark/auto appearance, accents and `transparency: "reduce"` independently using `applyTheme(appRoot, options)` on an explicitly configured `.gc-app` root. Real Chromium regression checks exercise sibling isolation, the Signal Constellation Lens, and forced-colors fallback. See [glass material guidance](docs/GLASS_SURFACES.md). Consumer and native device acceptance remain separate.
 
 > **Consumer package boundary:** npm installs include only the web runtime JS/types/CSS, semantic token JSON, generated functional glyphs, LICENSE and README. Project governance, native token generators, engineering scripts, visual QA and extended documents remain available in the [public source repository](https://github.com/GoreeCloud/gc-ui), not as runtime package files. Official GoreeCloud logo and trademark artwork is excluded from npm distribution.
+
+
+## Flutter Android Material 3 expressive-equivalent adapter
+
+The source-level [Flutter adapter](flutter/gc_ui_expressive/README.md) now shares canonical GC UI light/dark palettes and the four accent families with Android Compose, using rounded Material 3 widgets and inset floating navigation. This is an **expressive-equivalent Flutter baseline**, not the full native Jetpack Compose Expressive component/motion library, a published package or verified device adoption.
