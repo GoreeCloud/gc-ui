@@ -1,0 +1,42 @@
+name: GC UI Flutter Material 3 foundation
+on:
+  pull_request:
+    paths:
+      - "flutter/gc_ui_expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-flutter-tokens.mjs"
+      - "tests/flutter-token-contract.test.js"
+      - ".github/workflows/flutter-material3.yml"
+  push:
+    branches: [main]
+    paths:
+      - "flutter/gc_ui_expressive/**"
+      - "tokens/gc.tokens.json"
+      - "scripts/generate-flutter-tokens.mjs"
+      - "tests/flutter-token-contract.test.js"
+      - ".github/workflows/flutter-material3.yml"
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  flutter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: "22"
+      - run: node scripts/generate-flutter-tokens.mjs --check
+      - uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          flutter-version: "3.27.4"
+          channel: stable
+      - working-directory: flutter/gc_ui_expressive
+        run: flutter pub get
+      - working-directory: flutter/gc_ui_expressive
+        run: flutter analyze
+      - working-directory: flutter/gc_ui_expressive
+        run: flutter test

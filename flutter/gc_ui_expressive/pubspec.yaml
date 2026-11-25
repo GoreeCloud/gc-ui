@@ -1,0 +1,13 @@
+name: goreecloud_ui_expressive
+description: Source-level GoreeCloud UI Flutter Material 3 expressive-equivalent adapter.
+publish_to: none
+version: 0.1.0-dev.1
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: '>=3.27.0'
+dependencies:
+  flutter:
+    sdk: flutter
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
