@@ -42,8 +42,13 @@ by looking similar. Avoid rewriting a working client without a controlled plan.
 - Native theme with MaterialTheme and MotionScheme.expressive, optional wallpaper
   colors, a consumer-exposed reduced-motion mode and floating phone navigation.
 - Android native compile CI and the separate Compose Multiplatform Android compile workflow passed on merged source. A source-linked Android development fixture compiled both modules into one debug APK in [run 44705429234](https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234). Runtime/device acceptance is still open.
-- No verified app-specific integration, emulator/physical device visual acceptance,
-  artifact publication, Flutter/RN/KMP bridge or ecosystem-wide migration yet.
+- Multiple verified **source-level downstream integrations** are now merged, including
+  Photos, Locations, Database, Backup and Keyboard (Compose), plus Metrics and Teams
+  via the dedicated Flutter Material 3 equivalent source adapter. See current
+  targeted snapshot in `registry/design-authority.v1.json`. Consumer PR/CI
+  validation is not emulator/physical-device visual or accessibility acceptance.
+- React Native/Expo source adapter, full Flutter native Expressive parity,
+  product releases, all-ecosystem migration and device certification are open.
 
 The Compose Material 3 version was verified as stable 1.5.0 on 2026-11-18.
 Sources: https://developer.android.com/jetpack/androidx/releases/compose-material3
@@ -73,3 +78,20 @@ in a real consumer before qualifying integrated adoption.
 ## Flutter source adapter — partial Expressive parity
 
 Flutter clients can consume the new source-level [GC UI Flutter adapter](../flutter/gc_ui_expressive/README.md). Its eight light/dark accent palettes are generated deterministically from canonical tokens, with rounded Material 3 controls and floating compact navigation. Flutter's official Expressive component ecosystem is still evolving; this adapter does not claim full native Compose motion, spring or widget parity. Consumer apps must apply reduced-motion preferences, test platform insets and accessibility, and validate visuals on real devices. Source availability alone is not a verified downstream migration.
+
+
+## Targeted downstream validation snapshot — 25 November 2026
+
+Merged app integrations (source-level, not production releases):
+
+| App | Framework | Source/CI evidence |
+| --- | --- | --- |
+| Photos | Kotlin/Compose | [PR #54](https://github.com/GoreeCloud/photos/pull/54) |
+| Locations | Kotlin/Compose | [PR #33](https://github.com/GoreeCloud/locations/pull/33) |
+| Database | Kotlin/Compose | [PR #33](https://github.com/GoreeCloud/database/pull/33) |
+| Backup | Kotlin/Compose | [PR #55](https://github.com/GoreeCloud/backup/pull/55) |
+| Keyboard | Kotlin/Compose | [PR #7](https://github.com/GoreeCloud/keyboard/pull/7) — reduced-motion/CI hardening on existing imported adapter |
+| Metrics | Flutter Material 3 equivalent | [PR #38](https://github.com/GoreeCloud/metrics/pull/38) |
+| Teams | Flutter Material 3 equivalent | [PR #43](https://github.com/GoreeCloud/teams/pull/43) |
+
+[Vault PR #32](https://github.com/GoreeCloud/vault/pull/32) is **closed but not GitHub-merged** following connector timeouts. The reviewed source landed on `vault/main` at [00979f1](https://github.com/GoreeCloud/vault/commit/00979f1343576feec3826b1f12d4d97a3390eb4a); the merged-main and tested-PR Git trees are identical. Six [app CI jobs](https://github.com/GoreeCloud/vault/actions/runs/45647577022) and [CodeQL](https://github.com/GoreeCloud/vault/actions/runs/45647576997) passed. This verifies source integration only, not device acceptance or an approved production credential manager. The [Android Defaults Dialer Compose migration](https://github.com/GoreeCloud/android-defaults/issues/84) remains unimplemented; its existing programmatic Views must not be represented as Compose compliance. No device accessibility, physical display, certified keyboard or telecom acceptance, signed APK or production rollout is established by these source-level merges. The listed statuses are **dated evidence**, not a live monitoring service.
