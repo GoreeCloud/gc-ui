@@ -35,6 +35,15 @@ test("shared Compose Kotlin stack and boundaries are explicit", () => {
   assert.match(moduleBuild,/implementation\(compose\.material3\)/);
   assert.match(theme,/fun GoreeCloudMultiplatformTheme\(/);
   assert.match(theme,/fun GoreeCloudNavigation\(/);
+  assert.match(theme,/windowInsets\s*=\s*WindowInsets\(0, 0, 0, 0\)/,
+    "portable navigation must consume system inset only once");
+  assert.match(theme,/surfaceContainerLowest\s*=\s*color\("surface"\)/);
+  assert.match(theme,/surfaceContainerHighest\s*=\s*color\("surface-tonal"\)/);
+  for (const role of ["onPositive", "onWarning", "onNegative", "lensFill", "brandContainer", "outlineSoft", "scrim"])
+    assert.ok(theme.includes("val " + role + ": Color"), "missing semantic role " + role);
+  const androidTheme = read(android+"GoreeCloudExpressiveTheme.kt");
+  assert.match(androidTheme,/surfaceContainer\s*=\s*c\("surface-tonal"\)/);
+
   assert.match(docs,/Material 3 Expressive/);
   assert.match(docs,/Qt Quick/);
   assert.match(read(android+"GoreeCloudExpressiveTheme.kt"),/MotionScheme\.expressive\(\)/);

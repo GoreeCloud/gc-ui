@@ -52,6 +52,13 @@ private fun paletteScheme(t: Map<String, Long>, dark: Boolean): ColorScheme {
         background = c("canvas"), onBackground = c("text"),
         surface = c("surface"), onSurface = c("text"),
         surfaceVariant = c("surface-tonal"), onSurfaceVariant = c("text-soft"),
+        // Material 3 Expressive reads container roles for many surfaces.
+        // Always use GC UI's canonical colors, not library defaults.
+        surfaceContainerLowest = c("surface"),
+        surfaceContainerLow = c("surface"),
+        surfaceContainer = c("surface-tonal"),
+        surfaceContainerHigh = c("surface-tonal"),
+        surfaceContainerHighest = c("surface-tonal"),
         outline = c("outline"), outlineVariant = c("outline-soft"),
         error = c("negative"), onError = c("on-negative"),
         surfaceTint = c("brand")

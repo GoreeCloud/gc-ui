@@ -1,6 +1,7 @@
 package com.goreecloud.ui.multiplatform
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
@@ -43,7 +44,16 @@ data class GoreeColorRoles(
     val warning: Color,
     val negative: Color,
     val focusRing: Color,
-    val lensSolid: Color
+    val lensSolid: Color,
+    val lensFill: Color,
+    val onPositive: Color,
+    val onWarning: Color,
+    val onNegative: Color,
+    val brandContainer: Color,
+    val onBrandContainer: Color,
+    val outline: Color,
+    val outlineSoft: Color,
+    val scrim: Color
 )
 
 object GoreeCloudTokens {
@@ -62,7 +72,16 @@ object GoreeCloudTokens {
             warning = color("warning"),
             negative = color("negative"),
             focusRing = color("focus-ring"),
-            lensSolid = color("lens-solid")
+            lensSolid = color("lens-solid"),
+            lensFill = color("lens-fill"),
+            onPositive = color("on-positive"),
+            onWarning = color("on-warning"),
+            onNegative = color("on-negative"),
+            brandContainer = color("brand-container"),
+            onBrandContainer = color("on-brand-container"),
+            outline = color("outline"),
+            outlineSoft = color("outline-soft"),
+            scrim = color("scrim")
         )
     }
 
@@ -87,6 +106,14 @@ object GoreeCloudTokens {
             onSurface = color("text"),
             surfaceVariant = color("surface-tonal"),
             onSurfaceVariant = color("text-soft"),
+            // Expressive Material 3 components read container roles by default.
+            // Derive them from GC UI's existing solid semantic surfaces rather
+            // than silently falling back to unrelated Material palette colors.
+            surfaceContainerLowest = color("surface"),
+            surfaceContainerLow = color("surface"),
+            surfaceContainer = color("surface-tonal"),
+            surfaceContainerHigh = color("surface-tonal"),
+            surfaceContainerHighest = color("surface-tonal"),
             outline = color("outline"),
             outlineVariant = color("outline-soft"),
             error = color("negative"),
@@ -162,23 +189,41 @@ fun GoreeCloudNavigation(
     onSelect: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    require(items.size in 3..5) { "Expected 3–5 primary destinations" }
-    require(items.all { it.id.isNotBlank() && it.label.isNotBlank() }) { "Items need accessible labels and IDs" }
-    require(items.map { it.id }.distinct().size == items.size) { "Duplicate destination IDs" }
-    require(items.any { it.id == selectedId }) { "Selected destination is not present" }
+    GoreeNavigationContract.validate(items, selectedId)
     NavigationBar(
         modifier = modifier.navigationBarsPadding().padding(horizontal = 16.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(26.dp)),
-        containerColor = MaterialTheme.colorScheme.surface
+        containerColor = MaterialTheme.colorScheme.surface,
+        // Outer navigationBarsPadding consumes the safe area exactly once.
+        // Otherwise NavigationBar applies its own default inset as well.
+        windowInsets = WindowInsets(0, 0, 0, 0)
     ) {
         items.forEach { item ->
             NavigationBarItem(
                 selected = item.id == selectedId,
-                onClick = { if (item.id != selectedId) onSelect(item.id) },
+                onClick = { if (GoreeNavigationContract.shouldNavigate(selectedId, item.id)) onSelect(item.id) },
                 icon = { icon(item) },
                 label = { Text(item.label) },
                 alwaysShowLabel = true
             )
         }
     }
+}
+
+/**
+ * Pure navigation contract for both native hosts and common tests.
+ * Real navigation and authorization remain entirely consumer owned.
+ */
+object GoreeNavigationContract {
+    fun validate(items: List<GoreeNavItem>, selectedId: String) {
+        require(items.size in 3..5) { "Expected 3–5 primary destinations" }
+        require(items.all { it.id.isNotBlank() && it.label.isNotBlank() }) {
+            "Items need accessible labels and IDs"
+        }
+        require(items.map { it.id }.distinct().size == items.size) { "Duplicate destination IDs" }
+        require(items.any { it.id == selectedId }) { "Selected destination is not present" }
+    }
+
+    fun shouldNavigate(selectedId: String, targetId: String): Boolean =
+        selectedId != targetId
 }

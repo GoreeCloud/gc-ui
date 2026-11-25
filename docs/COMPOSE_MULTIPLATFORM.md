@@ -34,6 +34,12 @@
 
 The selected evaluation versions (Kotlin + compiler plugin **2.4.21**, Compose Multiplatform **1.12.2**, Android KMP library plugin **AGP 9.2.0**, Gradle **9.4.1**) come from current official compatibility guidance. They are not unchangeable brand standards. The Android Expressive adapter retains separately pinned Kotlin/Compose versions. An isolated Android Gradle composite fixture has **compiled both libraries into one debug APK** at the declared versions (CI run https://github.com/GoreeCloud/gc-ui/actions/runs/44705429234). This establishes source-linkage at this revision, **not** consumer binary/version-matrix compatibility or runtime/device acceptance. No Maven publishing or consumer migration has been performed.
 
+## Semantic component hardening — 25 November 2026
+
+The shared Kotlin color accessor now exposes all canonical state pairs (including on-positive/on-warning/on-negative), outlines, lens and scrim roles without inventing palette values. Both shared Compose Material 3 and the Android-specific Material 3 Expressive host explicitly map container surfaces from the canonical Canvas/Surface/Tonal roles. Material's default container surfaces must not silently drift to unrelated color families.
+
+The common floating navigation applies the operating system safe area **once**: outer navigationBarsPadding with inner NavigationBar windowInsets set to zero, matching the existing Android native adapter. Its pure GoreeNavigationContract validates 3–5 unique, nonblank destinations, rejects unknown selections, and prevents duplicated selection callbacks; real authorization and routing remain consumer-owned. Common Kotlin tests cover invariants and color pairing. Compilation and focused source checks are necessary but not a replacement for TalkBack/VoiceOver, real navigation, foldable, insets and visual acceptance.
+
 ## Adoption rule and verification gates
 
 For every Kotlin UI client: inventory actual platform(s), source, feature behavior, user data, native integrations and CI; select compliant shared-UI or Kotlin-only architecture; preserve working behavior and rollback; import GC UI source/tokens; use Android Expressive where Android is targeted; provide real routing and authorization; test deterministic token output, Gradle compile, accessibility, theme modes, keyboard/gesture navigation, large fonts, reduced motion, device insets, offline/recovery, and target packaging; only then mark the client adopted.
