@@ -247,6 +247,18 @@
           "pullRequest": "https://github.com/GoreeCloud/keyboard/pull/7",
           "mergeCommit": "2711201144448d3b20189ee660ed82c90b5baeb9",
           "notes": "already included gc-ui Expressive source; latest PR adds reduced-motion and immutable CI actions"
+        },
+        {
+          "repository": "GoreeCloud/DNS",
+          "pullRequest": "https://github.com/GoreeCloud/DNS/pull/28",
+          "mergeCommit": "b80ce4b48feff9697819754a4efe00cf65a49c6e",
+          "notes": "Shared Compose Multiplatform source and Android Material 3 Expressive integrated; five pre-merge and five post-merge CI jobs passed; targetSdk35 and DNS runtime unmodified"
+        },
+        {
+          "repository": "GoreeCloud/AI",
+          "pullRequest": "https://github.com/GoreeCloud/AI/pull/35",
+          "mergeCommit": "74bbd9ccff4a31795df41317c73365f2ce538e11",
+          "notes": "Shared Compose Multiplatform source integrated alongside Android Expressive; all four PR workflow jobs green; no signed APK, provider acceptance or deployment"
         }
       ],
       "verifiedFlutterConsumers": [
