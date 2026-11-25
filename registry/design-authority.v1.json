@@ -216,7 +216,81 @@
       "adaptive-large-screens",
       "talkback-and-contrast",
       "explicit-dynamic-color-opt-in"
-    ]
+    ],
+    "partialConsumerEvidence": {
+      "asOf": "2026-11-25",
+      "evidenceClass": "source-integrated-with-github-actions-compile-or-tests",
+      "scope": "targeted-consumers-only-not-ecosystem-wide-audit",
+      "verifiedComposeConsumers": [
+        {
+          "repository": "GoreeCloud/photos",
+          "pullRequest": "https://github.com/GoreeCloud/photos/pull/54",
+          "mergeCommit": "56136d7ff2ae7c11913fb34876ada39045d5f629"
+        },
+        {
+          "repository": "GoreeCloud/locations",
+          "pullRequest": "https://github.com/GoreeCloud/locations/pull/33",
+          "mergeCommit": "92087307f4571eb1b9f439d3c38e665abf5c070c"
+        },
+        {
+          "repository": "GoreeCloud/database",
+          "pullRequest": "https://github.com/GoreeCloud/database/pull/33",
+          "mergeCommit": "f39063d2176902c2371b9bd5281e31e03329cee2"
+        },
+        {
+          "repository": "GoreeCloud/backup",
+          "pullRequest": "https://github.com/GoreeCloud/backup/pull/55",
+          "mergeCommit": "530a949dda3ffc2106cd1d274aadeb09292a7f90"
+        },
+        {
+          "repository": "GoreeCloud/keyboard",
+          "pullRequest": "https://github.com/GoreeCloud/keyboard/pull/7",
+          "mergeCommit": "2711201144448d3b20189ee660ed82c90b5baeb9",
+          "notes": "already included gc-ui Expressive source; latest PR adds reduced-motion and immutable CI actions"
+        }
+      ],
+      "verifiedFlutterConsumers": [
+        {
+          "repository": "GoreeCloud/teams",
+          "pullRequest": "https://github.com/GoreeCloud/teams/pull/43",
+          "mergeCommit": "f4364be9169fb8c010fec93430bc2939cd773f5d"
+        },
+        {
+          "repository": "GoreeCloud/metrics",
+          "pullRequest": "https://github.com/GoreeCloud/metrics/pull/38",
+          "mergeCommit": "8ac0776a5fe10750f4d22536b9eec177089d310b"
+        }
+      ],
+      "inProgress": [
+        {
+          "repository": "GoreeCloud/vault",
+          "pullRequest": "https://github.com/GoreeCloud/vault/pull/32",
+          "state": "open-ci-in-progress"
+        },
+        {
+          "repository": "GoreeCloud/android-defaults",
+          "issue": "https://github.com/GoreeCloud/android-defaults/issues/84",
+          "state": "legacy-view-ui-migration-not-implemented"
+        }
+      ],
+      "acceptanceNotVerified": [
+        "physical-device",
+        "screen-reader-and-accessibility",
+        "full-material-3-expressive-flutter-parity",
+        "all-ecosystem-consumers",
+        "signed-release",
+        "deployment"
+      ]
+    },
+    "flutterAdapter": {
+      "source": "flutter/gc_ui_expressive",
+      "status": "alpha-source-on-main",
+      "implementationScope": "canonical-light-dark-colors-and-material3-equivalent-styling-not-full-compose-expressive-parity",
+      "upstreamPullRequest": "https://github.com/GoreeCloud/gc-ui/pull/179",
+      "subsequentAnalyzerFix": "https://github.com/GoreeCloud/gc-ui/pull/180",
+      "validation": "https://github.com/GoreeCloud/gc-ui/actions/runs/45629543802",
+      "deviceAcceptance": "not-verified"
+    }
   },
   "windowCommandNodes": {
     "officialName": "GoreeCloud UI Window Command Nodes",
