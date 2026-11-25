@@ -11,7 +11,9 @@ From this folder (Gradle 9.4.1 / JDK 17 / Android SDK platform 37.1):
 
 Android Studio can open this folder as its own Gradle project. The module uses
 Material 3 1.5.0 stable, Compose 1.13.0, AGP 9.2.0 and Kotlin Compose plugin 2.2.10.
-No Maven publication is configured. Include the module source in a consuming
+The Android CI also executes on-JVM palette contract tests for all eight
+canonical accent/appearance pairs; it does not substitute for real-device
+visual, TalkBack or motion acceptance. No Maven publication is configured. Include the module source in a consuming
 app's Gradle project; do not pretend an AAR is published.
 
 ## Compose usage
