@@ -1,5 +1,3 @@
-library goreecloud_ui_expressive;
-
 import 'package:flutter/material.dart';
 import 'src/generated/gc_ui_palettes.g.dart';
 
@@ -16,7 +14,7 @@ class GoreeCloudPalette {
     GoreeAccent accent = GoreeAccent.iris,
   }) {
     final mode = brightness == Brightness.dark ? 'dark' : 'light';
-    final roles = generatedGoreePalettes[accent.name + '/' + mode];
+    final roles = generatedGoreePalettes['${accent.name}/$mode'];
     if (roles == null) throw StateError('Unknown GoreeCloud UI palette');
     return GoreeCloudPalette._(roles);
   }
