@@ -38,5 +38,5 @@ jobs:
           "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" "platforms;android-37.1"
       - name: Verify generated color roles
         run: node scripts/generate-compose-tokens.mjs --check
-      - name: Compile Compose module
-        run: gradle -p android/material3-expressive :gc-ui-compose:assembleDebug --no-daemon --stacktrace
+      - name: Compile Compose module and run token palette unit tests
+        run: gradle -p android/material3-expressive :gc-ui-compose:assembleDebug :gc-ui-compose:testDebugUnitTest --no-daemon --stacktrace
