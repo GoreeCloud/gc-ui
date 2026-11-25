@@ -54,3 +54,7 @@ References:
 - https://docs.flutter.dev/release/breaking-changes/material-3-default
 - https://flutter.dev/blog/decoupling-material-cupertino
 - https://github.com/GoreeCloud/gc-ui/blob/main/docs/ANDROID_MATERIAL3_EXPRESSIVE.md
+
+## Canonical text contrast and motion tests
+
+Source-level Flutter tests now verify **WCAG 2 AA 4.5:1 or better** for seven opaque reading/text semantic color pairs in every Iris/Lagoon/Ember/Moss light/dark palette. Additional widget tests check the OS disabled-animation preference helper and the inset, floating navigation container. These tests require no network or customer data and run with the dedicated Flutter CI workflow. This is **token and widget-level evidence** only: rendered large-font, right-to-left, TalkBack, screenreader, high-contrast settings, navigation keyboard focus and physical-device appearance still require downstream acceptance.

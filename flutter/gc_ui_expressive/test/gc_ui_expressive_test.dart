@@ -2,6 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:goreecloud_ui_expressive/goreecloud_ui_expressive.dart';
 
+/// WCAG 2 contrast ratio for opaque foreground and background tokens.
+double contrastRatio(Color foreground, Color background) {
+  final a = foreground.computeLuminance();
+  final b = background.computeLuminance();
+  final lighter = a >= b ? a : b;
+  final darker = a >= b ? b : a;
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
 void main() {
   for (final accent in GoreeAccent.values) {
     for (final brightness in Brightness.values) {
@@ -58,5 +67,77 @@ void main() {
       ),
     ));
     expect(tester.takeException(), isArgumentError);
+  });
+
+  for (final accent in GoreeAccent.values) {
+    for (final brightness in Brightness.values) {
+      test('semantic text contrast is at least WCAG 2 AA for $accent $brightness', () {
+        final p = GoreeCloudPalette.forAppearance(
+          brightness: brightness, accent: accent,
+        );
+        final pairs = <(String, Color, Color)>[
+          ('text/surface', p.text, p.surface),
+          ('text/canvas', p.text, p.canvas),
+          ('text-soft/surface', p.textSoft, p.surface),
+          ('text-soft/canvas', p.textSoft, p.canvas),
+          ('on-brand/brand', p.onBrand, p.brand),
+          ('on-brand-container/brand-container',
+              p.onBrandContainer, p.brandContainer),
+          ('on-negative/negative', p.onNegative, p.negative),
+        ];
+        for (final (name, foreground, background) in pairs) {
+          expect(contrastRatio(foreground, background), greaterThanOrEqualTo(4.5),
+              reason: '$accent $brightness: $name');
+        }
+      });
+    }
+  }
+
+  testWidgets('system disable-animations preference is read without telemetry',
+      (tester) async {
+    bool? observed;
+    Future<void> render(bool disabled) async {
+      await tester.pumpWidget(MaterialApp(
+        home: MediaQuery(
+          data: MediaQueryData(disableAnimations: disabled),
+          child: Builder(builder: (context) {
+            observed = GoreeCloudMotion.reduced(context);
+            return const SizedBox.shrink();
+          }),
+        ),
+      ));
+    }
+    await render(true);
+    expect(observed, isTrue);
+    await render(false);
+    expect(observed, isFalse);
+  });
+
+  testWidgets('floating navigation reserves insets and avoids screen-edge strips',
+      (tester) async {
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        bottomNavigationBar: GoreeCloudFloatingNavigation(
+          selectedIndex: 0,
+          onDestinationSelected: (_) {},
+          destinations: const [
+            NavigationDestination(icon: Icon(Icons.home), label: 'Home'),
+            NavigationDestination(icon: Icon(Icons.settings), label: 'Settings'),
+          ],
+        ),
+      ),
+    ));
+    final insets = tester.widgetList<SafeArea>(find.descendant(
+      of: find.byType(GoreeCloudFloatingNavigation),
+      matching: find.byType(SafeArea),
+    ));
+    // NavigationBar can add its own SafeArea. Verify our explicit outer
+    // spacing without asserting that the framework creates no other insets.
+    expect(
+      insets.any((inset) =>
+          !inset.top &&
+          inset.minimum == const EdgeInsets.fromLTRB(16, 8, 16, 8)),
+      isTrue,
+    );
   });
 }
