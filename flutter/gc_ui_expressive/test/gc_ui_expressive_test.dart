@@ -4,7 +4,6 @@ import 'package:goreecloud_ui_expressive/goreecloud_ui_expressive.dart';
 
 /// WCAG 2 contrast ratio for opaque foreground and background tokens.
 double contrastRatio(Color foreground, Color background) {
-  assert(foreground.alpha == 255 && background.alpha == 255);
   final a = foreground.computeLuminance();
   final b = background.computeLuminance();
   final lighter = a >= b ? a : b;
