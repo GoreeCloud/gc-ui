@@ -91,6 +91,8 @@ Merged app integrations (source-level, not production releases):
 | Database | Kotlin/Compose | [PR #33](https://github.com/GoreeCloud/database/pull/33) |
 | Backup | Kotlin/Compose | [PR #55](https://github.com/GoreeCloud/backup/pull/55) |
 | Keyboard | Kotlin/Compose | [PR #7](https://github.com/GoreeCloud/keyboard/pull/7) — reduced-motion/CI hardening on existing imported adapter |
+| DNS | Kotlin/Compose Multiplatform + Android Material 3 Expressive | [PR #28](https://github.com/GoreeCloud/DNS/pull/28) — first-party source pinned to `gc-ui` commit `f501d92`, Android build and five PR CI jobs plus post-merge CI passed; no resolver deployment or device acceptance |
+| AI | Kotlin/Compose Multiplatform + Android Material 3 Expressive | [PR #35](https://github.com/GoreeCloud/AI/pull/35) — pinned shared Kotlin source and Android Expressive host, all four workflow jobs passed on final reviewed source; no live-provider or physical-device acceptance |
 | Metrics | Flutter Material 3 equivalent | [PR #38](https://github.com/GoreeCloud/metrics/pull/38) |
 | Teams | Flutter Material 3 equivalent | [PR #43](https://github.com/GoreeCloud/teams/pull/43) |
 
