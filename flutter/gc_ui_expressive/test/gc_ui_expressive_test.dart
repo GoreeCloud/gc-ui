@@ -127,11 +127,17 @@ void main() {
         ),
       ),
     ));
-    final inset = tester.widget<SafeArea>(find.descendant(
+    final insets = tester.widgetList<SafeArea>(find.descendant(
       of: find.byType(GoreeCloudFloatingNavigation),
       matching: find.byType(SafeArea),
     ));
-    expect(inset.top, isFalse);
-    expect(inset.minimum, const EdgeInsets.fromLTRB(16, 8, 16, 8));
+    // NavigationBar can add its own SafeArea. Verify our explicit outer
+    // spacing without asserting that the framework creates no other insets.
+    expect(
+      insets.any((inset) =>
+          !inset.top &&
+          inset.minimum == const EdgeInsets.fromLTRB(16, 8, 16, 8)),
+      isTrue,
+    );
   });
 }
